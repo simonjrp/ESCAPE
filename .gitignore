@@ -20,4 +20,4 @@ local.properties
 .project
 
 # Mac filesystem dust
-*.ds_store
+.ds_store
