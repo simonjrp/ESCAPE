@@ -17,9 +17,5 @@ public class ToDoListFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.activity_main, container, false);
-
-		/**
-		 * A fairly useless comment made to check formating between editors! :)
-		 */
 	}
 }
