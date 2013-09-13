@@ -21,3 +21,9 @@ local.properties
 
 # Mac filesystem dust
 .ds_store
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
