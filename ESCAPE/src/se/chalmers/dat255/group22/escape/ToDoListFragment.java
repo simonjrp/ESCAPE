@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 
 /**
  * A list fragment for our app.
+ * 
  * @author tholene
  */
-public class ToDoListFragment extends ListFragment{
+public class ToDoListFragment extends ListFragment {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_main, container, false);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.activity_main, container, false);
+	}
 }

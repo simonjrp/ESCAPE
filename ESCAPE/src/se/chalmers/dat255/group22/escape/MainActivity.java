@@ -1,7 +1,7 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
