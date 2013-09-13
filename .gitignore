@@ -27,3 +27,6 @@ local.properties
 *.ipr
 *.iws
 .idea/
+
+# Eclipse workspace settings
+.settings/
