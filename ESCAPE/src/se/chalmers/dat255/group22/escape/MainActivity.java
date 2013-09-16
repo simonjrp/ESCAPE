@@ -3,19 +3,19 @@ package se.chalmers.dat255.group22.escape;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.ExpandableListView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+/**
+ * The main activity
+ * 
+ * @author 
+ */
 public class MainActivity extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
