@@ -1,10 +1,10 @@
 # Authors
 
-[Adam Book](https://www.facebook.com/adam.book.54?fref=ts)
+[Adam Book](https://github.com/AdamBook)
 
 [Carl Jansson](https://github.com/HeyHoProBro)
 
-[Erik Tholén](https://github.com/tholene)
+[Erik Tholï¿½n](https://github.com/tholene)
 
 [Johanna Eriksson](https://github.com/johizzle)
 
@@ -18,9 +18,9 @@
 
 Real Name       	| Git alias(es)       
 --------------- 	| --------------
-Adam Book		|
+Adam Book		      | AdamBook
 Carl Jansson    	| HeyHoProBro
-Erik Tholen  		| Erik, Erik Tholén, Erik Tholen  
+Erik Tholen  	  	| Erik, Erik Tholï¿½n, Erik Tholen  
 Johanna Eriksson	| johizzle
-Mike Phoohad		| Annoa
+Mike Phoohad	  	| Annoa
 Simon Persson   	| Simon, Simon Persson, simonjrp, sjrp
