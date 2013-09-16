@@ -20,7 +20,7 @@ Real Name       	| Git alias(es)
 --------------- 	| --------------
 Adam Book		      | AdamBook
 Carl Jansson    	| HeyHoProBro
-Erik Tholen  	  	| Erik, Erik Thol�n, Erik Tholen  
+Erik Tholen  	  	| Erik, Erik Thol�n, Erik Tholen ,Erik Tholn
 Johanna Eriksson	| johizzle
 Mike Phoohad	  	| Annoa
 Simon Persson   	| Simon, Simon Persson, simonjrp, sjrp
