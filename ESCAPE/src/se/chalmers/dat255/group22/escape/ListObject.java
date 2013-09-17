@@ -10,14 +10,17 @@ public class ListObject {
 	private String name;
 	private String[] comment;
 	private boolean important;
+	
 	private Category category;
-
+	private Time time;
+	
 	public ListObject(int id, String name) {
 		this.id = id;
 		this.name = name;
 		this.comment = new String[300];
 		this.important = false;
 	}
+
 
 	/**
 	 * @return the id
@@ -55,6 +58,13 @@ public class ListObject {
 	}
 
 	/**
+	 * @return the time
+	 */
+	public Time getTime() {
+		return time;
+	}
+
+	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -82,6 +92,14 @@ public class ListObject {
 		this.category = category;
 	}
 
+	/**
+	 * @param time the time to set
+	 */
+	public void setTime(Time time) {
+		this.time = time;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
