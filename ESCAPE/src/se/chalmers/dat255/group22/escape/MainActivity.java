@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
+/**
+ * Hej hopp!
+ */
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
