@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.HashMap;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -7,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author tholene
@@ -20,21 +20,22 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 	private List<String> _listHeader; // header titles
 	// child data in format of header title, child title
 	private HashMap<String, List<String>> __listTask;
-    private HashMap<String, List<String>> _listTaskData;
+	private HashMap<String, List<String>> _listTaskData;
 
 	public MyListAdapter(Context context, List<String> listDataHeader,
-			HashMap<String, List<String>> listChildData, HashMap<String, List<String>> listGrandChildData) {
+			HashMap<String, List<String>> listChildData,
+			HashMap<String, List<String>> listGrandChildData) {
 		this._context = context;
-		this._listHeader = listDataHeader; //today, tomorrow etc
-		this.__listTask = listChildData; //task
-        this._listTaskData = listGrandChildData; //taskdata
+		this._listHeader = listDataHeader; // today, tomorrow etc
+		this.__listTask = listChildData; // task
+		this._listTaskData = listGrandChildData; // taskdata
 
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
-		return this.__listTask.get(this._listHeader.get(groupPosition))
-				.get(childPosititon);
+		return this.__listTask.get(this._listHeader.get(groupPosition)).get(
+				childPosititon);
 	}
 
 	@Override
@@ -63,8 +64,8 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this.__listTask.get(this._listHeader.get(groupPosition))
-				.size();
+		return this.__listTask.get(this._listHeader.get(groupPosition)).size();
+
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public long getGroupId(int groupPosition) {
-		return groupPosition;
+            return groupPosition;
 	}
 
 	@Override

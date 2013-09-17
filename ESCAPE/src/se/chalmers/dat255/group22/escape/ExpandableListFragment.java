@@ -21,7 +21,7 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableListFragment extends Fragment {
 
-	MyListAdapter listAdapter;
+	TopLevelListAdapter listAdapter;
 	ExpandableListView expListView;
 	List<String> listHeader;
 	HashMap<String, List<String>> listTask;
@@ -39,7 +39,7 @@ public class ExpandableListFragment extends Fragment {
 		// get the list data
 		getListData();
 
-		listAdapter = new MyListAdapter(getActivity(), listHeader, listTask,
+		listAdapter = new TopLevelListAdapter(getActivity(), listHeader, listTask,
 				listTaskData);
 
 		// getting the view
