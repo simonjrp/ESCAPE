@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Object class that represents a ListObject.
  * @author Johanna & Mike
@@ -11,10 +14,12 @@ public class ListObject {
 	private String[] comment;
 	private boolean important;
 	
-	private Category category;
+//	private Category category;
 	private Time time;
 	private Place place;
 	private TimeAlarm timeAlarm;
+	
+	private List<Category> categories;
 	
 	
 	public ListObject(int id, String name) {
@@ -22,6 +27,7 @@ public class ListObject {
 		this.name = name;
 		this.comment = new String[300];
 		this.important = false;
+		this.categories = new LinkedList<Category>();
 	}
 
 
@@ -54,10 +60,10 @@ public class ListObject {
 	}
 
 	/**
-	 * @return the category
+	 * @return the categories
 	 */
-	public Category getCategory() {
-		return category;
+	public List<Category> getCategories() {
+		return categories;
 	}
 
 	/**
@@ -104,13 +110,6 @@ public class ListObject {
 	public void setImportant(boolean important) {
 		this.important = important;
 	}
-	
-	/**
-	 * @param category the category to set
-	 */
-	public void setCategory(Category category) {
-		this.category = category;
-	}
 
 	/**
 	 * @param time the time to set
@@ -133,6 +132,12 @@ public class ListObject {
 		this.timeAlarm = timeAlarm;
 	}
 	
+	/**
+	 * @param category the category to set
+	 */
+	public void addToCategory(Category category) {
+		categories.add(category);
+	}	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
