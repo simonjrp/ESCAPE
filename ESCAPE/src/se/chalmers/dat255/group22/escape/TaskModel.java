@@ -1,11 +1,12 @@
 package se.chalmers.dat255.group22.escape;
 
 import android.location.Location;
-import android.text.format.Time;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 /**
+ * A model containing the data needed for a specific task.
  * @author tholene, Carl Jansson
  */
 public class TaskModel {
