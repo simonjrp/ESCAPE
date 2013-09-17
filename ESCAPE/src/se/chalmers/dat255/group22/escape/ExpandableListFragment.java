@@ -1,10 +1,14 @@
 package se.chalmers.dat255.group22.escape;
 
+
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import android.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +37,9 @@ public class ExpandableListFragment extends Fragment {
 		listAdapter = new MyListAdapter(getActivity(), listDataHeader,
 				listDataChild);
 
-		// setting list adapter
+		// getting the view
 		expListView = (ExpandableListView) getActivity().findViewById(R.id.lvExp);
+        // setting list adapter
 		expListView.setAdapter(listAdapter);
 	}
 	
@@ -52,6 +57,11 @@ public class ExpandableListFragment extends Fragment {
 		listDataHeader = new ArrayList<String>();
 		listDataChild = new HashMap<String, List<String>>();
 
+
+        // testTask
+        addTask("Handla kläder", new Time(18, 00, 00), new Date(2013, 9, 18), new Location("Nordstan"), "Glöm inte plånboken");
+
+        /*
 		// Adding header data
 		listDataHeader.add("Meeting with projectgroup");
 		listDataHeader.add("Make use of coupon at ICA");
@@ -66,6 +76,28 @@ public class ExpandableListFragment extends Fragment {
 
 		listDataChild.put(listDataHeader.get(0), task1); // Header, Child data
 		listDataChild.put(listDataHeader.get(1), task2);
+		*/
+
 
 	}
+
+    /**
+     * Add a new task to the list.
+     * @param name  the name of the task. This will be displayed even when the task is not expanded.
+     * @param time the time of the task.
+     * @param date the date of the task.
+     * @param location the location of the task.
+     * @param description the description of the task.
+     */
+    public void addTask(String name, Time time, Date date, Location location, String description) {
+
+    listDataHeader.add(name);
+    List<String> task1 = new ArrayList<String>();
+        task1.add(name + " " + time.toString() + " "
+                + date.toString() + " " + location.toString() + " " + description);
+    listDataChild.put(listDataHeader.get(listDataHeader.indexOf(name)), task1);
+
+    }
+
+
 }
