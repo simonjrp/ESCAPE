@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,10 +55,6 @@ public class MainActivity extends Activity {
 				invalidateOptionsMenu();
 			}
 
-            @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
-                return false;
-            }
 		};
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -80,7 +77,6 @@ public class MainActivity extends Activity {
 		});
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-        mDrawerToggle.syncState();
 	}
 
 	/**
@@ -124,7 +120,7 @@ public class MainActivity extends Activity {
             return true;
         }
         // Handle your other action bar items...
-
+        Log.d("HEJHEJ", "HEJ");
         return super.onOptionsItemSelected(item);
     }
 
@@ -145,6 +141,7 @@ public class MainActivity extends Activity {
         // If the nav drawer is open, hide action items related to the content
         // view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+//        boolean todoFragmentActive = mDrawerList.getCheckedItemPosition() == 0;
         return super.onPrepareOptionsMenu(menu);
     }
 }
