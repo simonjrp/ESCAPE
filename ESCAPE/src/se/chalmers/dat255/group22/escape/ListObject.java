@@ -13,6 +13,7 @@ public class ListObject {
 	
 	private Category category;
 	private Time time;
+	private Place place;
 	
 	public ListObject(int id, String name) {
 		this.id = id;
@@ -65,6 +66,15 @@ public class ListObject {
 	}
 
 	/**
+	 * @return the place
+	 */
+	public Place getPlace() {
+		return place;
+	}
+
+
+
+	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -97,6 +107,13 @@ public class ListObject {
 	 */
 	public void setTime(Time time) {
 		this.time = time;
+	}
+	
+	/**
+	 * @param place the place to set
+	 */
+	public void setPlace(Place place) {
+		this.place = place;
 	}
 	
 	
