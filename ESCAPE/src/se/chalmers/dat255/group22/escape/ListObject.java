@@ -10,6 +10,7 @@ public class ListObject {
 	private String name;
 	private String[] comment;
 	private boolean important;
+	private Category category;
 
 	public ListObject(int id, String name) {
 		this.id = id;
@@ -47,6 +48,13 @@ public class ListObject {
 	}
 
 	/**
+	 * @return the category
+	 */
+	public Category getCategory() {
+		return category;
+	}
+
+	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -65,6 +73,13 @@ public class ListObject {
 	 */
 	public void setImportant(boolean important) {
 		this.important = important;
+	}
+	
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	/* (non-Javadoc)
