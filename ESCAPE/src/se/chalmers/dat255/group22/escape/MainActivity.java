@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * The main activity, to be launched when app is started.
+ */
 public class MainActivity extends Activity {
 
 	private DrawerLayout mDrawerLayout;
@@ -26,6 +29,7 @@ public class MainActivity extends Activity {
 
 		// Saving title of application for later use
 		mTitle = getTitle();
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -47,20 +51,31 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	public void selectItem(int position){
+	/**
+	 * Method for selecting which fragment to be shown
+	 * 
+	 * @param position
+	 *            The position in the listview of the wanted fragment
+	 */
+	public void selectItem(int position) {
 		Fragment fragment = new TestFragment();
 		Bundle args = new Bundle();
 		args.putString("TITLE", fragmentTitles[position]);
 		fragment.setArguments(args);
-		
+
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-			.replace(R.id.content_frame,  fragment).commit();
+				.replace(R.id.content_frame, fragment).commit();
 		mDrawerList.setItemChecked(position, true);
 		setTitle(fragmentTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
-	
+
+	@Override
+	public void setTitle(CharSequence title) {
+		super.setTitle(title);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
