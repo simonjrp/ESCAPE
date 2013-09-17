@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fragments_array">    <item>To do</item>
+    <item>Calender</item>
+    <item>Pomodoro</item>
+
+    <string-array></string-array>
+
+</resources>
