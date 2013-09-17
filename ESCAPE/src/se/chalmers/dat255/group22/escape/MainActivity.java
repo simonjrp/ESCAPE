@@ -3,10 +3,12 @@ package se.chalmers.dat255.group22.escape;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,6 +53,11 @@ public class MainActivity extends Activity {
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu();
 			}
+
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                return false;
+            }
 		};
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -73,6 +80,7 @@ public class MainActivity extends Activity {
 		});
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+        mDrawerToggle.syncState();
 	}
 
 	/**
@@ -108,4 +116,35 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content
+        // view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        return super.onPrepareOptionsMenu(menu);
+    }
 }
