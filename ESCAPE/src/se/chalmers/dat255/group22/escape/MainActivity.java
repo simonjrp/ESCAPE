@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.View;
@@ -18,8 +19,11 @@ public class MainActivity extends Activity {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
-
+	private ActionBarDrawerToggle mDrawerToggle;
+	// Variable to store application name
 	private CharSequence mTitle;
+	// Variable to store current drawer title
+	private CharSequence mDrawerTitle;
 	private String[] fragmentTitles;
 
 	@Override
@@ -28,10 +32,28 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		// Saving title of application for later use
-		mTitle = getTitle();
+		mTitle = mDrawerTitle = getTitle();
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+			@Override
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu();
+			}
+
+			@Override
+			public void onDrawerOpened(View view) {
+				getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu();
+			}
+		};
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		fragmentTitles = getResources().getStringArray(R.array.fragments_array);
 
@@ -49,6 +71,8 @@ public class MainActivity extends Activity {
 			}
 
 		});
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/**
@@ -73,7 +97,8 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void setTitle(CharSequence title) {
-		super.setTitle(title);
+		mDrawerTitle = title;
+		super.setTitle(mTitle);
 	}
 
 	@Override
