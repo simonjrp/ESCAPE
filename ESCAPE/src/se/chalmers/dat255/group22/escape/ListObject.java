@@ -14,6 +14,8 @@ public class ListObject {
 	private Category category;
 	private Time time;
 	private Place place;
+	private TimeAlarm timeAlarm;
+	
 	
 	public ListObject(int id, String name) {
 		this.id = id;
@@ -75,6 +77,14 @@ public class ListObject {
 
 
 	/**
+	 * @return the timeAlarm
+	 */
+	public TimeAlarm getTimeAlarm() {
+		return timeAlarm;
+	}
+
+
+	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -114,6 +124,13 @@ public class ListObject {
 	 */
 	public void setPlace(Place place) {
 		this.place = place;
+	}
+
+	/**
+	 * @param timeAlarm the timeAlarm to set
+	 */
+	public void setTimeAlarm(TimeAlarm timeAlarm) {
+		this.timeAlarm = timeAlarm;
 	}
 	
 	
