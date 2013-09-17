@@ -18,6 +18,7 @@ public class ListObject {
 	private Time time;
 	private Place place;
 	private TimeAlarm timeAlarm;
+	private GPSAlarm gpsAlarm;
 	
 	private List<Category> categories;
 	
@@ -91,6 +92,15 @@ public class ListObject {
 
 
 	/**
+	 * @return the gpsAlarm
+	 */
+	public GPSAlarm getGpsAlarm() {
+		return gpsAlarm;
+	}
+
+
+
+	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
@@ -130,6 +140,13 @@ public class ListObject {
 	 */
 	public void setTimeAlarm(TimeAlarm timeAlarm) {
 		this.timeAlarm = timeAlarm;
+	}
+
+	/**
+	 * @param gpsAlarm the gpsAlarm to set
+	 */
+	public void setGpsAlarm(GPSAlarm gpsAlarm) {
+		this.gpsAlarm = gpsAlarm;
 	}
 	
 	/**
