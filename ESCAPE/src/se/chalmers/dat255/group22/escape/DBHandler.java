@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * The handler for the SQLite Database
+ * @author Johanna and Mike
+ *
+ */
 public class DBHandler extends SQLiteOpenHelper {
 
 	// All Static variables
@@ -249,5 +254,7 @@ public class DBHandler extends SQLiteOpenHelper {
         // Create tables again
         onCreate(db);
 	}
+	
+	
 
 }
