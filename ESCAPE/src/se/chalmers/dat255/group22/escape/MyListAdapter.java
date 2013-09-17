@@ -17,20 +17,23 @@ import java.util.List;
 public class MyListAdapter extends BaseExpandableListAdapter {
 
 	private Context _context;
-	private List<String> _listDataHeader; // header titles
+	private List<String> _listHeader; // header titles
 	// child data in format of header title, child title
-	private HashMap<String, List<String>> _listDataChild;
+	private HashMap<String, List<String>> __listTask;
+    private HashMap<String, List<String>> _listTaskData;
 
 	public MyListAdapter(Context context, List<String> listDataHeader,
-			HashMap<String, List<String>> listChildData) {
+			HashMap<String, List<String>> listChildData, HashMap<String, List<String>> listGrandChildData) {
 		this._context = context;
-		this._listDataHeader = listDataHeader;
-		this._listDataChild = listChildData;
+		this._listHeader = listDataHeader; //today, tomorrow etc
+		this.__listTask = listChildData; //task
+        this._listTaskData = listGrandChildData; //taskdata
+
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
-		return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+		return this.__listTask.get(this._listHeader.get(groupPosition))
 				.get(childPosititon);
 	}
 
@@ -48,11 +51,11 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this._context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_item, null);
+			convertView = infalInflater.inflate(R.layout.list_taskdata, null);
 		}
 
 		TextView txtListChild = (TextView) convertView
-				.findViewById(R.id.lblListItem);
+				.findViewById(R.id.lblListTaskData);
 
 		txtListChild.setText(childText);
 		return convertView;
@@ -60,18 +63,18 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+		return this.__listTask.get(this._listHeader.get(groupPosition))
 				.size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
-		return this._listDataHeader.get(groupPosition);
+		return this._listHeader.get(groupPosition);
 	}
 
 	@Override
 	public int getGroupCount() {
-		return this._listDataHeader.size();
+		return this._listHeader.size();
 	}
 
 	@Override
@@ -86,11 +89,11 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this._context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_group, null);
+			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
 		TextView lblListHeader = (TextView) convertView
-				.findViewById(R.id.lblListHeader);
+				.findViewById(R.id.lblListTask);
 		lblListHeader.setTypeface(null, Typeface.BOLD);
 		lblListHeader.setText(headerTitle);
 
