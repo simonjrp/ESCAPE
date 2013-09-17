@@ -1,6 +1,10 @@
 package se.chalmers.dat255.group22.escape;
 
 import android.os.Bundle;
+
+/**
+ * Test comment
+ */
 import android.app.Activity;
 import android.view.Menu;
 
