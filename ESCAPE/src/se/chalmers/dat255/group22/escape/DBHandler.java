@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * The handler for the SQLite Database
+ * @author Johanna and Mike
+ *
+ */
 public class DBHandler extends SQLiteOpenHelper {
 
 	// All Static variables
@@ -251,6 +256,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
 	}
 	
+
 	public void addListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
@@ -280,6 +286,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		
 		ContentValues values = new ContentValues();		
 		values.put(COLUMN_PLACES_NAME, place.getName());
+
 
 		db.insert(TABLE_PLACES, null, values);
 		db.close();

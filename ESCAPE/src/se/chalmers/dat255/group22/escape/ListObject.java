@@ -3,12 +3,15 @@ package se.chalmers.dat255.group22.escape;
 import java.util.LinkedList;
 import java.util.List;
 
+// TODO Add the possibility for all object classes to be constructed without
+// any id (or other primary key that is autoincremented)
 /**
  * Object class that represents a ListObject.
+ * 
  * @author Johanna & Mike
  */
 public class ListObject {
-	
+
 	private final int id;
 	private String name;
 	private String comment;
