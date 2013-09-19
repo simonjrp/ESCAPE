@@ -21,11 +21,11 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableListFragment extends Fragment {
 
-	TopLevelListAdapter listAdapter;
+	MyListAdapter listAdapter;
 	ExpandableListView expListView;
-	List<String> listHeader;
-	HashMap<String, List<String>> listTask;
-	HashMap<String, List<String>> listTaskData;
+	List<String> listDataHeader;
+	List<TaskModel> taskList;
+	HashMap<String, List<TaskModel>> listDataChild;
 
 	/**
 	 * Called when the activity containing the fragment is created.
@@ -39,8 +39,7 @@ public class ExpandableListFragment extends Fragment {
 		// get the list data
 		getListData();
 
-		listAdapter = new TopLevelListAdapter(getActivity(), listHeader, listTask,
-				listTaskData);
+		listAdapter = new MyListAdapter(getActivity(), listDataHeader, listDataChild);
 
 		// getting the view
 		expListView = (ExpandableListView) getActivity().findViewById(
@@ -67,8 +66,12 @@ public class ExpandableListFragment extends Fragment {
 	 * Preparing the list data
 	 */
 	private void getListData() {
-		listHeader = new ArrayList<String>();
-		listTask = new HashMap<String, List<String>>();
+		listDataHeader = new ArrayList<String>();
+		listDataHeader.add("Today");
+		listDataHeader.add("Tomorrow");
+		listDataHeader.add("Someday");
+		listDataChild = new HashMap<String, List<TaskModel>>();
+		taskList = new ArrayList<TaskModel>();
 
 		// testTask
 		addTask(new TaskModel("Handla kläder", new Time(
@@ -84,20 +87,11 @@ public class ExpandableListFragment extends Fragment {
 						System.currentTimeMillis()), new Location("Hemma"),
 				"Köttfärssås och spaghetti"));
 
-		/*
-		 * // Adding header data listHeader.add("Meeting with projectgroup");
-		 * listHeader.add("Make use of coupon at ICA");
-		 * 
-		 * // Adding child data List<String> task1 = new ArrayList<String>(); //
-		 * parse database? <date> <time> <description>? task1.add("16/9" + " " +
-		 * "08:00" + " " + "EDIT-huset 3213");
-		 * 
-		 * List<String> task2 = new ArrayList<String>();
-		 * task2.add("ICA Olskroken" + " | " + "Remind me at" + " 15:00");
-		 * 
-		 * listTask.put(listHeader.get(0), task1); // Header, Child data
-		 * listTask.put(listHeader.get(1), task2);
-		 */
+		listDataChild.put("Today", taskList);
+		listDataChild.put("Tomorrow", taskList);
+		addTask(new TaskModel("Handla mat", new Time(18, 00, 00), new Date(
+				2013, 9, 18), new Location("Nordstan"), "Glöm inte plånboken"));
+		listDataChild.put("Someday", taskList);
 
 	}
 
@@ -108,34 +102,7 @@ public class ExpandableListFragment extends Fragment {
 	 *            the task to add
 	 */
 	public void addTask(TaskModel Task) {
-		addTask(Task.getName(), Task.getTime(), Task.getDate(),
-				Task.getLocation(), Task.getDescription());
-	}
-
-	/**
-	 * Add a new task to the list.
-	 * 
-	 * @param name
-	 *            the name of the task. This will be displayed even when the
-	 *            task is not expanded.
-	 * @param time
-	 *            the time of the task.
-	 * @param date
-	 *            the date of the task.
-	 * @param location
-	 *            the location of the task.
-	 * @param description
-	 *            the description of the task.
-	 */
-	public void addTask(String name, Time time, Date date, Location location,
-			String description) {
-
-		listHeader.add(name);
-		List<String> task1 = new ArrayList<String>();
-		task1.add(time.toString() + "\n" + date.toString() + "\n"
-				+ location.getProvider() + "\n" + description);
-		listTask.put(listHeader.get(listHeader.indexOf(name)), task1);
-
+		taskList.add(Task);
 	}
 
 }
