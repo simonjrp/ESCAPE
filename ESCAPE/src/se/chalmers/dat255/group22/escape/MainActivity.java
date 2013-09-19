@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The main activity, to be launched when app is started.
  */
@@ -22,17 +25,23 @@ public class MainActivity extends Activity {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
+
+    private ActionBarDrawerToggle mDrawerToggle;
 	// Variable to store application name
 	private CharSequence mTitle;
 	// Variable to store current drawer title
 	private CharSequence mDrawerTitle;
+
+    private List<Fragment> fragments;
 	private String[] fragmentTitles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        fragments = new ArrayList<Fragment>();
+
 
 		// Saving title of application for later use
 		mTitle = mDrawerTitle = getTitle();
@@ -78,27 +87,39 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        initializeFragments();
+
         // begin to show todo fragment
         if(savedInstanceState == null) {
             selectFragment(0);
         }
 	}
 
-	/**
+    private void initializeFragments() {
+
+        for(int i = 0; i < fragmentTitles.length; i++) {
+            Fragment fragment = new TestFragment();
+            Bundle args = new Bundle();
+            args.putString("TITLE", fragmentTitles[i]);
+            fragment.setArguments(args);
+            fragments.add(fragment);
+        }
+
+
+
+    }
+
+    /**
 	 * Method for selecting which fragment to be shown
 	 * 
 	 * @param position
 	 *            The position in the listview of the wanted fragment
 	 */
 	public void selectFragment(int position) {
-		Fragment fragment = new TestFragment();
-		Bundle args = new Bundle();
-		args.putString("TITLE", fragmentTitles[position]);
-		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
+				.replace(R.id.content_frame, fragments.get(position)).commit();
 		mDrawerList.setItemChecked(position, true);
 		setTitle(fragmentTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
