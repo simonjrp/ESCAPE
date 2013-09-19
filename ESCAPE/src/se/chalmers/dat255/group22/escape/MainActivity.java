@@ -70,13 +70,18 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				selectItem(position);
+				selectFragment(position);
 
 			}
 
 		});
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // begin to show todo fragment
+        if(savedInstanceState == null) {
+            selectFragment(0);
+        }
 	}
 
 	/**
@@ -85,7 +90,7 @@ public class MainActivity extends Activity {
 	 * @param position
 	 *            The position in the listview of the wanted fragment
 	 */
-	public void selectItem(int position) {
+	public void selectFragment(int position) {
 		Fragment fragment = new TestFragment();
 		Bundle args = new Bundle();
 		args.putString("TITLE", fragmentTitles[position]);
