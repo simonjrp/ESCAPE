@@ -11,7 +11,7 @@ public class ListObject {
 	
 	private final int id;
 	private String name;
-	private String[] comment;
+	private String comment;
 	private boolean important;
 	
 //	private Category category;
@@ -26,7 +26,6 @@ public class ListObject {
 	public ListObject(int id, String name) {
 		this.id = id;
 		this.name = name;
-		this.comment = new String[300];
 		this.important = false;
 		this.categories = new LinkedList<Category>();
 	}
@@ -49,7 +48,7 @@ public class ListObject {
 	/**
 	 * @return the comment
 	 */
-	public String[] getComment() {
+	public String getComment() {
 		return comment;
 	}
 
@@ -110,7 +109,7 @@ public class ListObject {
 	/**
 	 * @param comment the comment to set
 	 */
-	public void setComment(String[] comment) {
+	public void setComment(String comment) {
 		this.comment = comment;
 	}
 

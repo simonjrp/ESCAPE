@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -249,5 +250,126 @@ public class DBHandler extends SQLiteOpenHelper {
         // Create tables again
         onCreate(db);
 	}
+	
+	public void addListObject(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
+		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant()) ? 1:0);
+		
+		db.insert(TABLE_LIST_OBJECTS, null, values);
+		db.close();
+	}
 
+	public void addCategory(Category category) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_CATEGORIES_NAME, category.getName());
+		values.put(COLUMN_CATEGORIES_BASE_COLOR, category.getBaseColor());
+		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR, category.getImportantColor());
+		
+		db.insert(TABLE_CATEGORIES, null, values);
+		db.close();
+	}
+	
+	public void addPlace(Place place) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_PLACES_NAME, place.getName());
+
+		db.insert(TABLE_PLACES, null, values);
+		db.close();
+	}
+	
+	public void addTime(Time time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_TIMES_START_DATE, time.getStartDate().getTime());
+		values.put(COLUMN_TIMES_END_DATE, time.getEndDate().getTime());
+		
+		db.insert(TABLE_TIMES, null, values);
+		db.close();
+	}
+	
+	public void addTimeAlarm(TimeAlarm timeAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
+
+		db.insert(TABLE_TIME_ALARMS, null, values);
+		db.close();
+	}
+	
+	public void addGPSAlarm(GPSAlarm gpsAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
+		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
+		
+		db.insert(TABLE_GPS_ALARMS, null, values);
+		db.close();
+	}
+	
+	public void addCategoryWithListObject(Category category, ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY, category.getName());
+		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT, listObject.getId());
+		
+		db.insert(TABLE_CATEGORIES_WITH_LISTOBJECTS, null, values);
+		db.close();
+	}
+	
+	public void addListObjectsWithTimeAlarm(ListObject listObject, TimeAlarm timeAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT, listObject.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM, timeAlarm.getId());
+		
+		db.insert(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, null, values);
+		db.close();
+	}
+	
+	public void addListObjectsWithGPSAlarm(ListObject listObject, GPSAlarm gpsAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT, listObject.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM, gpsAlarm.getId());
+		
+		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		db.close();
+	}
+	
+	public void addListObjectsWithTime(ListObject listObject, Time time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_TIME, time.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT, listObject.getId());
+		
+		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		db.close();
+	} 
+	
+	public void addListObjectsWithPlace(ListObject listObject, Place place) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();		
+		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE, place.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT, listObject.getId());
+		
+		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		db.close();
+	} 
+		
 }
