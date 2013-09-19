@@ -378,5 +378,45 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
 	} 
+	
+	/**
+	 * This will update a ListObject 
+	 * @param listObject to update
+	 * @return the number of updated rows
+	 */
+	public int updateListObject(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
 		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
+		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant()) ? 1:0);
+		
+		int rv = db.update(TABLE_LIST_OBJECTS, values, COLUMN_LIST_OBJECTS_ID + "=?", new String[] {"" + listObject.getId()});
+		db.close();
+		
+		return rv;
+	}
+	
+	/**
+	 * Updates a category in the database
+	 * @param category to update
+	 * @param oldName, if null it will update the the name that category has; 
+	 * 			if not null it will update the specified named category
+	 * @return number of affected rows
+	 */
+	public int updateCategory(Category category, String oldName) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_CATEGORIES_NAME, category.getName());
+		values.put(COLUMN_CATEGORIES_BASE_COLOR, category.getBaseColor());
+		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR, category.getImportantColor());
+		
+		int rv = db.update(TABLE_CATEGORIES, values, COLUMN_CATEGORIES_NAME + "=?", new String[] {oldName});
+		db.close();
+		
+		return rv;
+	}
+
 }
