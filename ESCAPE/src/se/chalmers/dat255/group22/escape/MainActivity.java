@@ -1,22 +1,22 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The main activity, to be launched when app is started.
@@ -145,8 +145,16 @@ public class MainActivity extends Activity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-        Log.d("HEJHEJ", "HEJ");
+        
+     // Handle your other action bar items...
+        
+        switch (item.getItemId()){
+        case R.id.add_task:
+        	Intent intent = new Intent(this, NewTaskActivity.class);
+        	startActivity(intent);
+        }
+        
+      
         return super.onOptionsItemSelected(item);
     }
 
