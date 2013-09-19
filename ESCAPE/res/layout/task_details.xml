@@ -1,13 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
-    <TextView
-        android:id="@+id/temp_title"
+    <EditText
+        android:id="@+id/task_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="tasks_detail_fragment" />
+        android:hint="Title"
+        android:inputType="text" />
 
-</LinearLayout>
+    <Spinner
+        android:id="@+id/task_categories"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/task_title"
+        android:text="Categories" />
+
+    <EditText
+        android:id="@+id/task_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/task_categories"
+        android:gravity="top|left"
+        android:hint="Description"
+        android:inputType="textMultiLine|textCapSentences"
+        android:maxLines="10"
+        android:minLines="3" />
+
+    <EditText
+        android:id="@+id/task_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/task_description"
+        android:hint="Location"
+        android:inputType="textPostalAddress" />
+
+    <CheckBox
+        android:id="@+id/task_important"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/task_location"
+        android:text="Mark as important" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/task_important"
+        android:layout_marginTop="48dp"
+        android:background="@android:color/holo_blue_dark" />
+
+
+</RelativeLayout>
