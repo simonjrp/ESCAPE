@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * The handler for the SQLite Database
+ * 
  * @author Johanna and Mike
- *
  */
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -110,7 +110,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+ COLUMN_GPS_ALARMS_LATITUDE + " NUMERIC NOT NULL,"
 			+ COLUMN_GPS_ALARMS_LONGITUDE + " NUMERIC NOT NULL" + ")";
-	private static final String CREATE_CATEGORIES_WITH_LISTOBJECTS_TABLE = "CREATE TABLE "
+	private static final String CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE = "CREATE TABLE "
 			+ TABLE_CATEGORIES_WITH_LISTOBJECTS
 			+ "("
 			+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT
@@ -128,11 +128,11 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ TABLE_CATEGORIES
 			+ "("
 			+ COLUMN_CATEGORIES_NAME
-			+ "),"
+			+ ") ON DELETE CASCADE,"
 			+ "FOREIGN KEY ("
 			+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT
 			+ ") REFERENCES "
-			+ TABLE_LIST_OBJECTS + "(" + COLUMN_LIST_OBJECTS_ID + ")" + ")";
+			+ TABLE_LIST_OBJECTS + "(" + COLUMN_LIST_OBJECTS_ID + ") ON DELETE CASCADE" + ")";
 	private static final String CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE = "CREATE TABLE "
 			+ TABLE_LIST_OBJECTS_WITH_TIME_ALARM
 			+ "("
@@ -146,14 +146,14 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ TABLE_LIST_OBJECTS
 			+ "("
 			+ COLUMN_LIST_OBJECTS_ID
-			+ "),"
+			+ ") ON DELETE CASCADE,"
 			+ "FOREIGN KEY ("
 			+ COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM
 			+ ") REFERENCES "
 			+ TABLE_TIME_ALARMS
 			+ "("
 			+ COLUMN_TIME_ALARMS_ID
-			+ ")" + ")";
+			+ ") ON DELETE CASCADE" + ")";
 	private static final String CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE = "CREATE TABLE "
 			+ TABLE_LIST_OBJECTS_WITH_GPS_ALARM
 			+ "("
@@ -167,14 +167,14 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ TABLE_LIST_OBJECTS
 			+ "("
 			+ COLUMN_LIST_OBJECTS_ID
-			+ "),"
+			+ ") ON DELETE CASCADE,"
 			+ "FOREIGN KEY ("
 			+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM
 			+ ") REFERENCES "
 			+ TABLE_GPS_ALARMS
 			+ "("
 			+ COLUMN_GPS_ALARMS_ID
-			+ ")" + ")";
+			+ ") ON DELETE CASCADE" + ")";
 	private static final String CREATE_LIST_OBJECTS_WITH_TIME_TABLE = "CREATE TABLE "
 			+ TABLE_LIST_OBJECTS_WITH_TIME
 			+ "("
@@ -188,10 +188,11 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ TABLE_LIST_OBJECTS
 			+ "("
 			+ COLUMN_LIST_OBJECTS_ID
-			+ "),"
+			+ ") ON DELETE CASCADE,"
 			+ "FOREIGN KEY ("
 			+ COLUMN_LIST_OBJECTS_WITH_TIME_TIME
-			+ ") REFERENCES " + TABLE_TIMES + "(" + COLUMN_TIMES_ID + ")" + ")";
+			+ ") REFERENCES "
+			+ TABLE_TIMES + "(" + COLUMN_TIMES_ID + ") ON DELETE CASCADE" + ")";
 	private static final String CREATE_LIST_OBJECTS_WITH_PLACE_TABLE = "CREATE TABLE "
 			+ TABLE_LIST_OBJECTS_WITH_PLACE
 			+ "("
@@ -205,14 +206,14 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ TABLE_LIST_OBJECTS
 			+ "("
 			+ COLUMN_LIST_OBJECTS_ID
-			+ "),"
+			+ ") ON DELETE CASCADE,"
 			+ "FOREIGN KEY ("
 			+ COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE
 			+ ") REFERENCES "
 			+ TABLE_PLACES
 			+ "("
 			+ COLUMN_PLACES_ID
-			+ ")"
+			+ ") ON DELETE CASCADE"
 			+ ")";
 
 	public DBHandler(Context context) {
@@ -228,7 +229,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TIMES_TABLE);
 		db.execSQL(CREATE_TIME_ALARMS_TABLE);
 		db.execSQL(CREATE_GPS_ALARMS_TABLE);
-		db.execSQL(CREATE_CATEGORIES_WITH_LISTOBJECTS_TABLE);
+		db.execSQL(CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
@@ -246,7 +247,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_WITH_LISTOBJECTS_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
@@ -255,129 +256,211 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
 	}
 	
+	// This enables foreign_keys such that "ON DELETE CASCADE" works.
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		super.onOpen(db);
+		if (!db.isReadOnly()) {
+			// Enable foreign key constraints
+			db.execSQL("PRAGMA foreign_keys=ON;");
+		}
+	}
 
+	/**
+	 * Saves a listObject to the database
+	 * 
+	 * @param listObject
+	 */
 	public void addListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
 		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
-		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant()) ? 1:0);
-		
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT,
+				(listObject.isImportant()) ? 1 : 0);
+
 		db.insert(TABLE_LIST_OBJECTS, null, values);
 		db.close();
 	}
-
+	
+	/**
+	 * Saves a category to the database
+	 * 
+	 * @param category
+	 */
 	public void addCategory(Category category) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_CATEGORIES_NAME, category.getName());
 		values.put(COLUMN_CATEGORIES_BASE_COLOR, category.getBaseColor());
-		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR, category.getImportantColor());
-		
+		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR,
+				category.getImportantColor());
+
 		db.insert(TABLE_CATEGORIES, null, values);
 		db.close();
 	}
-	
+
+	/**
+	 * Saves a place to the database
+	 * 
+	 * @param place
+	 */
 	public void addPlace(Place place) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
-		values.put(COLUMN_PLACES_NAME, place.getName());
 
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_PLACES_NAME, place.getName());
 
 		db.insert(TABLE_PLACES, null, values);
 		db.close();
 	}
-	
+
+	/**
+	 * Saves a Time object to the database
+	 * 
+	 * @param time
+	 */
 	public void addTime(Time time) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_TIMES_START_DATE, time.getStartDate().getTime());
 		values.put(COLUMN_TIMES_END_DATE, time.getEndDate().getTime());
-		
+
 		db.insert(TABLE_TIMES, null, values);
 		db.close();
 	}
-	
+
+	/**
+	 * Saves a time alarm to the database
+	 * 
+	 * @param timeAlarm
+	 */
 	public void addTimeAlarm(TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
+
+		ContentValues values = new ContentValues();
 		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
 
 		db.insert(TABLE_TIME_ALARMS, null, values);
 		db.close();
 	}
-	
+
+	/**
+	 * Saves a GPS alarm to the database
+	 * 
+	 * @param gpsAlarm
+	 */
 	public void addGPSAlarm(GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
+
+		ContentValues values = new ContentValues();
 		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
-		
+
 		db.insert(TABLE_GPS_ALARMS, null, values);
 		db.close();
 	}
-	
-	public void addCategoryWithListObject(Category category, ListObject listObject) {
+
+	/**
+	 * Saves a category and listobject "pair" to the database
+	 * I.e. the relation between them is saved
+	 * 
+	 * @param category
+	 * @param listObject
+	 */
+	public void addCategoryWithListObject(Category category,
+			ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
-		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY, category.getName());
-		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT, listObject.getId());
-		
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY,
+				category.getName());
+		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT,
+				listObject.getId());
+
 		db.insert(TABLE_CATEGORIES_WITH_LISTOBJECTS, null, values);
 		db.close();
 	}
-	
-	public void addListObjectsWithTimeAlarm(ListObject listObject, TimeAlarm timeAlarm) {
+
+	/**
+	 * Saves a time alarm to a list object to the database
+	 * 
+	 * @param listObject
+	 * @param timeAlarm
+	 */
+	public void addListObjectsWithTimeAlarm(ListObject listObject,
+			TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
-		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT, listObject.getId());
-		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM, timeAlarm.getId());
-		
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT,
+				listObject.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM,
+				timeAlarm.getId());
+
 		db.insert(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, null, values);
 		db.close();
 	}
-	
-	public void addListObjectsWithGPSAlarm(ListObject listObject, GPSAlarm gpsAlarm) {
+
+	/**
+	 * Saves a GPS alarm to a list object to the database
+	 * 
+	 * @param listObject
+	 * @param gpsAlarm
+	 */
+	public void addListObjectsWithGPSAlarm(ListObject listObject,
+			GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
-		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT, listObject.getId());
-		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM, gpsAlarm.getId());
-		
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT,
+				listObject.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM,
+				gpsAlarm.getId());
+
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
 	}
 	
+	/**
+	 * Saves a time to a list object to the database
+	 * 
+	 * @param listObject
+	 * @param time
+	 */
 	public void addListObjectsWithTime(ListObject listObject, Time time) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
+
+		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_TIME, time.getId());
-		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT, listObject.getId());
-		
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
+				listObject.getId());
+
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
-	} 
-	
+	}
+
+	/**
+	 * Saves a place to a list object to the database
+	 * 
+	 * @param listObject
+	 * @param place
+	 */
 	public void addListObjectsWithPlace(ListObject listObject, Place place) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		ContentValues values = new ContentValues();		
+
+		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE, place.getId());
-		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT, listObject.getId());
-		
+		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT,
+				listObject.getId());
+
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
-	} 
-	
+	}
+
 	/**
 	 * Updates a listObject in the database
 	 * 
@@ -450,7 +533,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a Time in the database
 	 * 
@@ -471,7 +554,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a timed alarm in the database
 	 * 
@@ -485,13 +568,13 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
 
-		int rv = db.update(TABLE_TIME_ALARMS, values, COLUMN_TIME_ALARMS_ID + "=?",
-				new String[] { "" + timeAlarm.getId() });
+		int rv = db.update(TABLE_TIME_ALARMS, values, COLUMN_TIME_ALARMS_ID
+				+ "=?", new String[] { "" + timeAlarm.getId() });
 		db.close();
 
 		return rv;
-	}	
-	
+	}
+
 	/**
 	 * Updates a GPS alarm in the database
 	 * 
@@ -506,8 +589,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
 
-		int rv = db.update(TABLE_GPS_ALARMS, values, COLUMN_GPS_ALARMS_ID + "=?",
-				new String[] { "" + gpsAlarm.getId() });
+		int rv = db.update(TABLE_GPS_ALARMS, values, COLUMN_GPS_ALARMS_ID
+				+ "=?", new String[] { "" + gpsAlarm.getId() });
 		db.close();
 
 		return rv;
@@ -519,51 +602,57 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 *            to update
 	 * @param timeAlarm
-	 * 			  to change to
+	 *            to change to
 	 * @return number of affected rows
 	 */
-	public int updateListObjectWithTimeAlarm(ListObject listObject, TimeAlarm timeAlarm) {
+	public int updateListObjectWithTimeAlarm(ListObject listObject,
+			TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM, timeAlarm.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM,
+				timeAlarm.getId());
 
-		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, values, COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, values,
+				COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a list object's GPS alarm, if it has any.
 	 * 
 	 * @param listObject
 	 *            to update
 	 * @param gpsAlarm
-	 * 			  to change to
+	 *            to change to
 	 * @return number of affected rows
 	 */
-	public int updateListObjectWithGPSAlarm(ListObject listObject, GPSAlarm gpsAlarm) {
+	public int updateListObjectWithGPSAlarm(ListObject listObject,
+			GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM, gpsAlarm.getId());
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM,
+				gpsAlarm.getId());
 
-		int rv = db.update(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, values, COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, values,
+				COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a list object's Time, if it has any.
 	 * 
 	 * @param listObject
 	 *            to update
 	 * @param time
-	 * 			  to change to
+	 *            to change to
 	 * @return number of affected rows
 	 */
 	public int updateListObjectWithTime(ListObject listObject, Time time) {
@@ -572,20 +661,21 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_TIME, time.getId());
 
-		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME, values, COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME, values,
+				COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a list object's place, if it has any.
 	 * 
 	 * @param listObject
 	 *            to update
 	 * @param place
-	 * 			  to change to
+	 *            to change to
 	 * @return number of affected rows
 	 */
 	public int updateListObjectWithPlace(ListObject listObject, Place place) {
@@ -594,10 +684,196 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE, place.getId());
 
-		int rv = db.update(TABLE_LIST_OBJECTS_WITH_PLACE, values, COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_PLACE, values,
+				COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
+	}
+
+	/**
+	 * Deletes a ListObject from the Database
+	 * 
+	 * @param listObject
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteListObject(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a Category from the Database
+	 * 
+	 * @param category
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteCategory(Category category) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_CATEGORIES, COLUMN_CATEGORIES_NAME + "=?",
+				new String[] { "" + category.getName() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a place from the Database
+	 * 
+	 * @param place
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deletePlace(Place place) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_PLACES, COLUMN_PLACES_ID + "=?",
+				new String[] { "" + place.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a time from the Database
+	 * 
+	 * @param time
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteTime(Time time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_TIMES, COLUMN_TIMES_ID + "=?",
+				new String[] { "" + time.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a time alarm from the Database
+	 * 
+	 * @param timeAlarm
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteTimeAlarms(TimeAlarm timeAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_TIME_ALARMS, COLUMN_TIME_ALARMS_ID + "=?",
+				new String[] { "" + timeAlarm.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a GPS alarm from the Database
+	 * 
+	 * @param gpsAlarm
+	 *            to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteGPSAlarm(GPSAlarm gpsAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_GPS_ALARMS, COLUMN_GPS_ALARMS_ID + "=?",
+				new String[] { "" + gpsAlarm.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes a category from a listobject (Note: Does not delete the list
+	 * object nor the category, only the relation)
+	 * 
+	 * @param category
+	 * @param listObject
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteCategoryWithListObject(Category category,
+			ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_CATEGORIES_WITH_LISTOBJECTS,
+				COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + "=? AND "
+						+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT
+						+ "=?", new String[] { "" + category.getName(),
+						"" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes the time alarm from a list object.
+	 * 
+	 * @param listObject
+	 *            to delete time alarm from
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteListObjectWithTimeAlarm(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
+				COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes the GPS alarm from a list object.
+	 * 
+	 * @param listObject
+	 *            to delete GPS alarm from
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteListObjectWithGPSAlarm(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
+				COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes the Time from a list object.
+	 * 
+	 * @param listObject
+	 *            to delete Time from
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteListObjectWithTime(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_TIME,
+				COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+
+	/**
+	 * Deletes the place from a list object.
+	 * 
+	 * @param listObject
+	 *            to delete place from
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteListObjectWithPlace(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_PLACE,
+				COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
 	}
 }
