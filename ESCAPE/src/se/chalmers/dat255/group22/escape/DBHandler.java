@@ -460,6 +460,59 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
 	}
+	
+	// TODO _Maybe_ make a method to return EVERYTHING from dBase. Is doable, but is it usable?
+//	public List<ListObject> getAllListObjectsWithAllRelatedIds() {
+//		SQLiteDatabase db = this.getReadableDatabase();
+//
+//		Cursor cursor = db.rawQuery(
+//				"SELECT a.?, b.? AS ?.name, c.? AS ?.id, d.? AS ?.id, e.? AS ?.id, f.? AS ?.id " 
+//				+ "FROM ? a LEFT JOIN ? b "
+//				+ "ON a.? = b.? " 
+//				+ "LEFT JOIN ? c " 
+//				+ "ON a.? = c.? "
+//				+ "LEFT JOIN ? d " 
+//				+ "ON a.? = d.? "
+//				+ "LEFT JOIN ? e " 
+//				+ "ON a.? = e.? "
+//				+ "LEFT JOIN ? f " 
+//				+ "ON a.? = f.?",
+//				new String[] { TABLE_LIST_OBJECTS, 
+//						TABLE_CATEGORIES_WITH_LISTOBJECTS, 
+//						TABLE_CATEGORIES, 
+//						TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
+//						TABLE_TIME_ALARMS,
+//						TABLE_LIST_OBJECTS_WITH_TIME,
+//						TABLE_TIMES,
+//						TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
+//						TABLE_GPS_ALARMS,
+//						TABLE_LIST_OBJECTS_WITH_PLACE,
+//						TABLE_PLACES,
+//						
+//						
+//						TABLE_LIST_OBJECTS,
+//						TABLE_CATEGORIES_WITH_LISTOBJECTS,
+//						COLUMN_LIST_OBJECTS_ID,
+//						COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT,
+//						TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
+//						COLUMN_LIST_OBJECTS_ID,
+//						COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT,
+//						TABLE_LIST_OBJECTS_WITH_TIME,
+//						COLUMN_LIST_OBJECTS_ID,
+//						COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
+//						TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
+//						COLUMN_LIST_OBJECTS_ID,
+//						COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT,
+//						TABLE_LIST_OBJECTS_WITH_PLACE,
+//						COLUMN_LIST_OBJECTS_ID,
+//						COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT});
+//		if (cursor.moveToFirst()) {
+//			do {
+//				
+//			} while (cursor.moveToNext());
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Updates a listObject in the database
