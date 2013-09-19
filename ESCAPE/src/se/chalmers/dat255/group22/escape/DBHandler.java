@@ -222,7 +222,6 @@ public class DBHandler extends SQLiteOpenHelper {
 	// Creating the tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		db.execSQL(CREATE_LIST_OBJECTS_TABLE);
 		db.execSQL(CREATE_CATEGORIES_TABLE);
 		db.execSQL(CREATE_PLACES_TABLE);
@@ -380,43 +379,225 @@ public class DBHandler extends SQLiteOpenHelper {
 	} 
 	
 	/**
-	 * This will update a ListObject 
-	 * @param listObject to update
+	 * Updates a listObject in the database
+	 * 
+	 * @param listObject
+	 *            to update
 	 * @return the number of updated rows
 	 */
 	public int updateListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
 		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
-		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant()) ? 1:0);
-		
-		int rv = db.update(TABLE_LIST_OBJECTS, values, COLUMN_LIST_OBJECTS_ID + "=?", new String[] {"" + listObject.getId()});
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT,
+				(listObject.isImportant()) ? 1 : 0);
+
+		int rv = db.update(TABLE_LIST_OBJECTS, values, COLUMN_LIST_OBJECTS_ID
+				+ "=?", new String[] { "" + listObject.getId() });
 		db.close();
-		
+
 		return rv;
 	}
-	
+
 	/**
 	 * Updates a category in the database
-	 * @param category to update
-	 * @param oldName, if null it will update the the name that category has; 
-	 * 			if not null it will update the specified named category
+	 * 
+	 * @param category
+	 *            to update
+	 * @param oldName
+	 *            , if null it will update the the name that category has; if
+	 *            not null it will update the specified named category
 	 * @return number of affected rows
 	 */
 	public int updateCategory(Category category, String oldName) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_CATEGORIES_NAME, category.getName());
 		values.put(COLUMN_CATEGORIES_BASE_COLOR, category.getBaseColor());
-		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR, category.getImportantColor());
-		
-		int rv = db.update(TABLE_CATEGORIES, values, COLUMN_CATEGORIES_NAME + "=?", new String[] {oldName});
+		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR,
+				category.getImportantColor());
+
+		int rv = db
+				.update(TABLE_CATEGORIES,
+						values,
+						COLUMN_CATEGORIES_NAME + "=?",
+						new String[] { (oldName != null) ? oldName : category
+								.getName() });
 		db.close();
-		
+
 		return rv;
 	}
 
+	/**
+	 * Updates a place in the database
+	 * 
+	 * @param place
+	 *            to update
+	 * @return number of affected rows
+	 */
+	public int updatePlaces(Place place) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_PLACES_NAME, place.getName());
+
+		int rv = db.update(TABLE_PLACES, values, COLUMN_PLACES_ID + "=?",
+				new String[] { "" + place.getId() });
+		db.close();
+
+		return rv;
+	}
+	
+	/**
+	 * Updates a Time in the database
+	 * 
+	 * @param time
+	 *            to update
+	 * @return number of affected rows
+	 */
+	public int updateTimes(Time time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_TIMES_START_DATE, time.getStartDate().getTime());
+		values.put(COLUMN_TIMES_END_DATE, time.getEndDate().getTime());
+
+		int rv = db.update(TABLE_TIMES, values, COLUMN_TIMES_ID + "=?",
+				new String[] { "" + time.getId() });
+		db.close();
+
+		return rv;
+	}
+	
+	/**
+	 * Updates a timed alarm in the database
+	 * 
+	 * @param timeAlarm
+	 *            to update
+	 * @return number of affected rows
+	 */
+	public int updateTimeAlarms(TimeAlarm timeAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
+
+		int rv = db.update(TABLE_TIME_ALARMS, values, COLUMN_TIME_ALARMS_ID + "=?",
+				new String[] { "" + timeAlarm.getId() });
+		db.close();
+
+		return rv;
+	}	
+	
+	/**
+	 * Updates a GPS alarm in the database
+	 * 
+	 * @param gpsAlarm
+	 *            to update
+	 * @return number of affected rows
+	 */
+	public int updateGPSAlarm(GPSAlarm gpsAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
+		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
+
+		int rv = db.update(TABLE_GPS_ALARMS, values, COLUMN_GPS_ALARMS_ID + "=?",
+				new String[] { "" + gpsAlarm.getId() });
+		db.close();
+
+		return rv;
+	}
+
+	/**
+	 * Updates a list object's time alarm, if it has any.
+	 * 
+	 * @param listObject
+	 *            to update
+	 * @param timeAlarm
+	 * 			  to change to
+	 * @return number of affected rows
+	 */
+	public int updateListObjectWithTimeAlarm(ListObject listObject, TimeAlarm timeAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM, timeAlarm.getId());
+
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, values, COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+
+		return rv;
+	}
+	
+	/**
+	 * Updates a list object's GPS alarm, if it has any.
+	 * 
+	 * @param listObject
+	 *            to update
+	 * @param gpsAlarm
+	 * 			  to change to
+	 * @return number of affected rows
+	 */
+	public int updateListObjectWithGPSAlarm(ListObject listObject, GPSAlarm gpsAlarm) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM, gpsAlarm.getId());
+
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, values, COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+
+		return rv;
+	}
+	
+	/**
+	 * Updates a list object's Time, if it has any.
+	 * 
+	 * @param listObject
+	 *            to update
+	 * @param time
+	 * 			  to change to
+	 * @return number of affected rows
+	 */
+	public int updateListObjectWithTime(ListObject listObject, Time time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_TIME, time.getId());
+
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME, values, COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+
+		return rv;
+	}
+	
+	/**
+	 * Updates a list object's place, if it has any.
+	 * 
+	 * @param listObject
+	 *            to update
+	 * @param place
+	 * 			  to change to
+	 * @return number of affected rows
+	 */
+	public int updateListObjectWithPlace(ListObject listObject, Place place) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE, place.getId());
+
+		int rv = db.update(TABLE_LIST_OBJECTS_WITH_PLACE, values, COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+
+		return rv;
+	}
 }
