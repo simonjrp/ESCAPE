@@ -14,8 +14,11 @@ public class NewTaskActivity extends Activity {
 		setContentView(R.layout.activity_new_task);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.container_new_task, new TaskDetailsFragment()).commit();
+        if(savedInstanceState == null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().add(R.id.container_new_task, new TaskDetailsFragment()).commit();
+        }
+
 	}
 
 	@Override
