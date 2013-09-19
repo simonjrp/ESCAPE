@@ -23,9 +23,11 @@ public class ExpandableListFragment extends Fragment {
 
 	MyListAdapter listAdapter;
 	ExpandableListView expListView;
-	List<String> listDataHeader;
-	List<TaskModel> taskList;
-	HashMap<String, List<TaskModel>> listDataChild;
+	List<String> headerList;
+	List<TaskModel> todayTaskList;
+    List<TaskModel> tomorrowTaskList;
+    List<TaskModel> somedayTaskList;
+	HashMap<String, List<TaskModel>> taskDataMap;
 
 	/**
 	 * Called when the activity containing the fragment is created.
@@ -39,7 +41,7 @@ public class ExpandableListFragment extends Fragment {
 		// get the list data
 		getListData();
 
-		listAdapter = new MyListAdapter(getActivity(), listDataHeader, listDataChild);
+		listAdapter = new MyListAdapter(getActivity(), headerList, taskDataMap);
 
 		// getting the view
 		expListView = (ExpandableListView) getActivity().findViewById(
@@ -66,43 +68,69 @@ public class ExpandableListFragment extends Fragment {
 	 * Preparing the list data
 	 */
 	private void getListData() {
-		listDataHeader = new ArrayList<String>();
-		listDataHeader.add("Today");
-		listDataHeader.add("Tomorrow");
-		listDataHeader.add("Someday");
-		listDataChild = new HashMap<String, List<TaskModel>>();
-		taskList = new ArrayList<TaskModel>();
+		headerList = new ArrayList<String>();
+		headerList.add("Today");
+		headerList.add("Tomorrow");
+		headerList.add("Someday");
+		taskDataMap = new HashMap<String, List<TaskModel>>();
+		todayTaskList = new ArrayList<TaskModel>();
+        tomorrowTaskList = new ArrayList<TaskModel>();
+        somedayTaskList = new ArrayList<TaskModel>();
 
 		// testTask
-		addTask(new TaskModel("Handla kläder", new Time(
+		addTaskToday(new TaskModel("Handla kläder", new Time(
 				System.currentTimeMillis()), new Date(
 				System.currentTimeMillis()), new Location("Nordstan"),
 				"Glöm inte plånboken"));
-		addTask(new TaskModel("Handla skor", new Time(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis()), new Location("Skoaffären"),
-				"Rabattkuponger!!!"));
-		addTask(new TaskModel("Laga mat",
-				new Time(System.currentTimeMillis()), new Date(
-						System.currentTimeMillis()), new Location("Hemma"),
-				"Köttfärssås och spaghetti"));
+		addTaskTomorrow(new TaskModel("Handla skor", new Time(
+                System.currentTimeMillis()), new Date(
+                System.currentTimeMillis()), new Location("Skoaffären"),
+                "Rabattkuponger!!!"));
+		addTaskTomorrow(new TaskModel("Laga mat",
+                new Time(System.currentTimeMillis()), new Date(
+                System.currentTimeMillis()), new Location("Hemma"),
+                "Köttfärssås och spaghetti"));
 
-		listDataChild.put("Today", taskList);
-		listDataChild.put("Tomorrow", taskList);
-		addTask(new TaskModel("Handla mat", new Time(18, 00, 00), new Date(
-				2013, 9, 18), new Location("Nordstan"), "Glöm inte plånboken"));
-		listDataChild.put("Someday", taskList);
+		taskDataMap.put("Today", todayTaskList);
+		taskDataMap.put("Tomorrow", tomorrowTaskList);
+
+		addTaskSomeday(new TaskModel("Handla mat", new Time(System.currentTimeMillis()), new Date(
+                System.currentTimeMillis()), new Location("Nordstan"), "Glöm inte plånboken"));
+
+		taskDataMap.put("Someday", somedayTaskList);
 
 	}
 
+    /**
+     * Add a new task for today.
+     *
+     * @param Task
+     *            the task to add
+     */
+    public void addTaskToday(TaskModel Task) {
+        todayTaskList.add(Task);
+    }
+
 	/**
-	 * Add a task model as a task
+	 * Add a new task for tomorrow.
 	 * 
 	 * @param Task
 	 *            the task to add
 	 */
-	public void addTask(TaskModel Task) {
-		taskList.add(Task);
+	public void addTaskTomorrow(TaskModel Task) {
+		tomorrowTaskList.add(Task);
 	}
+
+    /**
+     * Add a new task for someday.
+     *
+     * @param Task
+     *            the task to add
+     */
+
+    public void addTaskSomeday(TaskModel Task) {
+        somedayTaskList.add(Task);
+    }
+
 
 }
