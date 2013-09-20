@@ -14,10 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * The handler for the SQLite Database
  * 
  * @author Johanna and Mike
-<<<<<<< HEAD
  * 
-=======
->>>>>>> 1c1c1c60236d5dff9231ab29000c38aa227e0145
  */
 public class DBHandler extends SQLiteOpenHelper {
 
