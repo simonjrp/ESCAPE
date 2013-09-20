@@ -1,11 +1,14 @@
 package se.chalmers.dat255.group22.escape;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.TimePicker;
 
 public class NewTaskActivity extends Activity {
 
@@ -42,5 +45,14 @@ public class NewTaskActivity extends Activity {
     }
 
     public void onAddReminder(View v) {
+    	
+    	v.setVisibility(View.INVISIBLE);
+    	RelativeLayout layout = (RelativeLayout) findViewById(R.id.task_details_layout);
+    	
+    	DatePicker datePicker = new DatePicker(this);
+    	//datePicker.setLayoutParams(RelativeLayout.BELOW, R.id.task_add_reminder);
+    	
+    	TimePicker timePicker = new TimePicker(this);
+    	
     }
 }
