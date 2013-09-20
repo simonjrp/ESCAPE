@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class NewTaskActivity extends Activity {
 
@@ -40,4 +41,6 @@ public class NewTaskActivity extends Activity {
         }
     }
 
+    public void onAddReminder(View v) {
+    }
 }

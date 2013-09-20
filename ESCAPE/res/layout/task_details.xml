@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_title"
+        android:paddingTop="16dp"
         android:text="Categories" />
 
     <EditText
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_categories"
+        android:paddingTop="16dp"
         android:gravity="top|left"
         android:hint="Description"
         android:inputType="textMultiLine|textCapSentences"
@@ -38,8 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_description"
+        android:paddingTop="16dp"
         android:hint="Location"
-        android:inputType="textPostalAddress" />
+        android:inputType="text" />
 
     <CheckBox
         android:id="@+id/task_important"
@@ -47,15 +50,31 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_location"
+        android:paddingTop="16dp"
         android:text="Mark as important" />
 
     <View
+        android:id="@+id/separator1"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_important"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:paddingTop="16dp"
         android:background="@android:color/holo_blue_dark" />
+
+    <Button
+        android:id="@+id/task_add_reminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/separator1"
+        android:text="+ Add reminder"
+        android:onClick="onAddReminder"
+        />
+
+
 
 
 </RelativeLayout>
