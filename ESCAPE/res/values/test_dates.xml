@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="test_dates">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>Next Friday</item>
+        <item>Pick a date</item>
+
+    </string-array>
+
+</resources>

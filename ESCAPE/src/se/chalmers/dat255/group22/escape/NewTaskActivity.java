@@ -1,13 +1,18 @@
 package se.chalmers.dat255.group22.escape;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 public class NewTaskActivity extends Activity {
@@ -48,11 +53,36 @@ public class NewTaskActivity extends Activity {
     	
     	v.setVisibility(View.INVISIBLE);
     	RelativeLayout layout = (RelativeLayout) findViewById(R.id.task_details_layout);
-    	
-    	DatePicker datePicker = new DatePicker(this);
-    	//datePicker.setLayoutParams(RelativeLayout.BELOW, R.id.task_add_reminder);
-    	
-    	TimePicker timePicker = new TimePicker(this);
-    	
+
+        Spinner dateSpinner = new Spinner(this);
+        dateSpinner.setId(1);
+
+        // create adapter for date spinner
+        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(this, R.array.test_dates, android.R.layout.simple_spinner_item);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateSpinner.setAdapter(dateAdapter);
+
+        Spinner timeSpinner = new Spinner(this);
+        timeSpinner.setId(2);
+
+        // create adapter for time spinner
+        ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this, R.array.test_times, android.R.layout.simple_spinner_item);
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeSpinner.setAdapter(timeAdapter);
+
+        // set layout parameters for date and time spinners
+        RelativeLayout.LayoutParams paramsDate = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paramsDate.addRule(RelativeLayout.BELOW, R.id.task_reminders_list);
+        paramsDate.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+        RelativeLayout.LayoutParams paramsTime = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paramsTime.addRule(RelativeLayout.BELOW, 1);
+        paramsTime.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+        // add spinners with corresponding parameters
+        layout.addView(dateSpinner, paramsDate);
+        layout.addView(timeSpinner, paramsTime);
+
+
     }
 }
