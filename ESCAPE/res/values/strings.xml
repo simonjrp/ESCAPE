@@ -4,5 +4,8 @@
     <string name="app_name">ESCAPE</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="todayLabel">Today</string>
+    <string name="tomorrowLabel">Tomorrow</string>
+    <string name="somedayLabel">Someday</string>
 
 </resources>
