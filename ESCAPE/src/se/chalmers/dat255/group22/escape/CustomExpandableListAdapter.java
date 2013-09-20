@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -10,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -38,8 +38,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * @param listChildData
 	 *            A list of ListObjects to be associated with a header
 	 */
-	public CustomExpandableListAdapter(Context context, List<String> listDataHeader,
-                                       HashMap<String, List<ListObject>> listChildData) {
+	public CustomExpandableListAdapter(Context context,
+			List<String> listDataHeader,
+			HashMap<String, List<ListObject>> listChildData) {
 		this.context = context;
 		this.headerList = listDataHeader; // today, tomorrow etc
 		this.taskDataMap = listChildData; // task
@@ -83,12 +84,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			@Override
 			public void onClick(View v) {
 				alreadyExpanded = !alreadyExpanded;
-                if (alreadyExpanded) {
-                    //TODO temporary
-                    childLabel.setText(listObject.toString());
-                } else {
-                    childLabel.setText(listObject.getName());
-                }
+				if (alreadyExpanded) {
+					// TODO temporary ugly fix for fist release
+					if (listObject.getComment() == null) {
+						childLabel.setText(listObject.getName() + "\n"
+								+ listObject.toString());
+					} else {
+						childLabel.setText(listObject.getName() + "\n"
+								+ listObject.getComment());
+
+					}
+				} else {
+					childLabel.setText(listObject.getName());
+				}
 			}
 		});
 		return convertView;

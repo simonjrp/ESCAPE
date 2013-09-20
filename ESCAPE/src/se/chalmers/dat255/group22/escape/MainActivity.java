@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -18,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The main activity, to be launched when app is started.
  */
@@ -26,13 +26,13 @@ public class MainActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+	private ActionBarDrawerToggle mDrawerToggle;
 	// Variable to store application name
 	private CharSequence mTitle;
 	// Variable to store current drawer title
 	private CharSequence mDrawerTitle;
 
-    private List<Fragment> fragments;
+	private List<Fragment> fragments;
 	private String[] fragmentTitles;
 
 	@Override
@@ -40,8 +40,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        fragments = new ArrayList<Fragment>();
-
+		fragments = new ArrayList<Fragment>();
 
 		// Saving title of application for later use
 		mTitle = mDrawerTitle = getTitle();
@@ -66,7 +65,7 @@ public class MainActivity extends Activity {
 
 		};
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		fragmentTitles = getResources().getStringArray(R.array.fragments_array);
 
@@ -87,38 +86,36 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        initializeFragments();
+		initializeFragments();
 
-        // begin to show todo fragment
-        if(savedInstanceState == null) {
-            selectFragment(0);
-        }
+		// begin to show todo fragment
+		if (savedInstanceState == null) {
+			selectFragment(0);
+		}
 	}
 
-    private void initializeFragments() {
+	private void initializeFragments() {
 
-        for(int i = 0; i < fragmentTitles.length; i++) {
-            if(i == 0) {
-                Fragment fragment = new ExpandableListFragment();
-                Bundle args = new Bundle();
-                args.putString("TITLE", fragmentTitles[i]);
-                fragment.setArguments(args);
-                fragments.add(fragment);
-            }else {
-                Fragment fragment = new TestFragment();
-                Bundle args = new Bundle();
-                args.putString("TITLE", fragmentTitles[i]);
-                fragment.setArguments(args);
-                fragments.add(fragment);
-            }
+		for (int i = 0; i < fragmentTitles.length; i++) {
+			if (i == 0) {
+				Fragment fragment = new ExpandableListFragment();
+				Bundle args = new Bundle();
+				args.putString("TITLE", fragmentTitles[i]);
+				fragment.setArguments(args);
+				fragments.add(fragment);
+			} else {
+				Fragment fragment = new TestFragment();
+				Bundle args = new Bundle();
+				args.putString("TITLE", fragmentTitles[i]);
+				fragment.setArguments(args);
+				fragments.add(fragment);
+			}
 
-        }
+		}
 
+	}
 
-
-    }
-
-    /**
+	/**
 	 * Method for selecting which fragment to be shown
 	 * 
 	 * @param position
@@ -147,44 +144,44 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        
-     // Handle your other action bar items...
-        
-        switch (item.getItemId()){
-        case R.id.add_task:
-        	Intent intent = new Intent(this, NewTaskActivity.class);
-        	startActivity(intent);
-        }
-        
-      
-        return super.onOptionsItemSelected(item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
 
-    @Override
-    public void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
+		// Handle your other action bar items...
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+		switch (item.getItemId()) {
+			case R.id.add_task :
+				Intent intent = new Intent(this, NewTaskActivity.class);
+				startActivity(intent);
+		}
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content
-        // view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-//        boolean todoFragmentActive = mDrawerList.getCheckedItemPosition() == 0;
-        return super.onPrepareOptionsMenu(menu);
-    }
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		// boolean todoFragmentActive = mDrawerList.getCheckedItemPosition() ==
+		// 0;
+		return super.onPrepareOptionsMenu(menu);
+	}
 }

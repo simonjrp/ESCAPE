@@ -65,14 +65,15 @@
         android:paddingTop="16dp"
         android:background="@android:color/holo_blue_dark" />
 
-    <ListView 
+    <ListView
         android:id="@+id/task_reminders_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/separator1"
-        
+
         ></ListView>
+
     <Button
         android:id="@+id/task_add_reminder"
         android:layout_width="wrap_content"
@@ -80,10 +81,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_reminders_list"
         android:text="+ Add reminder"
-        android:onClick="onAddReminder"
-        />
-
-
+        android:onClick="onAddReminder" />
 
 
 </RelativeLayout>

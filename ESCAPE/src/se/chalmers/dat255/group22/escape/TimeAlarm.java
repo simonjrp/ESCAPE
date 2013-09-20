@@ -3,17 +3,18 @@ package se.chalmers.dat255.group22.escape;
 import java.sql.Date;
 /**
  * Simple object class to represent a time based alarm
+ * 
  * @author Johanna and Mike
- *
+ * 
  */
 public class TimeAlarm {
 
 	private final int id;
 	private Date date;
-	
+
 	public TimeAlarm(int id, Date date) {
 		this.id = id;
-		this.date = date;		
+		this.date = date;
 	}
 
 	/**
@@ -31,13 +32,16 @@ public class TimeAlarm {
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param date
+	 *            the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -45,7 +49,9 @@ public class TimeAlarm {
 		return "TimeAlarm [id=" + id + ", date=" + date + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -56,7 +62,9 @@ public class TimeAlarm {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

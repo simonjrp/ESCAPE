@@ -2,13 +2,14 @@ package se.chalmers.dat255.group22.escape;
 
 /**
  * Simple object class to represent a category.
+ * 
  * @author Johanna & Mike
  */
 public class Category {
-	
+
 	private String name;
-	
-	//TODO Colors are now saved as string, change in further implementations
+
+	// TODO Colors are now saved as string, change in further implementations
 	private String baseColor;
 	private String importantColor;
 
@@ -40,27 +41,32 @@ public class Category {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @param baseColor the baseColor to set
+	 * @param baseColor
+	 *            the baseColor to set
 	 */
 	public void setBaseColor(String baseColor) {
 		this.baseColor = baseColor;
 	}
 
 	/**
-	 * @param importantColor the importantColor to set
+	 * @param importantColor
+	 *            the importantColor to set
 	 */
 	public void setImportantColor(String importantColor) {
 		this.importantColor = importantColor;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -69,7 +75,9 @@ public class Category {
 				+ ", importantColor=" + importantColor + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -80,7 +88,9 @@ public class Category {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

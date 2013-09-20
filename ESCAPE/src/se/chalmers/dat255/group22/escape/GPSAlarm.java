@@ -2,11 +2,10 @@ package se.chalmers.dat255.group22.escape;
 
 public class GPSAlarm {
 
-	
 	private final int id;
 	private double longitude;
 	private double latitude;
-	
+
 	public GPSAlarm(int id, double longitude, double latitude) {
 		this.id = id;
 		this.longitude = longitude;
@@ -35,20 +34,24 @@ public class GPSAlarm {
 	}
 
 	/**
-	 * @param longitude the longitude to set
+	 * @param longitude
+	 *            the longitude to set
 	 */
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
 	/**
-	 * @param latitude the latitude to set
+	 * @param latitude
+	 *            the latitude to set
 	 */
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -57,7 +60,9 @@ public class GPSAlarm {
 				+ ", latitude=" + latitude + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -68,7 +73,9 @@ public class GPSAlarm {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

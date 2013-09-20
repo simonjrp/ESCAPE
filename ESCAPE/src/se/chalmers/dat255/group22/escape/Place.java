@@ -1,15 +1,16 @@
 package se.chalmers.dat255.group22.escape;
 
-/** 
+/**
  * Simple object class to represent a place
+ * 
  * @author Johanna and Mike
- *
+ * 
  */
 public class Place {
-	//TODO Maybe add GPS-coordinates to Place
+	// TODO Maybe add GPS-coordinates to Place
 	private final int id;
 	private String name;
-	
+
 	public Place(int id, String name) {
 		this.id = id;
 		this.name = name;
@@ -30,13 +31,16 @@ public class Place {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -44,7 +48,9 @@ public class Place {
 		return "Place [id=" + id + ", name=" + name + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -55,7 +61,9 @@ public class Place {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
