@@ -98,11 +98,20 @@ public class MainActivity extends Activity {
     private void initializeFragments() {
 
         for(int i = 0; i < fragmentTitles.length; i++) {
-            Fragment fragment = new TestFragment();
-            Bundle args = new Bundle();
-            args.putString("TITLE", fragmentTitles[i]);
-            fragment.setArguments(args);
-            fragments.add(fragment);
+            if(i == 0) {
+                Fragment fragment = new ExpandableListFragment();
+                Bundle args = new Bundle();
+                args.putString("TITLE", fragmentTitles[i]);
+                fragment.setArguments(args);
+                fragments.add(fragment);
+            }else {
+                Fragment fragment = new TestFragment();
+                Bundle args = new Bundle();
+                args.putString("TITLE", fragmentTitles[i]);
+                fragment.setArguments(args);
+                fragments.add(fragment);
+            }
+
         }
 
 
