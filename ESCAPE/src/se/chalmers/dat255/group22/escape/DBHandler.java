@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +14,10 @@ import android.database.sqlite.SQLiteOpenHelper;
  * The handler for the SQLite Database
  * 
  * @author Johanna and Mike
+<<<<<<< HEAD
+ * 
+=======
+>>>>>>> 1c1c1c60236d5dff9231ab29000c38aa227e0145
  */
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -243,21 +248,26 @@ public class DBHandler extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Write onUpgrade such that it reuses old data.
-		
+
 		// Drop older tables if existed
-        db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
 		db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
-        // Create tables again
-        onCreate(db);
+		db.execSQL("DROP TABLE IF EXISTS "
+				+ CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS "
+				+ CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS "
+				+ CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS "
+				+ CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS "
+				+ CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
+		// Create tables again
+		onCreate(db);
 	}
 	
 	// This enables foreign_keys such that "ON DELETE CASCADE" works.
@@ -287,7 +297,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.insert(TABLE_LIST_OBJECTS, null, values);
 		db.close();
 	}
-	
+
 	/**
 	 * Saves a category to the database
 	 * 
@@ -370,8 +380,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	/**
 	 * Saves a category and listobject "pair" to the database
-	 * I.e. the relation between them is saved
-	 * 
+	 * I.e. the relation between them is saved	 * 
 	 * @param category
 	 * @param listObject
 	 */
@@ -428,10 +437,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
 	}
-	
+
 	/**
 	 * Saves a time to a list object to the database
-	 * 
 	 * @param listObject
 	 * @param time
 	 */
@@ -443,13 +451,13 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
 				listObject.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		db.insert(TABLE_LIST_OBJECTS_WITH_TIME, null, values);
 		db.close();
 	}
 
 	/**
-	 * Saves a place to a list object to the database
 	 * 
+	 * Saves a place to a list object to the database
 	 * @param listObject
 	 * @param place
 	 */
@@ -461,9 +469,246 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT,
 				listObject.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		db.insert(TABLE_LIST_OBJECTS_WITH_PLACE, null, values);
 		db.close();
 	}
+
+	/**
+	 * Returns a list with all the ListObjects in the database
+	 * 
+	 * @return
+	 */
+	public List<ListObject> getAllListObjects() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<ListObject> list = new LinkedList<ListObject>();
+		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[] {
+				COLUMN_LIST_OBJECTS_ID, COLUMN_LIST_OBJECTS_NAME,
+				COLUMN_LIST_OBJECTS_COMMENT, COLUMN_LIST_OBJECTS_IMPORTANT },
+				null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				ListObject object = new ListObject(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
+				object.setComment(cursor.getString(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
+				object.setImportant((cursor.getInt(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
+						: false));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+
+	}
+
+	/**
+	 * Returns a list with all the Categories in the database
+	 * 
+	 * @return
+	 */
+	public List<Category> getAllCategories() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<Category> list = new LinkedList<Category>();
+		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
+				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR,
+				COLUMN_CATEGORIES_IMPORTANT_COLOR }, null, null, null, null,
+				null);
+		if (cursor.moveToFirst()) {
+			do {
+				Category object = new Category(
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_IMPORTANT_COLOR)));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+
+	}
+
+	/**
+	 * Returns a list with all the Places in the database
+	 * 
+	 * @return
+	 */
+	public List<Place> getAllPlaces() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<Place> list = new LinkedList<Place>();
+		Cursor cursor = db.query(TABLE_PLACES, new String[] { COLUMN_PLACES_ID,
+				COLUMN_PLACES_NAME }, null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Place object = new Place(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_PLACES_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_PLACES_NAME)));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+
+	}
+
+	/**
+	 * Returns a list with all the Times in the database
+	 * 
+	 * @return
+	 */
+	public List<Time> getAllTimes() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<Time> list = new LinkedList<Time>();
+		Cursor cursor = db.query(TABLE_TIMES, new String[] { COLUMN_TIMES_ID,
+				COLUMN_TIMES_START_DATE, COLUMN_TIMES_END_DATE }, null, null,
+				null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Time object = new Time(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIMES_ID)), new Date(
+						cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_START_DATE))),
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_END_DATE))));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+
+	}
+
+	/**
+	 * Returns a list with all the TimeAlarms in the database
+	 * 
+	 * @return
+	 */
+	public List<TimeAlarm> getAllTimeAlarms() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<TimeAlarm> list = new LinkedList<TimeAlarm>();
+		Cursor cursor = db.query(TABLE_TIME_ALARMS, new String[] {
+				COLUMN_TIME_ALARMS_ID, COLUMN_TIME_ALARMS_DATE }, null, null,
+				null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				TimeAlarm object = new TimeAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIMES_ID)), new Date(
+						cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIME_ALARMS_DATE))));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+
+	/**
+	 * Returns a list with all the GPSAlarms in the database
+	 * 
+	 * @return
+	 */
+	public List<GPSAlarm> getAllGPSAlarms() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
+		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LONGITUDE,
+				COLUMN_GPS_ALARMS_LATITUDE }, null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+
+	/**
+	 * Returns a list of the ListObjects of a Category
+	 * 
+	 * @param category
+	 * @return
+	 */
+
+	public List<ListObject> getListObjects(Category category) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_LIST_OBJECTS_ID + ", b."
+				+ COLUMN_LIST_OBJECTS_NAME + ", b."
+				+ COLUMN_LIST_OBJECTS_COMMENT + ", b."
+				+ COLUMN_LIST_OBJECTS_IMPORTANT + " FROM "
+				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
+				+ TABLE_LIST_OBJECTS + " b" + " ON a."
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = b."
+				+ COLUMN_LIST_OBJECTS_ID + " WHERE "
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = "
+				+ category.getName();
+
+		List<ListObject> list = new LinkedList<ListObject>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				ListObject object = new ListObject(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
+				object.setComment(cursor.getString(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
+				object.setImportant((cursor.getInt(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
+						: false));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+
+	/**
+	 * Returns a list of the Categories to a ListObject
+	 * @param listObject
+	 * @return
+	 */
+	public List<Category> getCategories(ListObject listObject) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_CATEGORIES_NAME + ", b."
+				+ COLUMN_CATEGORIES_BASE_COLOR + ", b."
+				+ COLUMN_CATEGORIES_IMPORTANT_COLOR + " FROM "
+				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
+				+ TABLE_CATEGORIES + " b" + " ON a."
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = b."
+				+ COLUMN_CATEGORIES_NAME + " WHERE "
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = "
+				+ listObject.getName();
+
+		List<Category> list = new LinkedList<Category>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Category object = new Category(
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_IMPORTANT_COLOR)));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+
 	
 	// TODO _Maybe_ make a method to return EVERYTHING from dBase. Is doable, but is it usable?
 //	public List<ListObject> getAllListObjectsWithAllRelatedIds() {
