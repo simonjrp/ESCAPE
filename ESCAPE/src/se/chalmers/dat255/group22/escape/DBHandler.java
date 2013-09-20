@@ -1,7 +1,11 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -513,6 +517,33 @@ public class DBHandler extends SQLiteOpenHelper {
 //		}
 //		return null;
 //	}
+
+	/**
+	 * Returns the listObject with the id specified.
+	 * 
+	 * @param id
+	 * @return ListObject with the id
+	 */
+	public ListObject getListObject(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		
+		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[] {COLUMN_LIST_OBJECTS_ID,  COLUMN_LIST_OBJECTS_NAME,  COLUMN_LIST_OBJECTS_COMMENT,  COLUMN_LIST_OBJECTS_IMPORTANT }, COLUMN_LIST_OBJECTS_ID + "=?", new String[] { id.toString() }, null, null, null);
+		
+		List<ListObject> list = new LinkedList<ListObject>();
+		if (cursor.moveToFirst()) {
+			do {
+				
+				ListObject object = new ListObject(cursor.getInt(cursor.getColumnIndex(COLUMN_LIST_OBJECTS_ID)), cursor.getString(cursor.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
+				object.setComment(cursor.getString(cursor.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
+				object.setImportant(cursor.getInt(cursor.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true : false);
+				
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		
+		return list.get(0);
+	}
+	
 
 	/**
 	 * Updates a listObject in the database
