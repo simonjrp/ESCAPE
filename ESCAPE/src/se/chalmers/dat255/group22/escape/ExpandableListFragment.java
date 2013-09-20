@@ -24,12 +24,12 @@ public class ExpandableListFragment extends Fragment {
 	CustomExpandableListAdapter listAdapter;
 	ExpandableListView expListView;
 
-	List<TaskModel> todayTaskList;
-	List<TaskModel> tomorrowTaskList;
-	List<TaskModel> somedayTaskList;
+	List<ListObject> todayTaskList;
+	List<ListObject> tomorrowTaskList;
+	List<ListObject> somedayTaskList;
 
 	List<String> headerList;
-	HashMap<String, List<TaskModel>> taskDataMap;
+	HashMap<String, List<ListObject>> taskDataMap;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -58,38 +58,23 @@ public class ExpandableListFragment extends Fragment {
 	 * Preparing the dummy list data
 	 */
 	private void getListData() {
+
+
 		headerList = new ArrayList<String>();
 
 		headerList.add(getResources().getString(R.string.todayLabel));
 		headerList.add(getResources().getString(R.string.tomorrowLabel));
 		headerList.add(getResources().getString(R.string.somedayLabel));
 
-		taskDataMap = new HashMap<String, List<TaskModel>>();
-		todayTaskList = new ArrayList<TaskModel>();
-		tomorrowTaskList = new ArrayList<TaskModel>();
-		somedayTaskList = new ArrayList<TaskModel>();
+		taskDataMap = new HashMap<String, List<ListObject>>();
+		todayTaskList = new ArrayList<ListObject>();
+		tomorrowTaskList = new ArrayList<ListObject>();
+		somedayTaskList = new ArrayList<ListObject>();
 
         taskDataMap.put(getResources().getString(R.string.todayLabel), todayTaskList);
         taskDataMap.put(getResources().getString(R.string.tomorrowLabel), tomorrowTaskList);
         taskDataMap.put(getResources().getString(R.string.somedayLabel), somedayTaskList);
 
-		// testTask
-		addTaskToday(new TaskModel("Handla kläder", new Time(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis()), new Location("Nordstan"),
-				"Glöm inte plånboken"));
-		addTaskTomorrow(new TaskModel("Handla skor", new Time(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis()), new Location("Skoaffären"),
-				"Rabattkuponger!!!"));
-		addTaskTomorrow(new TaskModel("Laga mat", new Time(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis()), new Location("Hemma"),
-				"Köttfärssås och spaghetti"));
-		addTaskSomeday(new TaskModel("Gå på Liseberg", new Time(
-				System.currentTimeMillis()), new Date(
-				System.currentTimeMillis()), new Location("Liseberg"),
-				"Köp åkband"));
 
 
 
@@ -98,32 +83,32 @@ public class ExpandableListFragment extends Fragment {
 	/**
 	 * Add a new task for today.
 	 * 
-	 * @param Task
-	 *            the task to add
+	 * @param listObject
+	 *            the listObject to add
 	 */
-	public void addTaskToday(TaskModel Task) {
-		todayTaskList.add(Task);
+	public void addListObjectToday(ListObject listObject) {
+		todayTaskList.add(listObject);
 	}
 
 	/**
 	 * Add a new task for tomorrow.
 	 * 
-	 * @param Task
-	 *            the task to add
+	 * @param listObject
+	 *            the listObject to add
 	 */
-	public void addTaskTomorrow(TaskModel Task) {
-		tomorrowTaskList.add(Task);
+	public void addListObjectTomorrow(ListObject listObject) {
+		tomorrowTaskList.add(listObject);
 	}
 
 	/**
 	 * Add a new task for someday.
 	 * 
-	 * @param Task
-	 *            the task to add
+	 * @param listObject
+	 *            the listObject to add
 	 */
 
-	public void addTaskSomeday(TaskModel Task) {
-		somedayTaskList.add(Task);
+	public void addListObjectSomeday(ListObject listObject) {
+		somedayTaskList.add(listObject);
 	}
 
 }
