@@ -12,11 +12,15 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 /**
- * A ListAdapter that works with TaskModel data
+ * An ExpandableListAdapter that makes use of a
+ * {@link se.chalmers.dat255.group22.escape.TaskModel}.<br>
+ * It also simulates a three level expandable listview by giving each child its
+ * own {@link android.view.View.OnClickListener}.
+ * 
  * 
  * @author tholene, Carl
  */
-public class MyListAdapter extends BaseExpandableListAdapter {
+public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 	// header titles
@@ -25,30 +29,23 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 	private HashMap<String, List<TaskModel>> taskDataMap;
 
 	/**
-	 * Constructor for MyListAdapter
+	 * Create a new custom list adapter.
 	 * 
 	 * @param context
-	 *            The activity
+	 *            The context to make use of
 	 * @param listDataHeader
-	 *            header data
+	 *            A list of header titles
 	 * @param listChildData
-	 *            the taskmodels to add
+	 *            A list of TaskModels to be associated with a header
 	 */
-	public MyListAdapter(Context context, List<String> listDataHeader,
-			HashMap<String, List<TaskModel>> listChildData) {
+	public CustomExpandableListAdapter(Context context, List<String> listDataHeader,
+                                       HashMap<String, List<TaskModel>> listChildData) {
 		this.context = context;
 		this.headerList = listDataHeader; // today, tomorrow etc
 		this.taskDataMap = listChildData; // task
 
 	}
 
-	/**
-	 * Returns the child object
-	 * 
-	 * @param groupPosition
-	 * @param childPosititon
-	 * @return
-	 */
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
 		return this.taskDataMap.get(this.headerList.get(groupPosition)).get(
@@ -60,20 +57,11 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 		return childPosition;
 	}
 
-	/**
-	 * returns the child view
-	 * 
-	 * @param groupPosition
-	 * @param childPosition
-	 * @param isLastChild
-	 * @param convertView
-	 * @param parent
-	 * @return the child view to display
-	 */
 	@Override
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
+		// Get the name of the task to display for each task entry
 		final String childText = ((TaskModel) getChild(groupPosition,
 				childPosition)).getName();
 
@@ -91,11 +79,11 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 
 		childLabel.setText(childText);
 		childLabel.setOnClickListener(new View.OnClickListener() {
-            boolean alreadyExpanded = false;
+			boolean alreadyExpanded = false;
 			@Override
 			public void onClick(View v) {
-                alreadyExpanded = !alreadyExpanded;
-                if(alreadyExpanded) {
+				alreadyExpanded = !alreadyExpanded;
+                if (alreadyExpanded) {
                     childLabel.setText(taskModel.getName() + "\n\n"
                             + taskModel.getTime() + "\n"
                             + taskModel.getDate() + "\n"
@@ -108,34 +96,18 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 		});
 		return convertView;
 	}
-	/**
-	 * Returns the number of children
-	 * 
-	 * @param groupPosition
-	 * @return the number of children
-	 */
+
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		return this.taskDataMap.get(this.headerList.get(groupPosition)).size();
 
 	}
 
-	/**
-	 * Returns an entire group
-	 * 
-	 * @param groupPosition
-	 * @return
-	 */
 	@Override
 	public Object getGroup(int groupPosition) {
 		return this.headerList.get(groupPosition);
 	}
 
-	/**
-	 * Returns the number of groups
-	 * 
-	 * @return number of groups
-	 */
 	@Override
 	public int getGroupCount() {
 		return this.headerList.size();
@@ -146,18 +118,11 @@ public class MyListAdapter extends BaseExpandableListAdapter {
 		return groupPosition;
 	}
 
-	/**
-	 * Returns the view to use for heads
-	 * 
-	 * @param groupPosition
-	 * @param isExpanded
-	 * @param convertView
-	 * @param parent
-	 * @return head view
-	 */
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
+
+		// Get the name of the header to display for each entry
 		String headerTitle = (String) getGroup(groupPosition);
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this.context
