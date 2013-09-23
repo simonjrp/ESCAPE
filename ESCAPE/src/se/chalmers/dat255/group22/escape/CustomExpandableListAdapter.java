@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.HashMap;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -7,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * An ExpandableListAdapter that makes use of a

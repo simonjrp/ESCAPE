@@ -81,7 +81,7 @@ public class NewTaskActivity extends Activity {
 		// create adapter for date spinner
 		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
 				.createFromResource(this, R.array.test_dates,
-                        android.R.layout.simple_spinner_item);
+						android.R.layout.simple_spinner_item);
 		dateAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		dateSpinner.setAdapter(dateAdapter);
@@ -92,7 +92,7 @@ public class NewTaskActivity extends Activity {
 		// create adapter for time spinner
 		ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter
 				.createFromResource(this, R.array.test_times,
-                        android.R.layout.simple_spinner_item);
+						android.R.layout.simple_spinner_item);
 		timeAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		timeSpinner.setAdapter(timeAdapter);
