@@ -37,6 +37,14 @@ public class TestDatabase extends AndroidTestCase {
         assertEquals(lo.getName(), list.get(0).getName());
     }
 
+	
+	public void testRemoveEntry(){
+		ListObject lo = db.getListObject(1l);
+		db.deleteListObject(lo);
+		List<ListObject> list = db.getAllListObjects();
+		assertEquals(true, list.isEmpty());
+		
+	}
 	@Override
 	protected void tearDown() throws Exception {
 		db.close();
