@@ -27,13 +27,15 @@ public class TestDatabase extends AndroidTestCase {
         assertEquals(lo, list.get(0));
     }
 	
-//	public void testEditEntry(){
-//		ListObject lo = new ListObject(1, "Test");
-//		
-//        db.addListObject(lo);
-//        List<ListObject> list = db.getAllListObjects();
-//        assertEquals(lo, list.get(0));
-//    }
+	public void testEditEntry(){ 
+		List<ListObject> list = db.getAllListObjects();
+        ListObject lo = list.get(0);
+        lo.setName("Test2");
+        
+        db.updateListObject(lo);
+        list = db.getAllListObjects();
+        assertEquals(lo.getName(), list.get(0).getName());
+    }
 
 	@Override
 	protected void tearDown() throws Exception {
