@@ -9,6 +9,7 @@
     <string name="title_activity_new_task">Add new task</string>
     <string name="todayLabel">Today</string>
     <string name="tomorrowLabel">Tomorrow</string>
-    <string name="somedayLabel">Someday</string>
+    <string name="thisWeekLabel">Someday</string>
+    <string name="taskHeader">Remember...</string>
 
 </resources>

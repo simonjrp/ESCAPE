@@ -18,6 +18,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+
 /**
  * The main activity, to be launched when app is started.
  */
@@ -98,7 +100,7 @@ public class MainActivity extends Activity {
 
 		for (int i = 0; i < fragmentTitles.length; i++) {
 			if (i == 0) {
-				Fragment fragment = new ExpandableListFragment();
+				Fragment fragment = new ExpandableEventListFragment();
 				Bundle args = new Bundle();
 				args.putString("TITLE", fragmentTitles[i]);
 				fragment.setArguments(args);

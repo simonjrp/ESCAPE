@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.ListFragment;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+
+import se.chalmers.dat255.group22.escape.ListObject;
+import se.chalmers.dat255.group22.escape.R;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -25,8 +28,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	// header titles
 	private List<String> headerList;
-	// child data in format of header title, data container (TaskModel)
-	private HashMap<String, List<ListObject>> taskDataMap;
+	// child data in format of header title, data container (ListObject)
+	private HashMap<String, List<ListObject>> objectDataMap;
 
 	/**
 	 * Create a new custom list adapter.
@@ -43,13 +46,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			HashMap<String, List<ListObject>> listChildData) {
 		this.context = context;
 		this.headerList = listDataHeader; // today, tomorrow etc
-		this.taskDataMap = listChildData; // task
+		this.objectDataMap = listChildData; // task/event
 
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).get(
+		return this.objectDataMap.get(this.headerList.get(groupPosition)).get(
 				childPosititon);
 	}
 
@@ -79,32 +82,16 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				.findViewById(R.id.listTask);
 
 		childLabel.setText(childText);
-		childLabel.setOnClickListener(new View.OnClickListener() {
-			boolean alreadyExpanded = false;
-			@Override
-			public void onClick(View v) {
-				alreadyExpanded = !alreadyExpanded;
-				if (alreadyExpanded) {
-					// TODO temporary ugly fix for fist release
-					if (listObject.getComment() == null) {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.toString());
-					} else {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.getComment());
 
-					}
-				} else {
-					childLabel.setText(listObject.getName());
-				}
-			}
-		});
+        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel);
+        childLabel.setOnClickListener(clickListener);
+
 		return convertView;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).size();
+		return this.objectDataMap.get(this.headerList.get(groupPosition)).size();
 
 	}
 
