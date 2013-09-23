@@ -1,6 +1,9 @@
 package se.chalmers.dat255.group22.escape.test;
 
+import java.util.List;
+
 import se.chalmers.dat255.group22.escape.DBHandler;
+import se.chalmers.dat255.group22.escape.ListObject;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -17,8 +20,20 @@ public class TestDatabase extends AndroidTestCase {
 	}
 	
 	public void testAddEntry(){
-        // Here i have my new database wich is not connected to the standard database of the App
+		ListObject lo = new ListObject(1, "Test");
+		
+        db.addListObject(lo);
+        List<ListObject> list = db.getAllListObjects();
+        assertEquals(lo, list.get(0));
     }
+	
+//	public void testEditEntry(){
+//		ListObject lo = new ListObject(1, "Test");
+//		
+//        db.addListObject(lo);
+//        List<ListObject> list = db.getAllListObjects();
+//        assertEquals(lo, list.get(0));
+//    }
 
 	@Override
 	protected void tearDown() throws Exception {
