@@ -22,9 +22,6 @@ public class MainActivity extends FragmentActivity {
 	// Variable to store application name
 	private CharSequence mTitle;
 
-	private List<Fragment> fragments;
-	private String[] fragmentTitles;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,38 +30,9 @@ public class MainActivity extends FragmentActivity {
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		viewPager = (ViewPager)findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-		
-		fragments = new ArrayList<Fragment>();
 
 		// Saving title of application for later use
 		mTitle = getTitle();
-
-		fragmentTitles = getResources().getStringArray(R.array.fragments_array);
-
-		initializeFragments();
-
-		
-		
-	}
-
-	private void initializeFragments() {
-
-		for (int i = 0; i < fragmentTitles.length; i++) {
-			if (i == 0) {
-				Fragment fragment = new ExpandableListFragment();
-				Bundle args = new Bundle();
-				args.putString("TITLE", fragmentTitles[i]);
-				fragment.setArguments(args);
-				fragments.add(fragment);
-			} else {
-				Fragment fragment = new TestFragment();
-				Bundle args = new Bundle();
-				args.putString("TITLE", fragmentTitles[i]);
-				fragment.setArguments(args);
-				fragments.add(fragment);
-			}
-
-		}
 
 	}
 
