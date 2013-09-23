@@ -1,20 +1,20 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.app.Activity;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The main activity, to be launched when app is started.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 	// Variable to store application name
 	private CharSequence mTitle;
@@ -36,10 +36,8 @@ public class MainActivity extends Activity {
 
 		initializeFragments();
 
-		// begin to show todo fragment
-		if (savedInstanceState == null) {
-			selectFragment(0);
-		}
+		
+		
 	}
 
 	private void initializeFragments() {
@@ -61,20 +59,6 @@ public class MainActivity extends Activity {
 
 		}
 
-	}
-
-	/**
-	 * Method for selecting which fragment to be shown
-	 * 
-	 * @param position
-	 *            The position in the listview of the wanted fragment
-	 */
-	public void selectFragment(int position) {
-
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragments.get(position)).commit();
-		setTitle(fragmentTitles[position]);
 	}
 
 	@Override
