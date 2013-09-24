@@ -7,20 +7,25 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The main activity, to be launched when app is started.
  */
 public class MainActivity extends FragmentActivity {
 
-	SectionsPagerAdapter pagerAdapter;
-	ViewPager viewPager;
+	private SectionsPagerAdapter pagerAdapter;
+	private ViewPager viewPager;
+    private String[] fragmentTitles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        fragmentTitles = getResources().getStringArray(R.id.fragment_title);
+		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragmentTitles);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
 

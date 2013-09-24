@@ -14,6 +14,7 @@ import java.util.List;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 	// List of all fragments in the swipeable viewpager
+    private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
 
 	/**
@@ -22,26 +23,23 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 * @param fragmentManager
 	 *            The fragment manager that's used for fragment transactions
 	 */
-	public SectionsPagerAdapter(FragmentManager fragmentManager) {
+	public SectionsPagerAdapter(FragmentManager fragmentManager, String[] fragmentTitles) {
 		super(fragmentManager);
 
-		// Create all wanted fragments and add them to fragmentList here
-		fragmentList = new ArrayList<Fragment>();
-		fragmentList.add(new ExpandableListFragment());
+        this.fragmentTitles = fragmentTitles;
 
-		// TODO temporary test fragments
-		TestFragment testFragment1 = new TestFragment();
-		Bundle bundle1 = new Bundle();
-		bundle1.putString("TITLE", "Test 1");
-		testFragment1.setArguments(bundle1);
-
-		TestFragment testFragment2 = new TestFragment();
-		Bundle bundle2 = new Bundle();
-		bundle2.putString("TITLE", "Test 2");
-		testFragment2.setArguments(bundle2);
-
-		fragmentList.add(testFragment1);
-		fragmentList.add(testFragment2);
+        for(int i = 0; i < fragmentTitles.length; i++) {
+            if(i == 0) {
+                ExpandableListFragment listFragment = new ExpandableListFragment();
+                fragmentList.add(listFragment);
+            }else {
+                TestFragment testFragment = new TestFragment();
+                Bundle args = new Bundle();
+                args.putString("TITLE", fragmentTitles[i]);
+                testFragment.setArguments(args);
+                fragmentList.add(testFragment);
+            }
+        }
 	}
 
 	@Override
