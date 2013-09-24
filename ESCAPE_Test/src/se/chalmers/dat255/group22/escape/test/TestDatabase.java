@@ -9,6 +9,7 @@ import se.chalmers.dat255.group22.escape.GPSAlarm;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.Place;
 import se.chalmers.dat255.group22.escape.Time;
+import se.chalmers.dat255.group22.escape.TimeAlarm;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -134,6 +135,7 @@ public class TestDatabase extends AndroidTestCase {
 		assertEquals(true, list.isEmpty());
 	}
 	
+	// GPS alarm
 	public void testAddGPSAlarm() {
 		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
 		db.addGPSAlarm(gps);
@@ -164,6 +166,38 @@ public class TestDatabase extends AndroidTestCase {
 		
 		List<GPSAlarm> list = db.getAllGPSAlarms();
 		assertEquals(1, list.size());
+	}
+
+	public void testAddTimeAlarm() {
+		Date date = new Date(1000l);
+		TimeAlarm ta = new TimeAlarm(1, date);
+		db.addTimeAlarm(ta);
+		
+		List<TimeAlarm> list = db.getAllTimeAlarms();
+		assertEquals(date, list.get(0).getDate());
+	}
+	
+	public void testEditTimeAlarm() {
+		Date date = new Date(1000l);
+		TimeAlarm ta = new TimeAlarm(1, date);
+		db.addTimeAlarm(ta);
+		
+		ta.getDate().setTime(2000l);
+		db.updateTimeAlarm(ta);
+		
+		List<TimeAlarm> list = db.getAllTimeAlarms();
+		assertEquals(date, list.get(0).getDate());
+	}
+	
+	public void testRemoveTimeAlarm() {
+		Date date = new Date(1000l);
+		TimeAlarm ta = new TimeAlarm(1, date);
+		db.addTimeAlarm(ta);
+		
+		db.deleteTimeAlarm(ta);
+		
+		List<TimeAlarm> list = db.getAllTimeAlarms();
+		assertEquals(true, list.isEmpty());
 	}
 		
 	@Override

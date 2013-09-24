@@ -906,7 +906,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 *            to update
 	 * @return number of affected rows
 	 */
-	public int updateTimeAlarms(TimeAlarm timeAlarm) {
+	public int updateTimeAlarm(TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -1107,7 +1107,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 *            to delete
 	 * @return true if anything was deleted, false otherwise
 	 */
-	public boolean deleteTimeAlarms(TimeAlarm timeAlarm) {
+	public boolean deleteTimeAlarm(TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_TIME_ALARMS, COLUMN_TIME_ALARMS_ID + "=?",
