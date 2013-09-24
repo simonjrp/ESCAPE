@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 
 /**
  * The main activity, to be launched when app is started.
@@ -105,7 +106,13 @@ public class MainActivity extends Activity {
 				args.putString("TITLE", fragmentTitles[i]);
 				fragment.setArguments(args);
 				fragments.add(fragment);
-			} else {
+			} else if (i == 1) {
+                Fragment fragment = new TaskListFragment();
+                Bundle args = new Bundle();
+                args.putString("TITLE", fragmentTitles[i]);
+                fragment.setArguments(args);
+                fragments.add(fragment);
+            } else {
 				Fragment fragment = new TestFragment();
 				Bundle args = new Bundle();
 				args.putString("TITLE", fragmentTitles[i]);
