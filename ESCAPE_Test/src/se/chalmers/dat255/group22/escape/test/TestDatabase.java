@@ -10,6 +10,8 @@ import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.Place;
 import se.chalmers.dat255.group22.escape.Time;
 import se.chalmers.dat255.group22.escape.TimeAlarm;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -168,6 +170,7 @@ public class TestDatabase extends AndroidTestCase {
 		assertEquals(1, list.size());
 	}
 
+	// Time Alarm
 	public void testAddTimeAlarm() {
 		Date date = new Date(1000l);
 		TimeAlarm ta = new TimeAlarm(1, date);
@@ -199,6 +202,32 @@ public class TestDatabase extends AndroidTestCase {
 		List<TimeAlarm> list = db.getAllTimeAlarms();
 		assertEquals(true, list.isEmpty());
 	}
+	
+	// Testing CategoriesWithListObject
+	public void testAddCategoryWithListObject() {
+		Category category = new Category("test", "color", "color2");
+		ListObject lo = new ListObject(1, "listobject");
+		db.addCategory(category);
+		db.addListObject(lo);
+		
+		db.addCategoryWithListObject(category, lo);
+		
+		List<Category> list = db.getCategories(lo);
+		List<ListObject> list2 = db.getListObjects(category);
+		assertEquals(category, list.get(0));
+		assertEquals(lo, list2.get(0));
+	}
+	
+	// Testing ListObjectWithTimeAlarm
+	
+	
+/*	public void addListObjectsWithTimeAlarm(ListObject listObject,
+			TimeAlarm timeAlarm)
+	public void addListObjectsWithGPSAlarm(ListObject listObject,
+			GPSAlarm gpsAlarm)
+	public void addListObjectsWithTime(ListObject listObject, Time time)
+	public void addListObjectsWithPlace(ListObject listObject, Place place)*/
+	
 		
 	@Override
 	protected void tearDown() throws Exception {

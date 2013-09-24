@@ -656,9 +656,9 @@ public class DBHandler extends SQLiteOpenHelper {
 				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
 				+ TABLE_LIST_OBJECTS + " b" + " ON a."
 				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = b."
-				+ COLUMN_LIST_OBJECTS_ID + " WHERE "
-				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = "
-				+ category.getName();
+				+ COLUMN_LIST_OBJECTS_ID + " WHERE a."
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = '"
+				+ category.getName() + "'";
 
 		List<ListObject> list = new LinkedList<ListObject>();
 		Cursor cursor = db.rawQuery(raw, null);
@@ -689,15 +689,25 @@ public class DBHandler extends SQLiteOpenHelper {
 	public List<Category> getCategories(ListObject listObject) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
+//		String raw = "SELECT b." + COLUMN_LIST_OBJECTS_ID + ", b."
+//				+ COLUMN_LIST_OBJECTS_NAME + ", b."
+//				+ COLUMN_LIST_OBJECTS_COMMENT + ", b."
+//				+ COLUMN_LIST_OBJECTS_IMPORTANT + " FROM "
+//				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
+//				+ TABLE_LIST_OBJECTS + " b" + " ON a."
+//				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = b."
+//				+ COLUMN_LIST_OBJECTS_ID + " WHERE a."
+//				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = '"
+//				+ category.getName() + "'";
 		String raw = "SELECT b." + COLUMN_CATEGORIES_NAME + ", b."
 				+ COLUMN_CATEGORIES_BASE_COLOR + ", b."
 				+ COLUMN_CATEGORIES_IMPORTANT_COLOR + " FROM "
 				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
 				+ TABLE_CATEGORIES + " b" + " ON a."
 				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = b."
-				+ COLUMN_CATEGORIES_NAME + " WHERE "
-				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = "
-				+ listObject.getName();
+				+ COLUMN_CATEGORIES_NAME + " WHERE a."
+				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = '"
+				+ listObject.getId() + "'";
 
 		List<Category> list = new LinkedList<Category>();
 		Cursor cursor = db.rawQuery(raw, null);
