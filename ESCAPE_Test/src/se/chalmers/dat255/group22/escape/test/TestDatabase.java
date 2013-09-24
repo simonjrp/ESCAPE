@@ -32,6 +32,9 @@ public class TestDatabase extends AndroidTestCase {
     }
 	
 	public void testEditEntry(){ 
+		ListObject lo2 = new ListObject(1, "Test");
+		db.addListObject(lo2);
+		
 		List<ListObject> list = db.getAllListObjects();
         ListObject lo = list.get(0);
         lo.setName("Test2");
@@ -43,6 +46,9 @@ public class TestDatabase extends AndroidTestCase {
 
 	
 	public void testRemoveEntry(){
+		ListObject lo2 = new ListObject(1, "Test");
+		db.addListObject(lo2);
+		
 		ListObject lo = db.getListObject(1l);
 		db.deleteListObject(lo);
 		List<ListObject> list = db.getAllListObjects();
