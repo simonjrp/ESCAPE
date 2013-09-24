@@ -5,6 +5,7 @@ import java.util.List;
 
 import se.chalmers.dat255.group22.escape.Category;
 import se.chalmers.dat255.group22.escape.DBHandler;
+import se.chalmers.dat255.group22.escape.GPSAlarm;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.Place;
 import se.chalmers.dat255.group22.escape.Time;
@@ -131,6 +132,38 @@ public class TestDatabase extends AndroidTestCase {
 		db.deleteTime(time);
 		List<Time> list = db.getAllTimes();
 		assertEquals(true, list.isEmpty());
+	}
+	
+	public void testAddGPSAlarm() {
+		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
+		db.addGPSAlarm(gps);
+		
+		List<GPSAlarm> list = db.getAllGPSAlarms();
+		assertEquals(1223.2222, list.get(0).getLongitude());
+		assertEquals(1333.333, list.get(0).getLatitude());
+	}
+	
+	public void testEditGPSAlarm() {
+		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
+		db.addGPSAlarm(gps);
+		
+		gps.setLatitude(113);
+		db.updateGPSAlarm(gps);
+		
+		List<GPSAlarm> list = db.getAllGPSAlarms();
+		assertEquals(113.0, list.get(0).getLatitude());
+	}
+	
+	public void testRemoveGPSAlarm() {
+		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
+		GPSAlarm gps2 = new GPSAlarm(2, 33, 22);
+		db.addGPSAlarm(gps);
+		db.addGPSAlarm(gps2);
+		
+		db.deleteGPSAlarm(gps);
+		
+		List<GPSAlarm> list = db.getAllGPSAlarms();
+		assertEquals(1, list.size());
 	}
 		
 	@Override
