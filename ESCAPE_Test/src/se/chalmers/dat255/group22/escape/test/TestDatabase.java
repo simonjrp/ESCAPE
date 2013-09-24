@@ -33,8 +33,8 @@ public class TestDatabase extends AndroidTestCase {
 	public void testEditEntry(){ 
 		ListObject lo = new ListObject(1, "Test");
         db.addListObject(lo);
-		lo.setName("Test2");        
-        db.updateListObject(lo);
+		lo.setName("Test2");        		
+		db.updateListObject(lo);
         List<ListObject> list = db.getAllListObjects();
         assertEquals(lo.getName(), list.get(0).getName());
     }

@@ -200,7 +200,7 @@ public class ListObject {
 			return false;
 		}
 		ListObject other = (ListObject) obj;
-		if (id != other.id) {
+		if (id != other.getId()) {
 			return false;
 		}
 		return true;
