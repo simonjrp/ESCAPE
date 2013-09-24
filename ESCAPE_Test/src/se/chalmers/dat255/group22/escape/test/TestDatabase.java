@@ -218,6 +218,21 @@ public class TestDatabase extends AndroidTestCase {
 		assertEquals(lo, list2.get(0));
 	}
 	
+	public void testRemoveCategoryWithListObject() {
+		Category category = new Category("test", "color", "color2");
+		ListObject lo = new ListObject(1, "listobject");
+		db.addCategory(category);
+		db.addListObject(lo);
+		
+		db.addCategoryWithListObject(category, lo);
+		db.deleteCategoryWithListObject(category, lo);
+		
+		List<Category> list = db.getCategories(lo);
+		List<ListObject> list2 = db.getListObjects(category);
+		assertEquals(true, list.isEmpty());
+		assertEquals(true, list2.isEmpty());
+	}
+	
 	// Testing ListObjectWithTimeAlarm
 	
 	// Testing ListObjectsWithGPSAlarm
@@ -235,6 +250,26 @@ public class TestDatabase extends AndroidTestCase {
 		assertEquals(gpsAlarm, list.get(0));
 	}
 	
+	public void testEditListObjectsWithGPSAlarm() {
+		double longitude1 = 1d;
+		double longitude2 = 2d;
+		double latitude1 = 3d;
+		double latitude2 = 4d;
+		GPSAlarm gpsAlarm1 = new GPSAlarm(1, longitude1, latitude1);
+		GPSAlarm gpsAlarm2 = new GPSAlarm(1, longitude2, latitude2);
+		ListObject lo = new ListObject(1, "listobject");
+		
+		db.addGPSAlarm(gpsAlarm1);
+		db.addGPSAlarm(gpsAlarm2);
+		db.addListObject(lo);
+		
+		db.addListObjectsWithGPSAlarm(lo, gpsAlarm1);
+		
+		db.updateListObjectWithGPSAlarm(lo, gpsAlarm2);
+		assertEquals(gpsAlarm2, getGPSAlarm(lo));
+		
+	}
+	
 	// Testing ListObjectsWithTime
 	public void testAddListObjectsWithTime() {
 		Date date1 = new Date(1l);
@@ -246,8 +281,32 @@ public class TestDatabase extends AndroidTestCase {
 		
 		db.addListObjectsWithTime(lo, time);
 		//TODO saknas getmetoder
-		List<Time> list = db.getTimes(lo);
+		List<Time> list = db.getTime(lo);
 		assertEquals(time, list.get(0));
+		
+		
+		
+	}
+	
+	public void testEditListObjectsWithTime() {
+		Date date1 = new Date(1l);
+		Date date2 = new Date(2l);
+		Date date3 = new Date(3l);
+		Date date4 = new Date(4l);
+		Time time1 = new Time(1, date1, date2);	
+		Time time2 = new Time(1, date3, date4);
+		ListObject lo = new ListObject(1, "listobject");
+		
+        db.addTime(time1);
+        db.addTime(time2);
+        db.addListObject(lo);
+        
+        db.addListObjectsWithTime(lo, time1);
+        
+        db.updateListObjectWithTime(lo, time2);
+		
+        assertEquals(time2, getTime(lo));
+		
 	}
 	
 	// Testing ListObjectsWithPlace
@@ -262,6 +321,21 @@ public class TestDatabase extends AndroidTestCase {
 		assertEquals(place, list.get(0));
 	}
 
+	public void testEditListObjectsWithPlace() {
+		Place place1 = new Place(1, "Test1");
+		Place place2 = new Place(1, "Test2");
+		ListObject lo = new ListObject(1, "listobject");
+		
+		db.addPlace(place1);
+		db.addPlace(place2);
+		db.addListObject(lo);
+        
+        db.addListObjectsWithPlace(lo, place1);        
+        db.updateListObjectWithPlace(lo, place2);
+		
+        assertEquals(place2, getPlace(lo));
+		
+	}
 	
 		
 	@Override
