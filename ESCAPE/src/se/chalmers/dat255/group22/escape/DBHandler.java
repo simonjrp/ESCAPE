@@ -1,14 +1,14 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.sql.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * The handler for the SQLite Database
@@ -851,8 +851,8 @@ public class DBHandler extends SQLiteOpenHelper {
 				category.getImportantColor());
 
 		int rv = db.update(TABLE_CATEGORIES, values, COLUMN_CATEGORIES_NAME
-                + "=?",
-                new String[]{(oldName != null) ? oldName : category.getName()});
+				+ "=?",
+				new String[]{(oldName != null) ? oldName : category.getName()});
 		db.close();
 
 		return rv;
