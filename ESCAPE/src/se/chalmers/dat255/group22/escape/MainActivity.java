@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        fragmentTitles = getResources().getStringArray(R.id.fragment_title);
+        fragmentTitles = getResources().getStringArray(R.array.fragments_array);
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragmentTitles);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
