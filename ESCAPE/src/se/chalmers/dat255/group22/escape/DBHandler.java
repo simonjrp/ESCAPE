@@ -406,7 +406,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param timeAlarm
 	 */
-	public void addListObjectsWithTimeAlarm(ListObject listObject,
+	public void addListObjectWithTimeAlarm(ListObject listObject,
 			TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -426,7 +426,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param gpsAlarm
 	 */
-	public void addListObjectsWithGPSAlarm(ListObject listObject,
+	public void addListObjectWithGPSAlarm(ListObject listObject,
 			GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -465,7 +465,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param place
 	 */
-	public void addListObjectsWithPlace(ListObject listObject, Place place) {
+	public void addListObjectWithPlace(ListObject listObject, Place place) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -804,7 +804,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 
-		return list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	/**
@@ -838,7 +838,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 
-		return list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	/**
@@ -875,7 +875,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 
-		return list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	/**
@@ -912,7 +912,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 
-		return list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
 	
 	/**
@@ -946,7 +946,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 
-		return list.get(0);
+		return list.isEmpty() ? null : list.get(0);
 	}
 
 	/**
