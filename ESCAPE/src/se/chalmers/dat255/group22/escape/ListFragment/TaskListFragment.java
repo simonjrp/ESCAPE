@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
- * A fragment displaying an expandable list with tasks.<br>
+ * A fragment displaying a list with tasks.
  * A task is different from an event such that a task does not have a set time
  * while an event does.
  * 
@@ -30,6 +30,7 @@ public class TaskListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+        // Initiate the lists and set the adapter to use
 		taskList = new ArrayList<ListObject>();
 		ourListAdapter = new CustomListAdapter(getActivity(), taskList);
 		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
@@ -39,32 +40,22 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater
-				.inflate(R.layout.task_list, container, false);
+		return inflater.inflate(R.layout.task_list, container, false);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+
+        // Fetch tasks from database
 		DBHandler dbHandler = new DBHandler(getActivity());
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
 		for (ListObject lo : listObjects) {
+            // we only want tasks in this fragment (objects without a specific time)
 			if (lo.getTime() == null) {
 				addListObject(lo);
 			}
 		}
-
-		// TODO Ugly code for 'updating' the expandable list view. Without this,
-		// if a category list is expanded before adding a new activity, you
-		// have to collapse and expand that category list to be able to see the
-		// newly added item.
-		/*
-		 * ExpandableListView expLv = (ExpandableListView) getActivity()
-		 * .findViewById(R.id.expTaskList); for (int i = 0; i <
-		 * listAdapter.getGroupCount(); i++) { if (expLv.isGroupExpanded(i)) {
-		 * expLv.collapseGroup(i); expLv.expandGroup(i); } }
-		 */
-
 	}
 
 	/**
