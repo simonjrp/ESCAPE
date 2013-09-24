@@ -1,9 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,12 +11,9 @@ import android.view.MenuItem;
  * The main activity, to be launched when app is started.
  */
 public class MainActivity extends FragmentActivity {
-	
+
 	SectionsPagerAdapter pagerAdapter;
 	ViewPager viewPager;
-	
-	// Variable to store application name
-	private CharSequence mTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +21,8 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		viewPager = (ViewPager)findViewById(R.id.view_pager);
+		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-
-		// Saving title of application for later use
-		mTitle = getTitle();
 
 	}
 
