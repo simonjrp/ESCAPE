@@ -257,7 +257,6 @@ public class TestDatabase extends AndroidTestCase {
 		db.addListObject(lo);
 		
 		db.addListObjectsWithGPSAlarm(lo, gpsAlarm);
-		//TODO saknas getmetoder
 		GPSAlarm test = db.getGPSAlarm(lo);
 		assertEquals(gpsAlarm, test);
 	}
@@ -278,7 +277,7 @@ public class TestDatabase extends AndroidTestCase {
 		db.addListObjectsWithGPSAlarm(lo, gpsAlarm1);
 		
 		db.updateListObjectWithGPSAlarm(lo, gpsAlarm2);
-		assertEquals(gpsAlarm2, getGPSAlarm(lo));
+		assertEquals(gpsAlarm2, db.getGPSAlarm(lo));
 		
 	}
 	
@@ -292,9 +291,8 @@ public class TestDatabase extends AndroidTestCase {
 		db.addListObject(lo);
 		
 		db.addListObjectsWithTime(lo, time);
-		//TODO saknas getmetoder
-		List<Time> list = db.getTime(lo);
-		assertEquals(time, list.get(0));
+		Time test = db.getTime(lo);
+		assertEquals(time, test);
 		
 		
 		
@@ -317,7 +315,7 @@ public class TestDatabase extends AndroidTestCase {
         
         db.updateListObjectWithTime(lo, time2);
 		
-        assertEquals(time2, getTime(lo));
+        assertEquals(time2, db.getTime(lo));
 		
 	}
 	
@@ -359,8 +357,19 @@ public class TestDatabase extends AndroidTestCase {
         db.addListObjectsWithPlace(lo, place1);        
         db.updateListObjectWithPlace(lo, place2);
 		
-        assertEquals(place2, getPlace(lo));
+        assertEquals(place2, db.getPlace(lo));
+	}
+	
+	// Testing ListObjectsWithPlace
+	public void testAddListObjectsWithPlace() {
+		Place place = new Place(1, "Test");
+		db.addPlace(place);
+		ListObject lo = new ListObject(1, "listobject");
+		db.addListObject(lo);
 		
+		db.addListObjectsWithPlace(lo, place);
+		Place test = db.getPlace(lo);
+		assertEquals(place, test);
 	}
 	
 		

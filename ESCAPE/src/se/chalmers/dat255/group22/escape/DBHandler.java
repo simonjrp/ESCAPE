@@ -877,6 +877,77 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.get(0);
 	}
+	
+	/**
+	 * Returns the Time for a list object
+	 * 
+	 * @param listObject
+	 * @return Time for the listObject
+	 */
+	public Time getTime(ListObject listObject) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_TIMES_ID + ", b."
+				+ COLUMN_TIMES_START_DATE + ", b."
+				+ COLUMN_TIMES_END_DATE + " FROM "
+				+ TABLE_LIST_OBJECTS_WITH_TIME + " a" + " INNER JOIN "
+				+ TABLE_TIMES + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_TIME+ " = b."
+				+ COLUMN_TIMES_ID + " WHERE a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + " = '"
+				+ listObject.getId() + "'";
+
+		List<Time> list = new LinkedList<Time>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Time object = new Time(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIMES_ID)),
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_START_DATE))),
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_END_DATE))));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.get(0);
+	}
+	
+	/**
+	 * Returns the Place for a list object
+	 * 
+	 * @param listObject
+	 * @return Place for the listObject
+	 */
+	public Place getPlace(ListObject listObject) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_PLACES_ID + ", b."
+				+ COLUMN_PLACES_NAME + " FROM "
+				+ TABLE_LIST_OBJECTS_WITH_PLACE + " a" + " INNER JOIN "
+				+ TABLE_PLACES + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE+ " = b."
+				+ COLUMN_PLACES_ID + " WHERE a."
+				+ COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + " = '"
+				+ listObject.getId() + "'";
+
+		List<Place> list = new LinkedList<Place>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				Place object = new Place(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_PLACES_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_PLACES_NAME)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.get(0);
+	}
 
 	/**
 	 * Updates a listObject in the database
