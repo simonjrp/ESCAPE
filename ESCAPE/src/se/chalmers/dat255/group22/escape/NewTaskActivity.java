@@ -51,18 +51,40 @@ public class NewTaskActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
+
+        /* Set data of the object */
+
+        // Title
 		EditText taskTitle = (EditText) findViewById(R.id.task_title);
 		String name = taskTitle.getText().toString();
 
+        // Description
 		EditText taskDesc = (EditText) findViewById(R.id.task_description);
 		String comment = taskDesc.getText().toString();
 
+        // Important
 		CheckBox important = (CheckBox) findViewById(R.id.task_important);
 		boolean importantTask = important.isChecked();
+
+        // Category
+        Spinner categories = (Spinner) findViewById(R.id.task_categories);
+        String category = categories.getSelectedItem().toString();
+
+        // Location
+        EditText taskLocation = (EditText) findViewById(R.id.task_location);
+        String location = taskLocation.getText().toString();
+
+        // Time
+
+        // Time Alarm
+
+        // GPS Alarm
 
 		ListObject lo = new ListObject(1, name);
 		lo.setComment(comment);
 		lo.setImportant(importantTask);
+        lo.addToCategory(new Category(category, "Random Color", "Another random Color"));
+        lo.setPlace(new Place(1, location));
 
 		DBHandler dbHandler = new DBHandler(this);
 		dbHandler.addListObject(lo);

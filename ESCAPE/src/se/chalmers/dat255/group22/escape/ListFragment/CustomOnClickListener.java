@@ -1,6 +1,9 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
 import se.chalmers.dat255.group22.escape.ListObject;
+import se.chalmers.dat255.group22.escape.R;
+
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +16,7 @@ import android.widget.TextView;
 public class CustomOnClickListener implements View.OnClickListener {
 
 	private TextView childLabel;
+    private TextView taskData;
 	private ListObject listObject;
 	private boolean isExpanded;
 
@@ -25,9 +29,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 * @param childLabel
 	 *            the TextView that the listener will be added to.
 	 */
-	public CustomOnClickListener(ListObject listObject, TextView childLabel) {
+	public CustomOnClickListener(ListObject listObject, TextView childLabel, TextView taskData) {
 		this.listObject = listObject;
 		this.childLabel = childLabel;
+        this.taskData = taskData;
 		isExpanded = false;
 	}
 
@@ -35,17 +40,18 @@ public class CustomOnClickListener implements View.OnClickListener {
 	public void onClick(View v) {
 		isExpanded = !isExpanded;
 		if (isExpanded) {
-			// TODO temporary ugly fix for fist release
-			if (listObject.getComment() == null) {
-				childLabel.setText(listObject.getName() + "\n"
-						+ listObject.toString());
-			} else {
-				childLabel.setText(listObject.getName() + "\n"
-						+ listObject.getComment());
+            taskData.setVisibility(View.VISIBLE);
+            taskData.setHeight(6*childLabel.getHeight()/8);
+            taskData.setText(
 
-			}
+                    (listObject.getComment() != null? listObject.getComment(): "") + "\n" +
+                    (listObject.getPlace() != null? listObject.getPlace().getName() : "" ) + "\n"
+
+            );
+            taskData.setBackgroundColor(listObject.isImportant()? Color.CYAN : Color.BLUE);
 		} else {
-			childLabel.setText(listObject.getName());
+            taskData.setVisibility(View.INVISIBLE);
+            taskData.setHeight(0);
 		}
 	}
 

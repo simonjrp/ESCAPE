@@ -60,14 +60,19 @@ public class ExpandableEventListFragment extends Fragment {
 		super.onResume();
 		DBHandler dbHandler = new DBHandler(getActivity());
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		for (ListObject lo : listObjects) {
-			addListObjectToday(lo);
-		}
+
+        for(ListObject lo:listObjects) {
+            // we only want evens in this fragment (objects with a set time)
+            if(lo.getTime() != null) {
+
+            }
+        }
 
 		// TODO Ugly code for 'updating' the expandable list view. Without this,
 		// if a category list is expanded before adding a new activity, you
 		// have to collapse and expand that category list to be able to see the
 		// newly added item.
+
 		ExpandableListView expLv = (ExpandableListView) getActivity()
 				.findViewById(R.id.expEventList);
 		for (int i = 0; i < listAdapter.getGroupCount(); i++) {
@@ -76,6 +81,7 @@ public class ExpandableEventListFragment extends Fragment {
 				expLv.expandGroup(i);
 			}
 		}
+        expLv.expandGroup(0, true);
 
 	}
 
@@ -101,6 +107,7 @@ public class ExpandableEventListFragment extends Fragment {
 		eventDataMap.put(getResources().getString(R.string.thisWeekLabel),
 				thisWeekEventList);
 
+
 	}
 
 	/**
@@ -110,20 +117,20 @@ public class ExpandableEventListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObjectToday(ListObject listObject) {
-		boolean alreadyExists = false;
 
-		// TODO ugly, temporary code so that the same listobject doesn't get
-		// added miltiple times
-		for (ListObject lo : todayEventList) {
-			if (listObject.getName().equals(lo.getName())) {
-				alreadyExists = true;
-			}
-		}
+        boolean alreadyExists = false;
 
-		if (!alreadyExists) {
-			todayEventList.add(listObject);
-		}
+        // TODO ugly, temporary code so that the same listobject doesn't get
+        // added multiple times
+        for (ListObject lo : todayEventList) {
+            if (listObject.getId() == lo.getId() ){
+                alreadyExists = true;
+            }
+        }
 
+        if (!alreadyExists) {
+            todayEventList.add(listObject);
+        }
 	}
 
 	/**
