@@ -75,15 +75,24 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
-		final ListObject listObject = (ListObject) getChild(groupPosition,
+        // Get the listObject
+		ListObject listObject = (ListObject) getChild(groupPosition,
 				childPosition);
 
-		final TextView childLabel = (TextView) convertView
+        // Get a textview for the object
+		TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
+
+        // Get a textview for the object's data
+        TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+
+        // We don't want the data to show yet...
+        childData.setVisibility(View.INVISIBLE);
+        childData.setHeight(0);
 
 		childLabel.setText(childText);
 
-        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel);
+        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel, childData);
         childLabel.setOnClickListener(clickListener);
 
 		return convertView;
