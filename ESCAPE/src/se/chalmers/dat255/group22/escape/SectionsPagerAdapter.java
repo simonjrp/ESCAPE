@@ -16,7 +16,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
-
+	
 	/**
 	 * Constructor for creating a new SectionsPagerAdapter.
 	 * 
@@ -63,4 +63,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		// TODO make non-static
 		return fragmentList.size();
 	}
+	
+	@Override
+	public CharSequence getPageTitle(int position){
+	
+		return fragmentTitles[position];
+	}
+	
+	
+	
+	
 }
