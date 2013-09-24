@@ -689,16 +689,6 @@ public class DBHandler extends SQLiteOpenHelper {
 	public List<Category> getCategories(ListObject listObject) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
-//		String raw = "SELECT b." + COLUMN_LIST_OBJECTS_ID + ", b."
-//				+ COLUMN_LIST_OBJECTS_NAME + ", b."
-//				+ COLUMN_LIST_OBJECTS_COMMENT + ", b."
-//				+ COLUMN_LIST_OBJECTS_IMPORTANT + " FROM "
-//				+ TABLE_CATEGORIES_WITH_LISTOBJECTS + " a" + " INNER JOIN "
-//				+ TABLE_LIST_OBJECTS + " b" + " ON a."
-//				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT + " = b."
-//				+ COLUMN_LIST_OBJECTS_ID + " WHERE a."
-//				+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + " = '"
-//				+ category.getName() + "'";
 		String raw = "SELECT b." + COLUMN_CATEGORIES_NAME + ", b."
 				+ COLUMN_CATEGORIES_BASE_COLOR + ", b."
 				+ COLUMN_CATEGORIES_IMPORTANT_COLOR + " FROM "
@@ -809,6 +799,77 @@ public class DBHandler extends SQLiteOpenHelper {
 						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
 						? true
 						: false);
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.get(0);
+	}
+	
+	/**
+	 * Returns the TimeAlarm for a ListObject
+	 * 
+	 * @param listObject
+	 * @return TimeAlarm for the listObject
+	 */
+	public TimeAlarm getTimeAlarm(ListObject listObject) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_TIME_ALARMS_ID + ", b."
+				+ COLUMN_TIME_ALARMS_DATE + " FROM "
+				+ TABLE_LIST_OBJECTS_WITH_TIME_ALARM + " a" + " INNER JOIN "
+				+ TABLE_TIME_ALARMS + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM + " = b."
+				+ COLUMN_TIME_ALARMS_ID + " WHERE a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + " = '"
+				+ listObject.getId() + "'";
+
+		List<TimeAlarm> list = new LinkedList<TimeAlarm>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				TimeAlarm timeAlarm = new TimeAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIME_ALARMS_ID)), new Date(
+						cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIME_ALARMS_DATE))));
+
+				list.add(timeAlarm);
+			} while (cursor.moveToNext());
+		}
+
+		return list.get(0);
+	}
+	
+	/**
+	 * Returns the TimeAlarm for a ListObject
+	 * 
+	 * @param listObject
+	 * @return TimeAlarm for the listObject
+	 */
+	public GPSAlarm getGPSAlarm(ListObject listObject) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		String raw = "SELECT b." + COLUMN_GPS_ALARMS_ID + ", b."
+				+ COLUMN_GPS_ALARMS_LATITUDE + ", b."
+				+ COLUMN_GPS_ALARMS_LONGITUDE + " FROM "
+				+ TABLE_LIST_OBJECTS_WITH_GPS_ALARM + " a" + " INNER JOIN "
+				+ TABLE_GPS_ALARMS + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM+ " = b."
+				+ COLUMN_GPS_ALARMS_ID + " WHERE a."
+				+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + " = '"
+				+ listObject.getId() + "'";
+
+		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
 
 				list.add(object);
 			} while (cursor.moveToNext());

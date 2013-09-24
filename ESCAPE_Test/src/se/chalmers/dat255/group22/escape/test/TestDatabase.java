@@ -234,6 +234,18 @@ public class TestDatabase extends AndroidTestCase {
 	}
 	
 	// Testing ListObjectWithTimeAlarm
+	public void testAddListObjectsWithTimeAlarm() {
+		ListObject listObject = new ListObject(1, "listobject");
+		Date date = new Date(1000l);
+		TimeAlarm ta = new TimeAlarm(1, date);
+		db.addListObject(listObject);
+		db.addTimeAlarm(ta);
+	
+		db.addListObjectsWithTimeAlarm(listObject, ta);
+	
+		TimeAlarm ta2 = db.getTimeAlarm(listObject);
+		assertEquals(ta, ta2);
+	}
 	
 	// Testing ListObjectsWithGPSAlarm
 	public void testAddListObjectsWithGPSAlarm() {
@@ -246,8 +258,8 @@ public class TestDatabase extends AndroidTestCase {
 		
 		db.addListObjectsWithGPSAlarm(lo, gpsAlarm);
 		//TODO saknas getmetoder
-		List<GPSAlarm> list = db.getGPSAlarm(lo);
-		assertEquals(gpsAlarm, list.get(0));
+		GPSAlarm test = db.getGPSAlarm(lo);
+		assertEquals(gpsAlarm, test);
 	}
 	
 	public void testEditListObjectsWithGPSAlarm() {
@@ -309,17 +321,31 @@ public class TestDatabase extends AndroidTestCase {
 		
 	}
 	
+//	public void testAddListObjectsWithTime() {
+//		Date date1 = new Date(1l);
+//		Date date2 = new Date(2l);
+//		Time time = new Time(1, date1, date2);
+//		ListObject lo = new ListObject(1, "listobject");
+//		db.addTime(time);
+//		db.addListObject(lo);
+//		
+//		db.addListObjectsWithTime(lo, time);
+//		//TODO saknas getmetoder
+//		List<Time> list = db.getTimes(lo);
+//		assertEquals(time, list.get(0));
+//	}
+//	
 	// Testing ListObjectsWithPlace
-	public void testAddListObjectsWithPlace() {
-		Place place = new Place(1, "Test");
-		db.addPlace(place);
-		ListObject lo = new ListObject(1, "listobject");
-		
-		db.addListObjectsWithPlace(lo, place);
-		//TODO saknas getmetoder
-		List<Place> list = db.getPlace(lo);
-		assertEquals(place, list.get(0));
-	}
+//	public void testAddListObjectsWithPlace() {
+//		Place place = new Place(1, "Test");
+//		db.addPlace(place);
+//		ListObject lo = new ListObject(1, "listobject");
+//		
+//		db.addListObjectsWithPlace(lo, place);
+//		//TODO saknas getmetoder
+//		List<Place> list = db.getPlace(lo);
+//		assertEquals(place, list.get(0));
+//	}
 
 	public void testEditListObjectsWithPlace() {
 		Place place1 = new Place(1, "Test1");
