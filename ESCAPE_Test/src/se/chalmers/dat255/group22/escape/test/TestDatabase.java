@@ -25,25 +25,24 @@ public class TestDatabase extends AndroidTestCase {
 	// ListObject tests
 	public void testAddEntry(){
 		ListObject lo = new ListObject(1, "Test");
-		
         db.addListObject(lo);
         List<ListObject> list = db.getAllListObjects();
         assertEquals(lo, list.get(0));
     }
 	
 	public void testEditEntry(){ 
-		List<ListObject> list = db.getAllListObjects();
-        ListObject lo = list.get(0);
-        lo.setName("Test2");
-        
+		ListObject lo = new ListObject(1, "Test");
+        db.addListObject(lo);
+		lo.setName("Test2");        
         db.updateListObject(lo);
-        list = db.getAllListObjects();
+        List<ListObject> list = db.getAllListObjects();
         assertEquals(lo.getName(), list.get(0).getName());
     }
 
 	
 	public void testRemoveEntry(){
-		ListObject lo = db.getListObject(1l);
+		ListObject lo = new ListObject(1, "Test");
+        db.addListObject(lo);
 		db.deleteListObject(lo);
 		List<ListObject> list = db.getAllListObjects();
 		assertEquals(true, list.isEmpty());
@@ -53,7 +52,6 @@ public class TestDatabase extends AndroidTestCase {
 	// Categories tests
 	public void testAddCategory(){
 		Category category = new Category("Test1", "Color1", "Color");
-		
         db.addCategory(category);
         List<Category> list = db.getAllCategories();
         assertEquals(category, list.get(0));
@@ -62,44 +60,43 @@ public class TestDatabase extends AndroidTestCase {
 	public void testEditCategory(){ 
 		Category category = new Category("Test1", "Color1", "Color");
         db.addCategory(category);
-		List<Category> list = db.getAllCategories();
         category.setName("Test2");
         db.updateCategory(category, "Test1");
-        list = db.getAllCategories();
+        List<Category> list = db.getAllCategories();
         assertEquals(category.getName(), list.get(0).getName());
     }
 
 	public void testRemoveCategory(){
-		List<Category> list = db.getAllCategories();
-		Category category = list.get(0);
+		Category category = new Category("Test1", "Color1", "Color");
+        db.addCategory(category);
 		db.deleteCategory(category);
+		List<Category> list = db.getAllCategories();
 		assertEquals(true, list.isEmpty());
 	}
 	
 	//Places tests
 	public void testAddPlace(){
 		Place place = new Place(1, "Test");
-		
-        db.addPlace(place);
+		db.addPlace(place);
         List<Place> list = db.getAllPlaces();
         assertEquals(place, list.get(0));
     }
 	
 	public void testEditPlace(){ 
-		List<Place> list = db.getAllPlaces();
-        Place place = list.get(0);
+		Place place = new Place(1, "Test");
+		db.addPlace(place);
         place.setName("Test2");
-        
         db.updatePlaces(place);
-        list = db.getAllPlaces();
+        List<Place> list = db.getAllPlaces();
         assertEquals(place.getName(), list.get(0).getName());
     }
 
 	
 	public void testRemovePlace(){
-		List<Place> list = db.getAllPlaces();
-		Place place = list.get(0);
+		Place place = new Place(1, "Test");
+		db.addPlace(place);
 		db.deletePlace(place);
+		List<Place> list = db.getAllPlaces();
 		assertEquals(true, list.isEmpty());
 	}
 	
@@ -107,28 +104,32 @@ public class TestDatabase extends AndroidTestCase {
 	public void testAddTime(){
 		Date date1 = new Date(1l);
 		Date date2 = new Date(2l);
-		Time time = new Time(1, date1, date2);
-		
+		Time time = new Time(1, date1, date2);	
         db.addTime(time);
         List<Time> list = db.getAllTimes();
         assertEquals(time, list.get(0));
     }
 	
-	public void testEditTime(){ 
+	public void testEditTime(){
+		Date date1 = new Date(1l);
+		Date date2 = new Date(2l);
 		Date date3 = new Date(3l);
-		List<Time> list = db.getAllTimes();
-        Time time = list.get(0);
+		Time time = new Time(1, date1, date2);	
+        db.addTime(time);
         time.setEndDate(date3);
         db.updateTimes(time);
-        list = db.getAllTimes();
+        List<Time> list = db.getAllTimes();
         assertEquals(time.getEndDate(), list.get(0).getEndDate());
     }
 
 	
 	public void testRemoveTime(){
-		List<Time> list = db.getAllTimes();
-		Time time = list.get(0);
+		Date date1 = new Date(1l);
+		Date date2 = new Date(2l);
+		Time time = new Time(1, date1, date2);	
+        db.addTime(time);
 		db.deleteTime(time);
+		List<Time> list = db.getAllTimes();
 		assertEquals(true, list.isEmpty());
 	}
 		
