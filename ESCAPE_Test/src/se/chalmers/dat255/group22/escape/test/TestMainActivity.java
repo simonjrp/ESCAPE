@@ -1,7 +1,7 @@
 package se.chalmers.dat255.group22.escape.test;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.SectionsPagerAdapter;
+import se.chalmers.dat255.group22.escape.TabsPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -10,7 +10,7 @@ public class TestMainActivity extends
 
 	private MainActivity mActivity;
 	private ViewPager viewPager;
-	private SectionsPagerAdapter pagerAdapter;
+	private TabsPagerAdapter pagerAdapter;
 	public static final int ADAPTER_COUNT = 3;
 
 	public TestMainActivity() {
@@ -29,7 +29,7 @@ public class TestMainActivity extends
 		mActivity = getActivity();
 		viewPager = (ViewPager) mActivity
 				.findViewById(se.chalmers.dat255.group22.escape.R.id.view_pager);
-		pagerAdapter = (SectionsPagerAdapter) viewPager.getAdapter();
+		pagerAdapter = (TabsPagerAdapter) viewPager.getAdapter();
 	}
 
 	public void testPreConditions() {

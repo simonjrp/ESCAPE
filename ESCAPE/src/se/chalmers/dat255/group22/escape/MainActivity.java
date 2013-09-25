@@ -12,14 +12,14 @@ import android.view.MenuItem;
  */
 public class MainActivity extends FragmentActivity {
 
-	private SectionsPagerAdapter pagerAdapter;
+	private TabsPagerAdapter pagerAdapter;
 	private ViewPager viewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
+		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
 				this);
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager);

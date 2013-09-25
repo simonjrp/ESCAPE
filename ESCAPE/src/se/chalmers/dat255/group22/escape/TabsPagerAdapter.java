@@ -12,14 +12,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 /**
  * A pager adapter to use with a viewpager.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
 
 	/**
-	 * Creates a new SectionsPagerAdapter.
+	 * Creates a new TabsPagerAdapter.
 	 * 
 	 * @param fragmentManager
 	 *            The fragment manager to be used by the adapter.
@@ -27,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 *            The context to be used for reading predefined string arrays from
 	 *            the /res folder.
 	 */
-	public SectionsPagerAdapter(FragmentManager fragmentManager, Context context) {
+	public TabsPagerAdapter(FragmentManager fragmentManager, Context context) {
 		super(fragmentManager);
 
 		fragmentTitles = context.getResources().getStringArray(
