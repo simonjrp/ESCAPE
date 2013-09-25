@@ -14,8 +14,7 @@ public class TestMainActivity extends
 	public static final int ADAPTER_COUNT = 3;
 
 	public TestMainActivity() {
-		super("se.chalmers.dat255.group22.escape.MainActivity",
-				MainActivity.class);
+		super(MainActivity.class);
 	}
 
 	@Override

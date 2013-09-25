@@ -69,6 +69,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	}
 
 	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public CharSequence getPageTitle(int position) {
 
 		return fragmentTitles[position];
