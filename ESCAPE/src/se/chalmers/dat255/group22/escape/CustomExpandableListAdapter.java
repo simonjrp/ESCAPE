@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -80,10 +80,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
-
+		
+		final Button editButton = (Button) convertView
+				.findViewById(R.id.editButton);
+		
+		editButton.setVisibility(View.INVISIBLE);
 		childLabel.setText(childText);
-		childLabel.setOnClickListener(new View.OnClickListener() {
-			boolean alreadyExpanded = false;
+		childLabel.setOnClickListener(new OnClickListener() {
+			boolean alreadyExpanded;
+			
 			@Override
 			public void onClick(View v) {
 				alreadyExpanded = !alreadyExpanded;
@@ -102,6 +107,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		});
+		childLabel.setOnTouchListener(new OptionTouchListener(context, convertView));
 		
 		return convertView;
 	}
