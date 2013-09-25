@@ -1,8 +1,15 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.database;
 
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 
 import android.content.ContentValues;
 import android.content.Context;

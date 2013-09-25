@@ -1,26 +1,27 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.objects;
 
+import java.sql.Date;
 /**
- * Simple object class to represent a place
+ * Simple object class to represent a time based alarm
  * 
  * @author Johanna and Mike
  * 
  */
-public class Place {
-	// TODO Maybe add GPS-coordinates to Place
-	private final int id;
-	private String name;
+public class TimeAlarm {
 
-	public Place(int id, String name) {
+	private final int id;
+	private Date date;
+
+	public TimeAlarm(int id, Date date) {
 		this.id = id;
-		this.name = name;
+		this.date = date;
 	}
 
 	/**
-	 * @return the name
+	 * @return the date
 	 */
-	public String getName() {
-		return name;
+	public Date getDate() {
+		return date;
 	}
 
 	/**
@@ -31,11 +32,11 @@ public class Place {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param date
+	 *            the date to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/*
@@ -45,7 +46,7 @@ public class Place {
 	 */
 	@Override
 	public String toString() {
-		return "Place [id=" + id + ", name=" + name + "]";
+		return "TimeAlarm [id=" + id + ", date=" + date + "]";
 	}
 
 	/*
@@ -74,7 +75,7 @@ public class Place {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Place other = (Place) obj;
+		TimeAlarm other = (TimeAlarm) obj;
 		if (id != other.id)
 			return false;
 		return true;

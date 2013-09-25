@@ -3,13 +3,13 @@ package se.chalmers.dat255.group22.escape.test;
 import java.sql.Date;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.Category;
-import se.chalmers.dat255.group22.escape.DBHandler;
-import se.chalmers.dat255.group22.escape.GPSAlarm;
-import se.chalmers.dat255.group22.escape.ListObject;
-import se.chalmers.dat255.group22.escape.Place;
-import se.chalmers.dat255.group22.escape.Time;
-import se.chalmers.dat255.group22.escape.TimeAlarm;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 

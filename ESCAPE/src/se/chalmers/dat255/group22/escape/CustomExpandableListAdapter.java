@@ -3,6 +3,8 @@ package se.chalmers.dat255.group22.escape;
 import java.util.HashMap;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -13,7 +15,7 @@ import android.widget.TextView;
 
 /**
  * An ExpandableListAdapter that makes use of a
- * {@link se.chalmers.dat255.group22.escape.ListObject}.<br>
+ * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
  * 
