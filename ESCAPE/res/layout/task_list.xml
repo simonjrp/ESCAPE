@@ -3,7 +3,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:showDividers="end">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:background="#2d92bd"
+        android:paddingLeft="16dp"
+        android:text="DUMMY HEADER"
+        android:textColor="#FFFFFF" />
 
     <ListView
             android:id="@+id/listView"

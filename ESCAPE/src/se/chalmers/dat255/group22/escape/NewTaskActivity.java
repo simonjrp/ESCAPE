@@ -80,11 +80,16 @@ public class NewTaskActivity extends Activity {
 
         // GPS Alarm
 
+        Category newCategory = new Category(category, "Random Color", "Another random Color");
+
+
 		ListObject lo = new ListObject(1, name);
-		lo.setComment(comment);
+        if(comment.trim().length() != 0)
+		    lo.setComment(comment);
 		lo.setImportant(importantTask);
-        lo.addToCategory(new Category(category, "Random Color", "Another random Color"));
+        lo.addToCategory(newCategory);
         lo.setPlace(new Place(1, location));
+
 
 		DBHandler dbHandler = new DBHandler(this);
 		dbHandler.addListObject(lo);

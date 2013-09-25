@@ -3,8 +3,12 @@ package se.chalmers.dat255.group22.escape.ListFragment;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.R;
 
+import android.app.ActionBar;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -40,18 +44,22 @@ public class CustomOnClickListener implements View.OnClickListener {
 	public void onClick(View v) {
 		isExpanded = !isExpanded;
 		if (isExpanded) {
-            taskData.setVisibility(View.VISIBLE);
-            taskData.setHeight(6*childLabel.getHeight()/8);
             taskData.setText(
 
-                    (listObject.getComment() != null? listObject.getComment(): "") + "\n" +
-                    (listObject.getPlace() != null? listObject.getPlace().getName() : "" ) + "\n"
+                    (listObject.getComment() != null ?"* " + listObject.getComment() + "\n": "No Comment\n")   +
+                    (listObject.getPlace() != null? "* " + listObject.getPlace().getName() + "\n": "No place" )
 
             );
-            taskData.setBackgroundColor(listObject.isImportant()? Color.CYAN : Color.BLUE);
+            if(taskData.getText() != null)
+
+                taskData.setVisibility(View.VISIBLE);
+                taskData.setHeight(taskData.getLineCount()*taskData.getLineHeight()+5);
+                taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+                childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 		} else {
             taskData.setVisibility(View.INVISIBLE);
             taskData.setHeight(0);
+            childLabel.setPaintFlags(1);
 		}
 	}
 

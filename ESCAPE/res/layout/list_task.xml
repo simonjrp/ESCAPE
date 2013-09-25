@@ -4,8 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:background="#a2a2a2">
+    android:background="#33B5E5"
+    android:padding="8dp">
 
 
     <TextView
@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:background="#c3c3c3"
-        android:textColor="#000000" />
+        android:background="#33B5E5"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/taskData"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textSize="20dp"
-        android:background="#d4d4d4"
-        android:textColor="#000000" />
+        android:textSize="17dp"
+        android:background="#33b5e5"
+        android:textColor="#000000"
+        />
 
 </LinearLayout>
