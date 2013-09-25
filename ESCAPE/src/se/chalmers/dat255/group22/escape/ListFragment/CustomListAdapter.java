@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.ListObject;
@@ -23,14 +24,16 @@ public class CustomListAdapter implements ListAdapter {
 	private Context context;
 	// The tasks in the list
 	private List<ListObject> ourTaskList;
+    // Array keeping track of changes in the list
+    private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 
 	/**
 	 * Creates a new CustomListAdapter
 	 * 
 	 * @param context
-	 *            The context this adapter is used in
+	 *            The context (activity) this adapter is used in
 	 * @param taskList
-	 *            The tasks in the list
+	 *            list with the tasks to display
 	 */
 	public CustomListAdapter(Context context, List<ListObject> taskList) {
 		this.context = context;
@@ -49,13 +52,22 @@ public class CustomListAdapter implements ListAdapter {
 
 	@Override
 	public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-
+        observers.add(dataSetObserver);
 	}
 
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-
+        observers.remove(dataSetObserver);
 	}
+
+    /**
+     * Call this method after changing data in the list
+     */
+    public void notifyDataSetChanged(){
+        for (DataSetObserver observer: observers) {
+            observer.onChanged();
+        }
+    }
 
 	@Override
 	public int getCount() {

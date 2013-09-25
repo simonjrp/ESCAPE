@@ -22,8 +22,11 @@ import android.widget.ListView;
  */
 public class TaskListFragment extends Fragment {
 
+    // The listView to display data in
 	ListView ourTaskList;
+    // The adapter used to handle data
 	CustomListAdapter ourListAdapter;
+    // List containing the data displayed
 	List<ListObject> taskList;
 
 	@Override
@@ -59,7 +62,7 @@ public class TaskListFragment extends Fragment {
 	}
 
 	/**
-	 * Add a new task for today.
+	 * Add a new task for the list
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -77,7 +80,8 @@ public class TaskListFragment extends Fragment {
 
 		if (!alreadyExists) {
 			taskList.add(listObject);
+            // Notify the adapter that data has changed
+            ourListAdapter.notifyDataSetChanged();
 		}
-
 	}
 }

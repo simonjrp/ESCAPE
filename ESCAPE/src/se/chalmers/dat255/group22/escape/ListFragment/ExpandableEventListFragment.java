@@ -72,6 +72,12 @@ public class ExpandableEventListFragment extends Fragment {
 		// if a category list is expanded before adding a new activity, you
 		// have to collapse and expand that category list to be able to see the
 		// newly added item.
+        /*
+        Look into implementing the following methods in CustomExpandableList
+        public void notifyDataSetChanged ()
+        public void registerDataSetObserver (DataSetObserver observer)
+        public void unregisterDataSetObserver (DataSetObserver observer)
+         */
 
 		ExpandableListView expLv = (ExpandableListView) getActivity()
 				.findViewById(R.id.expEventList);
