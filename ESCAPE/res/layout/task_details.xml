@@ -11,7 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Title"
-        android:inputType="text" />
+        android:selectAllOnFocus="false"
+        android:inputType="textCapSentences" />
 
     <Spinner
         android:id="@+id/task_categories"
@@ -43,7 +44,7 @@
         android:layout_below="@id/task_description"
         android:paddingTop="16dp"
         android:hint="Location"
-        android:inputType="text" />
+        android:inputType="textCapSentences" />
 
     <CheckBox
         android:id="@+id/task_important"
@@ -65,23 +66,65 @@
         android:paddingTop="16dp"
         android:background="@android:color/holo_blue_dark" />
 
-    <ListView
-        android:id="@+id/task_reminders_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/separator1"
-
-        ></ListView>
-
     <Button
         android:id="@+id/task_add_reminder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_reminders_list"
-        android:text="+ Add reminder"
-        android:onClick="onAddReminder" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/separator1"
+        android:text="Convert to Event"
+        android:onClick="onConvertEvent" />
+
+    <RelativeLayout
+        android:id="@+id/eventSpinners"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_below="@id/separator1">
+
+        <TextView
+            android:id="@+id/fromString"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:hint="From"
+            android:textSize="15dp"
+            >
+        </TextView>
+        <Spinner
+            android:id="@+id/date_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fromString"/>
+
+        <Spinner
+            android:id="@+id/time_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fromString"
+            android:layout_toRightOf="@id/date_from"/>
+        <TextView
+            android:id="@+id/toString"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:hint="To"
+            android:textSize="15dp"
+
+            android:layout_below="@id/date_from">
+        </TextView>
+        <Spinner
+            android:id="@+id/date_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toString" />
+
+        <Spinner
+            android:id="@+id/time_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/date_to"
+            android:layout_below="@id/toString"/>
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
