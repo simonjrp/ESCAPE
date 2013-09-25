@@ -24,7 +24,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 * @param fragmentManager
 	 *            The fragment manager to be used by the adapter.
 	 * @param context
-	 *            The context to be used for reading predefined string arrays in
+	 *            The context to be used for reading predefined string arrays from
 	 *            the /res folder.
 	 */
 	public SectionsPagerAdapter(FragmentManager fragmentManager, Context context) {
