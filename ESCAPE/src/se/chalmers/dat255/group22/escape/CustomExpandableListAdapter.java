@@ -107,7 +107,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		});
+		// TODO We add two listeners since it wont work on one if the other is added to
+		// Adding touchlisteners
 		childLabel.setOnTouchListener(new OptionTouchListener(context, convertView));
+		convertView.setOnTouchListener(new OptionTouchListener(context, convertView));
 		
 		return convertView;
 	}
