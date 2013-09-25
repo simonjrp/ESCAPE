@@ -8,6 +8,7 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -101,6 +102,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		});
+		
 		return convertView;
 	}
 
