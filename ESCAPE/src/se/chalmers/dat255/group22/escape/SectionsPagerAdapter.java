@@ -3,6 +3,7 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,18 +17,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
-	
+
 	/**
-	 * Constructor for creating a new SectionsPagerAdapter.
+	 * Creates a new SectionsPagerAdapter.
 	 * 
 	 * @param fragmentManager
-	 *            The fragment manager that's used for fragment transactions
+	 *            The fragment manager to be used by the adapter.
+	 * @param context
+	 *            The context to be used for reading predefined string arrays in
+	 *            the /res folder.
 	 */
-	public SectionsPagerAdapter(FragmentManager fragmentManager,
-			String[] fragmentTitles) {
+	public SectionsPagerAdapter(FragmentManager fragmentManager, Context context) {
 		super(fragmentManager);
 
-		this.fragmentTitles = fragmentTitles;
+		fragmentTitles = context.getResources().getStringArray(
+				R.array.fragments_array);
 		fragmentList = new ArrayList<Fragment>();
 
 		// Create all wanted fragments and add them to fragmentList here
@@ -63,14 +67,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		// TODO make non-static
 		return fragmentList.size();
 	}
-	
+
 	@Override
-	public CharSequence getPageTitle(int position){
-	
+	public CharSequence getPageTitle(int position) {
+
 		return fragmentTitles[position];
 	}
-	
-	
-	
-	
+
 }

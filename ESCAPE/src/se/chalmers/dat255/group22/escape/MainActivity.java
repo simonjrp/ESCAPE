@@ -14,16 +14,14 @@ public class MainActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter pagerAdapter;
 	private ViewPager viewPager;
-	private String[] fragmentTitles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		fragmentTitles = getResources().getStringArray(R.array.fragments_array);
 		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
-				fragmentTitles);
+				this);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
 
