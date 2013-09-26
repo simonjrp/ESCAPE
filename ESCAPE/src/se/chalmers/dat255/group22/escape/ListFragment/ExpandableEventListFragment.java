@@ -10,6 +10,7 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.DBHandler;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.Time;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,11 +69,18 @@ public class ExpandableEventListFragment extends Fragment {
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
-			if (dbHandler.getTime(lo).getStartDate() != null) {
-				addListObject(lo);
-			} else {
-                //dbHandler.addListObjectsWithTime(lo, new Time(1, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()+1)));
-                addListObject(lo);
+            try {
+                if (dbHandler.getTime(lo).getStartDate() != null) {
+                    //addListObject(lo);
+                    addListObjectToday(lo);
+                } else {
+                    //dbHandler.addListObjectsWithTime(lo, new Time(1, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()+1)));
+                    //addListObject(lo);
+                    addListObjectTomorrow(lo);
+                }
+            } catch (Exception e){
+                System.out.println("Exception caught!");
+                e.printStackTrace();
             }
 		}
 
@@ -164,9 +172,9 @@ public class ExpandableEventListFragment extends Fragment {
 		 * alreadyExists = true;
 		 * } }
 		 */
-		if (!todayEventList.contains(listObject)) {
+		//if (!todayEventList.contains(listObject)) {
 			todayEventList.add(listObject);
-		}
+		//}
 	}
 
 	/**
@@ -176,9 +184,9 @@ public class ExpandableEventListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObjectTomorrow(ListObject listObject) {
-		if (!tomorrowEventList.contains(listObject)) {
+		//if (!tomorrowEventList.contains(listObject)) {
 			tomorrowEventList.add(listObject);
-		}
+		//}
 	}
 
 	/**
