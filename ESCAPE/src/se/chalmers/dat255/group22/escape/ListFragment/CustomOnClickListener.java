@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
+import se.chalmers.dat255.group22.escape.DBHandler;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.R;
 
@@ -23,6 +24,8 @@ public class CustomOnClickListener implements View.OnClickListener {
     private TextView taskData;
 	private ListObject listObject;
 	private boolean isExpanded;
+    private DBHandler dbHandler;
+
 
 	/**
 	 * Create a new CustomOnClickListener.
@@ -38,6 +41,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 		this.childLabel = childLabel;
         this.taskData = taskData;
 		isExpanded = false;
+        dbHandler = new DBHandler(childLabel.getContext());
 	}
 
 	@Override
@@ -47,6 +51,7 @@ public class CustomOnClickListener implements View.OnClickListener {
             taskData.setText(
 
                     (listObject.getComment() != null ?"* " + listObject.getComment() + "\n": "No Comment\n")   +
+
                     (listObject.getPlace() != null? "* " + listObject.getPlace().getName() + "\n": "No place" )
 
             );

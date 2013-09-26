@@ -55,12 +55,39 @@
         android:paddingTop="16dp"
         android:text="Mark as important" />
 
+    <RelativeLayout
+        android:id="@+id/remindMeField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/task_important">
+
+        <ImageView
+            android:id="@+id/addAlarmImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/device_access_add_alarm"
+            android:scaleType="fitXY"
+            android:minHeight="45dp"
+            android:minWidth="45dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/remindMeString"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/addAlarmImg"
+            android:hint="@string/remind_me"
+            android:textSize="18dp"
+            android:layout_marginTop="18dp"/>
+    </RelativeLayout>
+
     <View
         android:id="@+id/separator1"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_important"
+        android:layout_below="@id/remindMeField"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:paddingTop="16dp"

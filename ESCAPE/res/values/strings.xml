@@ -11,5 +11,6 @@
     <string name="tomorrowLabel">Tomorrow</string>
     <string name="thisWeekLabel">Someday</string>
     <string name="taskHeader">Remember...</string>
+    <string name="remind_me"><u>Remind me at...</u></string>
 
 </resources>
