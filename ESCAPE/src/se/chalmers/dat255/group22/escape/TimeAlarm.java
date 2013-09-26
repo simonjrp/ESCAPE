@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape;
 
 import java.sql.Date;
+
 /**
  * Simple object class to represent a time based alarm
  * 

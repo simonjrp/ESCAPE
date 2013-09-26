@@ -81,6 +81,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		childLabel.setText(childText);
 		childLabel.setOnClickListener(new View.OnClickListener() {
 			boolean alreadyExpanded = false;
+
 			@Override
 			public void onClick(View v) {
 				alreadyExpanded = !alreadyExpanded;

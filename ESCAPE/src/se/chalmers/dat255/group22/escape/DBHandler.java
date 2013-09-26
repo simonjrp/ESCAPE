@@ -291,9 +291,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
 		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
-		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant())
-				? 1
-				: 0);
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT,
+				(listObject.isImportant()) ? 1 : 0);
 
 		db.insert(TABLE_LIST_OBJECTS, null, values);
 		db.close();
@@ -486,9 +485,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<ListObject> list = new LinkedList<ListObject>();
-		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[]{
+		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[] {
 				COLUMN_LIST_OBJECTS_ID, COLUMN_LIST_OBJECTS_NAME,
-				COLUMN_LIST_OBJECTS_COMMENT, COLUMN_LIST_OBJECTS_IMPORTANT},
+				COLUMN_LIST_OBJECTS_COMMENT, COLUMN_LIST_OBJECTS_IMPORTANT },
 				null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -499,8 +498,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				object.setComment(cursor.getString(cursor
 						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
 				object.setImportant((cursor.getInt(cursor
-						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
-						? true
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
 						: false));
 				list.add(object);
 			} while (cursor.moveToNext());
@@ -518,9 +516,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<Category> list = new LinkedList<Category>();
-		Cursor cursor = db.query(TABLE_CATEGORIES, new String[]{
+		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
 				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR,
-				COLUMN_CATEGORIES_IMPORTANT_COLOR}, null, null, null, null,
+				COLUMN_CATEGORIES_IMPORTANT_COLOR }, null, null, null, null,
 				null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -547,8 +545,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<Place> list = new LinkedList<Place>();
-		Cursor cursor = db.query(TABLE_PLACES, new String[]{COLUMN_PLACES_ID,
-				COLUMN_PLACES_NAME}, null, null, null, null, null);
+		Cursor cursor = db.query(TABLE_PLACES, new String[] { COLUMN_PLACES_ID,
+				COLUMN_PLACES_NAME }, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				Place object = new Place(cursor.getInt(cursor
@@ -571,8 +569,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<Time> list = new LinkedList<Time>();
-		Cursor cursor = db.query(TABLE_TIMES, new String[]{COLUMN_TIMES_ID,
-				COLUMN_TIMES_START_DATE, COLUMN_TIMES_END_DATE}, null, null,
+		Cursor cursor = db.query(TABLE_TIMES, new String[] { COLUMN_TIMES_ID,
+				COLUMN_TIMES_START_DATE, COLUMN_TIMES_END_DATE }, null, null,
 				null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -598,8 +596,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<TimeAlarm> list = new LinkedList<TimeAlarm>();
-		Cursor cursor = db.query(TABLE_TIME_ALARMS, new String[]{
-				COLUMN_TIME_ALARMS_ID, COLUMN_TIME_ALARMS_DATE}, null, null,
+		Cursor cursor = db.query(TABLE_TIME_ALARMS, new String[] {
+				COLUMN_TIME_ALARMS_ID, COLUMN_TIME_ALARMS_DATE }, null, null,
 				null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -622,9 +620,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
-		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[]{
+		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
 				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LONGITUDE,
-				COLUMN_GPS_ALARMS_LATITUDE}, null, null, null, null, null);
+				COLUMN_GPS_ALARMS_LATITUDE }, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
@@ -671,8 +669,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				object.setComment(cursor.getString(cursor
 						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
 				object.setImportant((cursor.getInt(cursor
-						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
-						? true
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
 						: false));
 				list.add(object);
 			} while (cursor.moveToNext());
@@ -779,10 +776,10 @@ public class DBHandler extends SQLiteOpenHelper {
 	public ListObject getListObject(Long id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[]{
+		Cursor cursor = db.query(TABLE_LIST_OBJECTS, new String[] {
 				COLUMN_LIST_OBJECTS_ID, COLUMN_LIST_OBJECTS_NAME,
-				COLUMN_LIST_OBJECTS_COMMENT, COLUMN_LIST_OBJECTS_IMPORTANT},
-				COLUMN_LIST_OBJECTS_ID + "=?", new String[]{id.toString()},
+				COLUMN_LIST_OBJECTS_COMMENT, COLUMN_LIST_OBJECTS_IMPORTANT },
+				COLUMN_LIST_OBJECTS_ID + "=?", new String[] { id.toString() },
 				null, null, null);
 
 		List<ListObject> list = new LinkedList<ListObject>();
@@ -796,8 +793,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				object.setComment(cursor.getString(cursor
 						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
 				object.setImportant(cursor.getInt(cursor
-						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
-						? true
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
 						: false);
 
 				list.add(object);
@@ -806,7 +802,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the TimeAlarm for a ListObject
 	 * 
@@ -840,7 +836,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the TimeAlarm for a ListObject
 	 * 
@@ -855,7 +851,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				+ COLUMN_GPS_ALARMS_LONGITUDE + " FROM "
 				+ TABLE_LIST_OBJECTS_WITH_GPS_ALARM + " a" + " INNER JOIN "
 				+ TABLE_GPS_ALARMS + " b" + " ON a."
-				+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM+ " = b."
+				+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM + " = b."
 				+ COLUMN_GPS_ALARMS_ID + " WHERE a."
 				+ COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + " = '"
 				+ listObject.getId() + "'";
@@ -877,7 +873,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the Time for a list object
 	 * 
@@ -888,11 +884,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String raw = "SELECT b." + COLUMN_TIMES_ID + ", b."
-				+ COLUMN_TIMES_START_DATE + ", b."
-				+ COLUMN_TIMES_END_DATE + " FROM "
-				+ TABLE_LIST_OBJECTS_WITH_TIME + " a" + " INNER JOIN "
-				+ TABLE_TIMES + " b" + " ON a."
-				+ COLUMN_LIST_OBJECTS_WITH_TIME_TIME+ " = b."
+				+ COLUMN_TIMES_START_DATE + ", b." + COLUMN_TIMES_END_DATE
+				+ " FROM " + TABLE_LIST_OBJECTS_WITH_TIME + " a"
+				+ " INNER JOIN " + TABLE_TIMES + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_TIME + " = b."
 				+ COLUMN_TIMES_ID + " WHERE a."
 				+ COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + " = '"
 				+ listObject.getId() + "'";
@@ -902,8 +897,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				Time object = new Time(cursor.getInt(cursor
-						.getColumnIndex(COLUMN_TIMES_ID)),
-						new Date(cursor.getLong(cursor
+						.getColumnIndex(COLUMN_TIMES_ID)), new Date(
+						cursor.getLong(cursor
 								.getColumnIndex(COLUMN_TIMES_START_DATE))),
 						new Date(cursor.getLong(cursor
 								.getColumnIndex(COLUMN_TIMES_END_DATE))));
@@ -914,7 +909,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the Place for a list object
 	 * 
@@ -925,10 +920,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String raw = "SELECT b." + COLUMN_PLACES_ID + ", b."
-				+ COLUMN_PLACES_NAME + " FROM "
-				+ TABLE_LIST_OBJECTS_WITH_PLACE + " a" + " INNER JOIN "
-				+ TABLE_PLACES + " b" + " ON a."
-				+ COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE+ " = b."
+				+ COLUMN_PLACES_NAME + " FROM " + TABLE_LIST_OBJECTS_WITH_PLACE
+				+ " a" + " INNER JOIN " + TABLE_PLACES + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE + " = b."
 				+ COLUMN_PLACES_ID + " WHERE a."
 				+ COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + " = '"
 				+ listObject.getId() + "'";
@@ -962,12 +956,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_LIST_OBJECTS_NAME, listObject.getName());
 		values.put(COLUMN_LIST_OBJECTS_COMMENT, listObject.getComment());
-		values.put(COLUMN_LIST_OBJECTS_IMPORTANT, (listObject.isImportant())
-				? 1
-				: 0);
+		values.put(COLUMN_LIST_OBJECTS_IMPORTANT,
+				(listObject.isImportant()) ? 1 : 0);
 
 		int rv = db.update(TABLE_LIST_OBJECTS, values, COLUMN_LIST_OBJECTS_ID
-				+ "=?", new String[]{"" + listObject.getId()});
+				+ "=?", new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
@@ -992,9 +985,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR,
 				category.getImportantColor());
 
-		int rv = db.update(TABLE_CATEGORIES, values, COLUMN_CATEGORIES_NAME
-				+ "=?",
-				new String[]{(oldName != null) ? oldName : category.getName()});
+		int rv = db
+				.update(TABLE_CATEGORIES,
+						values,
+						COLUMN_CATEGORIES_NAME + "=?",
+						new String[] { (oldName != null) ? oldName : category
+								.getName() });
 		db.close();
 
 		return rv;
@@ -1014,7 +1010,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_PLACES_NAME, place.getName());
 
 		int rv = db.update(TABLE_PLACES, values, COLUMN_PLACES_ID + "=?",
-				new String[]{"" + place.getId()});
+				new String[] { "" + place.getId() });
 		db.close();
 
 		return rv;
@@ -1035,7 +1031,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_TIMES_END_DATE, time.getEndDate().getTime());
 
 		int rv = db.update(TABLE_TIMES, values, COLUMN_TIMES_ID + "=?",
-				new String[]{"" + time.getId()});
+				new String[] { "" + time.getId() });
 		db.close();
 
 		return rv;
@@ -1055,7 +1051,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
 
 		int rv = db.update(TABLE_TIME_ALARMS, values, COLUMN_TIME_ALARMS_ID
-				+ "=?", new String[]{"" + timeAlarm.getId()});
+				+ "=?", new String[] { "" + timeAlarm.getId() });
 		db.close();
 
 		return rv;
@@ -1076,7 +1072,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
 
 		int rv = db.update(TABLE_GPS_ALARMS, values, COLUMN_GPS_ALARMS_ID
-				+ "=?", new String[]{"" + gpsAlarm.getId()});
+				+ "=?", new String[] { "" + gpsAlarm.getId() });
 		db.close();
 
 		return rv;
@@ -1101,7 +1097,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, values,
 				COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
@@ -1126,7 +1122,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.update(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, values,
 				COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
@@ -1149,7 +1145,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.update(TABLE_LIST_OBJECTS_WITH_TIME, values,
 				COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
@@ -1172,7 +1168,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.update(TABLE_LIST_OBJECTS_WITH_PLACE, values,
 				COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 
 		return rv;
@@ -1189,7 +1185,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1205,7 +1201,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_CATEGORIES, COLUMN_CATEGORIES_NAME + "=?",
-				new String[]{"" + category.getName()});
+				new String[] { "" + category.getName() });
 		db.close();
 		return rv > 0;
 	}
@@ -1221,7 +1217,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_PLACES, COLUMN_PLACES_ID + "=?",
-				new String[]{"" + place.getId()});
+				new String[] { "" + place.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1236,8 +1232,8 @@ public class DBHandler extends SQLiteOpenHelper {
 	public boolean deleteTime(Time time) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		int rv = db.delete(TABLE_TIMES, COLUMN_TIMES_ID + "=?", new String[]{""
-				+ time.getId()});
+		int rv = db.delete(TABLE_TIMES, COLUMN_TIMES_ID + "=?",
+				new String[] { "" + time.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1253,7 +1249,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_TIME_ALARMS, COLUMN_TIME_ALARMS_ID + "=?",
-				new String[]{"" + timeAlarm.getId()});
+				new String[] { "" + timeAlarm.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1269,7 +1265,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_GPS_ALARMS, COLUMN_GPS_ALARMS_ID + "=?",
-				new String[]{"" + gpsAlarm.getId()});
+				new String[] { "" + gpsAlarm.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1289,8 +1285,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		int rv = db.delete(TABLE_CATEGORIES_WITH_LISTOBJECTS,
 				COLUMN_CATEGORIES_WITH_LIST_OBJECTS_CATEGORY + "=? AND "
 						+ COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT
-						+ "=?", new String[]{"" + category.getName(),
-						"" + listObject.getId()});
+						+ "=?", new String[] { "" + category.getName(),
+						"" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1307,7 +1303,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
 				COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1324,7 +1320,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
 				COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1341,7 +1337,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_TIME,
 				COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}
@@ -1358,7 +1354,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_PLACE,
 				COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
-				new String[]{"" + listObject.getId()});
+				new String[] { "" + listObject.getId() });
 		db.close();
 		return rv > 0;
 	}

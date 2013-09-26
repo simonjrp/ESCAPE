@@ -24,8 +24,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	 * @param fragmentManager
 	 *            The fragment manager to be used by the adapter.
 	 * @param context
-	 *            The context to be used for reading predefined string arrays from
-	 *            the /res folder.
+	 *            The context to be used for reading predefined string arrays
+	 *            from the /res folder.
 	 */
 	public TabsPagerAdapter(FragmentManager fragmentManager, Context context) {
 		super(fragmentManager);
