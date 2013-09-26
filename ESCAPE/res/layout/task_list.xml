@@ -7,13 +7,13 @@
     android:showDividers="end">
 
     <TextView
+        android:id="@+id/listTask"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:textStyle="bold"
+        android:text="@string/taskHeader"
         android:background="#FFFFFF"
-        android:padding="16dp"
-        android:text="DUMMY HEADER"
         android:textColor="#000000" />
 
     <ListView
