@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -176,9 +174,33 @@ public class NewTaskActivity extends Activity {
 
         timeToSpinner.setAdapter(timeAdapter);
 
-
-
 	}
+
+    public void onRemindMe(View v) {
+        v.setVisibility(View.INVISIBLE);
+        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.setReminderField);
+        relativeLayout.setVisibility(View.VISIBLE);
+
+        /* Add items to the spinners */
+
+        int imgArr[] = {R.drawable.location_place, R.drawable.device_access_alarms };
+        String[] strArr = {"Location reminder", "Time reminder"};
+
+        ReminderTypeAdapter typeAdapter = new ReminderTypeAdapter(this, R.layout.type_spinner_item, strArr, imgArr);
+
+        Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
+        typeSpinner.setAdapter(typeAdapter);
+
+    }
+
+    public void onCancelReminder(View v) {
+       RelativeLayout currentLayout = (RelativeLayout)findViewById(R.id.setReminderField);
+       RelativeLayout toBeShownLayout = (RelativeLayout)findViewById(R.id.remindMeField);
+
+        currentLayout.setVisibility(View.INVISIBLE);
+        toBeShownLayout.setVisibility(View.VISIBLE);
+    }
+
 
     private void getTimeFromSpinners(String dateFromString, Date startDate, String dateToString, Date endDate) {
         if(dateFromString.equals("Today")) {

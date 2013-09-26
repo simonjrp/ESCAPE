@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="reminder_types" >
+        <item>@drawable/location_place</item>
+        <item>@drawable/device_access_alarms</item>
+    </integer-array>
+</resources>

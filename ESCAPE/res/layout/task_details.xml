@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:background="#FFFFFF">
 
     <EditText
         android:id="@+id/task_title"
@@ -59,7 +60,10 @@
         android:id="@+id/remindMeField"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/task_important">
+        android:layout_below="@id/task_important"
+        android:onClick="onRemindMe"
+        android:clickable="true"
+        android:background="@android:drawable/list_selector_background">
 
         <ImageView
             android:id="@+id/addAlarmImg"
@@ -80,6 +84,45 @@
             android:hint="@string/remind_me"
             android:textSize="18dp"
             android:layout_marginTop="18dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setReminderField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_below="@id/task_important"
+        android:clickable="true"
+        >
+
+        <Spinner
+            android:id="@+id/reminderTypeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/reminderDateSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reminderTypeSpinner"/>
+
+        <Spinner
+            android:id="@+id/reminderTimeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reminderDateSpinner"/>
+        <ImageButton
+            android:id="@+id/reminderCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:padding="16dp"
+                android:onClick="onCancelReminder"
+            android:src="@drawable/navigation_cancel"
+            style="@android:style/Widget.ActionButton"/>
     </RelativeLayout>
 
     <View
@@ -100,7 +143,9 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/separator1"
         android:text="Convert to Event"
-        android:onClick="onConvertEvent" />
+        android:onClick="onConvertEvent"
+        style="@android:style/Widget.ActionButton"
+        android:clickable="true"/>
 
     <RelativeLayout
         android:id="@+id/eventSpinners"
