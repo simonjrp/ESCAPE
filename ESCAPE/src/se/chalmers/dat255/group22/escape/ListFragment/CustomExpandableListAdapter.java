@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.ListFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+
+
+import se.chalmers.dat255.group22.escape.ListObject;
+import se.chalmers.dat255.group22.escape.R;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -25,8 +30,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	// header titles
 	private List<String> headerList;
-	// child data in format of header title, data container (TaskModel)
-	private HashMap<String, List<ListObject>> taskDataMap;
+	// child data in format of header title, data container (ListObject)
+	private HashMap<String, List<ListObject>> objectDataMap;
 
 	/**
 	 * Create a new custom list adapter.
@@ -43,13 +48,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			HashMap<String, List<ListObject>> listChildData) {
 		this.context = context;
 		this.headerList = listDataHeader; // today, tomorrow etc
-		this.taskDataMap = listChildData; // task
+		this.objectDataMap = listChildData; // task/event
 
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).get(
+		return this.objectDataMap.get(this.headerList.get(groupPosition)).get(
 				childPosititon);
 	}
 
@@ -72,39 +77,32 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
-		final ListObject listObject = (ListObject) getChild(groupPosition,
+        // Get the listObject
+		ListObject listObject = (ListObject) getChild(groupPosition,
 				childPosition);
 
-		final TextView childLabel = (TextView) convertView
+        // Get a textview for the object
+		TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
 
-		childLabel.setText(childText);
-		childLabel.setOnClickListener(new View.OnClickListener() {
-			boolean alreadyExpanded = false;
-			@Override
-			public void onClick(View v) {
-				alreadyExpanded = !alreadyExpanded;
-				if (alreadyExpanded) {
-					// TODO temporary ugly fix for fist release
-					if (listObject.getComment() == null) {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.toString());
-					} else {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.getComment());
+        // Get a textview for the object's data
+        TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
-					}
-				} else {
-					childLabel.setText(listObject.getName());
-				}
-			}
-		});
+        // We don't want the data to show yet...
+        childData.setVisibility(View.INVISIBLE);
+        childData.setHeight(0);
+
+		childLabel.setText(childText);
+
+        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel, childData);
+        childLabel.setOnClickListener(clickListener);
+
 		return convertView;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).size();
+		return this.objectDataMap.get(this.headerList.get(groupPosition)).size();
 
 	}
 

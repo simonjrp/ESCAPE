@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+
 /**
  * A pager adapter to use with a viewpager.
  */
@@ -39,7 +41,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		for (int i = 0; i < fragmentTitles.length; i++) {
 			// TODO ugly if statement
 			if (i == 0) {
-				ExpandableListFragment listFragment = new ExpandableListFragment();
+				Fragment listFragment = new ExpandableEventListFragment();
 				fragmentList.add(listFragment);
 			} else {
 				TestFragment testFragment = new TestFragment();
