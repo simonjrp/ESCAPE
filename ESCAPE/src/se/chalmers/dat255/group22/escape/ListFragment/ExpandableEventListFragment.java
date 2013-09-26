@@ -30,6 +30,7 @@ public class ExpandableEventListFragment extends Fragment {
 	List<ListObject> thisWeekEventList;
 	List<String> headerList;
 	HashMap<String, List<ListObject>> eventDataMap;
+    private static final String EMPTY_LIST = "EMPTY";
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -87,6 +88,15 @@ public class ExpandableEventListFragment extends Fragment {
 				expLv.expandGroup(i);
 			}
 		}
+
+        ListObject emptyObject = new ListObject(0, EMPTY_LIST);
+        if(todayEventList.size() == 0)
+            todayEventList.add(emptyObject);
+        if(tomorrowEventList.size() == 0)
+            tomorrowEventList.add(emptyObject);
+        if(thisWeekEventList.size() == 0)
+            thisWeekEventList.add(emptyObject);
+
         expLv.expandGroup(0, true);
 
 	}

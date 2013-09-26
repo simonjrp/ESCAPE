@@ -21,12 +21,13 @@ import se.chalmers.dat255.group22.escape.R;
  * {@link se.chalmers.dat255.group22.escape.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
- * 
- * 
+ *
+ *
  * @author tholene, Carl
  */
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
+    private static final String EMPTY_LIST = "EMPTY";
 	private Context context;
 	// header titles
 	private List<String> headerList;
@@ -35,7 +36,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	/**
 	 * Create a new custom list adapter.
-	 * 
+	 *
 	 * @param context
 	 *            The context to make use of
 	 * @param listDataHeader
@@ -80,22 +81,27 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         // Get the listObject
 		ListObject listObject = (ListObject) getChild(groupPosition,
 				childPosition);
+        if(listObject.getName().equals(EMPTY_LIST)) {
+            LayoutInflater inflaInflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflaInflater.inflate(R.layout.empty_list, null);
+        } else {
 
-        // Get a textview for the object
-		TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
+            // Get a textview for the object
+            TextView childLabel = (TextView) convertView
+                    .findViewById(R.id.listTask);
 
-        // Get a textview for the object's data
-        TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+            // Get a textview for the object's data
+            TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
-        // We don't want the data to show yet...
-        childData.setVisibility(View.INVISIBLE);
-        childData.setHeight(0);
+            // We don't want the data to show yet...
+            childData.setVisibility(View.INVISIBLE);
+            childData.setHeight(0);
 
-		childLabel.setText(childText);
+            childLabel.setText(childText);
 
-        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel, childData);
-        childLabel.setOnClickListener(clickListener);
+            CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel, childData);
+            childLabel.setOnClickListener(clickListener);
+        }
 
 		return convertView;
 	}

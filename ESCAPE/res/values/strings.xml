@@ -9,7 +9,6 @@
     <string name="todayLabel">Today</string>
     <string name="tomorrowLabel">Tomorrow</string>
     <string name="thisWeekLabel">Someday</string>
-    <string name="taskHeader"><u>Remember...</u></string>
-    <string name="remind_me">Remind me at...</string>
-
+    <string name="remind_me">Remind me at</string>
+    <string name="empty_list">-Nothing to show-</string>
 </resources>

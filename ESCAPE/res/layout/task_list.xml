@@ -6,17 +6,6 @@
     android:background="#ffffff"
     android:showDividers="end">
 
-    <TextView
-        android:id="@+id/listTask"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:padding="8dp"
-        android:text="@string/taskHeader"
-        android:background="#FFFFFF"
-        android:textColor="#000000" />
-
     <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
