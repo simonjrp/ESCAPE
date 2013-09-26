@@ -6,22 +6,27 @@
                 android:padding="3dp"
                 android:background="#ffffff">
 
-    <ImageView
-        android:id="@+id/spinnerImage"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:src="@drawable/location_place"
-        android:minHeight="25dp"
-        android:minWidth="25dp"></ImageView>
-
     <TextView
-        android:id="@+id/spinnerText"
+        android:id="@+id/spinnerTimeAsText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="Location reminder"
+        android:text="Afternoon"
         android:padding="3dp"
         android:textSize="15dp"
-        android:layout_toRightOf="@id/spinnerImage"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/spinnerTimeAsTime"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="17:00"
+        android:padding="8dp"
+        android:textSize="10dp"
+        android:textColor="#A3A3A3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         >
 
     </TextView>

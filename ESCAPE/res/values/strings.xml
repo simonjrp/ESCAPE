@@ -11,4 +11,6 @@
     <string name="thisWeekLabel">Someday</string>
     <string name="remind_me">Remind me at</string>
     <string name="empty_list">-Nothing to show-</string>
+    <string name="time_reminder">Time reminder</string>
+    <string name="location_reminder">Location reminder</string>
 </resources>

@@ -6,13 +6,16 @@
                 android:padding="3dp"
                 android:background="#ffffff">
 
-    <ImageView
-        android:id="@+id/spinnerImage"
+    <TextView
+        android:id="@+id/spinnerDate"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@drawable/location_place"
-        android:minHeight="25dp"
-        android:minWidth="25dp"
-        ></ImageView>
+        android:text="Today"
+        android:padding="3dp"
+        android:textSize="15dp"
+        >
+
+    </TextView>
+
 
 </RelativeLayout>

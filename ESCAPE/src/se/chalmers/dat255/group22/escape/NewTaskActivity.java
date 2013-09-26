@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -13,11 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.sql.Date;
-
 public class NewTaskActivity extends Activity {
 
-    static final long DAY_IN_MILLIS = 1000*60*60*24;
+	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,79 +56,80 @@ public class NewTaskActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 
-        /* Set data of the object */
+		/* Set data of the object */
 
-        // Title
+		// Title
 		EditText taskTitle = (EditText) findViewById(R.id.task_title);
 		String name = taskTitle.getText().toString();
 
-        // Description
+		// Description
 		EditText taskDesc = (EditText) findViewById(R.id.task_description);
 		String comment = taskDesc.getText().toString();
 
-        // Important
+		// Important
 		CheckBox important = (CheckBox) findViewById(R.id.task_important);
 		boolean importantTask = important.isChecked();
 
-        // Category
-        Spinner categories = (Spinner) findViewById(R.id.task_categories);
-        String category = categories.getSelectedItem().toString();
+		// Category
+		Spinner categories = (Spinner) findViewById(R.id.task_categories);
+		String category = categories.getSelectedItem().toString();
 
-        // Location
-        EditText taskLocation = (EditText) findViewById(R.id.task_location);
-        String location = taskLocation.getText().toString();
+		// Location
+		EditText taskLocation = (EditText) findViewById(R.id.task_location);
+		String location = taskLocation.getText().toString();
 
-        // Time
-        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.eventSpinners);
-        String dateFromString = "";
-        String dateToString = "";
-        if(relativeLayout.isShown()) {
-            Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
-            dateFromString = dateFrom.getSelectedItem().toString();
+		// Time
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		String dateFromString = "";
+		String dateToString = "";
+		if (relativeLayout.isShown()) {
+			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
+			dateFromString = dateFrom.getSelectedItem().toString();
 
-            Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
-            //TODO DON'T FORGET THIS DECLARATION
-            String timeFromString = timeFrom.getSelectedItem().toString();
+			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
+			// TODO DON'T FORGET THIS DECLARATION
+			String timeFromString = timeFrom.getSelectedItem().toString();
 
-            Spinner dateTo = (Spinner) findViewById(R.id.date_to);
-            dateToString = dateTo.getSelectedItem().toString();
+			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
+			dateToString = dateTo.getSelectedItem().toString();
 
-            Spinner timeTo = (Spinner) findViewById(R.id.time_to);
-            //TODO DON'T FORGET THIS DECLARATION
-            String timeToString = timeTo.getSelectedItem().toString();
-        }
+			Spinner timeTo = (Spinner) findViewById(R.id.time_to);
+			// TODO DON'T FORGET THIS DECLARATION
+			String timeToString = timeTo.getSelectedItem().toString();
+		}
 
+		// Time Alarm
 
-        // Time Alarm
+		// GPS Alarm
 
-        // GPS Alarm
+		Category newCategory = new Category(category, "Random Color",
+				"Another random Color");
+		Place place = new Place(1, location);
 
-        Category newCategory = new Category(category, "Random Color", "Another random Color");
-        Place place = new Place(1, location);
+		if (name.trim().length() != 0) {
 
-        if(name.trim().length() != 0) {
+			Time time;
+			Date startDate = new Date(DAY_IN_MILLIS);
+			Date endDate = new Date(DAY_IN_MILLIS);
 
-            Time time;
-            Date startDate = new Date(DAY_IN_MILLIS);
-            Date endDate = new Date(DAY_IN_MILLIS);
+			getTimeFromSpinners(dateFromString, startDate, dateToString,
+					endDate);
 
-            getTimeFromSpinners(dateFromString, startDate, dateToString, endDate);
+			time = new Time(1, startDate, endDate);
 
-            time = new Time(1, startDate, endDate);
+			ListObject lo = new ListObject(1, name);
+			if (comment.trim().length() != 0)
+				lo.setComment(comment);
+			lo.setImportant(importantTask);
+			lo.addToCategory(newCategory);
+			lo.setPlace(place);
+			lo.setTime(time);
 
-            ListObject lo = new ListObject(1, name);
-            if(comment.trim().length() != 0)
-                lo.setComment(comment);
-            lo.setImportant(importantTask);
-            lo.addToCategory(newCategory);
-            lo.setPlace(place);
-            lo.setTime(time);
+			DBHandler dbHandler = new DBHandler(this);
+			dbHandler.addListObject(lo);
+		} else {
 
-            DBHandler dbHandler = new DBHandler(this);
-            dbHandler.addListObject(lo);
-        } else {
-
-        }
+		}
 		super.onBackPressed();
 	}
 
@@ -135,14 +137,14 @@ public class NewTaskActivity extends Activity {
 
 		v.setVisibility(View.INVISIBLE);
 
-        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.eventSpinners);
-        relativeLayout.setVisibility(View.VISIBLE);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		relativeLayout.setVisibility(View.VISIBLE);
 
-		Spinner dateFromSpinner = (Spinner)findViewById(R.id.date_from);
+		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 
-        //
+		//
 		/* From: DateSpinner */
-        //
+		//
 		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
 				.createFromResource(this, R.array.test_dates,
 						android.R.layout.simple_spinner_item);
@@ -150,10 +152,10 @@ public class NewTaskActivity extends Activity {
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		dateFromSpinner.setAdapter(dateAdapter);
 
-        //
-        /* From: TimeSpinner */
-        //
-		Spinner timeFromSpinner = (Spinner)findViewById(R.id.time_from);
+		//
+		/* From: TimeSpinner */
+		//
+		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 
 		// create adapter for time spinner
 		ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter
@@ -163,70 +165,89 @@ public class NewTaskActivity extends Activity {
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		timeFromSpinner.setAdapter(timeAdapter);
 
-        //
-        /* To: TimeSpinner */
-        //
-        Spinner dateToSpinner = (Spinner)findViewById(R.id.date_to);
+		//
+		/* To: TimeSpinner */
+		//
+		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
 
-        dateToSpinner.setAdapter(dateAdapter);
+		dateToSpinner.setAdapter(dateAdapter);
 
-        Spinner timeToSpinner = (Spinner)findViewById(R.id.time_to);
+		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
 
-        timeToSpinner.setAdapter(timeAdapter);
+		timeToSpinner.setAdapter(timeAdapter);
 
 	}
 
-    public void onRemindMe(View v) {
-        v.setVisibility(View.INVISIBLE);
-        RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.setReminderField);
-        relativeLayout.setVisibility(View.VISIBLE);
+	public void onRemindMe(View v) {
+		v.setVisibility(View.INVISIBLE);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
+		relativeLayout.setVisibility(View.VISIBLE);
 
-        /* Add items to the spinners */
+		/* Add items to the spinners */
+		/* Begin with the "TYPE" of reminder */
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
-        int imgArr[] = {R.drawable.location_place, R.drawable.device_access_alarms };
-        String[] strArr = {"Location reminder", "Time reminder"};
+		ReminderTypeAdapter typeAdapter = new ReminderTypeAdapter(this,
+				R.layout.type_spinner_item, strTypeArr, imgArr);
 
-        ReminderTypeAdapter typeAdapter = new ReminderTypeAdapter(this, R.layout.type_spinner_item, strArr, imgArr);
+		Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
+		typeSpinner.setAdapter(typeAdapter);
 
-        Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
-        typeSpinner.setAdapter(typeAdapter);
+		/* Next up is the date of the reminder, simple enough */
+		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
+				.createFromResource(this, R.array.test_dates,
+                        android.R.layout.simple_spinner_item);
+		dateAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner dateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
+        dateSpinner.setAdapter(dateAdapter);
 
-    }
+        /* Last but not least, time of the reminder with a clarification of the time */
+        String[] strTimeArr = {"Morning","Afternoon","Evening","Night"};
+        ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
+                R.layout.time_spinner_item, strTimeArr);
+        Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
+        timeSpinner.setAdapter(timeAdapter);
+	}
 
-    public void onCancelReminder(View v) {
-       RelativeLayout currentLayout = (RelativeLayout)findViewById(R.id.setReminderField);
-       RelativeLayout toBeShownLayout = (RelativeLayout)findViewById(R.id.remindMeField);
+	public void onCancelReminder(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.setReminderField);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
 
-        currentLayout.setVisibility(View.INVISIBLE);
-        toBeShownLayout.setVisibility(View.VISIBLE);
-    }
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
+	}
 
+	private void getTimeFromSpinners(String dateFromString, Date startDate,
+			String dateToString, Date endDate) {
+		if (dateFromString.equals("Today")) {
+			startDate = new Date(System.currentTimeMillis());
+		} else if (dateFromString.equals("Tomorrow")) {
+			startDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
+		} else if (dateFromString.equals("This week")) {
+			startDate = new Date(System.currentTimeMillis()
+					+ (2 * DAY_IN_MILLIS));
+		} else if (dateFromString.equals("Pick a date...")) {
+			startDate = null;
+			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
+		} else {
 
-    private void getTimeFromSpinners(String dateFromString, Date startDate, String dateToString, Date endDate) {
-        if(dateFromString.equals("Today")) {
-            startDate = new Date(System.currentTimeMillis());
-        } else if (dateFromString.equals("Tomorrow")) {
-            startDate = new Date(System.currentTimeMillis()+DAY_IN_MILLIS);
-        } else if (dateFromString.equals("This week")) {
-            startDate = new Date(System.currentTimeMillis()+(2*DAY_IN_MILLIS));
-        } else if (dateFromString.equals("Pick a date...")) {
-            startDate = null;
-            Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
-        } else {
+		}
 
-        }
+		if (dateToString.equals("Today")) {
+			endDate = new Date(System.currentTimeMillis());
+		} else if (dateToString.equals("Tomorrow")) {
+			endDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
+		} else if (dateToString.equals("This week")) {
+			endDate = new Date(System.currentTimeMillis() + (2 * DAY_IN_MILLIS));
+		} else if (dateToString.equals("Pick a date...")) {
+			endDate = null;
+			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
+		} else {
 
-        if(dateToString.equals("Today")) {
-            endDate = new Date(System.currentTimeMillis());
-        } else if (dateToString.equals("Tomorrow")) {
-            endDate = new Date(System.currentTimeMillis()+DAY_IN_MILLIS);
-        } else if (dateToString.equals("This week")) {
-            endDate = new Date(System.currentTimeMillis()+(2*DAY_IN_MILLIS));
-        } else if (dateToString.equals("Pick a date...")) {
-            endDate = null;
-            Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
-        } else {
-
-        }
-    }
+		}
+	}
 }
