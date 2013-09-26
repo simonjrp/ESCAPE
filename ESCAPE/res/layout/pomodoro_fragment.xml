@@ -11,9 +11,17 @@
         android:layout_height="wrap_content" />
     
     <Button
+        android:id="@+id/pomodoro_start_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
         android:text="@string/pomodoro_start"/>
+    <Button 
+        android:id="@+id/pomodoro_stop_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/pomodoro_start_button"
+        android:text="@string/pomodoro_stop"/>
     
 
 </RelativeLayout>
