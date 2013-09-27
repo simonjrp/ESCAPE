@@ -820,6 +820,36 @@ public class DBHandler extends SQLiteOpenHelper {
 	}
 	
 	/**
+	 * Returns the listObject with the id specified.
+	 * 
+	 * @param id
+	 * @return ListObject with the id
+	 */
+	public TimeAlarm getTimeAlarm(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_TIME_ALARMS, new String[]{
+				COLUMN_TIME_ALARMS_ID, COLUMN_TIME_ALARMS_DATE},
+				COLUMN_TIME_ALARMS_ID + "=?", new String[]{id.toString()},
+				null, null, null);
+
+		List<TimeAlarm> list = new LinkedList<TimeAlarm>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				TimeAlarm object = new TimeAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIME_ALARMS_ID)), 
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIME_ALARMS_DATE))));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
+	/**
 	 * Returns the TimeAlarm for a ListObject
 	 * 
 	 * @param listObject
