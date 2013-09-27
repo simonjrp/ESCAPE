@@ -3,6 +3,7 @@ package se.chalmers.dat255.group22.escape;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.view.animation.TranslateAnimation;
 
 
@@ -27,6 +28,8 @@ public class OptionTouchListener extends LongTouchActionListener {
 
 	@Override
 	public void onLongTouchAction(View v) {
+		TextView timeText = (TextView) ve.findViewById(R.id.startTimeTask);
+		timeText.setVisibility(View.INVISIBLE);
 		ImageButton editButton = (ImageButton) ve.findViewById(R.id.editButton);
 		editButton.setVisibility(View.VISIBLE);
 		

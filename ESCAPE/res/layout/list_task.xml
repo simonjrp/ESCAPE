@@ -15,7 +15,7 @@
 	        android:id="@+id/listTask"
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
+	        android:layout_weight="5"
 	        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
 	        android:textColor="#000000"
 	        android:textSize="20dp" />
@@ -32,26 +32,31 @@
 	    
     </LinearLayout>
 
-    <LinearLayout 
+    <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 	    
-	    <ImageButton
-	        android:id="@+id/editButton"
+	    <LinearLayout
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="right"
-	        android:contentDescription="@string/editButtonDescription"
-	        android:src="@drawable/edit_icon" />
-	
-	    <ImageButton
-	        android:id="@+id/deleteButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="right"
-	        android:contentDescription="@string/deleteButtonDescription"
-	        android:src="@drawable/delete_icon" />
-	</LinearLayout>
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal" 
+	        android:layout_alignParentRight="true" >
+	        
+		    <ImageButton
+		        android:id="@+id/editButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:contentDescription="@string/editButtonDescription"
+		        android:src="@drawable/edit_icon" />
+		
+		    <ImageButton
+		        android:id="@+id/deleteButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:contentDescription="@string/deleteButtonDescription"
+		        android:src="@drawable/delete_icon" />
+	    </LinearLayout>
+	</RelativeLayout>
 
 </FrameLayout>
