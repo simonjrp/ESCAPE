@@ -30,13 +30,15 @@ public class OptionTouchListener extends LongTouchActionListener {
 		ImageButton editButton = (ImageButton) ve.findViewById(R.id.editButton);
 		editButton.setVisibility(View.VISIBLE);
 		
-		TranslateAnimation slide = new TranslateAnimation(0, -100, 0, 0);
-		slide.setDuration(100);
-		slide.setFillAfter(true);
-		editButton.startAnimation(slide);
-		
 		ImageButton deleteButton = (ImageButton) ve.findViewById(R.id.deleteButton);
 		deleteButton.setVisibility(View.VISIBLE);
+		
+		TranslateAnimation slide = new TranslateAnimation(0, -300, 0, 0);
+		slide.setDuration(250);
+		slide.setFillAfter(true);
+		editButton.startAnimation(slide);
+		deleteButton.startAnimation(slide);
+
 	}
 
 }

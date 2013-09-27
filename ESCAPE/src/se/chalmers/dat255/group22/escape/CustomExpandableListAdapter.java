@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -92,7 +91,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		deleteButton.setVisibility(View.INVISIBLE);
 		
 		
-		editButton.setX(editButton.getX() + 100);
+		editButton.setX(editButton.getX() + 300);
+		deleteButton.setX(deleteButton.getX() + 300);
 		
 		childLabel.setText(childText);
 		childLabel.setOnClickListener(new OnClickListener() {
