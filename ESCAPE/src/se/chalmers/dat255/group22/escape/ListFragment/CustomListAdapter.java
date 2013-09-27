@@ -52,17 +52,18 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	private void initialize() {
 		dbHandler = new DBHandler(context);
-		// Initiate the lists and set the adapter to use
 		taskList = new ArrayList<ListObject>();
 	}
 
+    /**
+     * Read from database and add all saved ListObjects that doesn't have a specific time
+     */
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
 		for (ListObject lo : listObjects) {
-			// we only want tasks in this fragment (objects without a specific
-			// time)
-			if (lo.getTime() == null) {
+			// we only want ListObjects without a specific time in this list!
+			if (dbHandler.getTime(lo) == null) {
 				addListObject(lo);
 			}
 		}
@@ -215,7 +216,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Add a new task for the list
+	 * Add a new task for the displayed list if the task is not already in the list
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -228,7 +229,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Remove a task from the list
+	 * Remove a task from the displayed list
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
@@ -241,7 +242,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Get a list object from the list
+	 * Get a list object from the displayed list
 	 * 
 	 * @param i
 	 *            number of object to return

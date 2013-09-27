@@ -290,15 +290,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 
-	/**
-	 * Call this to notify that something has changed. Makes the view update!
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void notifyDataSetInvalidated() {
 		this.dataSetObservable.notifyInvalidated();
 	}
 
+    /**
+     * Call this to notify that something has changed. Makes the view update!
+     * {@inheritDoc}
+     */
 	@Override
 	public void notifyDataSetChanged() {
 		this.dataSetObservable.notifyChanged();
@@ -339,7 +339,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Add a new event for today.
+	 * Add a new event for today if the task is not already in the list
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -352,7 +352,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Add a new event for tomorrow.
+	 * Add a new event for tomorrow if the task is not already in the list
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -365,7 +365,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Add a new event for someday.
+	 * Add a new event for someday if the task is not already in the list
 	 * 
 	 * @param listObject
 	 *            the listObject to add
