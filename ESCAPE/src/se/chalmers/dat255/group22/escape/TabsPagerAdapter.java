@@ -3,6 +3,8 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,10 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
+
+	public static final int TASKS_FRAGMENT = 0;
+	public static final int EVENTS_FRAGMENT = 1;
+	public static final int POMODORO_FRAGMENT = 2;
 
 	/**
 	 * Creates a new TabsPagerAdapter.
@@ -36,19 +42,19 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 		// Create all wanted fragments and add them to fragmentList here
 
-		for (int i = 0; i < fragmentTitles.length; i++) {
-			// TODO ugly if statement
-			if (i == 0) {
-				ExpandableListFragment listFragment = new ExpandableListFragment();
-				fragmentList.add(listFragment);
-			} else {
-				TestFragment testFragment = new TestFragment();
-				Bundle args = new Bundle();
-				args.putString("TITLE", fragmentTitles[i]);
-				testFragment.setArguments(args);
-				fragmentList.add(testFragment);
-			}
-		}
+		Fragment taskListFragment = new TaskListFragment();
+		fragmentList.add(taskListFragment);
+
+		Fragment eventListFragment = new ExpandableEventListFragment();
+		fragmentList.add(eventListFragment);
+
+		// TODO will be replaced by a pomodoro clock fragment
+		TestFragment testFragment = new TestFragment();
+		Bundle args = new Bundle();
+		args.putString("TITLE", fragmentTitles[POMODORO_FRAGMENT]);
+		testFragment.setArguments(args);
+		fragmentList.add(testFragment);
+
 	}
 
 	@Override

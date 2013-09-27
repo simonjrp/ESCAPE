@@ -1,9 +1,10 @@
 package se.chalmers.dat255.group22.escape.test;
 
-import se.chalmers.dat255.group22.escape.ExpandableListFragment;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.TabsPagerAdapter;
 import se.chalmers.dat255.group22.escape.TestFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -47,8 +48,8 @@ public class TestTabsPagerAdapter extends
 		Fragment tasks = tPA.getItem(TASKS_PAGER_POS);
 		Fragment events = tPA.getItem(EVENTS_PAGER_POS);
 		Fragment pomodoro = tPA.getItem(POMODORO_PAGER_POS);
-		assertEquals(tasks.getClass(), ExpandableListFragment.class);
-		assertEquals(events.getClass(), TestFragment.class);
+		assertEquals(tasks.getClass(), TaskListFragment.class);
+		assertEquals(events.getClass(), ExpandableEventListFragment.class);
 		assertEquals(pomodoro.getClass(), TestFragment.class);
 	}
 

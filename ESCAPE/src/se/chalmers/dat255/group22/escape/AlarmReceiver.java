@@ -25,9 +25,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 		Bundle args = intent.getExtras();
 		// Creates a notification with some simple test text (for now)
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-				context).setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(args.getString(NotificationHandler.NOTIFICATION_TITLE))
-				.setContentText(args.getString(NotificationHandler.NOTIFICATION_DESC));
+				context)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle(
+						args.getString(NotificationHandler.NOTIFICATION_TITLE))
+				.setContentText(
+						args.getString(NotificationHandler.NOTIFICATION_DESC));
 
 		// Enables sound and vibration for the notification
 		notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
@@ -57,7 +60,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// Sends the notification to the android system
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(args.getInt(NotificationHandler.NOTIFICATION_ID), notificationBuilder.build());
+		mNotificationManager.notify(
+				args.getInt(NotificationHandler.NOTIFICATION_ID),
+				notificationBuilder.build());
 	}
 
 }
