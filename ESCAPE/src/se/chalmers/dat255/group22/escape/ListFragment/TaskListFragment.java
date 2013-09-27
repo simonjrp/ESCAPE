@@ -14,30 +14,27 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
- * A fragment displaying a list with tasks.
- * A task is different from an event such that a task does not have a set time
- * while an event does.
+ * A fragment displaying a list with tasks. A task is different from an event
+ * such that a task does not have a set time while an event does.
  * 
  * @author tholene, Carl
  */
 public class TaskListFragment extends Fragment {
 
-    // The listView to display data in
+	// The listView to display data in
 	ListView ourTaskList;
-    // The adapter used to handle data
+	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
-    // List containing the data displayed
+	// List containing the data displayed
 	List<ListObject> taskList;
+    // The database
+    private DBHandler dbHandler;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        // Initiate the lists and set the adapter to use
-		taskList = new ArrayList<ListObject>();
-		ourListAdapter = new CustomListAdapter(getActivity(), taskList);
-		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
-		ourTaskList.setAdapter(ourListAdapter);
+        initialize();
 	}
 
 	@Override
@@ -50,16 +47,28 @@ public class TaskListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-        // Fetch tasks from database
-		DBHandler dbHandler = new DBHandler(getActivity());
+		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
 		for (ListObject lo : listObjects) {
-            // we only want tasks in this fragment (objects without a specific time)
+			// we only want tasks in this fragment (objects without a specific
+			// time)
 			if (lo.getTime() == null) {
 				addListObject(lo);
 			}
 		}
 	}
+
+    /**
+     * Initialize the database, lists and adapter
+     */
+    private void initialize() {
+        dbHandler = new DBHandler(getActivity());
+        // Initiate the lists and set the adapter to use
+        taskList = new ArrayList<ListObject>();
+        ourListAdapter = new CustomListAdapter(getActivity(), taskList);
+        ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
+        ourTaskList.setAdapter(ourListAdapter);
+    }
 
 	/**
 	 * Add a new task for the list
@@ -68,20 +77,36 @@ public class TaskListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObject(ListObject listObject) {
-		boolean alreadyExists = false;
-
-		// TODO ugly, temporary code so that the same listobject doesn't get
-		// added miltiple times
-		for (ListObject lo : taskList) {
-			if (listObject.getName().equals(lo.getName())) {
-				alreadyExists = true;
-			}
-		}
-
-		if (!alreadyExists) {
+		if (!taskList.contains(listObject)) {
 			taskList.add(listObject);
-            // Notify the adapter that data has changed
-            ourListAdapter.notifyDataSetChanged();
+			ourListAdapter.notifyDataSetChanged();
 		}
+	}
+
+	/**
+	 * Remove a task from the list
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObject(ListObject listObject) {
+		if (taskList.contains(listObject)) {
+			taskList.remove(listObject);
+			ourListAdapter.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Get a list object from the list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObject(int i) {
+		if ( i >= 0 && taskList.size() < i ) {
+			return taskList.get(i);
+		}
+		return null;
 	}
 }
