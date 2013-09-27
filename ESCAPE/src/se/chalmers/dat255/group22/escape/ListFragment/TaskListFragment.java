@@ -1,10 +1,5 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,10 +20,7 @@ public class TaskListFragment extends Fragment {
 	ListView ourTaskList;
 	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
-	// List containing the data displayed
-	List<ListObject> taskList;
-    // The database
-    private DBHandler dbHandler;
+
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -46,67 +38,16 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		// Fetch tasks from database
-		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		for (ListObject lo : listObjects) {
-			// we only want tasks in this fragment (objects without a specific
-			// time)
-			if (lo.getTime() == null) {
-				addListObject(lo);
-			}
-		}
+        ourListAdapter.reInit();
 	}
 
     /**
      * Initialize the database, lists and adapter
      */
     private void initialize() {
-        dbHandler = new DBHandler(getActivity());
         // Initiate the lists and set the adapter to use
-        taskList = new ArrayList<ListObject>();
-        ourListAdapter = new CustomListAdapter(getActivity(), taskList);
+        ourListAdapter = new CustomListAdapter(getActivity());
         ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
         ourTaskList.setAdapter(ourListAdapter);
     }
-
-	/**
-	 * Add a new task for the list
-	 * 
-	 * @param listObject
-	 *            the listObject to add
-	 */
-	public void addListObject(ListObject listObject) {
-		if (!taskList.contains(listObject)) {
-			taskList.add(listObject);
-			ourListAdapter.notifyDataSetChanged();
-		}
-	}
-
-	/**
-	 * Remove a task from the list
-	 * 
-	 * @param listObject
-	 *            the listObject to remove
-	 */
-	public void removeListObject(ListObject listObject) {
-		if (taskList.contains(listObject)) {
-			taskList.remove(listObject);
-			ourListAdapter.notifyDataSetChanged();
-		}
-	}
-
-	/**
-	 * Get a list object from the list
-	 * 
-	 * @param i
-	 *            number of object to return
-	 * @return the specified list object
-	 */
-	public ListObject getListObject(int i) {
-		if ( 0 <= i && i < taskList.size() ) {
-			return taskList.get(i);
-		}
-		return null;
-	}
 }

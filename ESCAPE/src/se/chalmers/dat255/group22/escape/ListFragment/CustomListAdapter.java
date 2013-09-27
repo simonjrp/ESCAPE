@@ -30,22 +30,43 @@ public class CustomListAdapter implements ListAdapter {
 	// The context this adapter is used in
 	private Context context;
 	// The tasks in the list
-	private List<ListObject> ourTaskList;
+	private List<ListObject> taskList;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
+    // The database
+    private DBHandler dbHandler;
 
 	/**
 	 * Creates a new CustomListAdapter
 	 * 
 	 * @param context
 	 *            The context (activity) this adapter is used in
-	 * @param taskList
-	 *            list with the tasks to display
 	 */
-	public CustomListAdapter(Context context, List<ListObject> taskList) {
+	public CustomListAdapter(Context context) {
 		this.context = context;
-		this.ourTaskList = taskList;
+        initialize();
 	}
+
+    /**
+     * Initialize the database, lists and adapter
+     */
+    private void initialize() {
+        dbHandler = new DBHandler(context);
+        // Initiate the lists and set the adapter to use
+        taskList = new ArrayList<ListObject>();
+    }
+
+    public void reInit(){
+        // Fetch tasks from database
+        List<ListObject> listObjects = dbHandler.getAllListObjects();
+        for (ListObject lo : listObjects) {
+            // we only want tasks in this fragment (objects without a specific
+            // time)
+            if (lo.getTime() == null) {
+                addListObject(lo);
+            }
+        }
+    }
 
 	@Override
 	public boolean areAllItemsEnabled() {
@@ -78,12 +99,12 @@ public class CustomListAdapter implements ListAdapter {
 
 	@Override
 	public int getCount() {
-		return ourTaskList.size();
+		return taskList.size();
 	}
 
 	@Override
 	public Object getItem(int i) {
-		return ourTaskList.get(i);
+		return taskList.get(i);
 	}
 
 	@Override
@@ -144,6 +165,7 @@ public class CustomListAdapter implements ListAdapter {
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
+                removeListObject(listObject);
 
 				//						v.refreshDrawableState();
 			}
@@ -188,6 +210,46 @@ public class CustomListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return ourTaskList.isEmpty();
+		return taskList.isEmpty();
 	}
+
+    /**
+     * Add a new task for the list
+     *
+     * @param listObject
+     *            the listObject to add
+     */
+    public void addListObject(ListObject listObject) {
+        if (!taskList.contains(listObject)) {
+            taskList.add(listObject);
+            this.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Remove a task from the list
+     *
+     * @param listObject
+     *            the listObject to remove
+     */
+    public void removeListObject(ListObject listObject) {
+        if (taskList.contains(listObject)) {
+            taskList.remove(listObject);
+            this.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Get a list object from the list
+     *
+     * @param i
+     *            number of object to return
+     * @return the specified list object
+     */
+    public ListObject getListObject(int i) {
+        if ( 0 <= i && i < taskList.size() ) {
+            return taskList.get(i);
+        }
+        return null;
+    }
 }
