@@ -173,35 +173,6 @@ public class CustomListAdapter implements ListAdapter {
 		// convertView));
 
 		return convertView;
-
-		//
-		//		final ListObject listObject = (ListObject) getItem(i);
-		//
-		//		final String childText = listObject.getName();
-		//
-		//		if (view == null) {
-		//			LayoutInflater infalInflater = (LayoutInflater) this.context
-		//					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		//			view = infalInflater.inflate(R.layout.list_task, null);
-		//		}
-		//
-		//		// Get a textview for the object
-		//		TextView childLabel = (TextView) view.findViewById(R.id.listTask);
-		//
-		//		// Get a textview for the object's data
-		//		TextView childData = (TextView) view.findViewById(R.id.taskData);
-		//
-		//		// We don't want the data to show yet...
-		//		childData.setVisibility(View.INVISIBLE);
-		//		childData.setHeight(0);
-		//
-		//		childLabel.setText(childText);
-		//
-		//		CustomOnClickListener clickListener = new CustomOnClickListener(
-		//				listObject, childLabel, childData);
-		//		childLabel.setOnClickListener(clickListener);
-		//
-		//		return view;
 	}
 
 	@Override
