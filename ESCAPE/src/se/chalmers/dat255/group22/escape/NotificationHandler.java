@@ -69,10 +69,18 @@ public class NotificationHandler {
 	 * 
 	 * @param listObject
 	 *            The ListObject describing the task or event.
+	 * @throws IllegalArgumentException
+	 *             If the ListObject's TimeAlarm object is null (i.e no alarm
+	 *             time specified)
 	 */
-	public void addReminderNotification(ListObject listObject) {
+	public void addReminderNotification(ListObject listObject)
+			throws IllegalArgumentException {
 
 		TimeAlarm timeAlarm = dBH.getTimeAlarm(listObject);
+		if (timeAlarm == null) {
+			throw new IllegalArgumentException(
+					"ListObject must have a TimeAlarm object");
+		}
 		Date date = timeAlarm.getDate();
 
 		Bundle args = generateBundle(listObject);
@@ -104,6 +112,8 @@ public class NotificationHandler {
 
 	}
 
+	// Method for generating a bundle object that contains all the important
+	// data from the ListObject
 	private Bundle generateBundle(ListObject listObject) {
 		Bundle bundle = new Bundle();
 
