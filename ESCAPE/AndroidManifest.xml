@@ -25,6 +25,10 @@
         <activity
             android:name="se.chalmers.dat255.group22.escape.NewTaskActivity"
             android:label="@string/title_activity_new_task"></activity>
+        <receiver
+        android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
+        android:process=":remote"
+        android:enabled="true" />
     </application>
 
 </manifest>
