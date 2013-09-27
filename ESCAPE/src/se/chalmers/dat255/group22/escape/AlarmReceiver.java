@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -21,11 +22,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
+		Bundle args = intent.getExtras();
 		// Creates a notification with some simple test text (for now)
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				context).setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle("Reminder!")
-				.setContentText("Description here.....");
+				.setContentTitle(args.getString("TITLE"))
+				.setContentText(args.getString("DESC"));
 
 		// Enables sound and vibration for the notification
 		notificationBuilder.setDefaults(Notification.DEFAULT_ALL);

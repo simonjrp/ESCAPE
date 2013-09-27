@@ -23,7 +23,6 @@ public class MainActivity extends FragmentActivity {
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-		this.sendBroadcast(new Intent(this, AlarmReceiver.class));
 
 	}
 
