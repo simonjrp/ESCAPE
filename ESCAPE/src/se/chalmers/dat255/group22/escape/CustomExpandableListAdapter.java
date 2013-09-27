@@ -91,7 +91,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
 		
-		final TextView childTimeView = (TextView) convertView.findViewById(R.id.startTimeTask);
+		final TextView childTimeView = (TextView) convertView
+				.findViewById(R.id.startTimeTask);
 
 		final ImageButton editButton = (ImageButton) convertView
 				.findViewById(R.id.editButton);
