@@ -3,18 +3,17 @@ package se.chalmers.dat255.group22.escape.ListFragment;
 import java.util.HashMap;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.ListObject;
+import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-
-
-import se.chalmers.dat255.group22.escape.ListObject;
-import se.chalmers.dat255.group22.escape.R;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -32,6 +31,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<String> headerList;
 	// child data in format of header title, data container (ListObject)
 	private HashMap<String, List<ListObject>> objectDataMap;
+
+	// Keeps track of changes
+	private final DataSetObservable dataSetObservable = new DataSetObservable();
 
 	/**
 	 * Create a new custom list adapter.
@@ -77,32 +79,34 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
-        // Get the listObject
+		// Get the listObject
 		ListObject listObject = (ListObject) getChild(groupPosition,
 				childPosition);
 
-        // Get a textview for the object
+		// Get a textview for the object
 		TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
 
-        // Get a textview for the object's data
-        TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+		// Get a textview for the object's data
+		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
-        // We don't want the data to show yet...
-        childData.setVisibility(View.INVISIBLE);
-        childData.setHeight(0);
+		// We don't want the data to show yet...
+		childData.setVisibility(View.INVISIBLE);
+		childData.setHeight(0);
 
 		childLabel.setText(childText);
 
-        CustomOnClickListener clickListener = new CustomOnClickListener(listObject, childLabel, childData);
-        childLabel.setOnClickListener(clickListener);
+		CustomOnClickListener clickListener = new CustomOnClickListener(
+				listObject, childLabel, childData);
+		childLabel.setOnClickListener(clickListener);
 
 		return convertView;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this.objectDataMap.get(this.headerList.get(groupPosition)).size();
+		return this.objectDataMap.get(this.headerList.get(groupPosition))
+				.size();
 
 	}
 
@@ -149,5 +153,33 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+
+	/**
+	 * Call this to notify that something has changed. Makes the view update!
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void notifyDataSetInvalidated() {
+		this.getDataSetObservable().notifyInvalidated();
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		this.getDataSetObservable().notifyChanged();
+	}
+
+	@Override
+	public void registerDataSetObserver(DataSetObserver observer) {
+		this.getDataSetObservable().registerObserver(observer);
+	}
+
+	@Override
+	public void unregisterDataSetObserver(DataSetObserver observer) {
+		this.getDataSetObservable().unregisterObserver(observer);
+	}
+
+	protected DataSetObservable getDataSetObservable() {
+		return dataSetObservable;
 	}
 }

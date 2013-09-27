@@ -24,8 +24,8 @@ public class CustomListAdapter implements ListAdapter {
 	private Context context;
 	// The tasks in the list
 	private List<ListObject> ourTaskList;
-    // Array keeping track of changes in the list
-    private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
+	// Array keeping track of changes in the list
+	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -52,22 +52,22 @@ public class CustomListAdapter implements ListAdapter {
 
 	@Override
 	public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-        observers.add(dataSetObserver);
+		observers.add(dataSetObserver);
 	}
 
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-        observers.remove(dataSetObserver);
+		observers.remove(dataSetObserver);
 	}
 
-    /**
-     * Call this method after changing data in the list
-     */
-    public void notifyDataSetChanged(){
-        for (DataSetObserver observer: observers) {
-            observer.onChanged();
-        }
-    }
+	/**
+	 * Call this to notify that something has changed. Makes the view update!
+	 */
+	public void notifyDataSetChanged() {
+		for (DataSetObserver observer : observers) {
+			observer.onChanged();
+		}
+	}
 
 	@Override
 	public int getCount() {
