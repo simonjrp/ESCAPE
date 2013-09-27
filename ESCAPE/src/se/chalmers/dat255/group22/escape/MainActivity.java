@@ -1,14 +1,13 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
-import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 
 /**
  * The main activity, to be launched when app is started.
@@ -22,12 +21,11 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
-				this);
+		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), this);
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-		
+
 		// switch to the events list directly after startup
 		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
 
@@ -44,9 +42,9 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case R.id.add_task :
-				Intent intent = new Intent(this, NewTaskActivity.class);
-				startActivity(intent);
+		case R.id.add_task:
+			Intent intent = new Intent(this, NewTaskActivity.class);
+			startActivity(intent);
 		}
 
 		return super.onOptionsItemSelected(item);

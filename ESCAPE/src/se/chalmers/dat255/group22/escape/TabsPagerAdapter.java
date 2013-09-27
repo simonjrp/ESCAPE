@@ -3,14 +3,13 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
-import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 
 /**
  * A pager adapter to use with a viewpager.
@@ -20,7 +19,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
-	
+
 	public static final int TASKS_FRAGMENT = 0;
 	public static final int EVENTS_FRAGMENT = 1;
 	public static final int POMODORO_FRAGMENT = 2;
