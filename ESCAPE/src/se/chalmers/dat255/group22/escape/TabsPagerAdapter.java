@@ -49,12 +49,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		Fragment eventListFragment = new ExpandableEventListFragment();
 		fragmentList.add(eventListFragment);
 
-		// TODO will be replaced by a pomodoro clock fragment
-		TestFragment testFragment = new TestFragment();
-		Bundle args = new Bundle();
-		args.putString("TITLE", fragmentTitles[POMODORO_FRAGMENT]);
-		testFragment.setArguments(args);
-		fragmentList.add(testFragment);
+		PomodoroFragment pomodoroFragment = new PomodoroFragment();
+		fragmentList.add(pomodoroFragment);
 
 	}
 
