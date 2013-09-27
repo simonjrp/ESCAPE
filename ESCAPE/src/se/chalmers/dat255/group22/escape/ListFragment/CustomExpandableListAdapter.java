@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.ListFragment;
 
 import java.sql.Date;
 import java.util.HashMap;
@@ -7,7 +7,11 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -32,8 +36,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	// header titles
 	private List<String> headerList;
-	// child data in format of header title, data container (TaskModel)
-	private HashMap<String, List<ListObject>> taskDataMap;
+	// child data in format of header title, data container (ListObject)
+	private HashMap<String, List<ListObject>> objectDataMap;
+
+	// Keeps track of changes
+	private final DataSetObservable dataSetObservable = new DataSetObservable();
 
 	/**
 	 * Create a new custom list adapter.
@@ -50,13 +57,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			HashMap<String, List<ListObject>> listChildData) {
 		this.context = context;
 		this.headerList = listDataHeader; // today, tomorrow etc
-		this.taskDataMap = listChildData; // task
+		this.objectDataMap = listChildData; // task/event
 
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).get(
+		return this.objectDataMap.get(this.headerList.get(groupPosition)).get(
 				childPosititon);
 	}
 
@@ -86,9 +93,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
+		// Get the listObject
 		final ListObject listObject = (ListObject) getChild(groupPosition,
 				childPosition);
 
+		// Get a textview for the object
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
 		
@@ -110,7 +119,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 //		deleteButton.setX(convertView.getRight() + 300);
 		
 		deleteButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
@@ -123,27 +131,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "10:00" : childTimeText);
-		childLabel.setOnClickListener(new OnClickListener() {
-			boolean alreadyExpanded;
+		// Get a textview for the object's data
+				TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
-			@Override
-			public void onClick(View v) {
-				alreadyExpanded = !alreadyExpanded;
-				if (alreadyExpanded) {
-					// TODO temporary ugly fix for fist release
-					if (listObject.getComment() == null) {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.toString());
-					} else {
-						childLabel.setText(listObject.getName() + "\n"
-								+ listObject.getComment());
+				// We don't want the data to show yet...
+				childData.setVisibility(View.INVISIBLE);
+				childData.setHeight(0);
 
-					}
-				} else {
-					childLabel.setText(listObject.getName());
-				}
-			}
-		});
+				childLabel.setText(childText);
+
+				CustomOnClickListener clickListener = new CustomOnClickListener(
+						listObject, childLabel, childData);
+				childLabel.setOnClickListener(clickListener);
 		// TODO We add two listeners since it wont work on one if the other is
 		// added to
 		// Adding touchlisteners
@@ -157,7 +156,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		return this.taskDataMap.get(this.headerList.get(groupPosition)).size();
+		return this.objectDataMap.get(this.headerList.get(groupPosition))
+				.size();
 
 	}
 
@@ -204,5 +204,33 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+
+	/**
+	 * Call this to notify that something has changed. Makes the view update!
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void notifyDataSetInvalidated() {
+		this.getDataSetObservable().notifyInvalidated();
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		this.getDataSetObservable().notifyChanged();
+	}
+
+	@Override
+	public void registerDataSetObserver(DataSetObserver observer) {
+		this.getDataSetObservable().registerObserver(observer);
+	}
+
+	@Override
+	public void unregisterDataSetObserver(DataSetObserver observer) {
+		this.getDataSetObservable().unregisterObserver(observer);
+	}
+
+	protected DataSetObservable getDataSetObservable() {
+		return dataSetObservable;
 	}
 }

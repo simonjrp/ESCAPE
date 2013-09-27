@@ -7,30 +7,32 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
+
 /**
  * The main activity, to be launched when app is started.
  */
 public class MainActivity extends FragmentActivity {
 
-	private SectionsPagerAdapter pagerAdapter;
+	private TabsPagerAdapter pagerAdapter;
 	private ViewPager viewPager;
-	private String[] fragmentTitles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(),
+				this);
 
-		fragmentTitles = getResources().getStringArray(R.array.fragments_array);
-		pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
-				fragmentTitles);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
+		
+		// switch to the events list directly after startup
+		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
 
 	}
 
-
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

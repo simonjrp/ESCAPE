@@ -12,7 +12,9 @@
     <string name="somedayLabel">Someday</string>
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>
-
-    
-
+    <string name="thisWeekLabel">Someday</string>
+    <string name="taskHeader">Remember...</string>
+    <string name="remind_me"><u>Remind me at...</u></string>
+    <string name ="pomodoro_start">Start pomodoro</string>
+	<string name ="pomodoro_stop">Stop</string>
 </resources>

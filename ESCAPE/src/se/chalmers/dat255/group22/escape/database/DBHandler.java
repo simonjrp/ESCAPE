@@ -292,7 +292,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param listObject
 	 */
-	public void addListObject(ListObject listObject) {
+	public Long addListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -302,8 +302,10 @@ public class DBHandler extends SQLiteOpenHelper {
 				? 1
 				: 0);
 
-		db.insert(TABLE_LIST_OBJECTS, null, values);
+		Long id = db.insert(TABLE_LIST_OBJECTS, null, values);
 		db.close();
+		
+		return id;
 	}
 
 	/**
@@ -311,7 +313,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param category
 	 */
-	public void addCategory(Category category) {
+	public Long addCategory(Category category) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -320,8 +322,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_CATEGORIES_IMPORTANT_COLOR,
 				category.getImportantColor());
 
-		db.insert(TABLE_CATEGORIES, null, values);
+		Long id = db.insert(TABLE_CATEGORIES, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -329,14 +332,15 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param place
 	 */
-	public void addPlace(Place place) {
+	public Long addPlace(Place place) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_PLACES_NAME, place.getName());
 
-		db.insert(TABLE_PLACES, null, values);
+		Long id = db.insert(TABLE_PLACES, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -344,15 +348,16 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param time
 	 */
-	public void addTime(Time time) {
+	public Long addTime(Time time) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_TIMES_START_DATE, time.getStartDate().getTime());
 		values.put(COLUMN_TIMES_END_DATE, time.getEndDate().getTime());
 
-		db.insert(TABLE_TIMES, null, values);
+		Long id = db.insert(TABLE_TIMES, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -360,14 +365,15 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param timeAlarm
 	 */
-	public void addTimeAlarm(TimeAlarm timeAlarm) {
+	public Long addTimeAlarm(TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_TIME_ALARMS_DATE, timeAlarm.getDate().getTime());
 
-		db.insert(TABLE_TIME_ALARMS, null, values);
+		Long id = db.insert(TABLE_TIME_ALARMS, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -375,15 +381,16 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * 
 	 * @param gpsAlarm
 	 */
-	public void addGPSAlarm(GPSAlarm gpsAlarm) {
+	public Long addGPSAlarm(GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
 
-		db.insert(TABLE_GPS_ALARMS, null, values);
+		Long id = db.insert(TABLE_GPS_ALARMS, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -393,7 +400,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param category
 	 * @param listObject
 	 */
-	public void addCategoryWithListObject(Category category,
+	public Long addCategoryWithListObject(Category category,
 			ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -403,8 +410,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_CATEGORIES_WITH_LIST_OBJECTS_LIST_OBJECT,
 				listObject.getId());
 
-		db.insert(TABLE_CATEGORIES_WITH_LISTOBJECTS, null, values);
+		Long id = db.insert(TABLE_CATEGORIES_WITH_LISTOBJECTS, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -413,7 +421,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param timeAlarm
 	 */
-	public void addListObjectWithTimeAlarm(ListObject listObject,
+	public Long addListObjectWithTimeAlarm(ListObject listObject,
 			TimeAlarm timeAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -423,8 +431,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM,
 				timeAlarm.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, null, values);
+		Long id = db.insert(TABLE_LIST_OBJECTS_WITH_TIME_ALARM, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -433,7 +442,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param gpsAlarm
 	 */
-	public void addListObjectWithGPSAlarm(ListObject listObject,
+	public Long addListObjectWithGPSAlarm(ListObject listObject,
 			GPSAlarm gpsAlarm) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -443,8 +452,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM,
 				gpsAlarm.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
+		Long id = db.insert(TABLE_LIST_OBJECTS_WITH_GPS_ALARM, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -453,7 +463,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param time
 	 */
-	public void addListObjectsWithTime(ListObject listObject, Time time) {
+	public Long addListObjectsWithTime(ListObject listObject, Time time) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -461,8 +471,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
 				listObject.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_TIME, null, values);
+		Long id = db.insert(TABLE_LIST_OBJECTS_WITH_TIME, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -472,7 +483,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 * @param place
 	 */
-	public void addListObjectWithPlace(ListObject listObject, Place place) {
+	public Long addListObjectWithPlace(ListObject listObject, Place place) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -480,8 +491,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT,
 				listObject.getId());
 
-		db.insert(TABLE_LIST_OBJECTS_WITH_PLACE, null, values);
+		Long id = db.insert(TABLE_LIST_OBJECTS_WITH_PLACE, null, values);
 		db.close();
+		return id;
 	}
 
 	/**
@@ -806,6 +818,36 @@ public class DBHandler extends SQLiteOpenHelper {
 						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
 						? true
 						: false);
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
+	/**
+	 * Returns the listObject with the id specified.
+	 * 
+	 * @param id
+	 * @return ListObject with the id
+	 */
+	public TimeAlarm getTimeAlarm(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_TIME_ALARMS, new String[]{
+				COLUMN_TIME_ALARMS_ID, COLUMN_TIME_ALARMS_DATE},
+				COLUMN_TIME_ALARMS_ID + "=?", new String[]{id.toString()},
+				null, null, null);
+
+		List<TimeAlarm> list = new LinkedList<TimeAlarm>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				TimeAlarm object = new TimeAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIME_ALARMS_ID)), 
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIME_ALARMS_DATE))));
 
 				list.add(object);
 			} while (cursor.moveToNext());
