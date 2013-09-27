@@ -53,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/task_location"
-        android:paddingTop="16dp"
         android:text="Mark as important" />
 
     <RelativeLayout
