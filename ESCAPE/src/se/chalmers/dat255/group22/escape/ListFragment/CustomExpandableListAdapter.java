@@ -123,8 +123,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
-				
-				v.refreshDrawableState();
+
 			}
 			
 		});

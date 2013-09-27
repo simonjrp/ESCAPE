@@ -61,7 +61,7 @@
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:contentDescription="@string/deleteButtonDescription"
-			        android:src="@drawable/delete_icon" />
+			        android:src="@drawable/delete_icon_2" />
 		    </LinearLayout>
 		</RelativeLayout>
 		</FrameLayout>
@@ -71,7 +71,7 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:textSize="17dp"
-	        android:background="#33b5e5"
+	        android:background="#f1f1f1"
 	        android:textColor="#000000"
 	        />
 	
