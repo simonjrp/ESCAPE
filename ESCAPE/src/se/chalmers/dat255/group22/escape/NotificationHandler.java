@@ -7,7 +7,6 @@ import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;

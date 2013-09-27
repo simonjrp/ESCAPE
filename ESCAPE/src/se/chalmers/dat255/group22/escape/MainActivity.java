@@ -1,7 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -25,6 +23,7 @@ public class MainActivity extends FragmentActivity {
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
+		viewPager.setCurrentItem(1);
 
 		// switch to the events list directly after startup
 		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);

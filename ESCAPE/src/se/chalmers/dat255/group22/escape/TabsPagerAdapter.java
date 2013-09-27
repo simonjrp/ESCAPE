@@ -6,7 +6,6 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
 import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

@@ -2,11 +2,6 @@ package se.chalmers.dat255.group22.escape.ListFragment;
 
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.R;
-
-import android.app.ActionBar;
-import android.graphics.Color;
-
 import android.graphics.Paint;
 import android.view.View;
 import android.widget.TextView;

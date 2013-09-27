@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:padding="3dp"
+                android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/spinnerTimeAsText"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Afternoon"
+        android:padding="3dp"
+        android:textSize="15dp"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/spinnerTimeAsTime"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="17:00"
+        android:padding="8dp"
+        android:textSize="10dp"
+        android:textColor="#A3A3A3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        >
+
+    </TextView>
+
+
+</RelativeLayout>

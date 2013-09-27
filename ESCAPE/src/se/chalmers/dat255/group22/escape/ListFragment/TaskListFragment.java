@@ -3,9 +3,9 @@ package se.chalmers.dat255.group22.escape.ListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,14 +27,14 @@ public class TaskListFragment extends Fragment {
 	CustomListAdapter ourListAdapter;
 	// List containing the data displayed
 	List<ListObject> taskList;
-    // The database
-    private DBHandler dbHandler;
+	// The database
+	private DBHandler dbHandler;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        initialize();
+		initialize();
 	}
 
 	@Override
@@ -58,17 +58,17 @@ public class TaskListFragment extends Fragment {
 		}
 	}
 
-    /**
-     * Initialize the database, lists and adapter
-     */
-    private void initialize() {
-        dbHandler = new DBHandler(getActivity());
-        // Initiate the lists and set the adapter to use
-        taskList = new ArrayList<ListObject>();
-        ourListAdapter = new CustomListAdapter(getActivity(), taskList);
-        ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
-        ourTaskList.setAdapter(ourListAdapter);
-    }
+	/**
+	 * Initialize the database, lists and adapter
+	 */
+	private void initialize() {
+		dbHandler = new DBHandler(getActivity());
+		// Initiate the lists and set the adapter to use
+		taskList = new ArrayList<ListObject>();
+		ourListAdapter = new CustomListAdapter(getActivity(), taskList);
+		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
+		ourTaskList.setAdapter(ourListAdapter);
+	}
 
 	/**
 	 * Add a new task for the list
@@ -104,7 +104,7 @@ public class TaskListFragment extends Fragment {
 	 * @return the specified list object
 	 */
 	public ListObject getListObject(int i) {
-		if ( 0 <= i && i < taskList.size() ) {
+		if (0 <= i && i < taskList.size()) {
 			return taskList.get(i);
 		}
 		return null;

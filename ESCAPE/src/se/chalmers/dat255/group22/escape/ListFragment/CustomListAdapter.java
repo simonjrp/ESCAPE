@@ -4,18 +4,18 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -106,9 +106,10 @@ public class CustomListAdapter implements ListAdapter {
 
 		final Time childTime = listObject.getTime();
 		String childTimeText = "";
-		if (childTime != null){
+		if (childTime != null) {
 			final Date childStartDate = childTime.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate).toString();
+			childTimeText = DateFormat.format("HH:mm", childStartDate)
+					.toString();
 		}
 
 		if (convertView == null) {
@@ -116,7 +117,6 @@ public class CustomListAdapter implements ListAdapter {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
-
 
 		// Get a textview for the object
 		final TextView childLabel = (TextView) convertView
@@ -134,10 +134,9 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setVisibility(View.INVISIBLE);
 		deleteButton.setVisibility(View.INVISIBLE);
 
-
-
-		//				editButton.setX(convertView.getRight() + deleteButton.getWidth() + 300);
-		//				deleteButton.setX(convertView.getRight() + 300);
+		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
+		// 300);
+		// deleteButton.setX(convertView.getRight() + 300);
 
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -145,13 +144,14 @@ public class CustomListAdapter implements ListAdapter {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
 
-				//						v.refreshDrawableState();
+				// v.refreshDrawableState();
 			}
 
 		});
 
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "10:00" : childTimeText);
+		childTimeView.setText(childTimeText.equals("") ? "10:00"
+				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
