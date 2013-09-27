@@ -23,20 +23,29 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		Bundle args = intent.getExtras();
+
+		// Creates the description text for the notification. Includes date and
+		// time if the source for the notification is an event, otherwise not.
 		String description = args
 				.getBoolean(NotificationHandler.NOTOFICATION_IS_EVENT) ? args
 				.getString(NotificationHandler.NOTIFICATION_EVENT_TIME)
 				+ ", "
 				+ args.getString(NotificationHandler.NOTIFICATION_DESC) : args
 				.getString(NotificationHandler.NOTIFICATION_DESC);
+
 		// Creates a notification with some simple test text (for now)
+		// TODO Action buttons in notification does not work.
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(
 						args.getString(NotificationHandler.NOTIFICATION_TITLE))
-				.setContentText(description).setStyle(new NotificationCompat.BigTextStyle().bigText(description));
-		
+				.setContentText(description)
+				.setStyle(
+						new NotificationCompat.BigTextStyle()
+								.bigText(description))
+				.addAction(R.drawable.task_done, "Done", null)
+				.addAction(R.drawable.task_snooze, "Snooze...", null);
 
 		// Enables sound and vibration for the notification
 		notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
