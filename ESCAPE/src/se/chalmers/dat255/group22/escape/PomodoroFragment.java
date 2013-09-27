@@ -14,10 +14,13 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	private CountDownTimer countDownTimer;
 	private boolean timerHasStarted = false;
+	
 	//Button to start pomodoro timer
 	private Button startB;
+	
 	//TextView that shows the time left on the timer in seconds(shows minutes:seconds format after running formatTime())
 	public TextView timeLeftText;
+	
 	//startTime defines the amount of time in the pomodoro timer. 1500 seconds = 25 minutes.
 	private final long startTime = 1500 * 1000;
 	private final long interval = 1 * 1000;
@@ -27,14 +30,19 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 
 		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
+		
 		//Layout for the pomodoro start button
 		startB = (Button) v.findViewById(R.id.pomodoro_button);
+		
 		//Listener for pomodoro start button
 		startB.setOnClickListener(this);
+		
 		//Layout for the time display in the pomodoro timer
 		timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+		
 		//Initializing count down timer
 		countDownTimer = new PomodoroTimer(startTime, interval);
+		
 		//Setting start time of the pomodoro timer
 		timeLeftText.setText(formatTime(startTime));
 		
@@ -57,7 +65,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			startB.setText("RESTART");
 		}
 	}
-	
+	/**
+	 * Method to format time from seconds to minutes:seconds
+	 * 
+	 * @param startTime the initial time in seconds, set to 1500 seconds
+	 * @return The formatted seconds displayed as minutes:seconds, for example "25:00" instead of 1500 seconds
+	 */
 	public String formatTime(long startTime){
 		
 		String output = "00:00";  
@@ -79,16 +92,21 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	    return output;
 	}
 	
+	
+	//Count down timer is handled below
+	
 	public class PomodoroTimer extends CountDownTimer {
 		public PomodoroTimer(long startTime, long interval) {
 			super(startTime, interval);
 		}
 
+		//When timer has reached zero, display "Done!" instead of time.
 		@Override
 		public void onFinish() {
 			timeLeftText.setText("Done!");
 		}
-
+		
+		//Method to update the display of minutes:seconds left
 		@Override
 		public void onTick(long millisUntilFinished) {
 			timeLeftText.setText(formatTime(millisUntilFinished));
