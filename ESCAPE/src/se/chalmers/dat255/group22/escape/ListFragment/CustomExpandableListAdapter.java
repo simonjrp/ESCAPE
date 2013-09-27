@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -108,6 +110,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				addListObject(lo);
 			}
 		}
+
+		// TODO default empty list view
+		// Adds a textview to all empty childlists
+		MainActivity mActivity = (MainActivity) context;
+		ExpandableListView expLv = (ExpandableListView) mActivity
+				.findViewById(R.id.expEventList);
+		for (int i = 0; i < this.getGroupCount(); i++) {
+			if (expLv.isGroupExpanded(i)) {
+				expLv.collapseGroup(i);
+				expLv.expandGroup(i);
+			}
+		}
+
+		ListObject emptyObject = new ListObject(0, EMPTY_LIST);
+		if (todayEventList.size() == 0)
+			todayEventList.add(emptyObject);
+		if (tomorrowEventList.size() == 0)
+			tomorrowEventList.add(emptyObject);
+		if (thisWeekEventList.size() == 0)
+			thisWeekEventList.add(emptyObject);
+
+		expLv.expandGroup(0, true);
 	}
 
 	@Override
@@ -177,9 +201,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				public void onClick(View v) {
 					DBHandler dbh = new DBHandler(context);
 					dbh.deleteListObject(listObject);
-                    removeListObjectToday(listObject);
-                    removeListObjectTomorrow(listObject);
-                    removeListObjectThisWeek(listObject);
+					removeListObjectToday(listObject);
+					removeListObjectTomorrow(listObject);
+					removeListObjectThisWeek(listObject);
 				}
 
 			});
