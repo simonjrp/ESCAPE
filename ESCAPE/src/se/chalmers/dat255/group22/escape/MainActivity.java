@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +28,30 @@ public class MainActivity extends FragmentActivity {
 
 		// switch to the events list directly after startup
 		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
+
+		NotificationHandler nf = new NotificationHandler(this);
+		DBHandler dbh = new DBHandler(this);
+
+		ListObject lo = new ListObject(0, "Köp mjölk");
+		lo.setComment("Mjölk är väldigt gott men du måste ändå köpa lättmjölk, annars blir du tjock");
+
+		TimeAlarm alarm = new TimeAlarm(0, new Date(
+				System.currentTimeMillis() + 1000));
+
+		long idAlarm = dbh.addTimeAlarm(alarm);
+
+		long idLo = dbh.addListObject(lo);
+
+		long idTime = dbh.addTime(new Time(0, new Date(System
+				.currentTimeMillis() + 100000), new Date(System
+				.currentTimeMillis() + 1000000)));
+
+		dbh.addListObjectWithTimeAlarm(dbh.getListObject(idLo),
+				dbh.getTimeAlarm(idAlarm));
+		
+		dbh.addListObjectsWithTime(dbh.getListObject(idLo), dbh.getTime(idTime));
+
+		nf.addReminderNotification(dbh.getListObject(idLo));
 
 	}
 

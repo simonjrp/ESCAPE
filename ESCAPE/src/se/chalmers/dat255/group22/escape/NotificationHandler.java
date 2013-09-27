@@ -109,9 +109,21 @@ public class NotificationHandler {
 		boolean isEvent = (time != null);
 
 		// create a date/time string to show in notification
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(
-				"yy-MM-dd : HH:mm:SS");
-		String timeString = dateFormatter.format(time.getStartDate());
+		String timeString = null;
+		if (isEvent) {
+			Date startDate = time.getStartDate();
+		
+			SimpleDateFormat yearFormatter = new SimpleDateFormat("yy");
+			SimpleDateFormat monthFormatter = new SimpleDateFormat("MM");
+			SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+			
+			// TODO use string builder instead
+			timeString = yearFormatter.format(startDate) + "/"
+					+ monthFormatter.format(startDate) + "/"
+					+ dayFormatter.format(startDate) + " "
+					+ timeFormatter.format(startDate);
+		}
 
 		bundle.putInt(NOTIFICATION_ID, id);
 		bundle.putString(NOTIFICATION_TITLE, title);

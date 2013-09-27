@@ -917,6 +917,39 @@ public class DBHandler extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * Method for getting a Time object from an ID
+	 * 
+	 * @param id
+	 *            The ID of the Time object
+	 * @return The Time object with the given id
+	 */
+	public Time getTime(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_TIMES, new String[] { COLUMN_TIMES_ID,
+				COLUMN_TIMES_START_DATE, COLUMN_TIMES_END_DATE },
+				COLUMN_TIMES_ID + "=?", new String[] { id.toString() }, null,
+				null, null);
+
+		List<Time> list = new LinkedList<Time>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				Time object = new Time(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_TIMES_ID)), new Date(
+						cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_START_DATE))),
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_START_DATE))));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+
+	/**
 	 * Returns the Time for a list object
 	 * 
 	 * @param listObject
