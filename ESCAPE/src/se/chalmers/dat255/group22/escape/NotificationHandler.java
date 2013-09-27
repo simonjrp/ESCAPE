@@ -104,7 +104,7 @@ public class NotificationHandler {
 
 	}
 
-	public Bundle generateBundle(ListObject listObject) {
+	private Bundle generateBundle(ListObject listObject) {
 		Bundle bundle = new Bundle();
 
 		int id = listObject.getId();
