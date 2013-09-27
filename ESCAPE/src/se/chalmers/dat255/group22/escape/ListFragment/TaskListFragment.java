@@ -21,12 +21,11 @@ public class TaskListFragment extends Fragment {
 	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
 
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        initialize();
+		initialize();
 	}
 
 	@Override
@@ -38,16 +37,16 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        ourListAdapter.reInit();
+		ourListAdapter.reInit();
 	}
 
-    /**
-     * Initialize the database, lists and adapter
-     */
-    private void initialize() {
-        // Initiate the lists and set the adapter to use
-        ourListAdapter = new CustomListAdapter(getActivity());
-        ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
-        ourTaskList.setAdapter(ourListAdapter);
-    }
+	/**
+	 * Initialize the database, lists and adapter
+	 */
+	private void initialize() {
+		// Initiate the lists and set the adapter to use
+		ourListAdapter = new CustomListAdapter(getActivity());
+		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
+		ourTaskList.setAdapter(ourListAdapter);
+	}
 }

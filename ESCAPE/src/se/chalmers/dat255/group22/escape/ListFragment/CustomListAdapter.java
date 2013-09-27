@@ -4,18 +4,18 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -33,8 +33,8 @@ public class CustomListAdapter implements ListAdapter {
 	private List<ListObject> taskList;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
-    // The database
-    private DBHandler dbHandler;
+	// The database
+	private DBHandler dbHandler;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -44,29 +44,29 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public CustomListAdapter(Context context) {
 		this.context = context;
-        initialize();
+		initialize();
 	}
 
-    /**
-     * Initialize the database, lists and adapter
-     */
-    private void initialize() {
-        dbHandler = new DBHandler(context);
-        // Initiate the lists and set the adapter to use
-        taskList = new ArrayList<ListObject>();
-    }
+	/**
+	 * Initialize the database and list
+	 */
+	private void initialize() {
+		dbHandler = new DBHandler(context);
+		// Initiate the lists and set the adapter to use
+		taskList = new ArrayList<ListObject>();
+	}
 
-    public void reInit(){
-        // Fetch tasks from database
-        List<ListObject> listObjects = dbHandler.getAllListObjects();
-        for (ListObject lo : listObjects) {
-            // we only want tasks in this fragment (objects without a specific
-            // time)
-            if (lo.getTime() == null) {
-                addListObject(lo);
-            }
-        }
-    }
+	public void reInit() {
+		// Fetch tasks from database
+		List<ListObject> listObjects = dbHandler.getAllListObjects();
+		for (ListObject lo : listObjects) {
+			// we only want tasks in this fragment (objects without a specific
+			// time)
+			if (lo.getTime() == null) {
+				addListObject(lo);
+			}
+		}
+	}
 
 	@Override
 	public boolean areAllItemsEnabled() {
@@ -127,9 +127,10 @@ public class CustomListAdapter implements ListAdapter {
 
 		final Time childTime = listObject.getTime();
 		String childTimeText = "";
-		if (childTime != null){
+		if (childTime != null) {
 			final Date childStartDate = childTime.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate).toString();
+			childTimeText = DateFormat.format("HH:mm", childStartDate)
+					.toString();
 		}
 
 		if (convertView == null) {
@@ -137,7 +138,6 @@ public class CustomListAdapter implements ListAdapter {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
-
 
 		// Get a textview for the object
 		final TextView childLabel = (TextView) convertView
@@ -155,25 +155,26 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setVisibility(View.INVISIBLE);
 		deleteButton.setVisibility(View.INVISIBLE);
 
-
-
-		//				editButton.setX(convertView.getRight() + deleteButton.getWidth() + 300);
-		//				deleteButton.setX(convertView.getRight() + 300);
+		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
+		// 300);
+		// deleteButton.setX(convertView.getRight() + 300);
 
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
-                removeListObject(listObject);
+				removeListObject(listObject);
 
-				//						v.refreshDrawableState();
+				// v.refreshDrawableState();
 			}
 
 		});
 
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "10:00" : childTimeText);
+		childTimeView.setText(childTimeText.equals("")
+				? "10:00"
+				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
@@ -213,43 +214,43 @@ public class CustomListAdapter implements ListAdapter {
 		return taskList.isEmpty();
 	}
 
-    /**
-     * Add a new task for the list
-     *
-     * @param listObject
-     *            the listObject to add
-     */
-    public void addListObject(ListObject listObject) {
-        if (!taskList.contains(listObject)) {
-            taskList.add(listObject);
-            this.notifyDataSetChanged();
-        }
-    }
+	/**
+	 * Add a new task for the list
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObject(ListObject listObject) {
+		if (!taskList.contains(listObject)) {
+			taskList.add(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
 
-    /**
-     * Remove a task from the list
-     *
-     * @param listObject
-     *            the listObject to remove
-     */
-    public void removeListObject(ListObject listObject) {
-        if (taskList.contains(listObject)) {
-            taskList.remove(listObject);
-            this.notifyDataSetChanged();
-        }
-    }
+	/**
+	 * Remove a task from the list
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObject(ListObject listObject) {
+		if (taskList.contains(listObject)) {
+			taskList.remove(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
 
-    /**
-     * Get a list object from the list
-     *
-     * @param i
-     *            number of object to return
-     * @return the specified list object
-     */
-    public ListObject getListObject(int i) {
-        if ( 0 <= i && i < taskList.size() ) {
-            return taskList.get(i);
-        }
-        return null;
-    }
+	/**
+	 * Get a list object from the list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObject(int i) {
+		if (0 <= i && i < taskList.size()) {
+			return taskList.get(i);
+		}
+		return null;
+	}
 }
