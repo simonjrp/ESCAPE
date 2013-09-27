@@ -90,6 +90,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		editButton.setVisibility(View.INVISIBLE);
 		deleteButton.setVisibility(View.INVISIBLE);
+		
+		
+		editButton.setX(editButton.getX() + 100);
+		
 		childLabel.setText(childText);
 		childLabel.setOnClickListener(new OnClickListener() {
 			boolean alreadyExpanded;
