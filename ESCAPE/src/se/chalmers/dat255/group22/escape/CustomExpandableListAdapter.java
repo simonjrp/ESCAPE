@@ -1,11 +1,13 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +70,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// Get the name of the task to display for each task entry
 		final String childText = ((ListObject) getChild(groupPosition,
 				childPosition)).getName();
+		final Date childTime = ((ListObject) getChild(groupPosition,
+				childPosition)).getTime().getStartDate();
+		final String childTimeText = DateFormat.format("HH:mm", childTime).toString();
 
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this.context
@@ -80,6 +85,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
+		
+		final TextView childTimeView = (TextView) convertView.findViewById(R.id.startTimeTask);
 
 		final ImageButton editButton = (ImageButton) convertView
 				.findViewById(R.id.editButton);
@@ -95,6 +102,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		deleteButton.setX(deleteButton.getX() + 300);
 		
 		childLabel.setText(childText);
+		childTimeView.setText(childTimeText);
 		childLabel.setOnClickListener(new OnClickListener() {
 			boolean alreadyExpanded;
 
