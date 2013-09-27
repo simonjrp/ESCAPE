@@ -15,7 +15,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	private CountDownTimer countDownTimer;
 	private boolean timerHasStarted = false;
 	private Button startB;
-	public TextView text;
+	public TextView secondsLeftText;
 	private final long startTime = 5 * 1000;
 	private final long interval = 1 * 1000;
 
@@ -27,9 +27,9 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		startB = (Button) v.findViewById(R.id.pomodoro_button);
 		startB.setOnClickListener(this);
-		text = (TextView) v.findViewById(R.id.pomodoro_timer);
-		countDownTimer = new MyCountDownTimer(startTime, interval);
-		text.setText(text.getText() + String.valueOf(startTime / 1000));
+		secondsLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+		countDownTimer = new PomodoroTimer(startTime, interval);
+		secondsLeftText.setText(secondsLeftText.getText() + String.valueOf(startTime / 1000));
 
 		return v;
 	}
@@ -47,19 +47,19 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	public class MyCountDownTimer extends CountDownTimer {
-		public MyCountDownTimer(long startTime, long interval) {
+	public class PomodoroTimer extends CountDownTimer {
+		public PomodoroTimer(long startTime, long interval) {
 			super(startTime, interval);
 		}
 
 		@Override
 		public void onFinish() {
-			text.setText("Time's up!");
+			secondsLeftText.setText("Done!");
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			text.setText("" + millisUntilFinished / 1000);
+			secondsLeftText.setText("" + millisUntilFinished / 1000);
 		}
 	}
 
