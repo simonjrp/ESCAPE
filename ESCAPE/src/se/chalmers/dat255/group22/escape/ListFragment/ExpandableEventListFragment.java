@@ -11,7 +11,6 @@ import se.chalmers.dat255.group22.escape.DBHandler;
 import se.chalmers.dat255.group22.escape.ListObject;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.Time;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableEventListFragment extends Fragment {
 
+	// List data
 	CustomExpandableListAdapter listAdapter;
 	ExpandableListView expListView;
 	List<ListObject> todayEventList;
@@ -36,17 +36,23 @@ public class ExpandableEventListFragment extends Fragment {
 	List<String> headerList;
 	HashMap<String, List<ListObject>> eventDataMap;
 
+	// The database
+	private DBHandler dbHandler;
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		// Initiate the database
+		dbHandler = new DBHandler(getActivity());
+
 		// get the list data
 		getListData();
 
+		// Create the adapter used to display the list
 		listAdapter = new CustomExpandableListAdapter(getActivity(),
 				headerList, eventDataMap);
-
-		// getting the view
+		// getting the list view
 		expListView = (ExpandableListView) getActivity().findViewById(
 				R.id.expEventList);
 		// setting list adapter
@@ -64,24 +70,22 @@ public class ExpandableEventListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-        DBHandler dbHandler = new DBHandler(getActivity());
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
-            try {
-                if (dbHandler.getTime(lo).getStartDate() != null) {
-                    //addListObject(lo);
-                    addListObjectToday(lo);
-                } else {
-                    //dbHandler.addListObjectsWithTime(lo, new Time(1, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()+1)));
-                    //addListObject(lo);
-                    addListObjectTomorrow(lo);
-                }
-            } catch (Exception e){
-                System.out.println("Exception caught!");
-                e.printStackTrace();
-            }
+			if (dbHandler.getTime(lo) != null) {
+				addListObject(lo);
+			} /*
+			 * else { //TODO this is test code displaying how a time might be
+			 * added to the listobject. Should be removed in final release! Time
+			 * tmpTimeTomorrow = new Time(lo.getId(), new Date(
+			 * System.currentTimeMillis() + 1000*60*60*24), new Date(
+			 * System.currentTimeMillis() + 1000*60*60*25));
+			 * dbHandler.addTime(tmpTimeTomorrow);
+			 * dbHandler.addListObjectsWithTime(lo, tmpTimeTomorrow);
+			 * addListObject(lo); }
+			 */
 		}
 
 		// TODO Ugly code for 'updating' the expandable list view. Without this,
@@ -89,10 +93,10 @@ public class ExpandableEventListFragment extends Fragment {
 		// have to collapse and expand that category list to be able to see the
 		// newly added item.
 		/*
-		 * Look into implementing the following methods in CustomExpandableListAdapter
-		 * public void notifyDataSetChanged () public void
-		 * registerDataSetObserver (DataSetObserver observer) public void
-		 * unregisterDataSetObserver (DataSetObserver observer)
+		 * Look into implementing the following methods in
+		 * CustomExpandableListAdapter public void notifyDataSetChanged ()
+		 * public void registerDataSetObserver (DataSetObserver observer) public
+		 * void unregisterDataSetObserver (DataSetObserver observer)
 		 */
 
 		ExpandableListView expLv = (ExpandableListView) getActivity()
@@ -107,9 +111,9 @@ public class ExpandableEventListFragment extends Fragment {
 
 	}
 
-    /**
-     * Prepare the dummy list data
-     */
+	/**
+	 * Prepare the dummy list data
+	 */
 	private void getListData() {
 
 		eventDataMap = new HashMap<String, List<ListObject>>();
@@ -141,16 +145,20 @@ public class ExpandableEventListFragment extends Fragment {
 	public void addListObject(ListObject listObject) {
 
 		// Get a calendar with current system time
-		/*Date theDate = dbHandler.getTime(listObject).getStartDate();
+		Time theTime = dbHandler.getTime(listObject);
 
-		//TODO Check if this works and maybe add additional functionality!
-		if (isToday(theDate)) {
-			addListObjectToday(listObject);
-		} else if (isTomorrow(theDate)) {
-			addListObjectTomorrow(listObject);
-		} else {
-			addListObjectThisWeek(listObject);
-		}*/
+		if (theTime != null) {
+
+			Date theDate = theTime.getStartDate();
+
+			if (isToday(theDate)) {
+				addListObjectToday(listObject);
+			} else if (isTomorrow(theDate)) {
+				addListObjectTomorrow(listObject);
+			} else {
+				addListObjectThisWeek(listObject);
+			}
+		}
 	}
 
 	/**
@@ -160,21 +168,9 @@ public class ExpandableEventListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObjectToday(ListObject listObject) {
-
-		/*
-		 * boolean alreadyExists = false;
-		 * 
-		 * // TODO ugly, temporary code so that the same listobject doesn't get
-		 * // added multiple times
-		 * for (ListObject lo : todayEventList) {
-		 * if
-		 * (listObject.getId() == lo.getId() ){
-		 * alreadyExists = true;
-		 * } }
-		 */
-		//if (!todayEventList.contains(listObject)) {
+		if (!todayEventList.contains(listObject)) {
 			todayEventList.add(listObject);
-		//}
+		}
 	}
 
 	/**
@@ -184,9 +180,9 @@ public class ExpandableEventListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObjectTomorrow(ListObject listObject) {
-		//if (!tomorrowEventList.contains(listObject)) {
+		if (!tomorrowEventList.contains(listObject)) {
 			tomorrowEventList.add(listObject);
-		//}
+		}
 	}
 
 	/**
@@ -201,6 +197,7 @@ public class ExpandableEventListFragment extends Fragment {
 		}
 	}
 
+    //TODO Look into better way to check if it is today or tomorrow
 	/**
 	 * Method to check if a date is today
 	 * 
@@ -212,10 +209,10 @@ public class ExpandableEventListFragment extends Fragment {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
-        // Get a calendar with current system time and set it to day after today
-        Calendar tomorrow = Calendar.getInstance();
-        tomorrow.roll(Calendar.DAY_OF_YEAR, true);
-        tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+		// Get a calendar with current system time and set it to day after today
+		Calendar tomorrow = Calendar.getInstance();
+		tomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		tomorrow.set(Calendar.HOUR_OF_DAY, 0);
 
 		return theCalendar.before(tomorrow);
 	}
@@ -231,14 +228,15 @@ public class ExpandableEventListFragment extends Fragment {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and set it to day after tomorrow
+		// Get a calendar with current system time and set it to day after
+		// tomorrow
 		Calendar dayAfterTomorrow = Calendar.getInstance();
-        dayAfterTomorrow.set(Calendar.HOUR_OF_DAY, 0);
-        dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
-        if (theCalendar.before(dayAfterTomorrow)) {
-            return false;
-        }
-        dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		dayAfterTomorrow.set(Calendar.HOUR_OF_DAY, 0);
+		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		if (theCalendar.before(dayAfterTomorrow)) {
+			return false;
+		}
+		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
 
 		return theCalendar.before(dayAfterTomorrow);
 	}
