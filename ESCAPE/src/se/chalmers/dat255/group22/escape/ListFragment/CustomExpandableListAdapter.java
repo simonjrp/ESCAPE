@@ -1,6 +1,9 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,11 +37,20 @@ import android.widget.TextView;
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private static final String EMPTY_LIST = "EMPTY";
+
+	// The context this is used in
 	private Context context;
 	// header titles
 	private List<String> headerList;
+	// The lists
+	List<ListObject> todayEventList;
+	List<ListObject> tomorrowEventList;
+	List<ListObject> thisWeekEventList;
 	// child data in format of header title, data container (ListObject)
 	private HashMap<String, List<ListObject>> objectDataMap;
+
+	// The database
+	private DBHandler dbHandler;
 
 	// Keeps track of changes
 	private final DataSetObservable dataSetObservable = new DataSetObservable();
@@ -48,18 +60,54 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * 
 	 * @param context
 	 *            The context to make use of
-	 * @param listDataHeader
-	 *            A list of header titles
-	 * @param listChildData
-	 *            A list of ListObjects to be associated with a header
 	 */
-	public CustomExpandableListAdapter(Context context,
-			List<String> listDataHeader,
-			HashMap<String, List<ListObject>> listChildData) {
+	public CustomExpandableListAdapter(Context context) {
 		this.context = context;
-		this.headerList = listDataHeader; // today, tomorrow etc
-		this.objectDataMap = listChildData; // task/event
 
+		initialize();
+	}
+
+	/**
+	 * Initialize database, lists, headers and hashmap
+	 */
+	private void initialize() {
+
+		// Initiate the database
+		dbHandler = new DBHandler(context);
+
+		objectDataMap = new HashMap<String, List<ListObject>>();
+		todayEventList = new ArrayList<ListObject>();
+		tomorrowEventList = new ArrayList<ListObject>();
+		thisWeekEventList = new ArrayList<ListObject>();
+		headerList = new ArrayList<String>();
+
+		headerList.add(context.getResources().getString(R.string.todayLabel));
+		headerList
+				.add(context.getResources().getString(R.string.tomorrowLabel));
+		headerList
+				.add(context.getResources().getString(R.string.thisWeekLabel));
+
+		objectDataMap.put(
+				context.getResources().getString(R.string.todayLabel),
+				todayEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.tomorrowLabel),
+				tomorrowEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.thisWeekLabel),
+				thisWeekEventList);
+
+	}
+
+	public void reInit() {
+		List<ListObject> listObjects = dbHandler.getAllListObjects();
+
+		for (ListObject lo : listObjects) {
+			// we only want evens in this fragment (objects with a set time)
+			if (dbHandler.getTime(lo) != null) {
+				addListObject(lo);
+			}
+		}
 	}
 
 	@Override
@@ -129,6 +177,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				public void onClick(View v) {
 					DBHandler dbh = new DBHandler(context);
 					dbh.deleteListObject(listObject);
+                    removeListObjectToday(listObject);
+                    removeListObjectTomorrow(listObject);
+                    removeListObjectThisWeek(listObject);
 				}
 
 			});
@@ -159,6 +210,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			// convertView));
 
 		}
+
 		return convertView;
 	}
 
@@ -220,25 +272,209 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	@Override
 	public void notifyDataSetInvalidated() {
-		this.getDataSetObservable().notifyInvalidated();
+		this.dataSetObservable.notifyInvalidated();
 	}
 
 	@Override
 	public void notifyDataSetChanged() {
-		this.getDataSetObservable().notifyChanged();
+		this.dataSetObservable.notifyChanged();
 	}
 
 	@Override
 	public void registerDataSetObserver(DataSetObserver observer) {
-		this.getDataSetObservable().registerObserver(observer);
+		this.dataSetObservable.registerObserver(observer);
 	}
 
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver observer) {
-		this.getDataSetObservable().unregisterObserver(observer);
+		this.dataSetObservable.unregisterObserver(observer);
 	}
 
-	protected DataSetObservable getDataSetObservable() {
-		return dataSetObservable;
+	/**
+	 * Add a list object to the expandable list. Object should automatically be
+	 * placed where it should be.
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObject(ListObject listObject) {
+		// Get a calendar with current system time
+		Time theTime = dbHandler.getTime(listObject);
+		if (theTime != null) {
+			// Get start date
+			Date theDate = theTime.getStartDate();
+			// Add into the relevant list
+			if (isToday(theDate)) {
+				addListObjectToday(listObject);
+			} else if (isTomorrow(theDate)) {
+				addListObjectTomorrow(listObject);
+			} else {
+				addListObjectThisWeek(listObject);
+			}
+		}
+	}
+
+	/**
+	 * Add a new event for today.
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObjectToday(ListObject listObject) {
+		if (!todayEventList.contains(listObject)) {
+			todayEventList.add(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Add a new event for tomorrow.
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObjectTomorrow(ListObject listObject) {
+		if (!tomorrowEventList.contains(listObject)) {
+			tomorrowEventList.add(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Add a new event for someday.
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObjectThisWeek(ListObject listObject) {
+		if (!thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.add(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Remove a event for today.
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObjectToday(ListObject listObject) {
+		if (todayEventList.contains(listObject)) {
+			todayEventList.remove(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Remove a event for tomorrow.
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObjectTomorrow(ListObject listObject) {
+		if (tomorrowEventList.contains(listObject)) {
+			tomorrowEventList.remove(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Remove a event for someday.
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObjectThisWeek(ListObject listObject) {
+		if (thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.remove(listObject);
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
+	 * Get a list object from the today list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObjectToday(int i) {
+		if (0 <= i && i < todayEventList.size()) {
+			return todayEventList.get(i);
+		}
+		return null;
+	}
+
+	/**
+	 * Get a list object from the tomorrow list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObjectTomorrow(int i) {
+		if (0 <= i && i < tomorrowEventList.size()) {
+			return tomorrowEventList.get(i);
+		}
+		return null;
+	}
+
+	/**
+	 * Get a list object from the someday list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObjectSomeday(int i) {
+		if (0 <= i && i < thisWeekEventList.size()) {
+			return thisWeekEventList.get(i);
+		}
+		return null;
+	}
+
+	// TODO Look into better way to check if it is today or tomorrow
+	/**
+	 * Method to check if a date is today
+	 * 
+	 * @param theDate
+	 *            the date to see if it is today
+	 * @return true if it is today
+	 */
+	private boolean isToday(Date theDate) {
+		// Get a calendar with the events start time
+		GregorianCalendar theCalendar = new GregorianCalendar();
+		theCalendar.setTime(theDate);
+		// Get a calendar with current system time and set it to day after today
+		Calendar tomorrow = Calendar.getInstance();
+		tomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+
+		return theCalendar.before(tomorrow);
+	}
+
+	/**
+	 * Method to check if a date is tomorrow
+	 * 
+	 * @param theDate
+	 *            the date to see if it is tomorrow
+	 * @return true of it is tomorrow
+	 */
+	private boolean isTomorrow(Date theDate) {
+		// Get a calendar with the events start time
+		GregorianCalendar theCalendar = new GregorianCalendar();
+		theCalendar.setTime(theDate);
+		// Get a calendar with current system time and set it to day after
+		// tomorrow
+		Calendar dayAfterTomorrow = Calendar.getInstance();
+		dayAfterTomorrow.set(Calendar.HOUR_OF_DAY, 0);
+		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		if (theCalendar.before(dayAfterTomorrow)) {
+			return false;
+		}
+		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
+
+		return theCalendar.before(dayAfterTomorrow);
 	}
 }
