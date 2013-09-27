@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
@@ -91,7 +92,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
 		
-		final TextView childTimeView = (TextView) convertView.findViewById(R.id.startTimeTask);
+		final TextView childTimeView = (TextView) convertView
+				.findViewById(R.id.startTimeTask);
 
 		final ImageButton editButton = (ImageButton) convertView
 				.findViewById(R.id.editButton);
@@ -105,6 +107,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		
 		editButton.setX(editButton.getX() + 300);
 		deleteButton.setX(deleteButton.getX() + 300);
+		
+		deleteButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				DBHandler dbh = new DBHandler(context);
+				dbh.deleteListObject(listObject);
+				
+				v.refreshDrawableState();
+			}
+			
+		});
 		
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "10:00" : childTimeText);
