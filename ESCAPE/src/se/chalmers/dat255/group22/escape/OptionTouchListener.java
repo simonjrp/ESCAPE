@@ -25,8 +25,10 @@ public class OptionTouchListener extends LongTouchActionListener {
 
 	@Override
 	public void onLongTouchAction(View v) {
-		Button button = (Button) ve.findViewById(R.id.editButton);
-		button.setVisibility(View.VISIBLE);
+		Button editButton = (Button) ve.findViewById(R.id.editButton);
+		editButton.setVisibility(View.VISIBLE);
+		Button deleteButton = (Button) ve.findViewById(R.id.deleteButton);
+		deleteButton.setVisibility(View.VISIBLE);
 	}
 
 }

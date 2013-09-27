@@ -80,15 +80,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		final TextView childLabel = (TextView) convertView
 				.findViewById(R.id.listTask);
-		
+
 		final Button editButton = (Button) convertView
 				.findViewById(R.id.editButton);
 		
+		final Button deleteButton = (Button) convertView
+				.findViewById(R.id.deleteButton);
+
 		editButton.setVisibility(View.INVISIBLE);
+		deleteButton.setVisibility(View.INVISIBLE);
 		childLabel.setText(childText);
 		childLabel.setOnClickListener(new OnClickListener() {
 			boolean alreadyExpanded;
-			
+
 			@Override
 			public void onClick(View v) {
 				alreadyExpanded = !alreadyExpanded;
@@ -107,11 +111,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 		});
-		// TODO We add two listeners since it wont work on one if the other is added to
+		// TODO We add two listeners since it wont work on one if the other is
+		// added to
 		// Adding touchlisteners
-		childLabel.setOnTouchListener(new OptionTouchListener(context, convertView));
-		convertView.setOnTouchListener(new OptionTouchListener(context, convertView));
-		
+		childLabel.setOnTouchListener(new OptionTouchListener(context,
+				convertView));
+		// convertView.setOnTouchListener(new OptionTouchListener(context,
+		// convertView));
+
 		return convertView;
 	}
 
