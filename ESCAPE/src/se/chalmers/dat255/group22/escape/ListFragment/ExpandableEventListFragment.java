@@ -76,43 +76,13 @@ public class ExpandableEventListFragment extends Fragment {
 			// we only want evens in this fragment (objects with a set time)
 			if (dbHandler.getTime(lo) != null) {
 				addListObject(lo);
-			} /*
-			 * else { //TODO this is test code displaying how a time might be
-			 * added to the listobject. Should be removed in final release! Time
-			 * tmpTimeTomorrow = new Time(lo.getId(), new Date(
-			 * System.currentTimeMillis() + 1000*60*60*24), new Date(
-			 * System.currentTimeMillis() + 1000*60*60*25));
-			 * dbHandler.addTime(tmpTimeTomorrow);
-			 * dbHandler.addListObjectsWithTime(lo, tmpTimeTomorrow);
-			 * addListObject(lo); }
-			 */
-		}
-
-		// TODO Ugly code for 'updating' the expandable list view. Without this,
-		// if a category list is expanded before adding a new activity, you
-		// have to collapse and expand that category list to be able to see the
-		// newly added item.
-		/*
-		 * Look into implementing the following methods in
-		 * CustomExpandableListAdapter public void notifyDataSetChanged ()
-		 * public void registerDataSetObserver (DataSetObserver observer) public
-		 * void unregisterDataSetObserver (DataSetObserver observer)
-		 */
-
-		ExpandableListView expLv = (ExpandableListView) getActivity()
-				.findViewById(R.id.expEventList);
-		for (int i = 0; i < listAdapter.getGroupCount(); i++) {
-			if (expLv.isGroupExpanded(i)) {
-				expLv.collapseGroup(i);
-				expLv.expandGroup(i);
 			}
 		}
-		expLv.expandGroup(0, true);
 
 	}
 
 	/**
-	 * Prepare the dummy list data
+	 * Initialize lists and hashmap with listobjects
 	 */
 	private void getListData() {
 
@@ -149,8 +119,10 @@ public class ExpandableEventListFragment extends Fragment {
 
 		if (theTime != null) {
 
+			// Get start date
 			Date theDate = theTime.getStartDate();
 
+			// Add into the relevant list
 			if (isToday(theDate)) {
 				addListObjectToday(listObject);
 			} else if (isTomorrow(theDate)) {
@@ -158,6 +130,8 @@ public class ExpandableEventListFragment extends Fragment {
 			} else {
 				addListObjectThisWeek(listObject);
 			}
+			// This makes the view update!
+			listAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -197,7 +171,7 @@ public class ExpandableEventListFragment extends Fragment {
 		}
 	}
 
-    //TODO Look into better way to check if it is today or tomorrow
+	// TODO Look into better way to check if it is today or tomorrow
 	/**
 	 * Method to check if a date is today
 	 * 
