@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.format.DateFormat;
@@ -70,9 +71,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// Get the name of the task to display for each task entry
 		final String childText = ((ListObject) getChild(groupPosition,
 				childPosition)).getName();
-		final Date childTime = ((ListObject) getChild(groupPosition,
-				childPosition)).getTime().getStartDate();
-		final String childTimeText = DateFormat.format("HH:mm", childTime).toString();
+		final Time childTime = ((ListObject) getChild(groupPosition,
+				childPosition)).getTime();
+		String childTimeText = "";
+		if (childTime != null){
+			final Date childStartDate = childTime.getStartDate();
+			childTimeText = DateFormat.format("HH:mm", childStartDate).toString();
+		}
 
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this.context
@@ -102,7 +107,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		deleteButton.setX(deleteButton.getX() + 300);
 		
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText);
+		childTimeView.setText(childTimeText.equals("") ? "10:00" : childTimeText);
 		childLabel.setOnClickListener(new OnClickListener() {
 			boolean alreadyExpanded;
 
