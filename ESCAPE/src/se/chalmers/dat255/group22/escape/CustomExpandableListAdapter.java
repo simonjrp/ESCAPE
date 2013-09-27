@@ -105,8 +105,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		deleteButton.setVisibility(View.INVISIBLE);
 		
 		
-		editButton.setX(convertView.getRight() + deleteButton.getWidth() + 300);
-		deleteButton.setX(convertView.getRight() + 300);
+		
+//		editButton.setX(convertView.getRight() + deleteButton.getWidth() + 300);
+//		deleteButton.setX(convertView.getRight() + 300);
 		
 		deleteButton.setOnClickListener(new OnClickListener() {
 
