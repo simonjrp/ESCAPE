@@ -213,7 +213,7 @@ public class ExpandableEventListFragment extends Fragment {
      * @return the specified list object
      */
     public ListObject getListObjectToday(int i) {
-        if ( i >= 0 && todayEventList.size() < i ) {
+        if ( 0 <= i && i < todayEventList.size() ) {
             return todayEventList.get(i);
         }
         return null;
@@ -227,7 +227,7 @@ public class ExpandableEventListFragment extends Fragment {
      * @return the specified list object
      */
     public ListObject getListObjectTomorrow(int i) {
-        if ( i >= 0 && tomorrowEventList.size() < i ) {
+        if ( 0 <= i && i < tomorrowEventList.size() ) {
             return tomorrowEventList.get(i);
         }
         return null;
@@ -241,7 +241,7 @@ public class ExpandableEventListFragment extends Fragment {
      * @return the specified list object
      */
     public ListObject getListObjectSomeday(int i) {
-        if ( i >= 0 && thisWeekEventList.size() < i ) {
+        if ( 0 <= i && i < thisWeekEventList.size() ) {
             return thisWeekEventList.get(i);
         }
         return null;

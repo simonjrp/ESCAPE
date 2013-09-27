@@ -104,7 +104,7 @@ public class TaskListFragment extends Fragment {
 	 * @return the specified list object
 	 */
 	public ListObject getListObject(int i) {
-		if ( i >= 0 && taskList.size() < i ) {
+		if ( 0 <= i && i < taskList.size() ) {
 			return taskList.get(i);
 		}
 		return null;
