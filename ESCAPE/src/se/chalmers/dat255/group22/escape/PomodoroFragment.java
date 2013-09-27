@@ -14,10 +14,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	private CountDownTimer countDownTimer;
 	private boolean timerHasStarted = false;
+	//Button to start pomodoro timer
 	private Button startB;
-	public TextView secondsLeftText;
-	
-	private final long startTime = 300 * 1000;
+	//TextView that shows the time left on the timer in seconds(shows minutes:seconds format after running formatTime())
+	public TextView timeLeftText;
+	//startTime defines the amount of time in the pomodoro timer. 1500 seconds = 25 minutes.
+	private final long startTime = 1500 * 1000;
 	private final long interval = 1 * 1000;
 
 	@Override
@@ -25,16 +27,25 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 
 		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
+		//Layout for the pomodoro start button
 		startB = (Button) v.findViewById(R.id.pomodoro_button);
+		//Listener for pomodoro start button
 		startB.setOnClickListener(this);
-		secondsLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+		//Layout for the time display in the pomodoro timer
+		timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+		//Initializing count down timer
 		countDownTimer = new PomodoroTimer(startTime, interval);
-		secondsLeftText.setText(formatTime(startTime));
+		//Setting start time of the pomodoro timer
+		timeLeftText.setText(formatTime(startTime));
 		
 		return v;
 	}
 
-	@Override
+	/* When clicking on start button, either start pomodoro timer (if it hasn't started) 
+	 * and change button text to STOP, otherwise stop running timer and change button 
+	 * text to RESTART.
+	 * 
+	*/@Override
 	public void onClick(View v) {
 		if (!timerHasStarted) {
 			countDownTimer.start();
@@ -46,7 +57,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			startB.setText("RESTART");
 		}
 	}
-
+	
 	public String formatTime(long startTime){
 		
 		String output = "00:00";  
@@ -75,12 +86,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public void onFinish() {
-			secondsLeftText.setText("Done!");
+			timeLeftText.setText("Done!");
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			secondsLeftText.setText(formatTime(millisUntilFinished));
+			timeLeftText.setText(formatTime(millisUntilFinished));
 		}
 	}
 
