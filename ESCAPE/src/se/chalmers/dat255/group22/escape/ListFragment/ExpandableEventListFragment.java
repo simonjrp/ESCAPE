@@ -43,20 +43,7 @@ public class ExpandableEventListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// Initiate the database
-		dbHandler = new DBHandler(getActivity());
-
-		// get the list data
-		getListData();
-
-		// Create the adapter used to display the list
-		listAdapter = new CustomExpandableListAdapter(getActivity(),
-				headerList, eventDataMap);
-		// getting the list view
-		expListView = (ExpandableListView) getActivity().findViewById(
-				R.id.expEventList);
-		// setting list adapter
-		expListView.setAdapter(listAdapter);
+		initialize();
 	}
 
 	@Override
@@ -82,9 +69,12 @@ public class ExpandableEventListFragment extends Fragment {
 	}
 
 	/**
-	 * Initialize lists and hashmap with listobjects
+	 * Initialize the database, lists and adapter
 	 */
-	private void getListData() {
+	private void initialize() {
+
+        // Initiate the database
+        dbHandler = new DBHandler(getActivity());
 
 		eventDataMap = new HashMap<String, List<ListObject>>();
 		todayEventList = new ArrayList<ListObject>();
@@ -103,6 +93,14 @@ public class ExpandableEventListFragment extends Fragment {
 		eventDataMap.put(getResources().getString(R.string.thisWeekLabel),
 				thisWeekEventList);
 
+        // Create the adapter used to display the list
+        listAdapter = new CustomExpandableListAdapter(getActivity(),
+                headerList, eventDataMap);
+        // getting the list view
+        expListView = (ExpandableListView) getActivity().findViewById(
+                R.id.expEventList);
+        // setting list adapter
+        expListView.setAdapter(listAdapter);
 	}
 
 	/**
@@ -113,15 +111,11 @@ public class ExpandableEventListFragment extends Fragment {
 	 *            the listObject to add
 	 */
 	public void addListObject(ListObject listObject) {
-
 		// Get a calendar with current system time
 		Time theTime = dbHandler.getTime(listObject);
-
 		if (theTime != null) {
-
 			// Get start date
 			Date theDate = theTime.getStartDate();
-
 			// Add into the relevant list
 			if (isToday(theDate)) {
 				addListObjectToday(listObject);
@@ -130,8 +124,6 @@ public class ExpandableEventListFragment extends Fragment {
 			} else {
 				addListObjectThisWeek(listObject);
 			}
-			// This makes the view update!
-			listAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -144,6 +136,7 @@ public class ExpandableEventListFragment extends Fragment {
 	public void addListObjectToday(ListObject listObject) {
 		if (!todayEventList.contains(listObject)) {
 			todayEventList.add(listObject);
+            listAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -156,6 +149,7 @@ public class ExpandableEventListFragment extends Fragment {
 	public void addListObjectTomorrow(ListObject listObject) {
 		if (!tomorrowEventList.contains(listObject)) {
 			tomorrowEventList.add(listObject);
+            listAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -168,8 +162,91 @@ public class ExpandableEventListFragment extends Fragment {
 	public void addListObjectThisWeek(ListObject listObject) {
 		if (!thisWeekEventList.contains(listObject)) {
 			thisWeekEventList.add(listObject);
+            listAdapter.notifyDataSetChanged();
 		}
 	}
+
+    /**
+     * Remove a event for today.
+     *
+     * @param listObject
+     *            the listObject to remove
+     */
+    public void removeListObjectToday(ListObject listObject) {
+        if (todayEventList.contains(listObject)) {
+            todayEventList.remove(listObject);
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Remove a event for tomorrow.
+     *
+     * @param listObject
+     *            the listObject to remove
+     */
+    public void removeListObjectTomorrow(ListObject listObject) {
+        if (tomorrowEventList.contains(listObject)) {
+            tomorrowEventList.remove(listObject);
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Remove a event for someday.
+     *
+     * @param listObject
+     *            the listObject to remove
+     */
+    public void removeListObjectThisWeek(ListObject listObject) {
+        if (thisWeekEventList.contains(listObject)) {
+            thisWeekEventList.remove(listObject);
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Get a list object from the today list
+     *
+     * @param i
+     *            number of object to return
+     * @return the specified list object
+     */
+    public ListObject getListObjectToday(int i) {
+        if ( i >= 0 && todayEventList.size() < i ) {
+            return todayEventList.get(i);
+        }
+        return null;
+    }
+
+    /**
+     * Get a list object from the tomorrow list
+     *
+     * @param i
+     *            number of object to return
+     * @return the specified list object
+     */
+    public ListObject getListObjectTomorrow(int i) {
+        if ( i >= 0 && tomorrowEventList.size() < i ) {
+            return tomorrowEventList.get(i);
+        }
+        return null;
+    }
+
+    /**
+     * Get a list object from the someday list
+     *
+     * @param i
+     *            number of object to return
+     * @return the specified list object
+     */
+    public ListObject getListObjectSomeday(int i) {
+        if ( i >= 0 && thisWeekEventList.size() < i ) {
+            return thisWeekEventList.get(i);
+        }
+        return null;
+    }
+
 
 	// TODO Look into better way to check if it is today or tomorrow
 	/**
