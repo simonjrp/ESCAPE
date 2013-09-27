@@ -2,7 +2,7 @@ package se.chalmers.dat255.group22.escape;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 public class OptionTouchListener extends LongTouchActionListener {
 //	private boolean alreadyExpanded;
@@ -25,9 +25,9 @@ public class OptionTouchListener extends LongTouchActionListener {
 
 	@Override
 	public void onLongTouchAction(View v) {
-		Button editButton = (Button) ve.findViewById(R.id.editButton);
+		ImageButton editButton = (ImageButton) ve.findViewById(R.id.editButton);
 		editButton.setVisibility(View.VISIBLE);
-		Button deleteButton = (Button) ve.findViewById(R.id.deleteButton);
+		ImageButton deleteButton = (ImageButton) ve.findViewById(R.id.deleteButton);
 		deleteButton.setVisibility(View.VISIBLE);
 	}
 

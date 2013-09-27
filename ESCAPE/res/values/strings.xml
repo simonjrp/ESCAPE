@@ -10,8 +10,9 @@
     <string name="todayLabel">Today</string>
     <string name="tomorrowLabel">Tomorrow</string>
     <string name="somedayLabel">Someday</string>
-    <string name="edit_buttonLabel">Edit</string>
-    <string name="delete_buttonLabel">Delete</string>
+    <string name="editButtonDescription">Edit</string>
+    <string name="deleteButtonDescription">Delete</string>
+
     
 
 </resources>
