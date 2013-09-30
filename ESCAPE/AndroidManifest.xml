@@ -38,6 +38,12 @@
                 <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_SNOOZE" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="se.chalmers.dat255.group22.escape.SnoozeDialogActivity"
+            android:label="@string/title_activity_snooze_dialog"
+            android:theme="@android:style/Theme.Dialog" >
+       </activity>
     </application>
 
 </manifest>

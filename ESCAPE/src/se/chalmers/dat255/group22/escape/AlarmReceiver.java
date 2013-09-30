@@ -142,7 +142,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 * Method called when a task reminder should be snoozed.
 	 */
 	private void notificationSnooze(Context context, Intent intent) {
-		Toast.makeText(context, "Snooze dialog...", Toast.LENGTH_LONG).show();
+		Intent dialogIntent = new Intent(context, SnoozeDialogActivity.class);
+		dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(dialogIntent);
 	}
 
 	@Override
