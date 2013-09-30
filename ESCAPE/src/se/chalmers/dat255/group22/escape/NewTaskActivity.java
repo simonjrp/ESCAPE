@@ -302,6 +302,16 @@ public class NewTaskActivity extends Activity {
 		remindMeClicked = false;
 	}
 
+    public void onCancelRepeat(View v) {
+        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+
+        currentLayout.setVisibility(View.INVISIBLE);
+        toBeShownLayout.setVisibility(View.VISIBLE);
+
+        repeatClicked = false;
+    }
+
     public void onRepeat(View v) {
         RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
         RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
@@ -316,6 +326,8 @@ public class NewTaskActivity extends Activity {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
         repeatIntervalSpinner.setAdapter(dateAdapter);
+
+        repeatClicked = true;
     }
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,

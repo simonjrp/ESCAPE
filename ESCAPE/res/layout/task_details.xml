@@ -8,8 +8,8 @@
         android:id="@+id/task_details_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:background="#FFFFFF">
 
         <EditText
@@ -17,8 +17,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:selectAllOnFocus="false"
-            android:inputType="textCapSentences"/>
+            android:textSize="@dimen/textsize_medium"
+            android:inputType="textCapSentences"
+            android:paddingTop="@dimen/ui_element_gap"/>
 
         <Spinner
             android:id="@+id/task_categories"
@@ -26,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_title"
-            android:paddingTop="16dp"
-            android:text="Categories"/>
+            android:textSize="@dimen/textsize_medium"
+            android:paddingTop="@dimen/ui_element_gap"/>
 
         <EditText
             android:id="@+id/task_description"
@@ -35,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_categories"
-            android:paddingTop="16dp"
             android:gravity="top|left"
             android:hint="Description"
+            android:textSize="@dimen/textsize_medium"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="10"
-            android:minLines="3"/>
+            android:minLines="3"
+            android:paddingTop="@dimen/ui_element_gap"/>
 
         <EditText
             android:id="@+id/task_location"
@@ -48,9 +50,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_description"
-            android:paddingTop="16dp"
             android:hint="Location"
-            android:inputType="textCapSentences"/>
+            android:textSize="@dimen/textsize_medium"
+            android:inputType="textCapSentences"
+            android:paddingTop="@dimen/ui_element_gap"
+            android:paddingBottom="@dimen/ui_element_gap"/>
 
         <CheckBox
             android:id="@+id/task_important"
@@ -58,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_location"
+            android:textSize="@dimen/textsize_small"
             android:text="Mark as important"/>
 
         <RelativeLayout
@@ -74,11 +79,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/device_access_add_alarm"
-                android:scaleType="fitXY"
-                android:minHeight="45dp"
-                android:minWidth="45dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"/>
+                android:scaleType="centerCrop"
+                android:minHeight="32dp"
+                android:minWidth="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/ui_element_gap"
+                android:layout_marginRight="@dimen/ui_element_gap"/>
 
             <TextView
                 android:id="@+id/remindMeString"
@@ -86,8 +92,9 @@
                 android:layout_width="wrap_content"
                 android:layout_toRightOf="@+id/addAlarmImg"
                 android:hint="@string/remind_me"
-                android:textSize="18dp"
-                android:layout_marginTop="18dp"/>
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_marginTop="@dimen/ui_element_gap"/>
 
         </RelativeLayout>
 
@@ -104,29 +111,36 @@
                 android:id="@+id/reminderTypeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                />
+                android:paddingTop="@dimen/ui_element_gap"/>
 
             <Spinner
                 android:id="@+id/reminderDateSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/reminderTypeSpinner"/>
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"/>
 
             <Spinner
                 android:id="@+id/reminderTimeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/reminderDateSpinner"/>
+                android:layout_toRightOf="@id/reminderDateSpinner"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"/>
 
             <ImageButton
                 android:id="@+id/reminderCancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"
                 android:clickable="true"
                 android:onClick="onCancelReminder"
-                android:maxWidth="5dp"
-                android:maxHeight="5dp"
+                android:minHeight="3dp"
+                android:minWidth="3dp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/navigation_cancel"
                 style="@android:style/Widget.ActionButton"/>
         </RelativeLayout>
@@ -273,6 +287,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/saturdayBox"/>
+
                 <TextView
                     android:id="@+id/repeatLabel"
                     android:layout_width="wrap_content"
@@ -286,6 +301,20 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/mondayBox"
                     android:layout_toRightOf="@id/repeatLabel"/>
+                <ImageButton
+                    android:id="@+id/repeatCancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingTop="@dimen/ui_element_gap"
+                    android:paddingRight="@dimen/ui_element_gap"
+                    android:clickable="true"
+                    android:onClick="onCancelRepeat"
+                    android:minHeight="3dp"
+                    android:minWidth="3dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/navigation_cancel"
+                    style="@android:style/Widget.ActionButton"/>
 
             </RelativeLayout>
 
