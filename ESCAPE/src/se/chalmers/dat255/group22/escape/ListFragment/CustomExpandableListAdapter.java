@@ -116,12 +116,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
 				.findViewById(R.id.expEventList);
-		for (int i = 0; i < this.getGroupCount(); i++) {
-			if (expLv.isGroupExpanded(i)) {
-				expLv.collapseGroup(i);
-				expLv.expandGroup(i);
-			}
-		}
 
 		ListObject emptyObject = new ListObject(0, EMPTY_LIST);
 		if (todayEventList.size() == 0)
@@ -131,6 +125,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		if (thisWeekEventList.size() == 0)
 			thisWeekEventList.add(emptyObject);
 
+        this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
 	}
 
