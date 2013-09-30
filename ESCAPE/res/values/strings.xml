@@ -13,8 +13,8 @@
     <string name="deleteButtonDescription">Delete</string>
     <string name="thisWeekLabel">This week</string>
     <string name="taskHeader">Remember...</string>
-    <string name ="pomodoro_start">Start pomodoro</string>
-	<string name ="pomodoro_stop">Stop</string>
+    <string name="pomodoro_start">Start pomodoro</string>
+    <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
     <string name="empty_list">-Nothing to show-</string>
     <string name="time_reminder">Time reminder</string>
@@ -23,5 +23,15 @@
     <string name="pickDateLabel">...</string>
     <string name="repeat">Repeat</string>
     <string name="repeatLabel">Every</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+    <string name="sunday_short">Sun</string>
+    <string name="fromLabel">From</string>
+    <string name="toLabel">To</string>
+
 
 </resources>
