@@ -7,9 +7,8 @@
     <RelativeLayout
         android:id="@+id/task_details_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent"
+
         android:background="#FFFFFF">
 
         <EditText
@@ -136,6 +135,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingTop="@dimen/ui_element_gap"
                 android:paddingRight="@dimen/ui_element_gap"
+                android:layout_marginRight="12dp"
                 android:clickable="true"
                 android:onClick="onCancelReminder"
                 android:minHeight="3dp"
@@ -151,8 +151,8 @@
             android:layout_height="1dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/remindMeField"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/ui_element_gap"
+            android:layout_marginBottom="@dimen/ui_element_gap"
             android:background="@android:color/holo_blue_dark"/>
 
         <Button
@@ -173,6 +173,19 @@
             android:visibility="invisible"
             android:layout_below="@id/separator1"
             android:padding="@dimen/ui_element_gap">
+
+            <ImageButton
+                android:id="@+id/eventCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:clickable="true"
+                android:onClick="onCancelEvent"
+                android:minHeight="3dp"
+                android:minWidth="3dp"
+                android:src="@drawable/navigation_cancel"
+                style="@android:style/Widget.ActionButton"/>
 
             <TextView
                 android:id="@+id/fromString"
@@ -218,25 +231,45 @@
                 android:layout_toRightOf="@id/date_to"
                 android:layout_below="@id/toString"/>
 
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/date_to"
+                android:layout_marginTop="@dimen/ui_element_gap"
+                android:layout_marginBottom="@dimen/ui_element_gap"
+                android:background="@android:color/holo_blue_dark"/>
+
             <RelativeLayout
                 android:id="@+id/repeatInactiveLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/ui_element_gap"
-                android:layout_below="@id/date_to"
+                android:layout_below="@id/separator2"
                 android:onClick="onRepeat"
                 android:clickable="true"
                 android:background="@android:drawable/list_selector_background">
 
+                <ImageView
+                    android:id="@+id/addRepeatImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/repeat"
+                    android:scaleType="centerCrop"
+                    android:minHeight="24dp"
+                    android:minWidth="24dp"
+                    android:layout_centerVertical="true"/>
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_toRightOf="@+id/imageView"
+                    android:layout_toRightOf="@+id/addRepeatImg"
                     android:hint="@string/repeat"
                     android:textSize="@dimen/textsize_medium"
+                    android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -244,16 +277,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
-                android:layout_below="@id/date_to"
-                android:clickable="true"
-                android:padding="@dimen/ui_element_gap">
+                android:layout_below="@id/separator2"
+                android:clickable="true">
 
                 <RelativeLayout
                     android:id="@+id/repeatStrings"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:paddingTop="@dimen/ui_element_gap"
-                    android:paddingRight="@dimen/ui_element_gap">
+                    android:layout_width="fill_parent"
+                    android:paddingTop="@dimen/ui_element_gap">
 
                     <TextView
                         android:id="@+id/monString"
@@ -262,6 +293,7 @@
                         android:hint="Mon"
                         android:textSize="@dimen/textsize_small"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/tueString"
                         android:layout_height="wrap_content"
@@ -270,6 +302,7 @@
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/monString"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/wedString"
                         android:layout_height="wrap_content"
@@ -278,6 +311,7 @@
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/tueString"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/thuString"
                         android:layout_height="wrap_content"
@@ -286,6 +320,7 @@
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/wedString"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/friString"
                         android:layout_height="wrap_content"
@@ -294,6 +329,7 @@
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/thuString"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/satString"
                         android:layout_height="wrap_content"
@@ -302,6 +338,7 @@
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/friString"
                         android:paddingRight="@dimen/ui_element_gap"/>
+
                     <TextView
                         android:id="@+id/sunString"
                         android:layout_height="wrap_content"
@@ -317,7 +354,7 @@
                 <RelativeLayout
                     android:id="@+id/repeatCheckBoxes"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_below="@id/repeatStrings">
 
                     <CheckBox
@@ -365,7 +402,7 @@
 
                 <RelativeLayout
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:paddingTop="@dimen/ui_element_gap"
                     android:layout_below="@id/repeatCheckBoxes">
 
@@ -391,8 +428,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:paddingTop="@dimen/ui_element_gap"
-                        android:paddingRight="@dimen/ui_element_gap"
                         android:clickable="true"
                         android:onClick="onCancelRepeat"
                         android:minHeight="3dp"
