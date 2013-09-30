@@ -151,9 +151,8 @@
             android:layout_height="1dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/remindMeField"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@android:color/holo_blue_dark"/>
 
         <Button
@@ -172,14 +171,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:layout_below="@id/separator1">
+            android:layout_below="@id/separator1"
+            android:padding="@dimen/ui_element_gap">
 
             <TextView
                 android:id="@+id/fromString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:hint="From"
-                android:textSize="15dp"
+                android:textSize="@dimen/textsize_small"
                 >
             </TextView>
 
@@ -201,8 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:hint="To"
-                android:textSize="15dp"
-
+                android:textSize="@dimen/textsize_small"
                 android:layout_below="@id/date_from">
             </TextView>
 
@@ -223,6 +222,7 @@
                 android:id="@+id/repeatInactiveLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/ui_element_gap"
                 android:layout_below="@id/date_to"
                 android:onClick="onRepeat"
                 android:clickable="true"
@@ -235,8 +235,8 @@
                     android:layout_width="wrap_content"
                     android:layout_toRightOf="@+id/imageView"
                     android:hint="@string/repeat"
-                    android:textSize="18dp"
-                    android:layout_marginTop="18dp"/>
+                    android:textSize="@dimen/textsize_medium"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -245,76 +245,162 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
                 android:layout_below="@id/date_to"
-                android:clickable="true">
+                android:clickable="true"
+                android:padding="@dimen/ui_element_gap">
 
-                <CheckBox
-                    android:id="@+id/mondayBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <CheckBox
-                    android:id="@+id/tuesdayBox"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/repeatStrings"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/mondayBox"/>
-
-                <CheckBox
-                    android:id="@+id/wednesdayBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/tuesdayBox"/>
-
-                <CheckBox
-                    android:id="@+id/thursdayBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/wednesdayBox"/>
-
-                <CheckBox
-                    android:id="@+id/fridayBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/thursdayBox"/>
-
-                <CheckBox
-                    android:id="@+id/saturdayBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/fridayBox"/>
-
-                <CheckBox
-                    android:id="@+id/sundayBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/saturdayBox"/>
-
-                <TextView
-                    android:id="@+id/repeatLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/repeatLabel"
-                    android:layout_below="@id/mondayBox"/>
-
-                <Spinner
-                    android:id="@+id/repeatIntervalSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/mondayBox"
-                    android:layout_toRightOf="@id/repeatLabel"/>
-                <ImageButton
-                    android:id="@+id/repeatCancelButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:paddingTop="@dimen/ui_element_gap"
-                    android:paddingRight="@dimen/ui_element_gap"
-                    android:clickable="true"
-                    android:onClick="onCancelRepeat"
-                    android:minHeight="3dp"
-                    android:minWidth="3dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/navigation_cancel"
-                    style="@android:style/Widget.ActionButton"/>
+                    android:paddingRight="@dimen/ui_element_gap">
+
+                    <TextView
+                        android:id="@+id/monString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Mon"
+                        android:textSize="@dimen/textsize_small"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/tueString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Tue"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/monString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/wedString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Wed"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/tueString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/thuString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Thu"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/wedString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/friString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Fri"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/thuString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/satString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Sat"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/friString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+                    <TextView
+                        android:id="@+id/sunString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="Sun"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/satString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/repeatCheckBoxes"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/repeatStrings">
+
+                    <CheckBox
+                        android:id="@+id/mondayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:id="@+id/tuesdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/mondayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/wednesdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/tuesdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/thursdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/wednesdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/fridayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/thursdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/saturdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/fridayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/sundayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/saturdayBox"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="@dimen/ui_element_gap"
+                    android:layout_below="@id/repeatCheckBoxes">
+
+                    <TextView
+                        android:id="@+id/repeatLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/repeatLabel"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <Spinner
+                        android:id="@+id/repeatIntervalSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/repeatLabel"
+                        android:paddingTop="@dimen/ui_element_gap"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageButton
+                        android:id="@+id/repeatCancelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:paddingTop="@dimen/ui_element_gap"
+                        android:paddingRight="@dimen/ui_element_gap"
+                        android:clickable="true"
+                        android:onClick="onCancelRepeat"
+                        android:minHeight="3dp"
+                        android:minWidth="3dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/navigation_cancel"
+                        style="@android:style/Widget.ActionButton"/>
+                </RelativeLayout>
 
             </RelativeLayout>
 
