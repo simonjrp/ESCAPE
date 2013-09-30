@@ -12,8 +12,11 @@ import android.widget.TextView;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 
-	private CountDownTimer countDownTimer;
-	private boolean timerHasStarted = false;
+	private CountDownTimer pomodoroCountDownTimer;
+	private CountDownTimer breakCountDownTimer;
+	private boolean pomodoroTimerHasStarted = false;
+	private boolean breakTimerHasStarted = false;
+	private boolean onBreak = false;
 
 	// Button to start pomodoro timer
 	private Button startB;
@@ -22,15 +25,24 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	// minutes:seconds format after running formatTime())
 	public TextView timeLeftText;
 
-	// startTime defines the amount of time in the pomodoro timer. 1500 seconds
-	// = 25 minutes.
-	private final long startTime = 1500 * 1000;
+	// startTime defines the amount of time in the pomodoro timer. 
+	// 1500 seconds = 25 minutes.
+	private long pomodoroStartTime=10*1000;
+	private long breakStartTime = 5*1000;
 	private final long interval = 1 * 1000;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+//		if(onBreak==false){
+//			startTime=10*1000;
+//		}
+//		else{
+//			startTime=5*1000;
+//		}
+		
 		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
 
 		// Layout for the pomodoro start button
@@ -42,11 +54,17 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// Layout for the time display in the pomodoro timer
 		timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
 
-		// Initializing count down timer
-		countDownTimer = new PomodoroTimer(startTime, interval);
+		// Initializing pomodoro count down timer
+		pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime, interval);
+		
+		// Initializing break count down timer
+		breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
 
 		// Setting start time of the pomodoro timer
-		timeLeftText.setText(formatTime(startTime));
+		timeLeftText.setText(formatTime(pomodoroStartTime));
+		
+		//Setting start time of the break timer
+		timeLeftText.setText(formatTime(breakStartTime));
 
 		return v;
 	}
@@ -57,13 +75,27 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	 * change button text to RESTART.
 	 */@Override
 	public void onClick(View v) {
-		if (!timerHasStarted) {
-			countDownTimer.start();
-			timerHasStarted = true;
+		if (!pomodoroTimerHasStarted && onBreak==false) {
+		//	startTime=15*1000;
+			pomodoroCountDownTimer.start();
+			pomodoroTimerHasStarted = true;
 			startB.setText("STOP");
-		} else {
-			countDownTimer.cancel();
-			timerHasStarted = false;
+		} 
+		else if (!breakTimerHasStarted && onBreak==true){
+		//	startTime=300*1000;
+			breakCountDownTimer.start();
+			breakTimerHasStarted = true;
+			startB.setText("STOP");
+		}
+		else if (pomodoroTimerHasStarted && onBreak==false) {
+			pomodoroCountDownTimer.cancel();
+			pomodoroTimerHasStarted = false;
+			onBreak=false;
+			startB.setText("RESTART");
+		}
+		else if (breakTimerHasStarted && onBreak==true){
+			breakCountDownTimer.cancel();
+			breakTimerHasStarted = false;
 			startB.setText("RESTART");
 		}
 	}
@@ -107,7 +139,15 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// When timer has reached zero, display "Done!" instead of time.
 		@Override
 		public void onFinish() {
-			timeLeftText.setText("Done!");
+			//timeLeftText.setText("Done!");
+			if(onBreak==false){
+				onBreak=true;
+				timeLeftText.setText("Breaktime!");
+			}
+			else if(onBreak==true){
+				onBreak=false;
+				timeLeftText.setText("Break over!");
+			}
 		}
 
 		// Method to update the display of minutes:seconds left
