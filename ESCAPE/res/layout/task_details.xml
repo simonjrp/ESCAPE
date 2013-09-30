@@ -118,9 +118,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:scaleType="centerCrop"
-            android:padding="16dp"
-                android:onClick="onCancelReminder"
+            android:onClick="onCancelReminder"
+            android:maxWidth="5dp"
+            android:maxHeight="5dp"
             android:src="@drawable/navigation_cancel"
             style="@android:style/Widget.ActionButton"/>
     </RelativeLayout>

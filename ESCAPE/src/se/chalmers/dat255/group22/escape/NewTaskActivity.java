@@ -285,7 +285,7 @@ public class NewTaskActivity extends Activity {
 		 * Last but not least, time of the reminder with a clarification of the
 		 * time
 		 */
-		String[] strTimeArr = { "Morning", "Afternoon", "Evening", "Night" };
+		String[] strTimeArr = { "Morning", "Afternoon", "Evening", "Night", "..." };
 		ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
 				R.layout.time_spinner_item, strTimeArr);
 		Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
@@ -304,29 +304,28 @@ public class NewTaskActivity extends Activity {
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,
 			String dateToString, Date endDate) {
-		if (dateFromString.equals("Today")) {
+		if (dateFromString.equals(getString(R.string.todayLabel))) {
 			startDate = new Date(System.currentTimeMillis());
-		} else if (dateFromString.equals("Tomorrow")) {
+		} else if (dateFromString.equals(getString(R.string.tomorrowLabel))) {
 			startDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateFromString.equals("This week")) {
+		} else if (dateFromString.equals(getString(R.string.thisWeekLabel))) {
 			startDate = new Date(System.currentTimeMillis()
 					+ (2 * DAY_IN_MILLIS));
-		} else if (dateFromString.equals("Pick a date...")) {
+		} else if (dateFromString.equals(getString(R.string.pickDateLabel))) {
 			startDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
+            Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
-
 		}
 
-		if (dateToString.equals("Today")) {
+		if (dateToString.equals(getString(R.string.todayLabel))) {
 			endDate = new Date(System.currentTimeMillis());
-		} else if (dateToString.equals("Tomorrow")) {
+		} else if (dateToString.equals(getString(R.string.tomorrowLabel))) {
 			endDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateToString.equals("This week")) {
+		} else if (dateToString.equals(getString(R.string.thisWeekLabel))) {
 			endDate = new Date(System.currentTimeMillis() + (2 * DAY_IN_MILLIS));
-		} else if (dateToString.equals("Pick a date...")) {
+		} else if (dateToString.equals(getString(R.string.pickDateLabel))) {
 			endDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG);
+			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
 
 		}

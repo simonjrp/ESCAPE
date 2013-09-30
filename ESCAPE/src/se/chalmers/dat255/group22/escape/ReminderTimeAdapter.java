@@ -32,11 +32,12 @@ public class ReminderTimeAdapter extends ArrayAdapter<String> {
 
 		TextView timeAsText = (TextView) row
 				.findViewById(R.id.spinnerTimeAsText);
-
 		timeAsText.setText(strings[position]);
 
 		TextView timeAsTime = (TextView) row
 				.findViewById(R.id.spinnerTimeAsTime);
+
+		timeAsTime.setVisibility(View.VISIBLE);
 
 		if (timeAsText.getText().equals("Morning"))
 			timeAsTime.setText("09:00");
@@ -53,13 +54,14 @@ public class ReminderTimeAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.time_spinner_item, parent, false);
+		View row = inflater.inflate(R.layout.time_spinner_item_single, parent,
+				false);
 
 		TextView timeAsText = (TextView) row
 				.findViewById(R.id.spinnerTimeAsText);
-		TextView timeAsTime = (TextView) row
-				.findViewById(R.id.spinnerTimeAsTime);
-		timeAsTime.setText("");
+
+		timeAsText.setText(strings[position]);
+
 		return row;
 	}
 
