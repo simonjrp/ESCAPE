@@ -26,7 +26,7 @@ public class NewTaskActivity extends Activity {
 
 	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean remindMeClicked;
-    private boolean repeatClicked;
+	private boolean repeatClicked;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,6 @@ public class NewTaskActivity extends Activity {
 					.commit();
 		}
 
-
 	}
 
 	@Override
@@ -55,11 +54,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -118,46 +117,46 @@ public class NewTaskActivity extends Activity {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(System.currentTimeMillis());
 			switch (reminderDateSpinner.getSelectedItemPosition()) {
-			case 0:
-				// date already correct
-				break;
-			case 1:
-				calendar.set(Calendar.DAY_OF_MONTH,
-						calendar.get(Calendar.DAY_OF_MONTH) + 1);
-				break;
-			case 2:
-				calendar.set(Calendar.DAY_OF_MONTH,
-						calendar.get(Calendar.DAY_OF_MONTH) + 2);
-				break;
-			default:
-				// TODO do nothing
-				break;
+				case 0 :
+					// date already correct
+					break;
+				case 1 :
+					calendar.set(Calendar.DAY_OF_MONTH,
+							calendar.get(Calendar.DAY_OF_MONTH) + 1);
+					break;
+				case 2 :
+					calendar.set(Calendar.DAY_OF_MONTH,
+							calendar.get(Calendar.DAY_OF_MONTH) + 2);
+					break;
+				default :
+					// TODO do nothing
+					break;
 			}
 
 			switch (reminderTimeSpinner.getSelectedItemPosition()) {
-			case 0:
-				calendar.set(Calendar.HOUR_OF_DAY, 9);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.SECOND, 0);
-				break;
-			case 1:
-				calendar.set(Calendar.HOUR_OF_DAY, 13);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.SECOND, 0);
-				break;
-			case 2:
-				calendar.set(Calendar.HOUR_OF_DAY, 17);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.SECOND, 0);
-				break;
-			case 3:
-				calendar.set(Calendar.HOUR_OF_DAY, 20);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.SECOND, 0);
-				break;
-			default:
-				// TODO do nothing
-				break;
+				case 0 :
+					calendar.set(Calendar.HOUR_OF_DAY, 9);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					break;
+				case 1 :
+					calendar.set(Calendar.HOUR_OF_DAY, 13);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					break;
+				case 2 :
+					calendar.set(Calendar.HOUR_OF_DAY, 17);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					break;
+				case 3 :
+					calendar.set(Calendar.HOUR_OF_DAY, 20);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.SECOND, 0);
+					break;
+				default :
+					// TODO do nothing
+					break;
 			}
 
 			Date date = new Date(calendar.getTimeInMillis());
@@ -181,8 +180,6 @@ public class NewTaskActivity extends Activity {
 
 			time = new Time(1, startDate, endDate);
 
-			DBHandler dbHandler = new DBHandler(this);
-
 			ListObject lo = new ListObject(1, name);
 			if (comment.trim().length() != 0)
 				lo.setComment(comment);
@@ -190,25 +187,54 @@ public class NewTaskActivity extends Activity {
 			lo.addToCategory(newCategory);
 			lo.setPlace(place);
 			lo.setTime(time);
-			long idLo = dbHandler.addListObject(lo);
+			lo.setTimeAlarm(timeAlarm);
 
-			// add timealarm and create notification
-			if (remindMeClicked) {
-				NotificationHandler nf = new NotificationHandler(this);
-
-				long idAlarm = dbHandler.addTimeAlarm(timeAlarm);
-
-				dbHandler.addListObjectWithTimeAlarm(
-						dbHandler.getListObject(idLo),
-						dbHandler.getTimeAlarm(idAlarm));
-
-				nf.addReminderNotification(dbHandler.getListObject(idLo));
-			}
+			saveToDatabase(lo);
 
 		} else {
 
 		}
 		super.onBackPressed();
+	}
+
+	/**
+	 * Save a complete ListObject into the database
+	 * 
+	 * @param lo
+	 *            ListObject to save
+	 */
+	public void saveToDatabase(ListObject lo) {
+		DBHandler dbHandler = new DBHandler(this);
+		dbHandler.addListObject(lo);
+
+		if (lo.getTimeAlarm() != null) {
+			dbHandler.addTimeAlarm(lo.getTimeAlarm());
+			dbHandler.addListObjectWithTimeAlarm(lo, lo.getTimeAlarm());
+			// creates a notification!
+			if (remindMeClicked) {
+                //TODO fix notifications!
+				//NotificationHandler nf = new NotificationHandler(this);
+				//nf.addReminderNotification(lo);
+			}
+		}
+		if (lo.getTime() != null) {
+			dbHandler.addTime(lo.getTime());
+			dbHandler.addListObjectsWithTime(lo, lo.getTime());
+		}
+		if (lo.getCategories() != null) {
+			for (Category cat : lo.getCategories()) {
+				dbHandler.addCategory(cat);
+				dbHandler.addCategoryWithListObject(cat, lo);
+			}
+		}
+		if (lo.getGpsAlarm() != null) {
+			dbHandler.addGPSAlarm(lo.getGpsAlarm());
+			dbHandler.addListObjectWithGPSAlarm(lo, lo.getGpsAlarm());
+		}
+		if (lo.getPlace() != null) {
+			dbHandler.addPlace(lo.getPlace());
+			dbHandler.addListObjectWithPlace(lo, lo.getPlace());
+		}
 	}
 
 	public void onConvertEvent(View v) {
@@ -236,9 +262,10 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 
 		// create adapter for time spinner
-        String[] strTimeArr = { "Morning", "Afternoon", "Evening", "Night", "..." };
-        ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
-                R.layout.time_spinner_item, strTimeArr);
+		String[] strTimeArr = {"Morning", "Afternoon", "Evening", "Night",
+				"..."};
+		ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
+				R.layout.time_spinner_item, strTimeArr);
 		timeFromSpinner.setAdapter(timeAdapter);
 
 		//
@@ -261,10 +288,10 @@ public class NewTaskActivity extends Activity {
 
 		/* Add items to the spinners */
 		/* Begin with the "TYPE" of reminder */
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		ReminderTypeAdapter typeAdapter = new ReminderTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -285,7 +312,8 @@ public class NewTaskActivity extends Activity {
 		 * Last but not least, time of the reminder with a clarification of the
 		 * time
 		 */
-		String[] strTimeArr = { "Morning", "Afternoon", "Evening", "Night", "..." };
+		String[] strTimeArr = {"Morning", "Afternoon", "Evening", "Night",
+				"..."};
 		ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
 				R.layout.time_spinner_item, strTimeArr);
 		Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
@@ -302,33 +330,33 @@ public class NewTaskActivity extends Activity {
 		remindMeClicked = false;
 	}
 
-    public void onCancelRepeat(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
-        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+	public void onCancelRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
 
-        currentLayout.setVisibility(View.INVISIBLE);
-        toBeShownLayout.setVisibility(View.VISIBLE);
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
 
-        repeatClicked = false;
-    }
+		repeatClicked = false;
+	}
 
-    public void onRepeat(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+	public void onRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
 
-        currentLayout.setVisibility(View.INVISIBLE);
-        toBeShownLayout.setVisibility(View.VISIBLE);
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
 
-        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
-                .createFromResource(this, R.array.test_intervals,
+		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
+				.createFromResource(this, R.array.test_intervals,
                         android.R.layout.simple_spinner_item);
-        dateAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
-        repeatIntervalSpinner.setAdapter(dateAdapter);
+		dateAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+		repeatIntervalSpinner.setAdapter(dateAdapter);
 
-        repeatClicked = true;
-    }
+		repeatClicked = true;
+	}
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,
 			String dateToString, Date endDate) {
@@ -341,7 +369,7 @@ public class NewTaskActivity extends Activity {
 					+ (2 * DAY_IN_MILLIS));
 		} else if (dateFromString.equals(getString(R.string.pickDateLabel))) {
 			startDate = null;
-            Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
 		}
 
