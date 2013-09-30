@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -26,7 +27,8 @@ public class NewTaskActivity extends Activity {
 
 	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean remindMeClicked;
-	private boolean repeatClicked;
+    private boolean repeatClicked;
+    private boolean isEvent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -279,6 +281,8 @@ public class NewTaskActivity extends Activity {
 
 		timeToSpinner.setAdapter(timeAdapter);
 
+        isEvent = true;
+
 	}
 
 	public void onRemindMe(View v) {
@@ -340,9 +344,20 @@ public class NewTaskActivity extends Activity {
 		repeatClicked = false;
 	}
 
-	public void onRepeat(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+
+    public void onCancelEvent(View v) {
+        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+        Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
+
+        currentLayout.setVisibility(View.INVISIBLE);
+        toBeShownButton.setVisibility(View.VISIBLE);
+
+        isEvent = false;
+    }
+
+    public void onRepeat(View v) {
+        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
