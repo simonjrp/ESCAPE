@@ -1,202 +1,297 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/task_details_layout"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:background="#FFFFFF">
-
-    <EditText
-        android:id="@+id/task_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title"
-        android:selectAllOnFocus="false"
-        android:inputType="textCapSentences" />
-
-    <Spinner
-        android:id="@+id/task_categories"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_title"
-        android:paddingTop="16dp"
-        android:text="Categories" />
-
-    <EditText
-        android:id="@+id/task_description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_categories"
-        android:paddingTop="16dp"
-        android:gravity="top|left"
-        android:hint="Description"
-        android:inputType="textMultiLine|textCapSentences"
-        android:maxLines="10"
-        android:minLines="3" />
-
-    <EditText
-        android:id="@+id/task_location"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_description"
-        android:paddingTop="16dp"
-        android:hint="Location"
-        android:inputType="textCapSentences" />
-
-    <CheckBox
-        android:id="@+id/task_important"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/task_location"
-        android:text="Mark as important" />
+    android:layout_height="fill_parent">
 
     <RelativeLayout
-        android:id="@+id/remindMeField"
+        android:id="@+id/task_details_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_important"
-        android:onClick="onRemindMe"
-        android:clickable="true"
-        android:background="@android:drawable/list_selector_background">
+        android:layout_height="fill_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="#FFFFFF">
 
-        <ImageView
-            android:id="@+id/addAlarmImg"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/task_title"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/device_access_add_alarm"
-            android:scaleType="fitXY"
-            android:minHeight="45dp"
-            android:minWidth="45dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"/>
-
-        <TextView
-            android:id="@+id/remindMeString"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/addAlarmImg"
-            android:hint="@string/remind_me"
-            android:textSize="18dp"
-            android:layout_marginTop="18dp"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/setReminderField"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_below="@id/task_important"
-        android:clickable="true"
-        >
+            android:hint="Title"
+            android:selectAllOnFocus="false"
+            android:inputType="textCapSentences"/>
 
         <Spinner
-            android:id="@+id/reminderTypeSpinner"
-            android:layout_width="wrap_content"
+            android:id="@+id/task_categories"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            />
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_title"
+            android:paddingTop="16dp"
+            android:text="Categories"/>
 
-        <Spinner
-            android:id="@+id/reminderDateSpinner"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/task_description"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/reminderTypeSpinner"/>
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_categories"
+            android:paddingTop="16dp"
+            android:gravity="top|left"
+            android:hint="Description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="10"
+            android:minLines="3"/>
 
-        <Spinner
-            android:id="@+id/reminderTimeSpinner"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/task_location"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/reminderDateSpinner"/>
-        <ImageButton
-            android:id="@+id/reminderCancelButton"
-            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_description"
+            android:paddingTop="16dp"
+            android:hint="Location"
+            android:inputType="textCapSentences"/>
+
+        <CheckBox
+            android:id="@+id/task_important"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_location"
+            android:text="Mark as important"/>
+
+        <RelativeLayout
+            android:id="@+id/remindMeField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/task_important"
+            android:onClick="onRemindMe"
             android:clickable="true"
-            android:onClick="onCancelReminder"
-            android:maxWidth="5dp"
-            android:maxHeight="5dp"
-            android:src="@drawable/navigation_cancel"
-            style="@android:style/Widget.ActionButton"/>
-    </RelativeLayout>
+            android:background="@android:drawable/list_selector_background">
 
-    <View
-        android:id="@+id/separator1"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/remindMeField"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:paddingTop="16dp"
-        android:background="@android:color/holo_blue_dark" />
+            <ImageView
+                android:id="@+id/addAlarmImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/device_access_add_alarm"
+                android:scaleType="fitXY"
+                android:minHeight="45dp"
+                android:minWidth="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"/>
 
-    <Button
-        android:id="@+id/task_add_reminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/separator1"
-        android:text="Convert to Event"
-        android:onClick="onConvertEvent"
-        style="@android:style/Widget.ActionButton"
-        android:clickable="true"/>
+            <TextView
+                android:id="@+id/remindMeString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/addAlarmImg"
+                android:hint="@string/remind_me"
+                android:textSize="18dp"
+                android:layout_marginTop="18dp"/>
 
-    <RelativeLayout
-        android:id="@+id/eventSpinners"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_below="@id/separator1">
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/fromString"
+        <RelativeLayout
+            android:id="@+id/setReminderField"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:hint="From"
-            android:textSize="15dp"
+            android:visibility="invisible"
+            android:layout_below="@id/task_important"
+            android:clickable="true"
             >
-        </TextView>
-        <Spinner
-            android:id="@+id/date_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fromString"/>
 
-        <Spinner
-            android:id="@+id/time_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fromString"
-            android:layout_toRightOf="@id/date_from"/>
-        <TextView
-            android:id="@+id/toString"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:hint="To"
-            android:textSize="15dp"
+            <Spinner
+                android:id="@+id/reminderTypeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
 
-            android:layout_below="@id/date_from">
-        </TextView>
-        <Spinner
-            android:id="@+id/date_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toString" />
+            <Spinner
+                android:id="@+id/reminderDateSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/reminderTypeSpinner"/>
 
-        <Spinner
-            android:id="@+id/time_to"
+            <Spinner
+                android:id="@+id/reminderTimeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/reminderDateSpinner"/>
+
+            <ImageButton
+                android:id="@+id/reminderCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:onClick="onCancelReminder"
+                android:maxWidth="5dp"
+                android:maxHeight="5dp"
+                android:src="@drawable/navigation_cancel"
+                style="@android:style/Widget.ActionButton"/>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/separator1"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/remindMeField"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="16dp"
+            android:background="@android:color/holo_blue_dark"/>
+
+        <Button
+            android:id="@+id/task_add_reminder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/date_to"
-            android:layout_below="@id/toString"/>
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/separator1"
+            android:text="Convert to Event"
+            android:onClick="onConvertEvent"
+            style="@android:style/Widget.ActionButton"
+            android:clickable="true"/>
+
+        <RelativeLayout
+            android:id="@+id/eventSpinners"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_below="@id/separator1">
+
+            <TextView
+                android:id="@+id/fromString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:hint="From"
+                android:textSize="15dp"
+                >
+            </TextView>
+
+            <Spinner
+                android:id="@+id/date_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fromString"/>
+
+            <Spinner
+                android:id="@+id/time_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fromString"
+                android:layout_toRightOf="@id/date_from"/>
+
+            <TextView
+                android:id="@+id/toString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:hint="To"
+                android:textSize="15dp"
+
+                android:layout_below="@id/date_from">
+            </TextView>
+
+            <Spinner
+                android:id="@+id/date_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toString"/>
+
+            <Spinner
+                android:id="@+id/time_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/date_to"
+                android:layout_below="@id/toString"/>
+
+            <RelativeLayout
+                android:id="@+id/repeatInactiveLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date_to"
+                android:onClick="onRepeat"
+                android:clickable="true"
+                android:background="@android:drawable/list_selector_background">
+
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@+id/imageView"
+                    android:hint="@string/repeat"
+                    android:textSize="18dp"
+                    android:layout_marginTop="18dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/repeatActiveLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_below="@id/date_to"
+                android:clickable="true">
+
+                <CheckBox
+                    android:id="@+id/mondayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <CheckBox
+                    android:id="@+id/tuesdayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/mondayBox"/>
+
+                <CheckBox
+                    android:id="@+id/wednesdayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tuesdayBox"/>
+
+                <CheckBox
+                    android:id="@+id/thursdayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/wednesdayBox"/>
+
+                <CheckBox
+                    android:id="@+id/fridayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/thursdayBox"/>
+
+                <CheckBox
+                    android:id="@+id/saturdayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/fridayBox"/>
+
+                <CheckBox
+                    android:id="@+id/sundayBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/saturdayBox"/>
+                <TextView
+                    android:id="@+id/repeatLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeatLabel"
+                    android:layout_below="@id/mondayBox"/>
+
+                <Spinner
+                    android:id="@+id/repeatIntervalSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/mondayBox"
+                    android:layout_toRightOf="@id/repeatLabel"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 
-
-</RelativeLayout>
+</ScrollView>

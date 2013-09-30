@@ -21,5 +21,7 @@
     <string name="location_reminder">Location reminder</string>
     <string name="pickTimeLabel">...</string>
     <string name="pickDateLabel">...</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeatLabel">Every</string>
 
 </resources>

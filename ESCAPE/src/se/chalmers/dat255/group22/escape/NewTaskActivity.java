@@ -26,6 +26,7 @@ public class NewTaskActivity extends Activity {
 
 	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean remindMeClicked;
+    private boolean repeatClicked;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class NewTaskActivity extends Activity {
 					.add(R.id.container_new_task, new TaskDetailsFragment())
 					.commit();
 		}
+
 
 	}
 
@@ -234,11 +236,9 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 
 		// create adapter for time spinner
-		ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter
-				.createFromResource(this, R.array.test_times,
-						android.R.layout.simple_spinner_item);
-		timeAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String[] strTimeArr = { "Morning", "Afternoon", "Evening", "Night", "..." };
+        ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
+                R.layout.time_spinner_item, strTimeArr);
 		timeFromSpinner.setAdapter(timeAdapter);
 
 		//
@@ -301,6 +301,22 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 		remindMeClicked = false;
 	}
+
+    public void onRepeat(View v) {
+        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+
+        currentLayout.setVisibility(View.INVISIBLE);
+        toBeShownLayout.setVisibility(View.VISIBLE);
+
+        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
+                .createFromResource(this, R.array.test_intervals,
+                        android.R.layout.simple_spinner_item);
+        dateAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+        repeatIntervalSpinner.setAdapter(dateAdapter);
+    }
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,
 			String dateToString, Date endDate) {
