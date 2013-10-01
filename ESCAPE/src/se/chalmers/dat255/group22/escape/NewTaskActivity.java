@@ -207,35 +207,35 @@ public class NewTaskActivity extends Activity {
 	 */
 	public void saveToDatabase(ListObject lo) {
 		DBHandler dbHandler = new DBHandler(this);
-		dbHandler.addListObject(lo);
+		long objId = dbHandler.addListObject(lo);
 
 		if (lo.getTimeAlarm() != null) {
 			dbHandler.addTimeAlarm(lo.getTimeAlarm());
-			dbHandler.addListObjectWithTimeAlarm(lo, lo.getTimeAlarm());
+			dbHandler.addListObjectWithTimeAlarm(dbHandler.getListObject(objId), lo.getTimeAlarm());
 			// creates a notification!
 			if (remindMeClicked) {
                 //TODO fix notifications!
-				//NotificationHandler nf = new NotificationHandler(this);
-				//nf.addReminderNotification(lo);
+				NotificationHandler nf = new NotificationHandler(this);
+				nf.addReminderNotification(dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getTime() != null) {
 			dbHandler.addTime(lo.getTime());
-			dbHandler.addListObjectsWithTime(lo, lo.getTime());
+			dbHandler.addListObjectsWithTime(dbHandler.getListObject(objId), lo.getTime());
 		}
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				dbHandler.addCategory(cat);
-				dbHandler.addCategoryWithListObject(cat, lo);
+				dbHandler.addCategoryWithListObject(cat, dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getGpsAlarm() != null) {
 			dbHandler.addGPSAlarm(lo.getGpsAlarm());
-			dbHandler.addListObjectWithGPSAlarm(lo, lo.getGpsAlarm());
+			dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId), lo.getGpsAlarm());
 		}
 		if (lo.getPlace() != null) {
 			dbHandler.addPlace(lo.getPlace());
-			dbHandler.addListObjectWithPlace(lo, lo.getPlace());
+			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId), lo.getPlace());
 		}
 	}
 
