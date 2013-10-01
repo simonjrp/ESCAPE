@@ -1,0 +1,13 @@
+package se.chalmers.dat255.group22.escape.objects;
+
+public interface IBlockObject {
+	
+	public String getName();
+	
+	public TimeWindow getTimeWindow();
+	
+	public int getHours();
+	
+	public double getSessionSize();
+
+}
