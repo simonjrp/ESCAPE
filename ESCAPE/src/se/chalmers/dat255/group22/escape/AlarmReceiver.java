@@ -1,5 +1,10 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,7 +14,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.widget.Toast;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also
@@ -91,8 +95,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 				.setStyle(
 						new NotificationCompat.BigTextStyle()
 								.bigText(description))
-				.addAction(R.drawable.task_done, "Done", donePendingIntent)
-				.addAction(R.drawable.task_snooze, "Snooze...",
+				.addAction(R.drawable.task_done, context.getString(R.string.notification_done), donePendingIntent)
+				.addAction(R.drawable.task_snooze, context.getString(R.string.notification_snooze),
 						snoozePendingIntent);
 
 		// Enables sound and vibration for the notification
@@ -139,12 +143,33 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 
 	/*
-	 * Method called when a task reminder should be snoozed.
+	 * Method called when a task reminder should be snoozed one hour.
 	 */
 	private void notificationSnooze(Context context, Intent intent) {
-		Intent dialogIntent = new Intent(context, SnoozeDialogActivity.class);
-		dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(dialogIntent);
+		long id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+		DBHandler dbH = new DBHandler(context);
+		ListObject listObject = dbH.getListObject(id);
+
+		// Deletes old time alarm.
+		TimeAlarm oldTimeAlarm = dbH.getTimeAlarm(listObject);
+		dbH.deleteListObjectWithTimeAlarm(listObject);
+		dbH.deleteTimeAlarm(oldTimeAlarm);
+
+		// Creates new time alarm, one hour from current time.
+		long oneHourInMillis = 3600000;
+		Date newDate = new Date(System.currentTimeMillis() + oneHourInMillis);
+		TimeAlarm newTimeAlarm = new TimeAlarm(0, newDate);
+		long idTimeAlarm = dbH.addTimeAlarm(newTimeAlarm);
+		dbH.addListObjectWithTimeAlarm(listObject,
+				dbH.getTimeAlarm(idTimeAlarm));
+
+		// Creates new notification reminder with the new time alarm.
+		NotificationHandler nH = new NotificationHandler(context);
+		nH.addTimeReminder(listObject);
+		
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel((int) id);
 	}
 
 	@Override
