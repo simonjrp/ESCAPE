@@ -1379,37 +1379,26 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @return true if anything was deleted, false otherwise
 	 */
 	public boolean purgeListObject(ListObject listObject) {
+		Time time = getTime(listObject);
+		Place place = getPlace(listObject);
+		TimeAlarm timeAlarm = getTimeAlarm(listObject);
+		GPSAlarm gpsAlarm = getGPSAlarm(listObject);
+		
+		if (time != null)
+			deleteTime(time);
+		if (place != null)
+			deletePlace(place);
+		if (timeAlarm != null)
+			deleteTimeAlarm(timeAlarm);
+		if (gpsAlarm != null)
+			deleteGPSAlarm(gpsAlarm);
+		
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		int rv = db.delete(TABLE_TIMES, "? = (SELECT a.? FROM ? a LIMIT 1 WHERE ?=?)",
-				new String[] { COLUMN_TIMES_ID,
-						COLUMN_LIST_OBJECTS_WITH_TIME_TIME,
-						TABLE_LIST_OBJECTS_WITH_TIME,
-						COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
-						"" + listObject.getId() });
-		rv += db.delete(TABLE_TIME_ALARMS, "? = (SELECT a.? FROM ? a LIMIT 1 WHERE ?=?)",
-				new String[] { COLUMN_TIME_ALARMS_ID,
-						COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM,
-						TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
-						COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT,
-						"" + listObject.getId() });
-		rv += db.delete(TABLE_GPS_ALARMS, "? = (SELECT a.? FROM ? a LIMIT 1 WHERE ?=?)",
-				new String[] { COLUMN_GPS_ALARMS_ID,
-						COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM,
-						TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
-						COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT,
-						"" + listObject.getId() });
-		rv += db.delete(TABLE_PLACES, "? = (SELECT a.? FROM ? a LIMIT 1 WHERE ?=?)",
-				new String[] { COLUMN_PLACES_ID,
-						COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE,
-						TABLE_LIST_OBJECTS_WITH_PLACE,
-						COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT,
-						"" + listObject.getId() });
-		
-		rv += db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
-				new String[] { "" + listObject.getId() });
 
+		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
+				new String[] { "" + listObject.getId() });
 		db.close();
+		
 		return rv > 0;
 	}
 
