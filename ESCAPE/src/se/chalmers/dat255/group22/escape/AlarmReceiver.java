@@ -136,10 +136,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 * Method called when a task should be marked as done.
 	 */
 	private void notificationDone(Context context, Intent intent) {
-		int id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+		long id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+		DBHandler dbH = new DBHandler(context);
+		dbH.purgeListObject(dbH.getListObject(id));
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(id);
+		notificationManager.cancel((int)id);
 	}
 
 	/*
