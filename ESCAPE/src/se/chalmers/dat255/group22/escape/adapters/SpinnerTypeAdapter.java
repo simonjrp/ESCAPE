@@ -1,30 +1,44 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import se.chalmers.dat255.group22.escape.R;
-
 /**
+ * An adapter that customizes the way spinners for choosing differnet types of
+ * reminders are presented.
+ * 
  * @author tholene
  */
 public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
-	private String[] strings;
+	private String[] types;
 	private int imgArr[];
 	private Context context;
 
+	/**
+	 * Create a new Adapter. This one is suited for a spinner containing
+	 * different types of reminders.
+	 * 
+	 * @param context
+	 *            the context that is relevant, usually "this".
+	 * @param textViewResourceId
+	 *            the resource ID for the layout that each item in the dropdown
+	 *            list will use.
+	 * @param types
+	 *            a stringarray that contains the string to be set for each item
+	 *            in the dropdown list.
+	 */
 	public SpinnerTypeAdapter(Context context, int textViewResourceId,
-                              String[] objects, int imgArr[]) {
-		super(context, textViewResourceId, objects);
+			String[] types, int imgArr[]) {
+		super(context, textViewResourceId, types);
 		this.context = context;
-		this.strings = objects;
+		this.types = types;
 		this.imgArr = imgArr;
 
 	}
@@ -38,11 +52,13 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
 		TextView label = (TextView) row.findViewById(R.id.spinnerTypeText);
 
-		label.setText(strings[position]);
+		label.setText(types[position]);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
 
 		icon.setImageResource(imgArr[position]);
+
+		// TODO If position == 1, rearrange layout for location input
 
 		return row;
 	}

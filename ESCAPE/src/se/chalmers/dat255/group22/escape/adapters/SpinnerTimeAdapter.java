@@ -10,18 +10,34 @@ import android.widget.TextView;
 import se.chalmers.dat255.group22.escape.R;
 
 /**
+ * An adapter that customizes the way spinners for choosing a time are presented.
+ *
  * @author tholene
  */
 public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
-	private String[] strings;
+	private String[] times;
 	private Context context;
 
+
+    /**
+     * Create a new Adapter. This one is suited for a spinner containing
+     * different times.
+     *
+     * @param context
+     *            the context that is relevant, usually "this".
+     * @param textViewResourceId
+     *            the resource ID for the layout that each item in the dropdown
+     *            list will use.
+     * @param times
+     *            a stringarray that contains the string to be set for each item
+     *            in the dropdown list.
+     */
 	public SpinnerTimeAdapter(Context context, int textViewResourceId,
-			String[] objects) {
-		super(context, textViewResourceId, objects);
+			String[] times) {
+		super(context, textViewResourceId, times);
 		this.context = context;
-		this.strings = objects;
+		this.times = times;
 
 	}
 
@@ -34,7 +50,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		TextView timeAsText = (TextView) row
 				.findViewById(R.id.spinnerTimeAsText);
-		timeAsText.setText(strings[position]);
+		timeAsText.setText(times[position]);
 
 		TextView timeAsTime = (TextView) row
 				.findViewById(R.id.spinnerTimeAsTime);
@@ -50,10 +66,16 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		if (timeAsText.getText().equals(context.getString(R.string.night)))
 			timeAsTime.setText("20:00");
 
-		// set gray color to "Pick a date" item
+		// set gray color to "Pick a time" item
 		if (position == 4) {
 			timeAsText.setBackgroundResource(R.color.light_gray);
 			timeAsTime.setBackgroundResource(R.color.light_gray);
+
+            View v = (View)timeAsText.getParent();
+            v.setBackgroundResource(R.color.light_gray);
+            v.setAlpha(0.75f);
+
+            // TODO Add clickListener that opens dialog
 		}
 		return row;
 	}
@@ -68,7 +90,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		TextView timeAsText = (TextView) row
 				.findViewById(R.id.spinnerTimeAsText);
 
-		timeAsText.setText(strings[position]);
+		timeAsText.setText(times[position]);
 
 		return row;
 	}
