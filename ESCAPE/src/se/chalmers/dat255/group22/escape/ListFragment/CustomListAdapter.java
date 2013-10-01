@@ -55,9 +55,10 @@ public class CustomListAdapter implements ListAdapter {
 		taskList = new ArrayList<ListObject>();
 	}
 
-    /**
-     * Read from database and add all saved ListObjects that doesn't have a specific time
-     */
+	/**
+	 * Read from database and add all saved ListObjects that doesn't have a
+	 * specific time
+	 */
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
@@ -173,8 +174,7 @@ public class CustomListAdapter implements ListAdapter {
 		});
 
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("")
-				? "10:00"
+		childTimeView.setText(childTimeText.equals("") ? "10:00"
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
@@ -216,7 +216,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Add a new task for the displayed list if the task is not already in the list
+	 * Add a new task for the displayed list if the task is not already in the
+	 * list
 	 * 
 	 * @param listObject
 	 *            the listObject to add

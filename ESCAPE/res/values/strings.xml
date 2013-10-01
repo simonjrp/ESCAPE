@@ -13,11 +13,15 @@
     <string name="deleteButtonDescription">Delete</string>
     <string name="thisWeekLabel">Someday</string>
     <string name="taskHeader">Remember...</string>
-    <string name ="pomodoro_start">Start pomodoro</string>
-	<string name ="pomodoro_stop">Stop</string>
+    <string name="pomodoro_start">Start pomodoro</string>
+    <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
     <string name="empty_list">-Nothing to show-</string>
     <string name="time_reminder">Time reminder</string>
     <string name="location_reminder">Location reminder</string>
+    <string name="title_activity_snooze_dialog">SnoozeDialogActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="notification_done">Done</string>
+    <string name="notification_snooze">In an hour</string>
 
 </resources>

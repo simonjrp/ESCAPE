@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="se.chalmers.dat255.group22.escape"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -12,10 +12,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="se.chalmers.dat255.group22.escape.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,11 +24,26 @@
         </activity>
         <activity
             android:name="se.chalmers.dat255.group22.escape.NewTaskActivity"
-            android:label="@string/title_activity_new_task"></activity>
+            android:label="@string/title_activity_new_task" >
+        </activity>
+
         <receiver
-        android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
-        android:process=":remote"
-        android:enabled="true" />
+            android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
+            android:enabled="true"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_TIME_NOTIFICATION" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_LOCATION_NOTIFICATION" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_DONE" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_SNOOZE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="se.chalmers.dat255.group22.escape.SnoozeDialogActivity"
+            android:label="@string/title_activity_snooze_dialog"
+            android:theme="@android:style/Theme.Dialog" >
+       </activity>
     </application>
 
 </manifest>
