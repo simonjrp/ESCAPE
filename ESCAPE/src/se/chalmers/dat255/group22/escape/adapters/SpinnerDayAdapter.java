@@ -19,7 +19,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	private Context context;
 
 	public SpinnerDayAdapter(Context context, int textViewResourceId,
-                             String[] objects) {
+			String[] objects) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		this.strings = objects;
@@ -34,7 +34,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		TextView day = (TextView) row.findViewById(R.id.spinnerDayText);
 
-        day.setText(strings[position]);
+		day.setText(strings[position]);
+		// set gray color to "Pick a date" item
+		if (position == 3) {
+			day.setBackgroundResource(R.color.light_gray);
+		}
 
 		return row;
 	}
@@ -45,10 +49,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.day_spinner_item_single, parent,
 				false);
-        TextView day = (TextView) row.findViewById(R.id.spinnerDayText);
+		TextView day = (TextView) row.findViewById(R.id.spinnerDayText);
 
-        day.setText(strings[position]);
-        return row;
+		day.setText(strings[position]);
+
+		return row;
 
 	}
 
