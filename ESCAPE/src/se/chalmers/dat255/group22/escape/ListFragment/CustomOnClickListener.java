@@ -49,8 +49,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 					+ "\n" : "No Comment\n")
 					+
 
-					(listObject.getPlace() != null ? "* "
-							+ listObject.getPlace().getName() + "\n"
+					(dbHandler.getPlace(listObject) != null ? "* "
+							+ dbHandler.getPlace(listObject).getName() + "\n"
 							: "No place")
 
 			);

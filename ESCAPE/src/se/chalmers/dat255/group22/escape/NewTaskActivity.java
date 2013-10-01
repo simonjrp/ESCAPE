@@ -176,13 +176,13 @@ public class NewTaskActivity extends Activity {
 			ListObject lo = new ListObject(1, name);
 			if (comment.trim().length() != 0)
 				lo.setComment(comment);
-            else
-                lo.setComment(null);
+			else
+				lo.setComment(null);
 			lo.setImportant(importantTask);
 			lo.addToCategory(newCategory);
 			lo.setPlace(place);
 			lo.setTimeAlarm(timeAlarm);
-            //lo.setGpsAlarm(...);
+			// lo.setGpsAlarm(...);
 			if (isEvent) {
 				Time time = getTimeFromSpinners(dateFromString, dateToString);
 				lo.setTime(time);
@@ -227,21 +227,21 @@ public class NewTaskActivity extends Activity {
 			for (Category cat : lo.getCategories()) {
 				tmpId = dbHandler.addCategory(cat);
 				// TODO do this work?
-				//dbHandler.addCategoryWithListObject(cat,
-				//		dbHandler.getListObject(objId));
+				// dbHandler.addCategoryWithListObject(cat,
+				// dbHandler.getListObject(objId));
 			}
 		}
 		// TODO fix gps alarm setter
 		if (lo.getGpsAlarm() != null) {
 			tmpId = dbHandler.addGPSAlarm(lo.getGpsAlarm());
-			// dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId),
-			// dbHandler.getGPSAlarm(tmpId));
+			dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId),
+					dbHandler.getGPSAlarm(tmpId));
 		}
 		// TODO fix place setter
 		if (lo.getPlace() != null) {
 			tmpId = dbHandler.addPlace(lo.getPlace());
-			// dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
-			// dbHandler.getPlace(tmpId));
+			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
+					dbHandler.getPlace(tmpId));
 		}
 	}
 
@@ -392,7 +392,7 @@ public class NewTaskActivity extends Activity {
 			startDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
-            startDate = null;
+			startDate = null;
 		}
 
 		if (dateToString.equals(getString(R.string.todayLabel))) {
@@ -405,10 +405,10 @@ public class NewTaskActivity extends Activity {
 			endDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
-            endDate = null;
+			endDate = null;
 		}
-        if (startDate == null && endDate == null)
-            return null;
+		if (startDate == null && endDate == null)
+			return null;
 
 		return new Time(1, startDate, endDate);
 	}
