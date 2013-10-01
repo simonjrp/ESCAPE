@@ -32,20 +32,6 @@ public class MainActivity extends FragmentActivity {
 
 		// switch to the events list directly after startup
 		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
-		
-		// TODO test code, to be removed
-		ListObject lo = new ListObject(0, "Title");
-		lo.setComment("Description");
-		TimeAlarm timeAlarm = new TimeAlarm(0, new Date(System.currentTimeMillis()));
-		
-		DBHandler db = new DBHandler(this);
-		long idLo = db.addListObject(lo);
-		long idTa = db.addTimeAlarm(timeAlarm);
-		
-		db.addListObjectWithTimeAlarm(db.getListObject(idLo), db.getTimeAlarm(idTa));
-		NotificationHandler nf = new NotificationHandler(this);
-		nf.addTimeReminder(db.getListObject(idLo));
-		
 
 	}
 
