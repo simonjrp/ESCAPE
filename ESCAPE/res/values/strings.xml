@@ -20,7 +20,7 @@
     <string name="time_reminder">Time reminder</string>
     <string name="location_reminder">Location reminder</string>
     <string name="pickTimeLabel">...</string>
-    <string name="pickDateLabel">...</string>
+    <string name="pickDayLabel">...</string>
     <string name="repeat">Repeat</string>
     <string name="repeatLabel">Every</string>
     <string name="monday_short">Mon</string>
@@ -32,6 +32,14 @@
     <string name="sunday_short">Sun</string>
     <string name="fromLabel">From</string>
     <string name="toLabel">To</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="night">Night</string>
+    <string name="oneWeekLabel">1 week</string>
+    <string name="twoWeeksLabel">2 weeks</string>
+    <string name="threeWeeksLabel">3 weeks</string>
+    <string name="oneMonthLabel">1 month</string>
 
 
 </resources>

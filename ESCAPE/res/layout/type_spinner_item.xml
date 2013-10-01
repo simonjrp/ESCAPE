@@ -16,11 +16,11 @@
     </ImageView>
 
     <TextView
-        android:id="@+id/spinnerText"
+        android:id="@+id/spinnerTypeText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="Location reminder"
-        android:textSize="15dp"
+        android:textSize="@dimen/textsize_small"
         android:layout_toRightOf="@id/spinnerImage"
         >
 

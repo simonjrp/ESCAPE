@@ -45,21 +45,18 @@ public class CustomOnClickListener implements View.OnClickListener {
 		if (isExpanded) {
 			taskData.setText(
 
-			(listObject.getComment() != null ? "* " + listObject.getComment()
-					+ "\n" : "No Comment\n")
-					+
-
-					(listObject.getPlace() != null ? "* "
-							+ listObject.getPlace().getName() + "\n"
-							: "No place")
+			(listObject.getComment() != null ? "* " + listObject.getComment() + "\n" : "No Comment\n") +
+            (listObject.getPlace() != null ? "* " + listObject.getPlace().getName() + "\n" : "No place")
 
 			);
-			if (taskData.getText() != null)
 
+			if (taskData.getText() != null)
 				taskData.setVisibility(View.VISIBLE);
+
 			taskData.setHeight(taskData.getLineCount()
 					* taskData.getLineHeight() + 5);
-			taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+
+ 			taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
 			childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 		} else {
 			taskData.setVisibility(View.INVISIBLE);

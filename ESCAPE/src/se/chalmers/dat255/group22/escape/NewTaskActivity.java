@@ -3,6 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.sql.Date;
 import java.util.Calendar;
 
+import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
@@ -15,7 +18,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,12 +25,17 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * The activity for adding a new task or event.
+ * 
+ * @author tholene
+ */
 public class NewTaskActivity extends Activity {
 
-	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+	private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean remindMeClicked;
-    private boolean repeatClicked;
-    private boolean isEvent;
+	private boolean repeatClicked;
+	private boolean isEvent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -214,9 +221,9 @@ public class NewTaskActivity extends Activity {
 			dbHandler.addListObjectWithTimeAlarm(lo, lo.getTimeAlarm());
 			// creates a notification!
 			if (remindMeClicked) {
-                //TODO fix notifications!
-				//NotificationHandler nf = new NotificationHandler(this);
-				//nf.addReminderNotification(lo);
+				// TODO fix notifications!
+				// NotificationHandler nf = new NotificationHandler(this);
+				// nf.addReminderNotification(lo);
 			}
 		}
 		if (lo.getTime() != null) {
@@ -239,6 +246,14 @@ public class NewTaskActivity extends Activity {
 		}
 	}
 
+	/**
+	 * When the "Convert to Event" button is pressed, this method is called and
+	 * the button is switched to a view containing the required forms for an
+	 * event.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
 	public void onConvertEvent(View v) {
 
 		v.setVisibility(View.INVISIBLE);
@@ -251,22 +266,27 @@ public class NewTaskActivity extends Activity {
 		//
 		/* From: DateSpinner */
 		//
-		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
-				.createFromResource(this, R.array.test_dates,
-						android.R.layout.simple_spinner_item);
-		dateAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		dateFromSpinner.setAdapter(dateAdapter);
+		// Array containing different days for an event
+		String[] strDayArr = {getString(R.string.todayLabel),
+				getString(R.string.tomorrowLabel),
+				getString(R.string.thisWeekLabel),
+				getString(R.string.pickDayLabel)};
+
+		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
+				R.layout.day_spinner_item, strDayArr);
+		dateFromSpinner.setAdapter(dayAdapter);
 
 		//
 		/* From: TimeSpinner */
 		//
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 
-		// create adapter for time spinner
-		String[] strTimeArr = {"Morning", "Afternoon", "Evening", "Night",
-				"..."};
-		ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
+		// Array containing different times for an event
+		String[] strTimeArr = {getString(R.string.morning),
+				getString(R.string.afternoon), getString(R.string.evening),
+				getString(R.string.night), getString(R.string.pickTimeLabel)};
+
+		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, strTimeArr);
 		timeFromSpinner.setAdapter(timeAdapter);
 
@@ -275,56 +295,138 @@ public class NewTaskActivity extends Activity {
 		//
 		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
 
-		dateToSpinner.setAdapter(dateAdapter);
+		dateToSpinner.setAdapter(dayAdapter);
 
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
 
 		timeToSpinner.setAdapter(timeAdapter);
 
-        isEvent = true;
+		isEvent = true;
 
 	}
 
+	/**
+	 * When the "Remind me" button is pressed, this method is called and the
+	 * button is switched to a view containing the required forms for adding a
+	 * reminder.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
 	public void onRemindMe(View v) {
 		v.setVisibility(View.INVISIBLE);
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
 		relativeLayout.setVisibility(View.VISIBLE);
 
-		/* Add items to the spinners */
-		/* Begin with the "TYPE" of reminder */
+		/*
+		 * Add items to the spinners
+		 * 
+		 * 
+		 * 
+		 * 
+		 * Begin with the "TYPE" of reminder
+		 */
+		// An array containing the images for a time and location reminder
 		int imgArr[] = {R.drawable.device_access_alarms,
 				R.drawable.location_place};
+
+		// An array containing strings to be associated with each image
 		String[] strTypeArr = {getString(R.string.time_reminder),
 				getString(R.string.location_reminder)};
 
-		ReminderTypeAdapter typeAdapter = new ReminderTypeAdapter(this,
+		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
 
 		Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
 		typeSpinner.setAdapter(typeAdapter);
 
 		/* Next up is the date of the reminder, simple enough */
-		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
-				.createFromResource(this, R.array.test_dates,
-						android.R.layout.simple_spinner_item);
-		dateAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Array containing different days for an event
+		String[] strDayArr = {getString(R.string.todayLabel),
+				getString(R.string.tomorrowLabel),
+				getString(R.string.thisWeekLabel),
+				getString(R.string.pickDayLabel)};
+
+		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
+				R.layout.day_spinner_item, strDayArr);
+
 		Spinner dateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
-		dateSpinner.setAdapter(dateAdapter);
+		dateSpinner.setAdapter(dayAdapter);
 
 		/*
 		 * Last but not least, time of the reminder with a clarification of the
 		 * time
 		 */
-		String[] strTimeArr = {"Morning", "Afternoon", "Evening", "Night",
-				"..."};
-		ReminderTimeAdapter timeAdapter = new ReminderTimeAdapter(this,
+		// Array containing different times for an event
+		String[] strTimeArr = {getString(R.string.morning),
+				getString(R.string.afternoon), getString(R.string.evening),
+				getString(R.string.night), getString(R.string.pickTimeLabel)};
+
+		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, strTimeArr);
+
 		Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
 		timeSpinner.setAdapter(timeAdapter);
 		remindMeClicked = true;
 	}
 
+	/**
+	 * When the "Repeat" button is pressed, this method is called and the button
+	 * is switched to a view containing the required forms for a repeating
+	 * event.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
+	public void onRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
+
+		/* The dayAdapter will suffice here as we only want simple strings */
+
+		// Array of strings for different intervals
+		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
+				getString(R.string.twoWeeksLabel),
+				getString(R.string.threeWeeksLabel),
+				getString(R.string.oneMonthLabel)};
+
+		SpinnerDayAdapter intervalAdapter = new SpinnerDayAdapter(this,
+				R.layout.day_spinner_item, strIntervalArr);
+
+		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+
+		repeatIntervalSpinner.setAdapter(intervalAdapter);
+
+		repeatClicked = true;
+	}
+
+	/**
+	 * When the "X" button next to the event field is pressed, this method is
+	 * called and the layout is restored to its previous state.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
+	public void onCancelEvent(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
+
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownButton.setVisibility(View.VISIBLE);
+
+		isEvent = false;
+	}
+
+	/**
+	 * When the "X" button next to the reminder field is pressed, this method is
+	 * called and the layout is restored to its previous state.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
 	public void onCancelReminder(View v) {
 		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.setReminderField);
 		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
@@ -334,6 +436,13 @@ public class NewTaskActivity extends Activity {
 		remindMeClicked = false;
 	}
 
+	/**
+	 * When the "X" button next to the repeat field is pressed, this method is
+	 * called and the layout is restored to its previous state.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
 	public void onCancelRepeat(View v) {
 		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
 		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
@@ -342,35 +451,6 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		repeatClicked = false;
-	}
-
-
-    public void onCancelEvent(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
-        Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
-
-        currentLayout.setVisibility(View.INVISIBLE);
-        toBeShownButton.setVisibility(View.VISIBLE);
-
-        isEvent = false;
-    }
-
-    public void onRepeat(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
-
-		currentLayout.setVisibility(View.INVISIBLE);
-		toBeShownLayout.setVisibility(View.VISIBLE);
-
-		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
-				.createFromResource(this, R.array.test_intervals,
-                        android.R.layout.simple_spinner_item);
-		dateAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
-		repeatIntervalSpinner.setAdapter(dateAdapter);
-
-		repeatClicked = true;
 	}
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,
@@ -382,7 +462,7 @@ public class NewTaskActivity extends Activity {
 		} else if (dateFromString.equals(getString(R.string.thisWeekLabel))) {
 			startDate = new Date(System.currentTimeMillis()
 					+ (2 * DAY_IN_MILLIS));
-		} else if (dateFromString.equals(getString(R.string.pickDateLabel))) {
+		} else if (dateFromString.equals(getString(R.string.pickDayLabel))) {
 			startDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
@@ -394,7 +474,7 @@ public class NewTaskActivity extends Activity {
 			endDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
 		} else if (dateToString.equals(getString(R.string.thisWeekLabel))) {
 			endDate = new Date(System.currentTimeMillis() + (2 * DAY_IN_MILLIS));
-		} else if (dateToString.equals(getString(R.string.pickDateLabel))) {
+		} else if (dateToString.equals(getString(R.string.pickDayLabel))) {
 			endDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {

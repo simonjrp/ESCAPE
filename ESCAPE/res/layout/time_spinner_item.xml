@@ -9,8 +9,7 @@
         android:id="@+id/spinnerTimeAsText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="15dp"
-        >
+        android:textSize="@dimen/textsize_small">
 
     </TextView>
 
@@ -18,12 +17,9 @@
         android:id="@+id/spinnerTimeAsTime"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="10dp"
+        android:textSize="@dimen/textsize_micro"
         android:textColor="#A3A3A3"
-        android:visibility="invisible"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        >
+        android:layout_alignParentRight="true">
 
     </TextView>
 

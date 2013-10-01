@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,16 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import se.chalmers.dat255.group22.escape.R;
+
 /**
  * @author tholene
  */
-public class ReminderTimeAdapter extends ArrayAdapter<String> {
+public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 	private String[] strings;
 	private Context context;
 
-	public ReminderTimeAdapter(Context context, int textViewResourceId,
-			String[] objects) {
+	public SpinnerTimeAdapter(Context context, int textViewResourceId,
+                              String[] objects) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		this.strings = objects;
@@ -39,13 +41,13 @@ public class ReminderTimeAdapter extends ArrayAdapter<String> {
 
 		timeAsTime.setVisibility(View.VISIBLE);
 
-		if (timeAsText.getText().equals("Morning"))
+		if (timeAsText.getText().equals(context.getString(R.string.morning)))
 			timeAsTime.setText("09:00");
-		if (timeAsText.getText().equals("Afternoon"))
+		if (timeAsText.getText().equals(context.getString(R.string.afternoon)))
 			timeAsTime.setText("13:00");
-		if (timeAsText.getText().equals("Evening"))
+		if (timeAsText.getText().equals(context.getString(R.string.evening)))
 			timeAsTime.setText("17:00");
-		if (timeAsText.getText().equals("Night"))
+		if (timeAsText.getText().equals(context.getString(R.string.night)))
 			timeAsTime.setText("20:00");
 		return row;
 	}

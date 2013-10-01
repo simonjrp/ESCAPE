@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,21 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import se.chalmers.dat255.group22.escape.R;
+
 /**
  * @author tholene
  */
-public class ReminderTypeAdapter extends ArrayAdapter<String> {
+public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 	private String[] strings;
-	private int imgArr[];
 	private Context context;
 
-	public ReminderTypeAdapter(Context context, int textViewResourceId,
-			String[] objects, int imgArr[]) {
+	public SpinnerDayAdapter(Context context, int textViewResourceId,
+                             String[] objects) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		this.strings = objects;
-		this.imgArr = imgArr;
 	}
 
 	@Override
@@ -30,15 +30,11 @@ public class ReminderTypeAdapter extends ArrayAdapter<String> {
 
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.type_spinner_item, parent, false);
+		View row = inflater.inflate(R.layout.day_spinner_item, parent, false);
 
-		TextView label = (TextView) row.findViewById(R.id.spinnerText);
+		TextView day = (TextView) row.findViewById(R.id.spinnerDayText);
 
-		label.setText(strings[position]);
-
-		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
-
-		icon.setImageResource(imgArr[position]);
+        day.setText(strings[position]);
 
 		return row;
 	}
@@ -47,13 +43,13 @@ public class ReminderTypeAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.type_spinner_item_single, parent,
+		View row = inflater.inflate(R.layout.day_spinner_item_single, parent,
 				false);
+        TextView day = (TextView) row.findViewById(R.id.spinnerDayText);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
+        day.setText(strings[position]);
+        return row;
 
-		icon.setImageResource(imgArr[position]);
-		return row;
 	}
 
 }
