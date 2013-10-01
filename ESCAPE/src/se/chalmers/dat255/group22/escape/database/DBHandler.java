@@ -884,6 +884,38 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
+	
+	/**
+	 * Returns the GPSAlarm with the id specified.
+	 * 
+	 * @param id
+	 * @return GPSAlarm with the id
+	 */
+	public GPSAlarm getGPSAlarm(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LATITUDE, COLUMN_GPS_ALARMS_LONGITUDE },
+				COLUMN_GPS_ALARMS_ID + "=?", new String[] { id.toString() },
+				null, null, null);
+
+		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)), 
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
 
 	/**
 	 * Returns the TimeAlarm for a ListObject
