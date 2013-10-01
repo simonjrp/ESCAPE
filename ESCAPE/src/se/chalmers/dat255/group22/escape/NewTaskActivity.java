@@ -214,9 +214,8 @@ public class NewTaskActivity extends Activity {
 					dbHandler.getTimeAlarm(tmpId));
 			// creates a notification!
 			if (remindMeClicked) {
-				// TODO fix notifications!
-				// NotificationHandler nf = new NotificationHandler(this);
-				// nf.addReminderNotification(dbHandler.getListObject(objId));
+				NotificationHandler nf = new NotificationHandler(this);
+				nf.addReminderNotification(dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getTime() != null) {
