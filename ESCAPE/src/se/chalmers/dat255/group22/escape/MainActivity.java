@@ -27,6 +27,8 @@ public class MainActivity extends FragmentActivity {
 
 		// switch to the events list directly after startup
 		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
+		// saves the state between the 3 different fragments
+		viewPager.setOffscreenPageLimit(3);
 
 	}
 
