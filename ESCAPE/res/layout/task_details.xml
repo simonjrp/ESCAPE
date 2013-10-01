@@ -8,7 +8,6 @@
         android:id="@+id/task_details_layout"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-
         android:background="#FFFFFF">
 
         <EditText
@@ -248,6 +247,7 @@
                 android:layout_below="@id/separator2"
                 android:onClick="onRepeat"
                 android:clickable="true"
+                android:layout_centerInParent="true"
                 android:background="@android:drawable/list_selector_background">
 
                 <ImageView
@@ -269,6 +269,7 @@
                     android:textSize="@dimen/textsize_medium"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
 
             </RelativeLayout>
 
