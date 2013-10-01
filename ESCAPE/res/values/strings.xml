@@ -11,7 +11,7 @@
     <string name="somedayLabel">Someday</string>
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>
-    <string name="thisWeekLabel">Someday</string>
+    <string name="thisWeekLabel">This week</string>
     <string name="taskHeader">Remember...</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
@@ -23,5 +23,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="notification_done">Done</string>
     <string name="notification_snooze">In an hour</string>
+    <string name="pickTimeLabel">...</string>
+    <string name="pickDateLabel">...</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeatLabel">Every</string>
 
 </resources>
