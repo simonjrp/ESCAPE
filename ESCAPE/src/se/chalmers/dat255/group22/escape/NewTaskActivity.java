@@ -27,8 +27,8 @@ public class NewTaskActivity extends Activity {
 
 	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean remindMeClicked;
-    private boolean repeatClicked;
-    private boolean isEvent;
+	private boolean repeatClicked;
+	private boolean isEvent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,23 +173,20 @@ public class NewTaskActivity extends Activity {
 
 		if (name.trim().length() != 0) {
 
-			Time time;
-			Date startDate = new Date(DAY_IN_MILLIS);
-			Date endDate = new Date(DAY_IN_MILLIS);
-
-			getTimeFromSpinners(dateFromString, startDate, dateToString,
-					endDate);
-
-			time = new Time(1, startDate, endDate);
-
 			ListObject lo = new ListObject(1, name);
 			if (comment.trim().length() != 0)
 				lo.setComment(comment);
+            else
+                lo.setComment(null);
 			lo.setImportant(importantTask);
 			lo.addToCategory(newCategory);
 			lo.setPlace(place);
-			lo.setTime(time);
 			lo.setTimeAlarm(timeAlarm);
+            //lo.setGpsAlarm(...);
+			if (isEvent) {
+				Time time = getTimeFromSpinners(dateFromString, dateToString);
+				lo.setTime(time);
+			}
 
 			saveToDatabase(lo);
 
@@ -208,34 +205,44 @@ public class NewTaskActivity extends Activity {
 	public void saveToDatabase(ListObject lo) {
 		DBHandler dbHandler = new DBHandler(this);
 		long objId = dbHandler.addListObject(lo);
+		long tmpId;
 
 		if (lo.getTimeAlarm() != null) {
-			dbHandler.addTimeAlarm(lo.getTimeAlarm());
-			dbHandler.addListObjectWithTimeAlarm(dbHandler.getListObject(objId), lo.getTimeAlarm());
+			tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
+			dbHandler.addListObjectWithTimeAlarm(
+					dbHandler.getListObject(objId),
+					dbHandler.getTimeAlarm(tmpId));
 			// creates a notification!
 			if (remindMeClicked) {
-                //TODO fix notifications!
-				NotificationHandler nf = new NotificationHandler(this);
-				nf.addReminderNotification(dbHandler.getListObject(objId));
+				// TODO fix notifications!
+				// NotificationHandler nf = new NotificationHandler(this);
+				// nf.addReminderNotification(dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getTime() != null) {
-			dbHandler.addTime(lo.getTime());
-			dbHandler.addListObjectsWithTime(dbHandler.getListObject(objId), lo.getTime());
+			tmpId = dbHandler.addTime(lo.getTime());
+			dbHandler.addListObjectsWithTime(dbHandler.getListObject(objId),
+					dbHandler.getTime(tmpId));
 		}
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
-				dbHandler.addCategory(cat);
-				dbHandler.addCategoryWithListObject(cat, dbHandler.getListObject(objId));
+				tmpId = dbHandler.addCategory(cat);
+				// TODO do this work?
+				dbHandler.addCategoryWithListObject(cat,
+						dbHandler.getListObject(objId));
 			}
 		}
+		// TODO fix gps alarm setter
 		if (lo.getGpsAlarm() != null) {
-			dbHandler.addGPSAlarm(lo.getGpsAlarm());
-			dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId), lo.getGpsAlarm());
+			tmpId = dbHandler.addGPSAlarm(lo.getGpsAlarm());
+			// dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId),
+			// dbHandler.getGPSAlarm(tmpId));
 		}
+		// TODO fix place setter
 		if (lo.getPlace() != null) {
-			dbHandler.addPlace(lo.getPlace());
-			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId), lo.getPlace());
+			tmpId = dbHandler.addPlace(lo.getPlace());
+			// dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
+			// dbHandler.getPlace(tmpId));
 		}
 	}
 
@@ -281,7 +288,7 @@ public class NewTaskActivity extends Activity {
 
 		timeToSpinner.setAdapter(timeAdapter);
 
-        isEvent = true;
+		isEvent = true;
 
 	}
 
@@ -344,27 +351,26 @@ public class NewTaskActivity extends Activity {
 		repeatClicked = false;
 	}
 
+	public void onCancelEvent(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
 
-    public void onCancelEvent(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
-        Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownButton.setVisibility(View.VISIBLE);
 
-        currentLayout.setVisibility(View.INVISIBLE);
-        toBeShownButton.setVisibility(View.VISIBLE);
+		isEvent = false;
+	}
 
-        isEvent = false;
-    }
-
-    public void onRepeat(View v) {
-        RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-        RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+	public void onRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter
 				.createFromResource(this, R.array.test_intervals,
-                        android.R.layout.simple_spinner_item);
+						android.R.layout.simple_spinner_item);
 		dateAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
@@ -373,8 +379,9 @@ public class NewTaskActivity extends Activity {
 		repeatClicked = true;
 	}
 
-	private void getTimeFromSpinners(String dateFromString, Date startDate,
-			String dateToString, Date endDate) {
+	private Time getTimeFromSpinners(String dateFromString, String dateToString) {
+		Date startDate;
+		Date endDate;
 		if (dateFromString.equals(getString(R.string.todayLabel))) {
 			startDate = new Date(System.currentTimeMillis());
 		} else if (dateFromString.equals(getString(R.string.tomorrowLabel))) {
@@ -386,6 +393,7 @@ public class NewTaskActivity extends Activity {
 			startDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
+            startDate = null;
 		}
 
 		if (dateToString.equals(getString(R.string.todayLabel))) {
@@ -398,7 +406,11 @@ public class NewTaskActivity extends Activity {
 			endDate = null;
 			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
 		} else {
-
+            endDate = null;
 		}
+        if (startDate == null && endDate == null)
+            return null;
+
+		return new Time(1, startDate, endDate);
 	}
 }
