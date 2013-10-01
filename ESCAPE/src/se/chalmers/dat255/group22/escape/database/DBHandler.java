@@ -310,6 +310,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * Saves a category to the database
 	 * 
 	 * @param category
+	 * @return -1 if some error happened, otherwise just a number
 	 */
 	public Long addCategory(Category category) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -730,6 +731,39 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return list;
 	}
+	
+	/**
+	 * Returns the Category with the name specified.
+	 * 
+	 * @param name
+	 * @return Category with the name
+	 */
+	public Category getCategory(String name) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
+				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR, COLUMN_CATEGORIES_IMPORTANT_COLOR },
+				COLUMN_CATEGORIES_NAME + "=?", new String[] { name.toString() },
+				null, null, null);
+
+		List<Category> list = new LinkedList<Category>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				Category object = new Category(cursor.getString(cursor
+						.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)), 
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_IMPORTANT_COLOR)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
 
 	// TODO _Maybe_ make a method to return EVERYTHING from dBase. Is doable,
 	// but is it usable?
@@ -1044,6 +1078,36 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery(raw, null);
 		if (cursor.moveToFirst()) {
 			do {
+				Place object = new Place(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_PLACES_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_PLACES_NAME)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
+	/**
+	 * Returns the Place with the id specified.
+	 * 
+	 * @param id
+	 * @return Place with the id
+	 */
+	public Place getPlace(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_PLACES, new String[] {
+				COLUMN_PLACES_ID, COLUMN_PLACES_NAME},
+				COLUMN_PLACES_ID + "=?", new String[] { id.toString() },
+				null, null, null);
+
+		List<Place> list = new LinkedList<Place>();
+		if (cursor.moveToFirst()) {
+			do {
+
 				Place object = new Place(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_PLACES_ID)),
 						cursor.getString(cursor
