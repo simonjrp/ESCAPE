@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#ffffff">
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingBottom="@dimen/ui_element_gap"
+                style="@android:style/Widget.DropDownItem.Spinner">
 
     <TextView
         android:id="@+id/spinnerTimeAsText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="@dimen/textsize_small">
+        android:paddingRight="25dp"
+        android:layout_alignParentLeft="true"
+        android:textSize="@dimen/textsize_medium">
 
     </TextView>
 
@@ -17,9 +21,10 @@
         android:id="@+id/spinnerTimeAsTime"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="@dimen/textsize_micro"
+        android:textSize="@dimen/textsize_small"
         android:textColor="#A3A3A3"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
 
     </TextView>
 

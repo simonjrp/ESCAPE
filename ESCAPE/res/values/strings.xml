@@ -19,8 +19,8 @@
     <string name="empty_list">-Nothing to show-</string>
     <string name="time_reminder">Time reminder</string>
     <string name="location_reminder">Location reminder</string>
-    <string name="pickTimeLabel">...</string>
-    <string name="pickDayLabel">...</string>
+    <string name="pickTimeLabel">Pick a time...</string>
+    <string name="pickDayLabel">Pick a day...</string>
     <string name="repeat">Repeat</string>
     <string name="repeatLabel">Every</string>
     <string name="monday_short">Mon</string>

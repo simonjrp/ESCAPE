@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import se.chalmers.dat255.group22.escape.R;
@@ -25,6 +26,7 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 		this.context = context;
 		this.strings = objects;
 		this.imgArr = imgArr;
+
 	}
 
 	@Override

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#ffffff">
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingBottom="@dimen/ui_element_gap"
+                style="@android:style/Widget.DropDownItem.Spinner">
 
     <TextView
         android:id="@+id/spinnerDayText"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="@dimen/textsize_small">
+        android:textSize="@dimen/textsize_medium">
 
     </TextView>
 </RelativeLayout>

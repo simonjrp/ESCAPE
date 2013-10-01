@@ -14,6 +14,8 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -384,8 +386,6 @@ public class NewTaskActivity extends Activity {
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
-
-		/* The dayAdapter will suffice here as we only want simple strings */
 
 		// Array of strings for different intervals
 		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
