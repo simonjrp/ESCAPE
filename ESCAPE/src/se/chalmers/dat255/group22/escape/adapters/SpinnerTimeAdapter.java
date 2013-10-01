@@ -18,7 +18,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 	private Context context;
 
 	public SpinnerTimeAdapter(Context context, int textViewResourceId,
-                              String[] objects) {
+			String[] objects) {
 		super(context, textViewResourceId, objects);
 		this.context = context;
 		this.strings = objects;
@@ -49,6 +49,12 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			timeAsTime.setText("17:00");
 		if (timeAsText.getText().equals(context.getString(R.string.night)))
 			timeAsTime.setText("20:00");
+
+		// set gray color to "Pick a date" item
+		if (position == 4) {
+			timeAsText.setBackgroundResource(R.color.light_gray);
+			timeAsTime.setBackgroundResource(R.color.light_gray);
+		}
 		return row;
 	}
 
