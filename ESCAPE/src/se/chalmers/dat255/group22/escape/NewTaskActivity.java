@@ -228,8 +228,8 @@ public class NewTaskActivity extends Activity {
 			for (Category cat : lo.getCategories()) {
 				tmpId = dbHandler.addCategory(cat);
 				// TODO do this work?
-				dbHandler.addCategoryWithListObject(cat,
-						dbHandler.getListObject(objId));
+				//dbHandler.addCategoryWithListObject(cat,
+				//		dbHandler.getListObject(objId));
 			}
 		}
 		// TODO fix gps alarm setter
