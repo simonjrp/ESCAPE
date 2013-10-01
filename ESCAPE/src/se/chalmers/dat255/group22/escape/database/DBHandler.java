@@ -1357,12 +1357,58 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 *            to delete
 	 * @return true if anything was deleted, false otherwise
+	 * @deprecated Use purgeListObject() instead. Using this method leaves
+	 *             unwanted stuff in database
 	 */
 	public boolean deleteListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
 				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+	
+	/**
+	 * Purges a ListObject from the Database which includes deleting every
+	 * place, time, timeAlarm and GPSAlarm that was connected to it from the
+	 * database
+	 * 
+	 * @param listObject
+	 *            to purge
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean purgeListObject(ListObject listObject) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		int rv = db.delete(TABLE_TIMES, "? = (SELECT a.? FROM ? a WHERE ?=?)",
+				new String[] { COLUMN_TIMES_ID,
+						COLUMN_LIST_OBJECTS_WITH_TIME_TIME,
+						TABLE_LIST_OBJECTS_WITH_TIME,
+						COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT,
+						"" + listObject.getId() });
+		rv += db.delete(TABLE_TIME_ALARMS, "? = (SELECT a.? FROM ? a WHERE ?=?)",
+				new String[] { COLUMN_TIME_ALARMS_ID,
+						COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_TIME_ALARM,
+						TABLE_LIST_OBJECTS_WITH_TIME_ALARM,
+						COLUMN_LIST_OBJECTS_WITH_TIME_ALARM_LIST_OBJECT,
+						"" + listObject.getId() });
+		rv += db.delete(TABLE_GPS_ALARMS, "? = (SELECT a.? FROM ? a WHERE ?=?)",
+				new String[] { COLUMN_GPS_ALARMS_ID,
+						COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_GPS_ALARM,
+						TABLE_LIST_OBJECTS_WITH_GPS_ALARM,
+						COLUMN_LIST_OBJECTS_WITH_GPS_ALARM_LIST_OBJECT,
+						"" + listObject.getId() });
+		rv += db.delete(TABLE_PLACES, "? = (SELECT a.? FROM ? a WHERE ?=?)",
+				new String[] { COLUMN_PLACES_ID,
+						COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE,
+						TABLE_LIST_OBJECTS_WITH_PLACE,
+						COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT,
+						"" + listObject.getId() });
+		
+		rv += db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
+				new String[] { "" + listObject.getId() });
+
 		db.close();
 		return rv > 0;
 	}
