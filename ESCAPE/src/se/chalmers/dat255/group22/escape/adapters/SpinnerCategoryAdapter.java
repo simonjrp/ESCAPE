@@ -1,6 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,34 +7,36 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import se.chalmers.dat255.group22.escape.R;
+
 /**
- * An adapter that customizes the way spinners for choosing a day are presented.
+ * An adapter that customizes the way spinners for choosing a category are presented.
  * 
  * @author tholene
  */
-public class SpinnerDayAdapter extends ArrayAdapter<String> {
+public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
-	private String[] days;
+	private String[] categories;
 	private Context context;
 
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
-	 * different days.
-	 * 
+	 * different categories.
+	 *
 	 * @param context
 	 *            the context that is relevant, usually "this".
 	 * @param textViewResourceId
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
-	 * @param days
+	 * @param categories
 	 *            a stringarray that contains the string to be set for each item
 	 *            in the dropdown list.
 	 */
-	public SpinnerDayAdapter(Context context, int textViewResourceId,
-			String[] days) {
-		super(context, textViewResourceId, days);
+	public SpinnerCategoryAdapter(Context context, int textViewResourceId,
+                                  String[] categories) {
+		super(context, textViewResourceId, categories);
 		this.context = context;
-		this.days = days;
+		this.categories = categories;
 	}
 
 	@Override
@@ -47,8 +48,8 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(days[position]);
-		// set gray color to "Pick a date" item
+		day.setText(categories[position]);
+		// set gray color to "New category" item
 		if (position == getCount()-1) {
 			day.setBackgroundResource(R.color.light_gray);
 
@@ -70,7 +71,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 				false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(days[position]);
+		day.setText(categories[position]);
 
 		return row;
 

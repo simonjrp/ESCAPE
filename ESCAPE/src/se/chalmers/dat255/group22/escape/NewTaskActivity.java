@@ -3,7 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.sql.Date;
 import java.util.Calendar;
 
+import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerIntervalAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
@@ -14,8 +16,6 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +35,8 @@ import android.widget.Toast;
 public class NewTaskActivity extends Activity {
 
 	private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-	private boolean remindMeClicked;
-	private boolean repeatClicked;
+	private boolean hasReminder;
+	private boolean isRepeating;
 	private boolean isEvent;
 
 	@Override
@@ -51,10 +51,30 @@ public class NewTaskActivity extends Activity {
 					.add(R.id.container_new_task, new TaskDetailsFragment())
 					.commit();
 		}
-
 	}
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Set up the spinner for different categories
+        Spinner categorySpinner = (Spinner) this.findViewById(R.id.task_categories);
+
+        // TODO This array should be grabbed from the database
+        String[] categories = {"Life", "Work", "School", "Custom category..."};
+
+        // The DayAdapter only makes use of simple strings and presents its
+        // items the way we want the categories to be presented. It would be
+        // unnecessary to create an identical adapter just for the categories,
+        // so we just use this one instead
+
+        SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
+                this, R.layout.simple_spinner_item, categories);
+
+        categorySpinner.setAdapter(categoryAdapter);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.new_task, menu);
@@ -122,7 +142,7 @@ public class NewTaskActivity extends Activity {
 		// TODO It's possible to select a time for the reminder that might've
 		// passed already
 		TimeAlarm timeAlarm = null;
-		if (remindMeClicked) {
+		if (hasReminder) {
 			Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
 			Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
 			Calendar calendar = Calendar.getInstance();
@@ -222,7 +242,7 @@ public class NewTaskActivity extends Activity {
 			dbHandler.addTimeAlarm(lo.getTimeAlarm());
 			dbHandler.addListObjectWithTimeAlarm(lo, lo.getTimeAlarm());
 			// creates a notification!
-			if (remindMeClicked) {
+			if (hasReminder) {
 				// TODO fix notifications!
 				// NotificationHandler nf = new NotificationHandler(this);
 				// nf.addReminderNotification(lo);
@@ -275,7 +295,7 @@ public class NewTaskActivity extends Activity {
 				getString(R.string.pickDayLabel)};
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
-				R.layout.day_spinner_item, strDayArr);
+				R.layout.simple_spinner_item, strDayArr);
 		dateFromSpinner.setAdapter(dayAdapter);
 
 		//
@@ -350,7 +370,7 @@ public class NewTaskActivity extends Activity {
 				getString(R.string.pickDayLabel)};
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
-				R.layout.day_spinner_item, strDayArr);
+				R.layout.simple_spinner_item, strDayArr);
 
 		Spinner dateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
 		dateSpinner.setAdapter(dayAdapter);
@@ -369,7 +389,7 @@ public class NewTaskActivity extends Activity {
 
 		Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
 		timeSpinner.setAdapter(timeAdapter);
-		remindMeClicked = true;
+		hasReminder = true;
 	}
 
 	/**
@@ -393,14 +413,14 @@ public class NewTaskActivity extends Activity {
 				getString(R.string.threeWeeksLabel),
 				getString(R.string.oneMonthLabel)};
 
-		SpinnerDayAdapter intervalAdapter = new SpinnerDayAdapter(this,
-				R.layout.day_spinner_item, strIntervalArr);
+		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(this,
+				R.layout.simple_spinner_item, strIntervalArr);
 
 		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
 
 		repeatIntervalSpinner.setAdapter(intervalAdapter);
 
-		repeatClicked = true;
+		isRepeating = true;
 	}
 
 	/**
@@ -433,7 +453,7 @@ public class NewTaskActivity extends Activity {
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
-		remindMeClicked = false;
+		hasReminder = false;
 	}
 
 	/**
@@ -450,7 +470,7 @@ public class NewTaskActivity extends Activity {
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
-		repeatClicked = false;
+		isRepeating = false;
 	}
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,

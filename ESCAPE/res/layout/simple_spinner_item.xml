@@ -8,7 +8,7 @@
                 style="@android:style/Widget.DropDownItem.Spinner">
 
     <TextView
-        android:id="@+id/spinnerDayText"
+        android:id="@+id/simpleSpinnerText"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:textSize="@dimen/textsize_medium">

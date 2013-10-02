@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+
 public class TaskDetailsFragment extends Fragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -19,13 +21,9 @@ public class TaskDetailsFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Spinner catSpinner = (Spinner) getActivity().findViewById(
-				R.id.task_categories);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getActivity(), R.array.test_categories,
-				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		catSpinner.setAdapter(adapter);
-	}
+
+
+
+    }
 
 }

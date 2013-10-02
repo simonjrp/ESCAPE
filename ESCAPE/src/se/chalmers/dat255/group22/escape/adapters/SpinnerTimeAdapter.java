@@ -67,7 +67,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			timeAsTime.setText("20:00");
 
 		// set gray color to "Pick a time" item
-		if (position == 4) {
+		if (position == getCount()-1) {
 			timeAsText.setBackgroundResource(R.color.light_gray);
 			timeAsTime.setBackgroundResource(R.color.light_gray);
 

@@ -33,6 +33,10 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 	 * @param types
 	 *            a stringarray that contains the string to be set for each item
 	 *            in the dropdown list.
+	 * 
+	 * @param imgArr
+	 *            an array containing the images to be associated with the
+	 *            strings in the previous array.
 	 */
 	public SpinnerTypeAdapter(Context context, int textViewResourceId,
 			String[] types, int imgArr[]) {
@@ -58,8 +62,9 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
 		icon.setImageResource(imgArr[position]);
 
-		// TODO If position == 1, rearrange layout for location input
-
+		if (position == (getCount()-1)) {
+			// TODO If position == 1, rearrange layout for location input
+		}
 		return row;
 	}
 
