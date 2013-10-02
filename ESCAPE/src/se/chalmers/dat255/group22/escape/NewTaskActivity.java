@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
@@ -61,7 +62,12 @@ public class NewTaskActivity extends Activity {
         Spinner categorySpinner = (Spinner) this.findViewById(R.id.task_categories);
 
         // TODO This array should be grabbed from the database
-        String[] categories = {"Life", "Work", "School", "Custom category..."};
+        ArrayList<String> categories = new ArrayList<String>();
+        categories.add("Life");
+        categories.add("School");
+        categories.add("Work");
+
+        categories.add(getString(R.string.custom_category));
 
         // The DayAdapter only makes use of simple strings and presents its
         // items the way we want the categories to be presented. It would be

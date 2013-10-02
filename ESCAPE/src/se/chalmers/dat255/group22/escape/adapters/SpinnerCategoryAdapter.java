@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import se.chalmers.dat255.group22.escape.R;
 
 /**
@@ -16,7 +18,7 @@ import se.chalmers.dat255.group22.escape.R;
  */
 public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
-	private String[] categories;
+	private ArrayList<String> categories;
 	private Context context;
 
 	/**
@@ -29,11 +31,11 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
 	 * @param categories
-	 *            a stringarray that contains the string to be set for each item
+	 *            a ArrayList that contains the string to be set for each item
 	 *            in the dropdown list.
 	 */
 	public SpinnerCategoryAdapter(Context context, int textViewResourceId,
-                                  String[] categories) {
+                                  ArrayList<String> categories) {
 		super(context, textViewResourceId, categories);
 		this.context = context;
 		this.categories = categories;
@@ -48,7 +50,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(categories[position]);
+		day.setText(categories.get(position));
 		// set gray color to "New category" item
 		if (position == getCount()-1) {
 			day.setBackgroundResource(R.color.light_gray);
@@ -71,7 +73,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 				false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(categories[position]);
+		day.setText(categories.get(position));
 
 		return row;
 
