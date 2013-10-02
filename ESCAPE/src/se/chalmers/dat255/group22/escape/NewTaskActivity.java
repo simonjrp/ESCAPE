@@ -54,33 +54,32 @@ public class NewTaskActivity extends Activity {
 		}
 	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+	@Override
+	protected void onResume() {
+		super.onResume();
 
-        // Set up the spinner for different categories
-        Spinner categorySpinner = (Spinner) this.findViewById(R.id.task_categories);
+		// Set up the spinner for different categories
+		Spinner categorySpinner = (Spinner) this
+				.findViewById(R.id.task_categories);
 
-        // TODO This array should be grabbed from the database
-        ArrayList<String> categories = new ArrayList<String>();
-        categories.add("Life");
-        categories.add("School");
-        categories.add("Work");
+		// TODO This array should be grabbed from the database
+		ArrayList<String> categories = new ArrayList<String>();
 
-        categories.add(getString(R.string.custom_category));
 
-        // The DayAdapter only makes use of simple strings and presents its
-        // items the way we want the categories to be presented. It would be
-        // unnecessary to create an identical adapter just for the categories,
-        // so we just use this one instead
+		categories.add(getString(R.string.custom_category));
 
-        SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
-                this, R.layout.simple_spinner_item, categories);
+		// The DayAdapter only makes use of simple strings and presents its
+		// items the way we want the categories to be presented. It would be
+		// unnecessary to create an identical adapter just for the categories,
+		// so we just use this one instead
 
-        categorySpinner.setAdapter(categoryAdapter);
-    }
+		SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
+				this, R.layout.simple_spinner_item, categories);
 
-    @Override
+		categorySpinner.setAdapter(categoryAdapter);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.new_task, menu);
@@ -275,6 +274,37 @@ public class NewTaskActivity extends Activity {
 	}
 
 	/**
+	 * When the "Repeat" button is pressed, this method is called and the button
+	 * is switched to a view containing the required forms for a repeating
+	 * event.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
+	public void onRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+
+		currentLayout.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
+
+		// Array of strings for different intervals
+		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
+				getString(R.string.twoWeeksLabel),
+				getString(R.string.threeWeeksLabel),
+				getString(R.string.oneMonthLabel)};
+
+		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
+				this, R.layout.simple_spinner_item, strIntervalArr);
+
+		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+
+		repeatIntervalSpinner.setAdapter(intervalAdapter);
+
+		isRepeating = true;
+	}
+
+	/**
 	 * When the "Convert to Event" button is pressed, this method is called and
 	 * the button is switched to a view containing the required forms for an
 	 * event.
@@ -399,34 +429,20 @@ public class NewTaskActivity extends Activity {
 	}
 
 	/**
-	 * When the "Repeat" button is pressed, this method is called and the button
-	 * is switched to a view containing the required forms for a repeating
-	 * event.
+	 * When the "X" button next to the repeat field is pressed, this method is
+	 * called and the layout is restored to its previous state.
 	 * 
 	 * @param v
 	 *            the view that calls this method.
 	 */
-	public void onRepeat(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+	public void onCancelRepeat(View v) {
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
-		// Array of strings for different intervals
-		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
-				getString(R.string.twoWeeksLabel),
-				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel)};
-
-		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(this,
-				R.layout.simple_spinner_item, strIntervalArr);
-
-		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
-
-		repeatIntervalSpinner.setAdapter(intervalAdapter);
-
-		isRepeating = true;
+		isRepeating = false;
 	}
 
 	/**
@@ -460,23 +476,6 @@ public class NewTaskActivity extends Activity {
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
 		hasReminder = false;
-	}
-
-	/**
-	 * When the "X" button next to the repeat field is pressed, this method is
-	 * called and the layout is restored to its previous state.
-	 * 
-	 * @param v
-	 *            the view that calls this method.
-	 */
-	public void onCancelRepeat(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-
-		currentLayout.setVisibility(View.INVISIBLE);
-		toBeShownLayout.setVisibility(View.VISIBLE);
-
-		isRepeating = false;
 	}
 
 	private void getTimeFromSpinners(String dateFromString, Date startDate,

@@ -413,7 +413,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/repeatLabel"
-                        android:textSize="@dimen/textsize_small"
+                        android:textSize="@dimen/textsize_medium"
+                        android:paddingRight="@dimen/ui_element_gap"
                         android:layout_centerVertical="true"
                         />
 
