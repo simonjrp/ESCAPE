@@ -17,6 +17,7 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ public class NewTaskActivity extends Activity {
 	private boolean hasReminder;
 	private boolean isRepeating;
 	private boolean isEvent;
+	private boolean editing;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,6 @@ public class NewTaskActivity extends Activity {
 		// TODO This array should be grabbed from the database
 		ArrayList<String> categories = new ArrayList<String>();
 
-
 		categories.add(getString(R.string.custom_category));
 
 		// The DayAdapter only makes use of simple strings and presents its
@@ -77,6 +78,49 @@ public class NewTaskActivity extends Activity {
 				this, R.layout.simple_spinner_item, categories);
 
 		categorySpinner.setAdapter(categoryAdapter);
+
+		Intent intent = getIntent();
+		// TODO Fix this ugly check
+		if (intent.getStringExtra("EDIT") != null) {
+			if (intent.getStringExtra("EDIT").equals("TRUE")) {
+				// TODO Should keep track of wether this is a new event or an
+				// TODO event in editing, maybe a better way for this?
+				editing = true;
+
+				// References to all the input fields
+				EditText title = (EditText)findViewById(R.id.task_title);
+				Spinner category = (Spinner)findViewById(R.id.task_categories);
+				EditText description = (EditText)findViewById(R.id.task_description);
+				EditText location = (EditText)findViewById(R.id.task_location);
+				CheckBox important = (CheckBox)findViewById(R.id.task_important);
+
+				Spinner remindType = (Spinner)findViewById(R.id.reminderTypeSpinner);
+				Spinner remindDate = (Spinner)findViewById(R.id.reminderDateSpinner);
+				Spinner remindTime = (Spinner)findViewById(R.id.reminderTimeSpinner);
+
+				Spinner dateFrom = (Spinner)findViewById(R.id.date_from);
+				Spinner dateTo = (Spinner)findViewById(R.id.date_to);
+				Spinner timeFrom = (Spinner)findViewById(R.id.time_from);
+				Spinner timeTo = (Spinner)findViewById(R.id.time_to);
+
+                CheckBox mondayBox = (CheckBox)findViewById(R.id.mondayBox);
+                CheckBox tuesdayBox = (CheckBox)findViewById(R.id.tuesdayBox);
+                CheckBox wednesdayBox = (CheckBox)findViewById(R.id.wednesdayBox);
+                CheckBox thursdayBox = (CheckBox)findViewById(R.id.thursdayBox);
+                CheckBox fridayBox = (CheckBox)findViewById(R.id.fridayBox);
+                CheckBox saturdayBox = (CheckBox)findViewById(R.id.saturdayBox);
+                CheckBox sundayBox = (CheckBox)findViewById(R.id.sundayBox);
+                Spinner interval = (Spinner)findViewById(R.id.repeatIntervalSpinner);
+
+				// Set up the fields from the ListObject that "called" the
+				// activity
+				// TODO This should also be saved into the object when
+				// TODO pausing/destroying the activity!
+				title.setText(intent.getStringExtra("Name"));
+                description.setText(intent.getStringExtra("Description"));
+
+			}
+		}
 	}
 
 	@Override
@@ -225,8 +269,11 @@ public class NewTaskActivity extends Activity {
 			lo.setTime(time);
 			lo.setTimeAlarm(timeAlarm);
 
-			saveToDatabase(lo);
-
+            if(editing) {
+                // TODO Update? Remove+Add? Cookies?
+            } else {
+                saveToDatabase(lo);
+            }
 		} else {
 
 		}
@@ -281,6 +328,7 @@ public class NewTaskActivity extends Activity {
 	 * @param v
 	 *            the view that calls this method.
 	 */
+
 	public void onRepeat(View v) {
 		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
 		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);

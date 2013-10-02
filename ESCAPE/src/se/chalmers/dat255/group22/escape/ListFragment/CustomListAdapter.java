@@ -4,13 +4,16 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.NewTaskActivity;
 import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -160,7 +163,21 @@ public class CustomListAdapter implements ListAdapter {
 		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
 		// 300);
 		// deleteButton.setX(convertView.getRight() + 300);
+        editButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NewTaskActivity.class);
+                // TODO FIX
+                String name = listObject.getName();
+                String description = listObject.getComment();
 
+                intent.putExtra("EDIT", "TRUE");
+                intent.putExtra("Name", name);
+                intent.putExtra("Description", description);
+
+                context.startActivity(intent);
+            }
+        });
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

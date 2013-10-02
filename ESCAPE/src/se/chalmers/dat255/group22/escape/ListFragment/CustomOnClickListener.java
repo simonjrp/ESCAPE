@@ -41,28 +41,28 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		isExpanded = !isExpanded;
-		if (isExpanded) {
-			taskData.setText(
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+            taskData.setText(
 
-			(listObject.getComment() != null ? "* " + listObject.getComment() + "\n" : "No Comment\n") +
-            (listObject.getPlace() != null ? "* " + listObject.getPlace().getName() + "\n" : "No place")
+                    (listObject.getComment() != null ? "* " + listObject.getComment() + "\n" : "No Comment\n") +
+                            (listObject.getPlace() != null ? "* " + listObject.getPlace().getName() + "\n" : "No place")
 
-			);
+            );
 
-			if (taskData.getText() != null)
-				taskData.setVisibility(View.VISIBLE);
+            if (taskData.getText() != null)
+                taskData.setVisibility(View.VISIBLE);
 
-			taskData.setHeight(taskData.getLineCount()
-					* taskData.getLineHeight() + 5);
+            taskData.setHeight(taskData.getLineCount()
+                    * taskData.getLineHeight() + 5);
 
- 			taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
-			childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-		} else {
-			taskData.setVisibility(View.INVISIBLE);
-			taskData.setHeight(0);
-			childLabel.setPaintFlags(1);
-		}
+            taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+            childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        } else {
+            taskData.setVisibility(View.INVISIBLE);
+            taskData.setHeight(0);
+            childLabel.setPaintFlags(1);
+        }
 	}
 
 }
