@@ -23,11 +23,19 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * An activity used for creating a new task
+ * 
+ * @author Erik, Carl
+ */
 public class NewTaskActivity extends Activity {
 
+    // Milliseconds in a day
 	static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+    // true if reminder is active
 	private boolean remindMeClicked;
 	private boolean repeatClicked;
+    // true if task is an event
 	private boolean isEvent;
 
 	@Override
@@ -171,18 +179,20 @@ public class NewTaskActivity extends Activity {
 				"Another random Color");
 		Place place = new Place(1, location);
 
+        // If a name is set create ListObject
 		if (name.trim().length() != 0) {
-
 			ListObject lo = new ListObject(1, name);
+
 			if (comment.trim().length() != 0)
 				lo.setComment(comment);
-			else
+			else // A comment MUST be set even if only null!
 				lo.setComment(null);
+
 			lo.setImportant(importantTask);
 			lo.addToCategory(newCategory);
 			lo.setPlace(place);
 			lo.setTimeAlarm(timeAlarm);
-			// lo.setGpsAlarm(...);
+			//lo.setGpsAlarm(...);
 			if (isEvent) {
 				Time time = getTimeFromSpinners(dateFromString, dateToString);
 				lo.setTime(time);
@@ -226,18 +236,16 @@ public class NewTaskActivity extends Activity {
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				tmpId = dbHandler.addCategory(cat);
-				// TODO do this work?
+				// TODO implement methods for setting category!
 				// dbHandler.addCategoryWithListObject(cat,
 				// dbHandler.getListObject(objId));
 			}
 		}
-		// TODO fix gps alarm setter
 		if (lo.getGpsAlarm() != null) {
 			tmpId = dbHandler.addGPSAlarm(lo.getGpsAlarm());
 			dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId),
 					dbHandler.getGPSAlarm(tmpId));
 		}
-		// TODO fix place setter
 		if (lo.getPlace() != null) {
 			tmpId = dbHandler.addPlace(lo.getPlace());
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
