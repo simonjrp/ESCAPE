@@ -117,7 +117,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		ExpandableListView expLv = (ExpandableListView) mActivity
 				.findViewById(R.id.expEventList);
 
-        this.notifyDataSetChanged();
+		this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
 	}
 
@@ -196,7 +196,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			});
 
 			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("") ? "10:00"
+			childTimeView.setText(childTimeText.equals("")
+					? "10:00"
 					: childTimeText);
 			// Get a textview for the object's data
 			TextView childData = (TextView) convertView
@@ -275,6 +276,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return todayEventList.isEmpty() && tomorrowEventList.isEmpty()
+				&& thisWeekEventList.isEmpty();
 	}
 
 	@Override
@@ -453,7 +460,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 *            the date to see if it is today
 	 * @return true if it is today
 	 */
-	private boolean isToday(Date theDate) {
+	public boolean isToday(Date theDate) {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
@@ -472,7 +479,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 *            the date to see if it is tomorrow
 	 * @return true of it is tomorrow
 	 */
-	private boolean isTomorrow(Date theDate) {
+	public boolean isTomorrow(Date theDate) {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);

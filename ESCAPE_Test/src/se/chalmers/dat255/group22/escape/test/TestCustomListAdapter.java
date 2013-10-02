@@ -11,7 +11,10 @@ import android.test.RenamingDelegatingContext;
 
 /**
  * A test for some methods in CustomListAdapter. The test requires
- * ListObject.java and DBHandler.java to be functional!
+ * ListObject.java, DBHandler.java and related data classes to be functional!
+ * 
+ * DataBase is used since some methods in adapter assume that every ListObject
+ * originate in database and tries to get additional data from that source!
  * 
  * @author Carl Jansson
  */
