@@ -50,7 +50,6 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		day.setText(days[position]);
 		// set gray color to "Pick a date" item
 		if (position == getCount()-1) {
-			day.setBackgroundResource(R.color.light_gray);
 
 			View v = (View) day.getParent();
 			v.setBackgroundResource(R.color.light_gray);

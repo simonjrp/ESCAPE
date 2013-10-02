@@ -53,7 +53,6 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 		day.setText(categories.get(position));
 		// set gray color to "New category" item
 		if (position == getCount()-1) {
-			day.setBackgroundResource(R.color.light_gray);
 
 			View v = (View) day.getParent();
 			v.setBackgroundResource(R.color.light_gray);
