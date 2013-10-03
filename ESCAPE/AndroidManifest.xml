@@ -3,8 +3,9 @@
     package="se.chalmers.dat255.group22.escape"
     android:versionCode="1"
     android:versionName="1.0" >
-    
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.VIBRATE" >
+    </uses-permission>
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -24,13 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="se.chalmers.dat255.group22.escape.NewTaskActivity"
-            android:label="@string/title_activity_new_task" >
+        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity" >
+            android:label="@string/title_activity_new_task"
+            android:windowSoftInputMode="stateHidden">
         </activity>
 
-        <receiver
-            android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
+        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver" >
             android:enabled="true"
             android:process=":remote" >
             <intent-filter>
@@ -45,7 +45,7 @@
             android:name="se.chalmers.dat255.group22.escape.SnoozeDialogActivity"
             android:label="@string/title_activity_snooze_dialog"
             android:theme="@android:style/Theme.Dialog" >
-       </activity>
+        </activity>
     </application>
 
 </manifest>

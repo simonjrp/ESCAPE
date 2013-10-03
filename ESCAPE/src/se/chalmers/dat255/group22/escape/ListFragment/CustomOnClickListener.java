@@ -51,14 +51,17 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 					(dbHandler.getPlace(listObject) != null ? "* "
 							+ dbHandler.getPlace(listObject).getName() + "\n"
-							: "No place")
+
+					: "No place")
 
 			);
-			if (taskData.getText() != null)
 
+			if (taskData.getText() != null)
 				taskData.setVisibility(View.VISIBLE);
+
 			taskData.setHeight(taskData.getLineCount()
 					* taskData.getLineHeight() + 5);
+
 			taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
 			childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 		} else {

@@ -2,6 +2,7 @@ package se.chalmers.dat255.group22.escape;
 
 import android.content.Context;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -11,6 +12,8 @@ public class OptionTouchListener extends LongTouchActionListener {
 	// private TextView childLabel;
 	// private CustomExpandableListAdapter adapter;
 	private View ve;
+	private boolean animationStarted;
+	private TranslateAnimation slide;
 
 	public OptionTouchListener(Context context, View ve) {
 		super(context);
@@ -35,12 +38,15 @@ public class OptionTouchListener extends LongTouchActionListener {
 				.findViewById(R.id.deleteButton);
 		deleteButton.setVisibility(View.VISIBLE);
 
-		// TranslateAnimation slide = new TranslateAnimation(0, -300, 0, 0);
-		// slide.setDuration(250);
-		// slide.setFillAfter(true);
-		// editButton.startAnimation(slide);
-		// deleteButton.startAnimation(slide);
-
+		if (!animationStarted) {
+			slide = new TranslateAnimation(-300, 0, 0, 0);
+			slide.setDuration(250);
+			slide.setFillAfter(true);
+			slide.setFillEnabled(true);
+			editButton.startAnimation(slide);
+			deleteButton.startAnimation(slide);
+			animationStarted = true;
+		}
 	}
 
 }

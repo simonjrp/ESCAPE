@@ -2,13 +2,13 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:scrollbars="none">
 
     <RelativeLayout
         android:id="@+id/task_details_layout"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-
         android:background="#FFFFFF">
 
         <EditText
@@ -16,7 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:textSize="@dimen/textsize_medium"
+            android:textSize="@dimen/textsize_large"
             android:inputType="textCapSentences"
             android:paddingTop="@dimen/ui_element_gap"/>
 
@@ -27,6 +27,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_title"
             android:textSize="@dimen/textsize_medium"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/ui_element_gap"/>
 
         <EditText
@@ -112,6 +113,19 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/ui_element_gap"/>
 
+
+            <EditText
+                android:id="@+id/reminderLocationEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:hint="Location"
+                android:visibility="invisible"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:ems="10"/>
+
+
             <Spinner
                 android:id="@+id/reminderDateSpinner"
                 android:layout_width="wrap_content"
@@ -143,6 +157,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/navigation_cancel"
                 style="@android:style/Widget.ActionButton"/>
+
         </RelativeLayout>
 
         <View
@@ -191,7 +206,7 @@
                 android:id="@+id/fromString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="From"
+                android:hint="@string/fromLabel"
                 android:textSize="@dimen/textsize_small"
                 >
             </TextView>
@@ -213,7 +228,7 @@
                 android:id="@+id/toString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="To"
+                android:hint="@string/toLabel"
                 android:textSize="@dimen/textsize_small"
                 android:layout_below="@id/date_from">
             </TextView>
@@ -248,6 +263,7 @@
                 android:layout_below="@id/separator2"
                 android:onClick="onRepeat"
                 android:clickable="true"
+                android:layout_centerInParent="true"
                 android:background="@android:drawable/list_selector_background">
 
                 <ImageView
@@ -270,6 +286,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -290,7 +307,7 @@
                         android:id="@+id/monString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Mon"
+                        android:hint="@string/monday_short"
                         android:textSize="@dimen/textsize_small"
                         android:paddingRight="@dimen/ui_element_gap"/>
 
@@ -298,7 +315,7 @@
                         android:id="@+id/tueString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Tue"
+                        android:hint="@string/tuesday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/monString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -307,7 +324,7 @@
                         android:id="@+id/wedString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Wed"
+                        android:hint="@string/wednesday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/tueString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -316,7 +333,7 @@
                         android:id="@+id/thuString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Thu"
+                        android:hint="@string/thursday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/wedString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -325,7 +342,7 @@
                         android:id="@+id/friString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Fri"
+                        android:hint="@string/friday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/thuString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -334,7 +351,7 @@
                         android:id="@+id/satString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Sat"
+                        android:hint="@string/saturday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/friString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -343,7 +360,7 @@
                         android:id="@+id/sunString"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:hint="Sun"
+                        android:hint="@string/sunday_short"
                         android:textSize="@dimen/textsize_small"
                         android:layout_toRightOf="@id/satString"
                         android:paddingRight="@dimen/ui_element_gap"/>
@@ -411,7 +428,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/repeatLabel"
-                        android:textSize="@dimen/textsize_small"
+                        android:textSize="@dimen/textsize_medium"
+                        android:paddingRight="@dimen/ui_element_gap"
                         android:layout_centerVertical="true"
                         />
 
