@@ -8,6 +8,10 @@ public interface IBlockObject {
 	
 	public int getHours();
 	
-	public double getSessionSize();
+	public int getSessionMinutes();
+	
+	public int getSplitAmount();
+	
+	public int getLastSplitMinutes();
 
 }
