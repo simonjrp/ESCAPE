@@ -9,9 +9,13 @@ import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,14 +170,42 @@ public class CustomListAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, NewTaskActivity.class);
-				// TODO FIX
+
 				String name = listObject.getName();
 				String description = listObject.getComment();
+				Place location = listObject.getPlace();
+				Boolean important = listObject.isImportant();
+				TimeAlarm timeAlarm = listObject.getTimeAlarm();
+				Time time = listObject.getTime();
 
+				String locationString = "";
+                String timeAlarmString = "";
+				String timeStartString = "";
+				String timeEndString = "";
+
+                if(location != null) {
+                    locationString = location.getName();
+                }
+				if (timeAlarm != null) {
+					timeAlarmString = timeAlarm.getDate().toString();
+				}
+				if (time != null) {
+					timeStartString = time.getStartDate().toString();
+					timeEndString = time.getEndDate().toString();
+				}
+
+				Bundle bundle = new Bundle();
+
+				bundle.putString("name", name);
+				bundle.putString("description", description);
+				bundle.putString("location", locationString);
+				bundle.putBoolean("important", important);
+				bundle.putString("timeAlarm", timeAlarmString);
+				bundle.putString("timeStart", timeStartString);
+				bundle.putString("timeEnd", timeEndString);
+
+				intent.putExtra("Edit Task", bundle);
 				intent.setFlags(1);
-				intent.putExtra("Name", name);
-				intent.putExtra("Description", description);
-
 				context.startActivity(intent);
 			}
 		});
@@ -191,7 +223,8 @@ public class CustomListAdapter implements ListAdapter {
 
 		// TODO tasks don't have time!
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "event"
+		childTimeView.setText(childTimeText.equals("")
+				? "event"
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
@@ -204,11 +237,11 @@ public class CustomListAdapter implements ListAdapter {
 
 		CustomOnClickListener clickListener = new CustomOnClickListener(
 				listObject, childLabel, childData);
-		childLabel.setOnClickListener(clickListener);
+		convertView.setOnClickListener(clickListener);
 		// TODO We add two listeners since it wont work on one if the other is
 		// added to
 		// Adding touchlisteners
-		childLabel.setOnTouchListener(new OptionTouchListener(context,
+		convertView.setOnTouchListener(new OptionTouchListener(context,
 				convertView));
 		// convertView.setOnTouchListener(new OptionTouchListener(context,
 		// convertView));

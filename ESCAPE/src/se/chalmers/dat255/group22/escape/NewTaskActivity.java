@@ -28,7 +28,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 /**
  * An activity used for creating a new task
@@ -90,46 +89,65 @@ public class NewTaskActivity extends Activity {
 
 		Intent intent = getIntent();
 
-		// TODO Fix this ugly check
+		// TODO Fix this ugly check?
 		if (intent.getFlags() == 1) {
+			Bundle bundle = intent.getBundleExtra("Edit Task");
+			if (bundle != null) {
+				// TODO Should keep track of wether this is a new event or an
+				// TODO event in editing, maybe a better way for this?
 
-			// TODO Should keep track of wether this is a new event or an
-			// TODO event in editing, maybe a better way for this?
+				editing = true;
 
-			editing = true;
+				// References to all the input fields
+				EditText title = (EditText) findViewById(R.id.task_title);
+				Spinner category = (Spinner) findViewById(R.id.task_categories);
+				EditText description = (EditText) findViewById(R.id.task_description);
+				EditText location = (EditText) findViewById(R.id.task_location);
+				CheckBox important = (CheckBox) findViewById(R.id.task_important);
 
-			// References to all the input fields
-			EditText title = (EditText) findViewById(R.id.task_title);
-			Spinner category = (Spinner) findViewById(R.id.task_categories);
-			EditText description = (EditText) findViewById(R.id.task_description);
-			EditText location = (EditText) findViewById(R.id.task_location);
-			CheckBox important = (CheckBox) findViewById(R.id.task_important);
+				Spinner remindType = (Spinner) findViewById(R.id.reminderTypeSpinner);
+				Spinner remindDate = (Spinner) findViewById(R.id.reminderDateSpinner);
+				Spinner remindTime = (Spinner) findViewById(R.id.reminderTimeSpinner);
 
-			Spinner remindType = (Spinner) findViewById(R.id.reminderTypeSpinner);
-			Spinner remindDate = (Spinner) findViewById(R.id.reminderDateSpinner);
-			Spinner remindTime = (Spinner) findViewById(R.id.reminderTimeSpinner);
+				Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
+				Spinner dateTo = (Spinner) findViewById(R.id.date_to);
+				Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
+				Spinner timeTo = (Spinner) findViewById(R.id.time_to);
 
-			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
-			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
-			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
-			Spinner timeTo = (Spinner) findViewById(R.id.time_to);
+				CheckBox mondayBox = (CheckBox) findViewById(R.id.mondayBox);
+				CheckBox tuesdayBox = (CheckBox) findViewById(R.id.tuesdayBox);
+				CheckBox wednesdayBox = (CheckBox) findViewById(R.id.wednesdayBox);
+				CheckBox thursdayBox = (CheckBox) findViewById(R.id.thursdayBox);
+				CheckBox fridayBox = (CheckBox) findViewById(R.id.fridayBox);
+				CheckBox saturdayBox = (CheckBox) findViewById(R.id.saturdayBox);
+				CheckBox sundayBox = (CheckBox) findViewById(R.id.sundayBox);
+				Spinner interval = (Spinner) findViewById(R.id.repeatIntervalSpinner);
 
-			CheckBox mondayBox = (CheckBox) findViewById(R.id.mondayBox);
-			CheckBox tuesdayBox = (CheckBox) findViewById(R.id.tuesdayBox);
-			CheckBox wednesdayBox = (CheckBox) findViewById(R.id.wednesdayBox);
-			CheckBox thursdayBox = (CheckBox) findViewById(R.id.thursdayBox);
-			CheckBox fridayBox = (CheckBox) findViewById(R.id.fridayBox);
-			CheckBox saturdayBox = (CheckBox) findViewById(R.id.saturdayBox);
-			CheckBox sundayBox = (CheckBox) findViewById(R.id.sundayBox);
-			Spinner interval = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+				// Get data from the ListObject that "called" the activity
 
-			// Set up the fields from the ListObject that "called" the
-			// activity
+				String nameString = bundle.getString("name");
+				String descriptionString = bundle.getString("description");
+				String locationString = bundle.getString("location");
+				Boolean isImportant = bundle.getBoolean("important");
+				String timeAlarmString = bundle.getString("timeAlarm");
+				String timeStartString = bundle.getString("timeStart");
+				String timeEndString = bundle.getString("timeEnd");
 
-			// TODO This should also be saved into the object/database when
-			// TODO pausing/destroying the activity!
-			title.setText(intent.getStringExtra("Name"));
-			description.setText(intent.getStringExtra("Description"));
+				// TODO This should also be saved into the object/database when
+				// TODO pausing/destroying the activity!
+				title.setText(nameString);
+                if(descriptionString != null) {
+                    if(descriptionString.trim().length() != 0)
+                        description.setText(descriptionString);
+                }
+                if(locationString != null) {
+                    if(locationString.trim().length() != 0)
+                        location.setText(locationString);
+                }
+                important.setChecked(isImportant);
+
+                // TODO FIX TIMES AND STUFF
+			}
 		}
 	}
 
@@ -144,11 +162,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -409,12 +427,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -501,10 +519,10 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		// Array of strings for different intervals
-		String[] strIntervalArr = { getString(R.string.oneWeekLabel),
+		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
 				getString(R.string.twoWeeksLabel),
 				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel) };
+				getString(R.string.oneMonthLabel)};
 
 		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
 				this, R.layout.simple_spinner_item, strIntervalArr);
