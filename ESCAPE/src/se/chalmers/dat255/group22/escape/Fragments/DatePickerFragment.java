@@ -35,10 +35,10 @@ public class DatePickerFragment extends DialogFragment implements
 
 	@Override
 	public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+		NewTaskActivity activity = (NewTaskActivity) getActivity();
 
 		// Used to check if year chosen is current year
 		Calendar tempCalendar = Calendar.getInstance();
-		NewTaskActivity activity = (NewTaskActivity) getActivity();
 
 		// Retrieve spinner and adapter to be able to add new custom date
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
@@ -65,6 +65,11 @@ public class DatePickerFragment extends DialogFragment implements
 		tempCalendar.set(Calendar.YEAR, year);
 		tempCalendar.set(Calendar.MONTH, month);
 		tempCalendar.set(Calendar.DAY_OF_MONTH, day);
+		tempCalendar.set(Calendar.HOUR_OF_DAY, 0);
+		tempCalendar.set(Calendar.MINUTE, 0);
+		tempCalendar.set(Calendar.SECOND, 0);
+		tempCalendar.set(Calendar.MILLISECOND, 0);
+		
 		adapter.addData(new Date(tempCalendar.getTimeInMillis()));
 
 	}

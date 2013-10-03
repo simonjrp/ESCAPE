@@ -46,7 +46,11 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		timesData = new ArrayList<Date>();
 		Calendar tempCalendar = Calendar.getInstance();
+		
+		// Sets minutes and seconds of reference time to zero
 		tempCalendar.set(Calendar.MINUTE, 0);
+		tempCalendar.set(Calendar.SECOND, 0);
+		tempCalendar.set(Calendar.MILLISECOND, 0);
 
 		// Saves the standard time data relative to current day
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 9);

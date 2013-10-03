@@ -52,8 +52,15 @@ public class TimePickerFragment extends DialogFragment implements
 		spinner.setSelection(adapter.getCount() - 2, true);
 
 		Calendar tempCalendar = Calendar.getInstance();
+		tempCalendar.set(Calendar.YEAR, 0);
+		tempCalendar.set(Calendar.MONTH, 0);
+		tempCalendar.set(Calendar.DAY_OF_MONTH, 0);
 		tempCalendar.set(Calendar.HOUR_OF_DAY, hour);
 		tempCalendar.set(Calendar.MINUTE, minute);
+		tempCalendar.set(Calendar.SECOND, 0);
+		tempCalendar.set(Calendar.MILLISECOND, 0);
+
+		
 
 		adapter.addData(new Date(tempCalendar.getTimeInMillis()));
 

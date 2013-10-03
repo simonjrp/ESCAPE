@@ -2,6 +2,7 @@ package se.chalmers.dat255.group22.escape.adapters;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
@@ -44,8 +45,14 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		this.context = context;
 		this.days = days;
 
+		// Sets seconds and milliseconds of reference time
+		// to zero
+		Calendar tempCalendar = Calendar.getInstance();
+		tempCalendar.set(Calendar.SECOND, 0);
+		tempCalendar.set(Calendar.MILLISECOND, 0);
+
 		dateData = new ArrayList<Date>();
-		long currentTimeInMillis = System.currentTimeMillis();
+		long currentTimeInMillis = tempCalendar.getTimeInMillis();
 		dateData.add(new Date(currentTimeInMillis));
 		dateData.add(new Date(currentTimeInMillis + 86400000));
 		dateData.add(new Date(currentTimeInMillis + oneWeekInMillis));
