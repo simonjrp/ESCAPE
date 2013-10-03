@@ -12,7 +12,6 @@
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>
     <string name="thisWeekLabel">This week</string>
-    <string name="taskHeader">Remember...</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>

@@ -5,10 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-
-import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 
 public class TaskDetailsFragment extends Fragment {
 
@@ -22,8 +18,6 @@ public class TaskDetailsFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-
-
-    }
+	}
 
 }

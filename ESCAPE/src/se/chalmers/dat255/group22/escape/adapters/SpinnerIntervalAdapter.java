@@ -44,7 +44,8 @@ public class SpinnerIntervalAdapter extends ArrayAdapter<String> {
 
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item, parent, false);
+		View row = inflater
+				.inflate(R.layout.simple_spinner_item, parent, false);
 
 		TextView interval = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
@@ -57,8 +58,8 @@ public class SpinnerIntervalAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item_single, parent,
-				false);
+		View row = inflater.inflate(R.layout.simple_spinner_item_single,
+				parent, false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
 		day.setText(intervals[position]);

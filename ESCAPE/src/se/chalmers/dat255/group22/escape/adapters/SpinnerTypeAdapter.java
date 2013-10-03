@@ -62,7 +62,7 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
 		icon.setImageResource(imgArr[position]);
 
-		if (position == (getCount()-1)) {
+		if (position == (getCount() - 1)) {
 			// TODO If position == 1, rearrange layout for location input
 		}
 		return row;

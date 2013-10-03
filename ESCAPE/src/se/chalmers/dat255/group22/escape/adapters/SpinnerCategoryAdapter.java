@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,10 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import se.chalmers.dat255.group22.escape.R;
-
 /**
- * An adapter that customizes the way spinners for choosing a category are presented.
+ * An adapter that customizes the way spinners for choosing a category are
+ * presented.
  * 
  * @author tholene
  */
@@ -22,7 +22,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
 	 * different categories.
-	 *
+	 * 
 	 * @param context
 	 *            the context that is relevant, usually "this".
 	 * @param textViewResourceId
@@ -33,7 +33,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 	 *            in the dropdown list.
 	 */
 	public SpinnerCategoryAdapter(Context context, int textViewResourceId,
-                                  String[] categories) {
+			String[] categories) {
 		super(context, textViewResourceId, categories);
 		this.context = context;
 		this.categories = categories;
@@ -44,13 +44,14 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item, parent, false);
+		View row = inflater
+				.inflate(R.layout.simple_spinner_item, parent, false);
 
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
 		day.setText(categories[position]);
 		// set gray color to "New category" item
-		if (position == getCount()-1) {
+		if (position == getCount() - 1) {
 			day.setBackgroundResource(R.color.light_gray);
 
 			View v = (View) day.getParent();
@@ -67,8 +68,8 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item_single, parent,
-				false);
+		View row = inflater.inflate(R.layout.simple_spinner_item_single,
+				parent, false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
 		day.setText(categories[position]);

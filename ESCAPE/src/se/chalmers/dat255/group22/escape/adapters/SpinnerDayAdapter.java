@@ -1,5 +1,9 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,8 +19,11 @@ import android.widget.TextView;
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
-	private String[] days;
+	public static final long oneDayInMillis = 86400000;
+	public static final long oneWeekInMillis = 604800000;
+	private ArrayList<String> days;
 	private Context context;
+	private List<Date> dateData;
 
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
@@ -32,31 +39,31 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 *            in the dropdown list.
 	 */
 	public SpinnerDayAdapter(Context context, int textViewResourceId,
-			String[] days) {
+			ArrayList<String> days) {
 		super(context, textViewResourceId, days);
 		this.context = context;
 		this.days = days;
+
+		dateData = new ArrayList<Date>();
+		long currentTimeInMillis = System.currentTimeMillis();
+		dateData.add(new Date(currentTimeInMillis));
+		dateData.add(new Date(currentTimeInMillis + 86400000));
+		dateData.add(new Date(currentTimeInMillis + oneWeekInMillis));
 	}
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item, parent, false);
+		View row = inflater
+				.inflate(R.layout.simple_spinner_item, parent, false);
 
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(days[position]);
+		day.setText(days.get(position));
 		// set gray color to "Pick a date" item
-		if (position == getCount()-1) {
-			day.setBackgroundResource(R.color.light_gray);
-
-			View v = (View) day.getParent();
-			v.setBackgroundResource(R.color.light_gray);
-			v.setAlpha(0.75f);
-
-			// TODO Add clickListener that opens dialog
+		if (position == getCount() - 1) {
+			row.setBackgroundResource(R.drawable.spinner_button_colors);
 		}
 
 		return row;
@@ -66,14 +73,22 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
 
-		View row = inflater.inflate(R.layout.simple_spinner_item_single, parent,
-				false);
+		View row = inflater.inflate(R.layout.simple_spinner_item_single,
+				parent, false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(days[position]);
+		day.setText(days.get(position));
 
 		return row;
 
+	}
+
+	public Date getData(int position) {
+		return dateData.get(position);
+	}
+
+	public void addData(Date date) {
+		dateData.add(date);
 	}
 
 }
