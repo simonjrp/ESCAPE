@@ -39,6 +39,6 @@
     <string name="twoWeeksLabel">2 weeks</string>
     <string name="threeWeeksLabel">3 weeks</string>
     <string name="oneMonthLabel">1 month</string>
-
+    <string name="custom_category">Add new category...</string>
 
 </resources>

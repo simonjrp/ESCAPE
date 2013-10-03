@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import java.util.ArrayList;
+
 import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,7 +18,7 @@ import android.widget.TextView;
  */
 public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
-	private String[] categories;
+	private ArrayList<String> categories;
 	private Context context;
 
 	/**
@@ -29,11 +31,12 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
 	 * @param categories
-	 *            a stringarray that contains the string to be set for each item
+	 *            a ArrayList that contains the string to be set for each item
 	 *            in the dropdown list.
 	 */
 	public SpinnerCategoryAdapter(Context context, int textViewResourceId,
-			String[] categories) {
+
+	ArrayList<String> categories) {
 		super(context, textViewResourceId, categories);
 		this.context = context;
 		this.categories = categories;
@@ -49,16 +52,10 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(categories[position]);
+		day.setText(categories.get(position));
 		// set gray color to "New category" item
 		if (position == getCount() - 1) {
-			day.setBackgroundResource(R.color.light_gray);
-
-			View v = (View) day.getParent();
-			v.setBackgroundResource(R.color.light_gray);
-			v.setAlpha(0.75f);
-
-			// TODO Add clickListener that opens dialog
+			row.setBackgroundResource(R.drawable.spinner_button_colors);
 		}
 
 		return row;
@@ -72,7 +69,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 				parent, false);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
-		day.setText(categories[position]);
+		day.setText(categories.get(position));
 
 		return row;
 

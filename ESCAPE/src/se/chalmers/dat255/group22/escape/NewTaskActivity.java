@@ -17,10 +17,12 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -37,9 +39,11 @@ public class NewTaskActivity extends Activity {
 
 	private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean hasReminder;
+	private boolean isTimeReminder;
+	private boolean isLocationReminder;
 	private boolean isRepeating;
 	private boolean isEvent;
-	private TimeAlarm customTimeAlarmDate;
+	private boolean editing;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,9 @@ public class NewTaskActivity extends Activity {
 				.findViewById(R.id.task_categories);
 
 		// TODO This array should be grabbed from the database
-		String[] categories = { "Life", "Work", "School", "Custom category..." };
+		ArrayList<String> categories = new ArrayList<String>();
+
+		categories.add(getString(R.string.custom_category));
 
 		// The DayAdapter only makes use of simple strings and presents its
 		// items the way we want the categories to be presented. It would be
@@ -75,6 +81,50 @@ public class NewTaskActivity extends Activity {
 				this, R.layout.simple_spinner_item, categories);
 
 		categorySpinner.setAdapter(categoryAdapter);
+
+		Intent intent = getIntent();
+
+		// TODO Fix this ugly check
+		if (intent.getFlags() == 1) {
+
+			// TODO Should keep track of wether this is a new event or an
+			// TODO event in editing, maybe a better way for this?
+
+			editing = true;
+
+			// References to all the input fields
+			EditText title = (EditText) findViewById(R.id.task_title);
+			Spinner category = (Spinner) findViewById(R.id.task_categories);
+			EditText description = (EditText) findViewById(R.id.task_description);
+			EditText location = (EditText) findViewById(R.id.task_location);
+			CheckBox important = (CheckBox) findViewById(R.id.task_important);
+
+			Spinner remindType = (Spinner) findViewById(R.id.reminderTypeSpinner);
+			Spinner remindDate = (Spinner) findViewById(R.id.reminderDateSpinner);
+			Spinner remindTime = (Spinner) findViewById(R.id.reminderTimeSpinner);
+
+			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
+			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
+			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
+			Spinner timeTo = (Spinner) findViewById(R.id.time_to);
+
+			CheckBox mondayBox = (CheckBox) findViewById(R.id.mondayBox);
+			CheckBox tuesdayBox = (CheckBox) findViewById(R.id.tuesdayBox);
+			CheckBox wednesdayBox = (CheckBox) findViewById(R.id.wednesdayBox);
+			CheckBox thursdayBox = (CheckBox) findViewById(R.id.thursdayBox);
+			CheckBox fridayBox = (CheckBox) findViewById(R.id.fridayBox);
+			CheckBox saturdayBox = (CheckBox) findViewById(R.id.saturdayBox);
+			CheckBox sundayBox = (CheckBox) findViewById(R.id.sundayBox);
+			Spinner interval = (Spinner) findViewById(R.id.repeatIntervalSpinner);
+
+			// Set up the fields from the ListObject that "called" the
+			// activity
+
+			// TODO This should also be saved into the object/database when
+			// TODO pausing/destroying the activity!
+			title.setText(intent.getStringExtra("Name"));
+			description.setText(intent.getStringExtra("Description"));
+		}
 	}
 
 	@Override
@@ -206,8 +256,13 @@ public class NewTaskActivity extends Activity {
 			lo.setTime(time);
 			lo.setTimeAlarm(timeAlarm);
 
-			saveToDatabase(lo);
-
+			if (editing) {
+				// TODO Update? Remove+Add? Cookies?
+				DBHandler db = new DBHandler(this);
+				db.updateListObject(lo);
+			} else {
+				saveToDatabase(lo);
+			}
 		} else {
 
 		}
@@ -342,15 +397,16 @@ public class NewTaskActivity extends Activity {
 	 *            the view that calls this method.
 	 */
 	public void onRemindMe(View v) {
+		hasReminder = true;
+		// Hide the "Button" that called this method
 		v.setVisibility(View.INVISIBLE);
+
+		// View the reminder layout
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
 		relativeLayout.setVisibility(View.VISIBLE);
 
 		/*
 		 * Add items to the spinners
-		 * 
-		 * 
-		 * 
 		 * 
 		 * Begin with the "TYPE" of reminder
 		 */
@@ -367,6 +423,24 @@ public class NewTaskActivity extends Activity {
 
 		Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
 		typeSpinner.setAdapter(typeAdapter);
+
+		typeSpinner
+				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+					@Override
+					public void onItemSelected(AdapterView<?> parent,
+							View view, int position, long id) {
+						if (position == 0) {
+							showTimeReminderInput();
+						} else if (position == 1) {
+							showLocationReminderInput();
+						}
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> parent) {
+
+					}
+				});
 
 		/* Next up is the date of the reminder, simple enough */
 		// ArrayList containing different days for an event
@@ -408,6 +482,7 @@ public class NewTaskActivity extends Activity {
 						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
 						timeSpinner.getId()));
 		hasReminder = true;
+
 	}
 
 	/**
@@ -418,6 +493,7 @@ public class NewTaskActivity extends Activity {
 	 * @param v
 	 *            the view that calls this method.
 	 */
+
 	public void onRepeat(View v) {
 		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
 		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
@@ -442,6 +518,22 @@ public class NewTaskActivity extends Activity {
 	}
 
 	/**
+	 * When the "X" button next to the reminder field is pressed, this method is
+	 * called and the layout is restored to its previous state.
+	 * 
+	 * @param v
+	 *            the view that calls this method.
+	 */
+	public void onCancelReminder(View v) {
+		RelativeLayout toBeHidden = (RelativeLayout) findViewById(R.id.setReminderField);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
+
+		toBeHidden.setVisibility(View.INVISIBLE);
+		toBeShownLayout.setVisibility(View.VISIBLE);
+		hasReminder = false;
+	}
+
+	/**
 	 * When the "X" button next to the event field is pressed, this method is
 	 * called and the layout is restored to its previous state.
 	 * 
@@ -456,22 +548,6 @@ public class NewTaskActivity extends Activity {
 		toBeShownButton.setVisibility(View.VISIBLE);
 
 		isEvent = false;
-	}
-
-	/**
-	 * When the "X" button next to the reminder field is pressed, this method is
-	 * called and the layout is restored to its previous state.
-	 * 
-	 * @param v
-	 *            the view that calls this method.
-	 */
-	public void onCancelReminder(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.setReminderField);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
-
-		currentLayout.setVisibility(View.INVISIBLE);
-		toBeShownLayout.setVisibility(View.VISIBLE);
-		hasReminder = false;
 	}
 
 	/**
@@ -520,16 +596,39 @@ public class NewTaskActivity extends Activity {
 		}
 	}
 
-	public void setDate(int year, int month, int day) {
-		Calendar tempCalendar = Calendar.getInstance();
-		tempCalendar.set(Calendar.YEAR, year);
-		tempCalendar.set(Calendar.MONTH, month);
-		tempCalendar.set(Calendar.DAY_OF_MONTH, day);
-		customTimeAlarmDate = new TimeAlarm(0, new Date(
-				tempCalendar.getTimeInMillis()));
+	/*
+	 * Switches the input forms to something more suited for a Time Reminder
+	 */
+	private void showTimeReminderInput() {
+		isTimeReminder = true;
+		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
+		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+
+		day.setVisibility(View.VISIBLE);
+		time.setVisibility(View.VISIBLE);
+
+		// Also hiding previous input
+
+		EditText location = (EditText) findViewById(R.id.reminderLocationEditText);
+		location.setVisibility(View.INVISIBLE);
+		isLocationReminder = false;
 	}
 
-	public void setTime(int hour, int minute) {
+	/*
+	 * Switches the input forms to something more suited for a Location Reminder
+	 */
+	private void showLocationReminderInput() {
+		isLocationReminder = true;
+		EditText location = (EditText) findViewById(R.id.reminderLocationEditText);
+		location.setVisibility(View.VISIBLE);
 
+		// Also hiding previous input
+
+		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
+		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+
+		day.setVisibility(View.INVISIBLE);
+		time.setVisibility(View.INVISIBLE);
+		isTimeReminder = false;
 	}
 }

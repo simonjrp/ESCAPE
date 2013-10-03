@@ -15,7 +15,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Title"
-            android:textSize="@dimen/textsize_medium"
+            android:textSize="@dimen/textsize_large"
             android:inputType="textCapSentences"
             android:paddingTop="@dimen/ui_element_gap"/>
 
@@ -26,6 +26,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_title"
             android:textSize="@dimen/textsize_medium"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/ui_element_gap"/>
 
         <EditText
@@ -111,6 +112,19 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/ui_element_gap"/>
 
+
+            <EditText
+                android:id="@+id/reminderLocationEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:hint="Location"
+                android:visibility="invisible"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:ems="10"/>
+
+
             <Spinner
                 android:id="@+id/reminderDateSpinner"
                 android:layout_width="wrap_content"
@@ -142,6 +156,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/navigation_cancel"
                 style="@android:style/Widget.ActionButton"/>
+
         </RelativeLayout>
 
         <View
@@ -412,7 +427,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/repeatLabel"
-                        android:textSize="@dimen/textsize_small"
+                        android:textSize="@dimen/textsize_medium"
+                        android:paddingRight="@dimen/ui_element_gap"
                         android:layout_centerVertical="true"
                         />
 
