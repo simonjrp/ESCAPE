@@ -212,10 +212,10 @@ public class NewTaskActivity extends Activity {
 			Date finalDate = getOneDate(
 					reminderDateAdapter.getData(reminderDateSpinner
 							.getSelectedItemPosition()),
-					reminderDateAdapter.getData(reminderDateSpinner
+					reminderTimeAdapter.getData(reminderTimeSpinner
 							.getSelectedItemPosition()));
-			Toast.makeText(this, finalDate.toString(), Toast.LENGTH_LONG)
-					.show();
+			Calendar tempCalendar = Calendar.getInstance();
+			tempCalendar.setTime(finalDate);
 
 			timeAlarm = new TimeAlarm(0, finalDate);
 		}
@@ -226,20 +226,21 @@ public class NewTaskActivity extends Activity {
 				"Another random Color");
 		Place place = new Place(1, location);
 
-        // If a name is set create ListObject
+		// If a name is set create ListObject
 		if (name.trim().length() != 0) {
 			ListObject lo = new ListObject(1, name);
 
 			if (comment.trim().length() != 0)
 				lo.setComment(comment);
-			else // A comment MUST be set even if only null!
+			else
+				// A comment MUST be set even if only null!
 				lo.setComment(null);
 
 			lo.setImportant(importantTask);
 			lo.addToCategory(newCategory);
 			lo.setPlace(place);
 			lo.setTimeAlarm(timeAlarm);
-			//lo.setGpsAlarm(...);
+			// lo.setGpsAlarm(...);
 			if (isEvent) {
 				Time time = getTimeFromSpinners(dateFromString, dateToString);
 				lo.setTime(time);
@@ -277,7 +278,7 @@ public class NewTaskActivity extends Activity {
 			// creates a notification!
 			if (hasReminder) {
 				NotificationHandler nf = new NotificationHandler(this);
-				nf.addTimeReminder(lo);
+				nf.addTimeReminder(dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getTime() != null) {
@@ -565,8 +566,6 @@ public class NewTaskActivity extends Activity {
 		isRepeating = false;
 	}
 
-
-
 	/*
 	 * Switches the input forms to something more suited for a Time Reminder
 	 */
@@ -595,7 +594,6 @@ public class NewTaskActivity extends Activity {
 
 		// Also hiding previous input
 
-
 		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
 		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
 
@@ -605,39 +603,38 @@ public class NewTaskActivity extends Activity {
 	}
 
 	private Time getTimeFromSpinners(String dateFromString, String dateToString) {
-		Date startDate;
-		Date endDate;
-		if (dateFromString.equals(getString(R.string.todayLabel))) {
-			startDate = new Date(System.currentTimeMillis());
-		} else if (dateFromString.equals(getString(R.string.tomorrowLabel))) {
-			startDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateFromString.equals(getString(R.string.thisWeekLabel))) {
-			startDate = new Date(System.currentTimeMillis()
-					+ (2 * DAY_IN_MILLIS));
-		} else if (dateFromString.equals(getString(R.string.pickDayLabel))) {
-			startDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
-		} else {
-			startDate = null;
-		}
 
-		if (dateToString.equals(getString(R.string.todayLabel))) {
-			endDate = new Date(System.currentTimeMillis());
-		} else if (dateToString.equals(getString(R.string.tomorrowLabel))) {
-			endDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateToString.equals(getString(R.string.thisWeekLabel))) {
-			endDate = new Date(System.currentTimeMillis() + (2 * DAY_IN_MILLIS));
-		} else if (dateToString.equals(getString(R.string.pickDayLabel))) {
-			endDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
-		} else {
-			endDate = null;
-		}
-		if (startDate == null && endDate == null)
-			return null;
+		// Gets all date and time spinners in convert event view
+		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
+		SpinnerDayAdapter dateFromAdapter = (SpinnerDayAdapter) dateFromSpinner
+				.getAdapter();
 
-		return new Time(1, startDate, endDate);
-}
+		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
+		SpinnerTimeAdapter timeFromAdapter = (SpinnerTimeAdapter) timeFromSpinner
+				.getAdapter();
+
+		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
+		SpinnerDayAdapter dateToAdapter = (SpinnerDayAdapter) dateToSpinner
+				.getAdapter();
+
+		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
+		SpinnerTimeAdapter timeToAdapter = (SpinnerTimeAdapter) timeToSpinner
+				.getAdapter();
+
+		// creates the final start and end dates
+		Date finalStartDate = getOneDate(
+				dateFromAdapter.getData(dateFromSpinner
+						.getSelectedItemPosition()),
+				timeFromAdapter.getData(timeFromSpinner
+						.getSelectedItemPosition()));
+
+		Date finalEndDate = getOneDate(
+				dateToAdapter.getData(dateToSpinner.getSelectedItemPosition()),
+				timeToAdapter.getData(timeToSpinner.getSelectedItemPosition()));
+
+		return new Time(0, finalStartDate, finalEndDate);
+	}
+
 	// TODO temporary method
 	public Date getOneDate(Date date, Date time) {
 		// Retrieves date.
@@ -651,7 +648,9 @@ public class NewTaskActivity extends Activity {
 		// Merges date and time calendar
 		dateCalendar.set(Calendar.HOUR_OF_DAY,
 				timeCalendar.get(Calendar.HOUR_OF_DAY));
+
 		dateCalendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
+
 		return new Date(dateCalendar.getTimeInMillis());
 	}
 }

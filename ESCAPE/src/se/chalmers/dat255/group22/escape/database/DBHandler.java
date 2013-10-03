@@ -731,7 +731,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Returns the Category with the name specified.
 	 * 
@@ -742,18 +742,19 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
-				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR, COLUMN_CATEGORIES_IMPORTANT_COLOR },
-				COLUMN_CATEGORIES_NAME + "=?", new String[] { name.toString() },
-				null, null, null);
+				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR,
+				COLUMN_CATEGORIES_IMPORTANT_COLOR }, COLUMN_CATEGORIES_NAME
+				+ "=?", new String[] { name.toString() }, null, null, null);
 
 		List<Category> list = new LinkedList<Category>();
 		if (cursor.moveToFirst()) {
 			do {
 
-				Category object = new Category(cursor.getString(cursor
-						.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+				Category object = new Category(
 						cursor.getString(cursor
-								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)), 
+								.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)),
 						cursor.getString(cursor
 								.getColumnIndex(COLUMN_CATEGORIES_IMPORTANT_COLOR)));
 
@@ -763,7 +764,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
 
 	// TODO _Maybe_ make a method to return EVERYTHING from dBase. Is doable,
 	// but is it usable?
@@ -918,7 +918,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the GPSAlarm with the id specified.
 	 * 
@@ -929,9 +929,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
-				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LATITUDE, COLUMN_GPS_ALARMS_LONGITUDE },
-				COLUMN_GPS_ALARMS_ID + "=?", new String[] { id.toString() },
-				null, null, null);
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LATITUDE,
+				COLUMN_GPS_ALARMS_LONGITUDE }, COLUMN_GPS_ALARMS_ID + "=?",
+				new String[] { id.toString() }, null, null, null);
 
 		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
 		if (cursor.moveToFirst()) {
@@ -940,7 +940,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
 						cursor.getDouble(cursor
-								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)), 
+								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
 						cursor.getDouble(cursor
 								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
 
@@ -1089,7 +1089,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the Place with the id specified.
 	 * 
@@ -1099,10 +1099,9 @@ public class DBHandler extends SQLiteOpenHelper {
 	public Place getPlace(Long id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_PLACES, new String[] {
-				COLUMN_PLACES_ID, COLUMN_PLACES_NAME},
-				COLUMN_PLACES_ID + "=?", new String[] { id.toString() },
-				null, null, null);
+		Cursor cursor = db.query(TABLE_PLACES, new String[] { COLUMN_PLACES_ID,
+				COLUMN_PLACES_NAME }, COLUMN_PLACES_ID + "=?",
+				new String[] { id.toString() }, null, null, null);
 
 		List<Place> list = new LinkedList<Place>();
 		if (cursor.moveToFirst()) {
@@ -1368,7 +1367,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.close();
 		return rv > 0;
 	}
-	
+
 	/**
 	 * Purges a ListObject from the Database which includes deleting every
 	 * place, time, timeAlarm and GPSAlarm that was connected to it from the
@@ -1383,7 +1382,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		Place place = getPlace(listObject);
 		TimeAlarm timeAlarm = getTimeAlarm(listObject);
 		GPSAlarm gpsAlarm = getGPSAlarm(listObject);
-		
+
 		if (time != null)
 			deleteTime(time);
 		if (place != null)
@@ -1392,13 +1391,13 @@ public class DBHandler extends SQLiteOpenHelper {
 			deleteTimeAlarm(timeAlarm);
 		if (gpsAlarm != null)
 			deleteGPSAlarm(gpsAlarm);
-		
+
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
-		
+
 		return rv > 0;
 	}
 

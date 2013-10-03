@@ -9,7 +9,6 @@ import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -129,10 +128,11 @@ public class CustomListAdapter implements ListAdapter {
 
 		final String childText = listObject.getName();
 
-		//final Time childTime = listObject.getTime();
+		// final Time childTime = listObject.getTime();
 		String childTimeText = "";
 		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject).getStartDate();
+			final Date childStartDate = dbHandler.getTime(listObject)
+					.getStartDate();
 			childTimeText = DateFormat.format("HH:mm", childStartDate)
 					.toString();
 		}
@@ -189,7 +189,7 @@ public class CustomListAdapter implements ListAdapter {
 
 		});
 
-        //TODO tasks don't have time!
+		// TODO tasks don't have time!
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "event"
 				: childTimeText);

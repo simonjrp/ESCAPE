@@ -136,16 +136,17 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final ListObject listObject = ((ListObject) getChild(groupPosition,
-                childPosition));
+		final ListObject listObject = ((ListObject) getChild(groupPosition,
+				childPosition));
 
 		// Get the name of the task to display for each task entry
 		final String childText = listObject.getName();
 
-        // Get the time if it exists
+		// Get the time if it exists
 		String childTimeText = "";
 		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject).getStartDate();
+			final Date childStartDate = dbHandler.getTime(listObject)
+					.getStartDate();
 			childTimeText = DateFormat.format("hh:mm", childStartDate)
 					.toString();
 		}
@@ -195,8 +196,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			});
 
 			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("")
-					? "no start time"
+			childTimeView.setText(childTimeText.equals("") ? "no start time"
 					: childTimeText);
 			// Get a textview for the object's data
 			TextView childData = (TextView) convertView
