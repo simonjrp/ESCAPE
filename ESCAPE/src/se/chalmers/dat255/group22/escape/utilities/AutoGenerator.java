@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape.utilities;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,46 +58,45 @@ public abstract class AutoGenerator {
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
-		
+
 		// Place the nights sorted together with the original schedule
 		Iterator<ListObject> iterator = schedule.iterator();
 		while (iterator.hasNext()) {
-			totalList.add(TimeBox.convertListObject(iterator.next()));
+			totalList.add(convertListObject(iterator.next()));
 		}
-		
-		Collections.sort(totalList);
-		
-//		ListIterator<TimeBox> iterator = totalList.listIterator();
-//		while (!schedule.isEmpty()) {
-//			ListObject first = schedule.get(0);
-//			TimeBox tb = TimeBox.convertListObject(first);
-//			if (totalList.isEmpty()) {
-//				// TODO
-//			} else {
-//				if (iterator.hasNext()) {
-//					TimeBox current = iterator.next();
-//					if (tb.end > current.start) {
-//						if (tb.start < current.start) {
-//							// Here they overlap and we extend the timebox
-//							// instead of inserting
-//							// TODO Check if it extends into previous as well
-//							current.start = tb.start;
-//						} else {
-//							// Here we check if the inserting timebox is
-//							// contained within another
-//							if(tb.start < current.end)
-//						}
-//					}
-//				}
-//			}
-//		}
-		
 
-		
+		Collections.sort(totalList);
+		fixOverlap(totalList);
+
+		// ListIterator<TimeBox> iterator = totalList.listIterator();
+		// while (!schedule.isEmpty()) {
+		// ListObject first = schedule.get(0);
+		// TimeBox tb = TimeBox.convertListObject(first);
+		// if (totalList.isEmpty()) {
+		// // TODO
+		// } else {
+		// if (iterator.hasNext()) {
+		// TimeBox current = iterator.next();
+		// if (tb.end > current.start) {
+		// if (tb.start < current.start) {
+		// // Here they overlap and we extend the timebox
+		// // instead of inserting
+		// // TODO Check if it extends into previous as well
+		// current.start = tb.start;
+		// } else {
+		// // Here we check if the inserting timebox is
+		// // contained within another
+		// if(tb.start < current.end)
+		// }
+		// }
+		// }
+		// }
+		// }
+
 		// Prioritize the blocks depending on if they are constrained to working
 		// hours or leisure (or all)
-		List<IBlockObject> first = new LinkedList<IBlockObject>();
-		List<IBlockObject> second = new LinkedList<IBlockObject>();
+		ArrayList<IBlockObject> first = new ArrayList<IBlockObject>();
+		ArrayList<IBlockObject> second = new ArrayList<IBlockObject>();
 
 		for (IBlockObject block : blocks) {
 			if (block.getTimeWindow() != TimeWindow.ALL) {
@@ -109,10 +110,115 @@ public abstract class AutoGenerator {
 		// -- Prioritize the splits that can only be
 		// placed within certain time windows
 
+		List<ListObject> lolist = new LinkedList<ListObject>();
+
+		if (!first.isEmpty()) {
+			// First priority
+			Collections.sort(first, new Comparator<IBlockObject>() {
+
+				/*
+				 * Sorts on session size
+				 */
+				@Override
+				public int compare(IBlockObject first, IBlockObject second) {
+					int a = first.getSessionMinutes(), b = second
+							.getSessionMinutes();
+					if (a == b) {
+						return 0;
+					}
+					return a - b;
+				}
+
+			});
+			int[][] data = new int[first.size()][3];
+			int i = 0;
+			for (IBlockObject block : first) {
+				data[i][0] = block.getSplitAmount();
+				data[i][1] = block.getSplitAmount();
+				data[i][2] = block.getTimeWindow().getNumVal();
+			}
+			ListIterator<TimeBox> it = totalList.listIterator(0);
+			while (it.hasNext()) {
+				TimeBox current = it.next();
+				TimeBox next;
+				if (it.hasNext()) {
+					next = it.next();
+
+					Long diffLong = next.start - current.end;
+					IBlockObject fittingBlock = null;
+					long blockTime = 0;
+					for (i = 0; i < first.size(); i++) {
+						IBlockObject currentBlock = first.get(i);
+						if (data[i][1] > 0) {
+							blockTime = (long) 60000
+									* (data[i][1] == 1 ? currentBlock
+											.getLastSplitMinutes()
+											: currentBlock.getSessionMinutes());
+							if (diffLong >= blockTime * 60000) {
+								fittingBlock = currentBlock;
+								// Reduce the remaining block amount with 1
+								data[i][1]--;
+								break;
+							}
+						}
+					}
+					if (fittingBlock != null) {
+						// INSERT
+						ListObject insert = new ListObject(-1,
+								fittingBlock.getName());
+						lolist.add(insert);
+						insert.setTime(new Time(-1, new Date(current.end),
+								new Date(current.end + blockTime)));
+						it.previous();
+						it.add(new TimeBox(current.end, current.end + blockTime));
+						it.next();
+					}
+				} // else {
+					// Here we can do if there is no more timeBoxes (last space
+					// until list end
+					// }
+				// Check if we have any more blocks to place
+				boolean canPlace = false;
+				for (i = 0; i < data.length; i++) {
+					if (data[i][1] > 0) {
+						canPlace = true;
+						break;
+					}
+				}
+				if (!canPlace) {
+					break;
+				}
+			} // TODO I WAS HERE
+		}
+
 		// If not all splits fit, overflow somewhere
 
 		// Return the list with the newly created listObjects
 		return null;
+	}
+
+	/*
+	 * Fixes overlap between TimeBoxes in a list.
+	 */
+	private void fixOverlap(LinkedList<TimeBox> fullList) {
+		Iterator<TimeBox> iterator = fullList.iterator();
+		TimeBox current, next;
+		while (iterator.hasNext()) {
+			current = iterator.next();
+
+			if (iterator.hasNext()) {
+				next = iterator.next();
+				Long end = current.end;
+				while (end >= next.start) {
+					if (next.end >= end) {
+						end = next.end;
+					}
+					iterator.remove();
+					next = iterator.next();
+				}
+				current.end = end;
+			}
+		}
 	}
 
 	private LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
@@ -169,32 +275,41 @@ public abstract class AutoGenerator {
 	// This inner class represents a "timebox", i.e. a start- and an endtime
 	// that belongs together.
 	// The start and end time is represented by milliseconds (since 1970 Jan 1)
-	protected static class TimeBox implements Comparable<TimeBox> {
-		public static Long start;
-		public static Long end;
+	protected class TimeBox implements Comparable<TimeBox> {
+		public Long start;
+		public Long end;
 
 		TimeBox(Long start, Long end) {
 			this.start = start;
 			this.end = end;
 		}
 
-		static TimeBox convertListObject(ListObject lo) {
-			Time time = lo.getTime();
-			if (time != null) {
-				TimeBox tb = new TimeBox(time.getStartDate().getTime(), time
-						.getEndDate().getTime());
-				return tb;
-			}
-
-			return null;
-		}
-
 		@Override
 		public int compareTo(TimeBox another) {
-			// TODO Auto-generated method stub
+			if (this.start >= another.end) {
+				return 1;
+			} else if (this.end <= another.start) {
+				return -1;
+			} else if ((this.start < another.end && this.end > another.end)
+					|| (this.end > another.start && this.start < another.start)) {
+				return 1;
+			} else if ((another.start > this.end && another.end > this.end)
+					|| (another.end > this.start && another.start < this.start)) {
+				return -1;
+			}
 			return 0;
 		}
-		
+
+	}
+
+	private TimeBox convertListObject(ListObject lo) {
+		Time time = lo.getTime();
+		if (time != null) {
+			TimeBox tb = new TimeBox(time.getStartDate().getTime(), time
+					.getEndDate().getTime());
+			return tb;
+		}
+		return null;
 	}
 
 	public abstract boolean validate();
