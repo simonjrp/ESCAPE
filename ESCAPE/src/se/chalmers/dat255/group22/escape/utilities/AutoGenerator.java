@@ -1,18 +1,26 @@
 package se.chalmers.dat255.group22.escape.utilities;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Currency;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import android.animation.TimeInterpolator;
+import java.util.ListIterator;
 
 import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 
+/**
+ * A utility for autogenerating splittable blocks into a schedule
+ * 
+ * @author anno
+ * 
+ */
 public abstract class AutoGenerator {
 
 	public static final int NIGHT_START = 22;
@@ -21,6 +29,12 @@ public abstract class AutoGenerator {
 	private List<ListObject> schedule;
 	private List<IBlockObject> blocks;
 
+	/**
+	 * Lists are mutated inside this class.
+	 * 
+	 * @param currentSchedule
+	 * @param blocks
+	 */
 	public AutoGenerator(List<ListObject> currentSchedule,
 			List<IBlockObject> blocks) {
 		this.schedule = currentSchedule;
@@ -41,11 +55,43 @@ public abstract class AutoGenerator {
 		end.add(Calendar.HOUR_OF_DAY, NIGHT_START);
 
 		// Get a list of all the nights for the rest of the week
-		List<TimeBox> totalList = removeNights(now, end);
+		LinkedList<TimeBox> totalList = removeNights(now, end);
 		
 		// Place the nights sorted together with the original schedule
+		Iterator<ListObject> iterator = schedule.iterator();
+		while (iterator.hasNext()) {
+			totalList.add(TimeBox.convertListObject(iterator.next()));
+		}
+		
+		Collections.sort(totalList);
+		
+//		ListIterator<TimeBox> iterator = totalList.listIterator();
+//		while (!schedule.isEmpty()) {
+//			ListObject first = schedule.get(0);
+//			TimeBox tb = TimeBox.convertListObject(first);
+//			if (totalList.isEmpty()) {
+//				// TODO
+//			} else {
+//				if (iterator.hasNext()) {
+//					TimeBox current = iterator.next();
+//					if (tb.end > current.start) {
+//						if (tb.start < current.start) {
+//							// Here they overlap and we extend the timebox
+//							// instead of inserting
+//							// TODO Check if it extends into previous as well
+//							current.start = tb.start;
+//						} else {
+//							// Here we check if the inserting timebox is
+//							// contained within another
+//							if(tb.start < current.end)
+//						}
+//					}
+//				}
+//			}
+//		}
 		
 
+		
 		// Prioritize the blocks depending on if they are constrained to working
 		// hours or leisure (or all)
 		List<IBlockObject> first = new LinkedList<IBlockObject>();
@@ -69,13 +115,13 @@ public abstract class AutoGenerator {
 		return null;
 	}
 
-	private List<TimeBox> removeNights(Calendar start, Calendar end) {
+	private LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
 		// If start is after or the same time as end, return null
 		if (start.compareTo(end) > -1) {
 			return null;
 		}
 
-		List<TimeBox> nightList = new LinkedList<TimeBox>();
+		LinkedList<TimeBox> nightList = new LinkedList<TimeBox>();
 		// Get new objects we can change
 		Calendar s = (Calendar) start.clone();
 		Calendar e = (Calendar) end.clone();
@@ -123,7 +169,7 @@ public abstract class AutoGenerator {
 	// This inner class represents a "timebox", i.e. a start- and an endtime
 	// that belongs together.
 	// The start and end time is represented by milliseconds (since 1970 Jan 1)
-	protected static class TimeBox {
+	protected static class TimeBox implements Comparable<TimeBox> {
 		public static Long start;
 		public static Long end;
 
@@ -143,6 +189,12 @@ public abstract class AutoGenerator {
 			return null;
 		}
 
+		@Override
+		public int compareTo(TimeBox another) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
 	}
 
 	public abstract boolean validate();
