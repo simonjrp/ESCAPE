@@ -43,11 +43,13 @@ public class DatePickerFragment extends DialogFragment implements
 		// Retrieve spinner and adapter to be able to add new custom date
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerDayAdapter adapter = (SpinnerDayAdapter) spinner.getAdapter();
+		// TODO hacky code
+		String nextWeekSameDayLabel = adapter.getItem(2);
 		adapter.clear();
 
 		// Add the standard date labels to the spinner again
 		adapter.add(getActivity().getString(R.string.todayLabel));
-		adapter.add(getActivity().getString(R.string.tomorrowLabel));
+		adapter.add(nextWeekSameDayLabel);
 		adapter.add(getActivity().getString(R.string.thisWeekLabel));
 
 		// Doesn't add year to text in spinner if chosen year equals current

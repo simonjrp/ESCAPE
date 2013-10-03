@@ -44,6 +44,7 @@ public class NewTaskActivity extends Activity {
 	private boolean isRepeating;
 	private boolean isEvent;
 	private boolean editing;
+	private String nextWeekSameDay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,11 @@ public class NewTaskActivity extends Activity {
 					.add(R.id.container_new_task, new TaskDetailsFragment())
 					.commit();
 		}
+		Calendar tempCalendar = Calendar.getInstance();
+		int weekday = tempCalendar.get(Calendar.DAY_OF_WEEK);
+		String[] weekDays = getResources().getStringArray(R.array.weekdays);
+		nextWeekSameDay = getResources().getString(R.string.nextweeksameday)
+				+ " " + weekDays[weekday];
 	}
 
 	@Override
@@ -203,27 +209,11 @@ public class NewTaskActivity extends Activity {
 			SpinnerTimeAdapter reminderTimeAdapter = (SpinnerTimeAdapter) reminderTimeSpinner
 					.getAdapter();
 
-			// Retrieves date.
-			Calendar dateCalendar = Calendar.getInstance();
-			Date date = reminderDateAdapter.getData(reminderDateSpinner
-					.getSelectedItemPosition());
-			dateCalendar.setTime(date);
-
-			// Retrieves time.
-			Calendar timeCalendar = Calendar.getInstance();
-			Date time = reminderTimeAdapter.getData(reminderTimeSpinner
-					.getSelectedItemPosition());
-			timeCalendar.setTime(time);
-
-			// Merges date and time calendar
-			dateCalendar.set(Calendar.HOUR_OF_DAY,
-					timeCalendar.get(Calendar.HOUR_OF_DAY));
-			dateCalendar
-					.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
-
-			// Generates final Date object from merged date and time Calendar
-			// object.
-			Date finalDate = new Date(dateCalendar.getTimeInMillis());
+			Date finalDate = getOneDate(
+					reminderDateAdapter.getData(reminderDateSpinner
+							.getSelectedItemPosition()),
+					reminderDateAdapter.getData(reminderDateSpinner
+							.getSelectedItemPosition()));
 			Toast.makeText(this, finalDate.toString(), Toast.LENGTH_LONG)
 					.show();
 
@@ -241,9 +231,6 @@ public class NewTaskActivity extends Activity {
 			Time time;
 			Date startDate = new Date(DAY_IN_MILLIS);
 			Date endDate = new Date(DAY_IN_MILLIS);
-
-			getTimeFromSpinners(dateFromString, startDate, dateToString,
-					endDate);
 
 			time = new Time(1, startDate, endDate);
 
@@ -334,10 +321,11 @@ public class NewTaskActivity extends Activity {
 		/* From: DateSpinner */
 		//
 		// Array containing different days for an event
+
 		ArrayList<String> strDayList = new ArrayList<String>();
 		strDayList.add(getString(R.string.todayLabel));
 		strDayList.add(getString(R.string.tomorrowLabel));
-		strDayList.add(getString(R.string.thisWeekLabel));
+		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pickDayLabel));
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
@@ -444,10 +432,11 @@ public class NewTaskActivity extends Activity {
 
 		/* Next up is the date of the reminder, simple enough */
 		// ArrayList containing different days for an event
+
 		ArrayList<String> strDayList = new ArrayList<String>();
 		strDayList.add(getString(R.string.todayLabel));
 		strDayList.add(getString(R.string.tomorrowLabel));
-		strDayList.add(getString(R.string.thisWeekLabel));
+		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pickDayLabel));
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
@@ -567,35 +556,6 @@ public class NewTaskActivity extends Activity {
 		isRepeating = false;
 	}
 
-	private void getTimeFromSpinners(String dateFromString, Date startDate,
-			String dateToString, Date endDate) {
-		if (dateFromString.equals(getString(R.string.todayLabel))) {
-			startDate = new Date(System.currentTimeMillis());
-		} else if (dateFromString.equals(getString(R.string.tomorrowLabel))) {
-			startDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateFromString.equals(getString(R.string.thisWeekLabel))) {
-			startDate = new Date(System.currentTimeMillis()
-					+ (2 * DAY_IN_MILLIS));
-		} else if (dateFromString.equals(getString(R.string.pickDayLabel))) {
-			startDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
-		} else {
-		}
-
-		if (dateToString.equals(getString(R.string.todayLabel))) {
-			endDate = new Date(System.currentTimeMillis());
-		} else if (dateToString.equals(getString(R.string.tomorrowLabel))) {
-			endDate = new Date(System.currentTimeMillis() + DAY_IN_MILLIS);
-		} else if (dateToString.equals(getString(R.string.thisWeekLabel))) {
-			endDate = new Date(System.currentTimeMillis() + (2 * DAY_IN_MILLIS));
-		} else if (dateToString.equals(getString(R.string.pickDayLabel))) {
-			endDate = null;
-			Toast.makeText(this, "To be implemented", Toast.LENGTH_LONG).show();
-		} else {
-
-		}
-	}
-
 	/*
 	 * Switches the input forms to something more suited for a Time Reminder
 	 */
@@ -630,5 +590,22 @@ public class NewTaskActivity extends Activity {
 		day.setVisibility(View.INVISIBLE);
 		time.setVisibility(View.INVISIBLE);
 		isTimeReminder = false;
+	}
+
+	// TODO temporary method
+	public Date getOneDate(Date date, Date time) {
+		// Retrieves date.
+		Calendar dateCalendar = Calendar.getInstance();
+		dateCalendar.setTime(date);
+
+		// Retrieves time.
+		Calendar timeCalendar = Calendar.getInstance();
+		timeCalendar.setTime(time);
+
+		// Merges date and time calendar
+		dateCalendar.set(Calendar.HOUR_OF_DAY,
+				timeCalendar.get(Calendar.HOUR_OF_DAY));
+		dateCalendar.set(Calendar.MINUTE, timeCalendar.get(Calendar.MINUTE));
+		return new Date(dateCalendar.getTimeInMillis());
 	}
 }

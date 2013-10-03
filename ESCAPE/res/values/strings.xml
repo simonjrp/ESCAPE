@@ -11,7 +11,6 @@
     <string name="somedayLabel">Someday</string>
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>
-    <string name="thisWeekLabel">This week</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
@@ -40,5 +39,8 @@
     <string name="threeWeeksLabel">3 weeks</string>
     <string name="oneMonthLabel">1 month</string>
     <string name="custom_category">Add new category...</string>
+    <string name="nextweeksameday">Next</string>
+    <string name="thisWeekLabel">This week</string>
+    
 
 </resources>
