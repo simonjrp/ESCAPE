@@ -4,9 +4,13 @@ import se.chalmers.dat255.group22.escape.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -25,8 +29,25 @@ public class TaskListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		initialize();
+        setHasOptionsMenu(true);
+        initialize();
 	}
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_action, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.pick_category :
+                Toast.makeText(getActivity(), "task category pick", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

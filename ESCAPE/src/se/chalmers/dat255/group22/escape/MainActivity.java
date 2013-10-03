@@ -1,16 +1,12 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * The main activity, to be launched when app is started.
@@ -46,9 +42,10 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.add_task:
-			Intent intent = new Intent(this, NewTaskActivity.class);
-			startActivity(intent);
+			case R.id.add_task :
+				Intent intent = new Intent(this, NewTaskActivity.class);
+				startActivity(intent);
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);

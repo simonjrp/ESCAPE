@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/pick_category"
+            android:icon="@drawable/ic_action_overflow"
+            android:showAsAction="ifRoom"
+            android:title="Pick categories"
+            android:orderInCategory="10"/>
+</menu>
