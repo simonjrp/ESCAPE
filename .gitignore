@@ -20,8 +20,9 @@ local.properties
 .classpath
 .project
 
-# Mac filesystem dust
+# OS filesystem dust
 .ds_store
+Thumbs.db
 
 # Intellij project files
 *.iml
