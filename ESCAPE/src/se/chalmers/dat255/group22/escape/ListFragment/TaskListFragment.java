@@ -29,6 +29,7 @@ public class TaskListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+        // Make fragment aware it has an action bar object!
         setHasOptionsMenu(true);
         initialize();
 	}
@@ -44,6 +45,7 @@ public class TaskListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.pick_category :
                 Toast.makeText(getActivity(), "task category pick", Toast.LENGTH_SHORT).show();
+                //TODO implement a way to select categories to display
                 break;
         }
         return super.onOptionsItemSelected(item);
