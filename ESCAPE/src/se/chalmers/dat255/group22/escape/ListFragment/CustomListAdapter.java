@@ -171,7 +171,7 @@ public class CustomListAdapter implements ListAdapter {
                 String name = listObject.getName();
                 String description = listObject.getComment();
 
-                intent.putExtra("EDIT", "TRUE");
+                intent.setFlags(1);
                 intent.putExtra("Name", name);
                 intent.putExtra("Description", description);
 

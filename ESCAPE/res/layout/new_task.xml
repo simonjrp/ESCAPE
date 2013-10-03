@@ -112,6 +112,19 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/ui_element_gap"/>
 
+
+            <EditText
+                android:id="@+id/reminderLocationEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:hint="Location"
+                android:visibility="invisible"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:ems="10"/>
+
+
             <Spinner
                 android:id="@+id/reminderDateSpinner"
                 android:layout_width="wrap_content"
@@ -143,6 +156,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/navigation_cancel"
                 style="@android:style/Widget.ActionButton"/>
+
         </RelativeLayout>
 
         <View
