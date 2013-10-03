@@ -127,10 +127,10 @@ public class CustomListAdapter implements ListAdapter {
 
 		final String childText = listObject.getName();
 
-		final Time childTime = listObject.getTime();
+		//final Time childTime = listObject.getTime();
 		String childTimeText = "";
-		if (childTime != null) {
-			final Date childStartDate = childTime.getStartDate();
+		if (dbHandler.getTime(listObject) != null) {
+			final Date childStartDate = dbHandler.getTime(listObject).getStartDate();
 			childTimeText = DateFormat.format("HH:mm", childStartDate)
 					.toString();
 		}
@@ -173,8 +173,9 @@ public class CustomListAdapter implements ListAdapter {
 
 		});
 
+        //TODO tasks don't have time!
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "10:00"
+		childTimeView.setText(childTimeText.equals("") ? "event"
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);

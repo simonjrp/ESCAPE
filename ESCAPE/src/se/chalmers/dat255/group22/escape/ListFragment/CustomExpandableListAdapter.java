@@ -136,15 +136,17 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
+        final ListObject listObject = ((ListObject) getChild(groupPosition,
+                childPosition));
+
 		// Get the name of the task to display for each task entry
-		final String childText = ((ListObject) getChild(groupPosition,
-				childPosition)).getName();
-		final Time childTime = ((ListObject) getChild(groupPosition,
-				childPosition)).getTime();
+		final String childText = listObject.getName();
+
+        // Get the time if it exists
 		String childTimeText = "";
-		if (childTime != null) {
-			final Date childStartDate = childTime.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate)
+		if (dbHandler.getTime(listObject) != null) {
+			final Date childStartDate = dbHandler.getTime(listObject).getStartDate();
+			childTimeText = DateFormat.format("hh:mm", childStartDate)
 					.toString();
 		}
 
@@ -154,9 +156,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView = infalInflater.inflate(R.layout.list_task, null);
 		}
 
-		// Get the listObject
-		final ListObject listObject = (ListObject) getChild(groupPosition,
-				childPosition);
 		if (listObject.getName().equals(EMPTY_LIST)) {
 			LayoutInflater inflaInflater = (LayoutInflater) this.context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -197,7 +196,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 			childLabel.setText(childText);
 			childTimeView.setText(childTimeText.equals("")
-					? "10:00"
+					? "no start time"
 					: childTimeText);
 			// Get a textview for the object's data
 			TextView childData = (TextView) convertView
