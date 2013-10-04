@@ -13,10 +13,7 @@ import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
@@ -31,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -45,23 +43,20 @@ import android.widget.TextView;
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private static final String EMPTY_LIST = "EMPTY";
-
-	// The context this is used in
-	private Context context;
-	// header titles
-	private List<String> headerList;
+	// Keeps track of changes
+	private final DataSetObservable dataSetObservable = new DataSetObservable();
 	// The lists
 	List<ListObject> todayEventList;
 	List<ListObject> tomorrowEventList;
 	List<ListObject> thisWeekEventList;
+	// The context this is used in
+	private Context context;
+	// header titles
+	private List<String> headerList;
 	// child data in format of header title, data container (ListObject)
 	private HashMap<String, List<ListObject>> objectDataMap;
-
 	// The database
 	private DBHandler dbHandler;
-
-	// Keeps track of changes
-	private final DataSetObservable dataSetObservable = new DataSetObservable();
 
 	/**
 	 * Create a new custom list adapter.
@@ -116,40 +111,44 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			}
 		}
 
-		// TODO default empty list view
-		// Adds a textview to all empty childlists
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
 				.findViewById(R.id.expEventList);
 
 		this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
-        updateEditButtons();
 	}
 
-    /**
-     * update the edit/remove button
-     */
-    protected void updateEditButtons() {
-        TextView timeText = (TextView) ((MainActivity)context).findViewById(
-                R.id.startTimeTask);
-        if (timeText != null)
-            timeText.setVisibility(View.VISIBLE);
+	/**
+	 * update the edit/remove button
+	 */
+	protected void updateEditButtons() {
+		try {
+			RelativeLayout layout = (RelativeLayout) ((MainActivity) context)
+					.findViewById(R.id.listTask);
+			TextView timeText = (TextView) ((MainActivity) context)
+					.findViewById(R.id.startTimeTask);
+			if (timeText != null)
+				timeText.setVisibility(View.VISIBLE);
 
-        ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
-                R.id.editButton);
-        if (editButton != null) {
-            editButton.setVisibility(View.INVISIBLE);
-            editButton.clearAnimation();
-        }
+			ImageButton editButton = (ImageButton) ((MainActivity) context)
+					.findViewById(R.id.editButton);
+			if (editButton != null) {
+				editButton.setVisibility(View.INVISIBLE);
+				editButton.clearAnimation();
+			}
 
-        ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
-                R.id.deleteButton);
-        if (deleteButton != null) {
-            deleteButton.setVisibility(View.INVISIBLE);
-            deleteButton.clearAnimation();
-        }
-    }
+			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
+					.findViewById(R.id.deleteButton);
+			if (deleteButton != null) {
+				deleteButton.setVisibility(View.INVISIBLE);
+				deleteButton.clearAnimation();
+			}
+
+		} catch (RuntimeException e) {
+			// Do nothing
+		}
+	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
@@ -167,7 +166,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
-        updateEditButtons();
 		// Get the name of the task to display for each task entry
 		final String childText = listObject.getName();
 
@@ -180,11 +178,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					.toString();
 		}
 
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_task, null);
-		}
+		LayoutInflater infalInflater = (LayoutInflater) this.context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		convertView = infalInflater.inflate(R.layout.list_task, null);
 
 		if (listObject.getName().equals(EMPTY_LIST)) {
 			LayoutInflater inflaInflater = (LayoutInflater) this.context
@@ -193,37 +189,36 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		} else {
 
 			// Get a textview for the object
-			final TextView childLabel = (TextView) convertView
+			TextView childLabel = (TextView) convertView
 					.findViewById(R.id.listTask);
 
-			final TextView childTimeView = (TextView) convertView
+			TextView childTimeView = (TextView) convertView
 					.findViewById(R.id.startTimeTask);
 
-			final ImageButton editButton = (ImageButton) convertView
+			ImageButton editButton = (ImageButton) convertView
 					.findViewById(R.id.editButton);
 
-			final ImageButton deleteButton = (ImageButton) convertView
+			ImageButton deleteButton = (ImageButton) convertView
 					.findViewById(R.id.deleteButton);
 
-			editButton.setVisibility(View.INVISIBLE);
-			deleteButton.setVisibility(View.INVISIBLE);
+			updateEditButtons();
 
 			// editButton.setX(convertView.getRight() + deleteButton.getWidth()
 			// + 300);
 			// deleteButton.setX(convertView.getRight() + 300);
-            editButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, NewTaskActivity.class);
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, NewTaskActivity.class);
 
-                    Bundle bundle = new Bundle();
-                    intent.putExtra("Edit Task", bundle);
+					Bundle bundle = new Bundle();
+					intent.putExtra("Edit Task", bundle);
 
-                    bundle.putInt("ID", listObject.getId());
-                    intent.setFlags(1);
-                    context.startActivity(intent);
-                }
-            });
+					bundle.putInt("ID", listObject.getId());
+					intent.setFlags(1);
+					context.startActivity(intent);
+				}
+			});
 			deleteButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -237,7 +232,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			});
 
 			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("") ? "no start time"
+			childTimeView.setText(childTimeText.equals("")
+					? "no start time"
 					: childTimeText);
 			// Get a textview for the object's data
 			TextView childData = (TextView) convertView
@@ -292,14 +288,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-        updateEditButtons();
+		updateEditButtons();
 		// Get the name of the header to display for each entry
 		String headerTitle = (String) getGroup(groupPosition);
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_header, null);
-		}
+
+		LayoutInflater infalInflater = (LayoutInflater) this.context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		convertView = infalInflater.inflate(R.layout.list_header, null);
 
 		TextView lblListHeader = (TextView) convertView
 				.findViewById(R.id.listHeader);
@@ -480,13 +475,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Get a list object from the someday list
+	 * Get a list object from the this week list
 	 * 
 	 * @param i
 	 *            number of object to return
 	 * @return the specified list object
 	 */
-	public ListObject getListObjectSomeday(int i) {
+	public ListObject getListObjectThisWeek(int i) {
 		if (0 <= i && i < thisWeekEventList.size()) {
 			return thisWeekEventList.get(i);
 		}
@@ -494,6 +489,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	// TODO Look into better way to check if it is today or tomorrow
+
 	/**
 	 * Method to check if a date is today
 	 * 

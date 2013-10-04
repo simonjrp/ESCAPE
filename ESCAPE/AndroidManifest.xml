@@ -46,6 +46,14 @@
             android:label="@string/title_activity_snooze_dialog"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
+        <activity
+            android:name="se.chalmers.dat255.group22.escape.NewBlockActivity"
+            android:label="@string/title_activity_new_block"
+            android:parentActivityName="se.chalmers.dat255.group22.escape.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="se.chalmers.dat255.group22.escape.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

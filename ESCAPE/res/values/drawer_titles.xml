@@ -2,6 +2,7 @@
 <resources>
     <string-array name="drawer_titles">
         <item>Home</item>
+        <item>Blocks</item>
         <item>Pomodoro</item>
 
     </string-array>

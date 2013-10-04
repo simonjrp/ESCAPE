@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".NewBlockActivity" >
+
+    <EditText
+        android:id="@+id/block_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:inputType="textCapSentences"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_large" />
+
+    <EditText
+        android:id="@+id/block_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/block_title"
+        android:gravity="top|left"
+        android:hint="Description"
+        android:inputType="textMultiLine|textCapSentences"
+        android:maxLines="10"
+        android:minLines="3"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_medium" />
+
+    <EditText
+        android:id="@+id/block_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/block_description"
+        android:hint="Location"
+        android:inputType="textCapSentences"
+        android:paddingBottom="@dimen/ui_element_gap"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_medium" />
+
+    <CheckBox
+        android:id="@+id/block_important"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/block_location"
+        android:text="Mark as important"
+        android:textSize="@dimen/textsize_small" />
+
+    <TextView
+        android:id="@+id/block_hours_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/block_important"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:text="Total size:"
+        android:textSize="@dimen/textsize_medium" />
+
+    <Spinner
+        android:id="@+id/block_hours_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/block_important"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_medium" />
+
+    <TextView
+        android:id="@+id/split_time_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/block_hours_desc"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:text="Duration of each block:"
+        android:textSize="@dimen/textsize_medium" />
+
+    <Spinner
+        android:id="@+id/split_time_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/block_hours_desc"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_medium" />
+
+    <TextView
+        android:id="@+id/when_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/split_time_desc"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:text="When:"
+        android:textSize="@dimen/textsize_medium" />
+
+    <Spinner
+        android:id="@+id/when_to_gen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/split_time_desc"
+        android:paddingTop="@dimen/ui_element_gap"
+        android:textSize="@dimen/textsize_medium" />
+
+</RelativeLayout>
