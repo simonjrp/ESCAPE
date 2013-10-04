@@ -16,11 +16,13 @@
         <item
                 android:id="@+id/cat1"
                 android:title="A category"
-                android:checked="true"/>
+                android:checked="false"
+                android:onClick="onOptionsItemSelected"/>
         <item
                 android:id="@+id/cat2"
                 android:title="Another category"
-                android:checked="true"/>
+                android:checked="true"
+                android:onClick="onOptionsItemSelected"/>
     </group>
 
 </menu>
