@@ -10,6 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Fragment containing a viewpager (swipeable tabs) holding
+ * ExpandableEventListFragment and TaskListFragment.
+ * 
+ * @author simon
+ * @see se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment
+ * @see se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment
+ * 
+ */
 public class TasksEventsFragment extends Fragment {
 	private TabsPagerAdapter pagerAdapter;
 	private ViewPager viewPager;
