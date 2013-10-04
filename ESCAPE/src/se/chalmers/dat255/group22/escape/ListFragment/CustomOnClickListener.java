@@ -1,8 +1,10 @@
 package se.chalmers.dat255.group22.escape.ListFragment;
 
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.graphics.Paint;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,7 +15,7 @@ import android.widget.TextView;
  * @author tholene
  */
 public class CustomOnClickListener implements View.OnClickListener {
-
+	private final static String NEW_ROW = "\n";
 	private TextView childLabel;
 	private TextView taskData;
 	private ListObject listObject;
@@ -42,33 +44,47 @@ public class CustomOnClickListener implements View.OnClickListener {
 	@Override
 	public void onClick(View v) {
 		isExpanded = !isExpanded;
+
 		if (isExpanded) {
-			taskData.setText(
+			if (!v.findViewById(R.id.editButton).isShown()) {
+				Time start = new Time();
+				start.set((dbHandler.getTime(listObject) != null ? (dbHandler
+						.getTime(listObject).getStartDate().getTime()) : 0));
+				Time end = new Time();
+				end.set((dbHandler.getTime(listObject) != null ? (dbHandler
+						.getTime(listObject).getEndDate().getTime()) : 0));
+				StringBuilder builder = new StringBuilder();
 
-			(listObject.getComment() != null ? "* " + listObject.getComment()
-					+ "\n" : "No Comment\n")
-					+
+				taskData.setText(
 
-					(dbHandler.getPlace(listObject) != null ? "* "
-							+ dbHandler.getPlace(listObject).getName() + "\n"
+				(listObject.getComment() != null ? listObject.getComment()
+						+ NEW_ROW : "")
+						+ (dbHandler.getPlace(listObject) != null ? dbHandler
+								.getPlace(listObject).getName() + NEW_ROW : "")
+						+ (start != null ? start.format("%H:%M") + "-" : "")
+						+ (end != null ? end.format("%H:%M") + NEW_ROW : "")
+						+ (dbHandler.getTimeAlarm(listObject) != null
+								? "Remind me at "
+										+ dbHandler.getTimeAlarm(listObject)
+												.getDate().toString()
+								: "")
 
-					: "No place")
+				);
+				if (taskData.getText() != null)
+					taskData.setVisibility(View.VISIBLE);
 
-			);
+				taskData.setHeight(taskData.getLineCount()
+						* taskData.getLineHeight() + 5);
 
-			if (taskData.getText() != null)
-				taskData.setVisibility(View.VISIBLE);
-
-			taskData.setHeight(taskData.getLineCount()
-					* taskData.getLineHeight() + 5);
-
-			taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
-			childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+				taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+				childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+			}
 		} else {
 			taskData.setVisibility(View.INVISIBLE);
 			taskData.setHeight(0);
 			childLabel.setPaintFlags(1);
 		}
+
 	}
 
 }

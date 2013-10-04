@@ -95,6 +95,9 @@ public class NewTaskActivity extends Activity {
 			if (bundle != null) {
 				// TODO Should keep track of wether this is a new event or an
 				// TODO event in editing, maybe a better way for this?
+                DBHandler dbHandler = new DBHandler(this);
+                long id = bundle.getInt("ID");
+                ListObject listObject = dbHandler.getListObject(id);
 
 				editing = true;
 
@@ -125,13 +128,23 @@ public class NewTaskActivity extends Activity {
 
 				// Get data from the ListObject that "called" the activity
 
-				String nameString = bundle.getString("name");
-				String descriptionString = bundle.getString("description");
-				String locationString = bundle.getString("location");
-				Boolean isImportant = bundle.getBoolean("important");
-				String timeAlarmString = bundle.getString("timeAlarm");
-				String timeStartString = bundle.getString("timeStart");
-				String timeEndString = bundle.getString("timeEnd");
+				String nameString = listObject.getName().toString();
+                String descriptionString = "";
+                String locationString = "";
+                String timeAlarmString = "";
+                String timeStartString = "";
+                String timeEndString = "";
+                if(listObject.getComment() != null)
+                    descriptionString = listObject.getComment();
+                if(dbHandler.getPlace(listObject) != null)
+				    locationString = dbHandler.getPlace(listObject).getName();
+				Boolean isImportant = listObject.isImportant();
+                if(dbHandler.getTimeAlarm(listObject) != null)
+				    timeAlarmString = dbHandler.getTimeAlarm(listObject).getDate().toString();
+                if(dbHandler.getTime(listObject) != null)
+				    timeStartString = dbHandler.getTime(listObject).getStartDate().toString();
+                if(dbHandler.getTime(listObject) != null)
+				timeEndString = dbHandler.getTime(listObject).getEndDate().toString();
 
 				// TODO This should also be saved into the object/database when
 				// TODO pausing/destroying the activity!

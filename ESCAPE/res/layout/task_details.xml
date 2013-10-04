@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:id="@+id/task_details_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <EditText
+            android:id="@+id/task_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textSize="@dimen/textsize_large"
+            android:inputType="textCapSentences"
+            android:paddingTop="@dimen/ui_element_gap"/>
+
+        <Spinner
+            android:id="@+id/task_categories"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_title"
+            android:textSize="@dimen/textsize_medium"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/ui_element_gap"/>
+
+        <EditText
+            android:id="@+id/task_description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_categories"
+            android:gravity="top|left"
+            android:hint="Description"
+            android:textSize="@dimen/textsize_medium"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="10"
+            android:minLines="3"
+            android:paddingTop="@dimen/ui_element_gap"/>
+
+        <EditText
+            android:id="@+id/task_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_description"
+            android:hint="Location"
+            android:textSize="@dimen/textsize_medium"
+            android:inputType="textCapSentences"
+            android:paddingTop="@dimen/ui_element_gap"
+            android:paddingBottom="@dimen/ui_element_gap"/>
+
+        <CheckBox
+            android:id="@+id/task_important"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/task_location"
+            android:textSize="@dimen/textsize_small"
+            android:text="Mark as important"/>
+
+        <RelativeLayout
+            android:id="@+id/remindMeField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/task_important"
+            android:onClick="onRemindMe"
+            android:clickable="true"
+            android:background="@android:drawable/list_selector_background">
+
+            <ImageView
+                android:id="@+id/addAlarmImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/device_access_add_alarm"
+                android:scaleType="centerCrop"
+                android:minHeight="32dp"
+                android:minWidth="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/ui_element_gap"
+                android:layout_marginRight="@dimen/ui_element_gap"/>
+
+            <TextView
+                android:id="@+id/remindMeString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/addAlarmImg"
+                android:hint="@string/remind_me"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_marginTop="@dimen/ui_element_gap"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/setReminderField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_below="@id/task_important"
+            android:clickable="true"
+            >
+
+            <Spinner
+                android:id="@+id/reminderTypeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/ui_element_gap"/>
+
+
+            <EditText
+                android:id="@+id/reminderLocationEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:hint="Location"
+                android:visibility="invisible"
+                android:textSize="@dimen/textsize_medium"
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:ems="10"/>
+
+
+            <Spinner
+                android:id="@+id/reminderDateSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/reminderTypeSpinner"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"/>
+
+            <Spinner
+                android:id="@+id/reminderTimeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/reminderDateSpinner"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"/>
+
+            <ImageButton
+                android:id="@+id/reminderCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/ui_element_gap"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:onClick="onCancelReminder"
+                android:minHeight="3dp"
+                android:minWidth="3dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/navigation_cancel"
+                style="@android:style/Widget.ActionButton"/>
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/separator1"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/remindMeField"
+            android:layout_marginTop="@dimen/ui_element_gap"
+            android:layout_marginBottom="@dimen/ui_element_gap"
+            android:background="@android:color/holo_blue_dark"/>
+
+        <Button
+            android:id="@+id/task_add_reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/separator1"
+            android:text="Convert to Event"
+            android:onClick="onConvertEvent"
+            style="@android:style/Widget.ActionButton"
+            android:clickable="true"/>
+
+        <RelativeLayout
+            android:id="@+id/eventSpinners"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_below="@id/separator1"
+            android:padding="@dimen/ui_element_gap">
+
+            <ImageButton
+                android:id="@+id/eventCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:clickable="true"
+                android:onClick="onCancelEvent"
+                android:minHeight="3dp"
+                android:minWidth="3dp"
+                android:src="@drawable/navigation_cancel"
+                style="@android:style/Widget.ActionButton"/>
+
+            <TextView
+                android:id="@+id/fromString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:hint="@string/fromLabel"
+                android:textSize="@dimen/textsize_small"
+                >
+            </TextView>
+
+            <Spinner
+                android:id="@+id/date_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fromString"/>
+
+            <Spinner
+                android:id="@+id/time_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fromString"
+                android:layout_toRightOf="@id/date_from"/>
+
+            <TextView
+                android:id="@+id/toString"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:hint="@string/toLabel"
+                android:textSize="@dimen/textsize_small"
+                android:layout_below="@id/date_from">
+            </TextView>
+
+            <Spinner
+                android:id="@+id/date_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toString"/>
+
+            <Spinner
+                android:id="@+id/time_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/date_to"
+                android:layout_below="@id/toString"/>
+
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/date_to"
+                android:layout_marginTop="@dimen/ui_element_gap"
+                android:layout_marginBottom="@dimen/ui_element_gap"
+                android:background="@android:color/holo_blue_dark"/>
+
+            <RelativeLayout
+                android:id="@+id/repeatInactiveLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator2"
+                android:onClick="onRepeat"
+                android:clickable="true"
+                android:layout_centerInParent="true"
+                android:background="@android:drawable/list_selector_background">
+
+                <ImageView
+                    android:id="@+id/addRepeatImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/repeat"
+                    android:scaleType="centerCrop"
+                    android:minHeight="24dp"
+                    android:minWidth="24dp"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@+id/addRepeatImg"
+                    android:hint="@string/repeat"
+                    android:textSize="@dimen/textsize_medium"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/repeatActiveLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_below="@id/separator2"
+                android:clickable="true">
+
+                <RelativeLayout
+                    android:id="@+id/repeatStrings"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:paddingTop="@dimen/ui_element_gap">
+
+                    <TextView
+                        android:id="@+id/monString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/monday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/tueString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/tuesday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/monString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/wedString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/wednesday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/tueString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/thuString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/thursday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/wedString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/friString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/friday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/thuString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/satString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/saturday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/friString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+                    <TextView
+                        android:id="@+id/sunString"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:hint="@string/sunday_short"
+                        android:textSize="@dimen/textsize_small"
+                        android:layout_toRightOf="@id/satString"
+                        android:paddingRight="@dimen/ui_element_gap"/>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/repeatCheckBoxes"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_below="@id/repeatStrings">
+
+                    <CheckBox
+                        android:id="@+id/mondayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <CheckBox
+                        android:id="@+id/tuesdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/mondayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/wednesdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/tuesdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/thursdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/wednesdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/fridayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/thursdayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/saturdayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/fridayBox"/>
+
+                    <CheckBox
+                        android:id="@+id/sundayBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/saturdayBox"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:paddingTop="@dimen/ui_element_gap"
+                    android:layout_below="@id/repeatCheckBoxes">
+
+                    <TextView
+                        android:id="@+id/repeatLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/repeatLabel"
+                        android:textSize="@dimen/textsize_medium"
+                        android:paddingRight="@dimen/ui_element_gap"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <Spinner
+                        android:id="@+id/repeatIntervalSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/repeatLabel"
+                        android:paddingTop="@dimen/ui_element_gap"
+                        android:layout_centerVertical="true"/>
+
+                    <ImageButton
+                        android:id="@+id/repeatCancelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:clickable="true"
+                        android:onClick="onCancelRepeat"
+                        android:minHeight="3dp"
+                        android:minWidth="3dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/navigation_cancel"
+                        style="@android:style/Widget.ActionButton"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</ScrollView>

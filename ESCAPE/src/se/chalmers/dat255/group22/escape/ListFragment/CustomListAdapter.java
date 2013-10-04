@@ -169,44 +169,15 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
+                Intent intent = new Intent(context, NewTaskActivity.class);
 
-				String name = listObject.getName();
-				String description = listObject.getComment();
-				Place location = listObject.getPlace();
-				Boolean important = listObject.isImportant();
-				TimeAlarm timeAlarm = listObject.getTimeAlarm();
-				Time time = listObject.getTime();
+                Bundle bundle = new Bundle();
+                intent.putExtra("Edit Task", bundle);
 
-				String locationString = "";
-                String timeAlarmString = "";
-				String timeStartString = "";
-				String timeEndString = "";
-
-                if(location != null) {
-                    locationString = location.getName();
-                }
-				if (timeAlarm != null) {
-					timeAlarmString = timeAlarm.getDate().toString();
-				}
-				if (time != null) {
-					timeStartString = time.getStartDate().toString();
-					timeEndString = time.getEndDate().toString();
-				}
-
-				Bundle bundle = new Bundle();
-
-				bundle.putString("name", name);
-				bundle.putString("description", description);
-				bundle.putString("location", locationString);
-				bundle.putBoolean("important", important);
-				bundle.putString("timeAlarm", timeAlarmString);
-				bundle.putString("timeStart", timeStartString);
-				bundle.putString("timeEnd", timeEndString);
-
-				intent.putExtra("Edit Task", bundle);
-				intent.setFlags(1);
-				context.startActivity(intent);
+                bundle.putInt("ID", listObject.getId());
+                System.out.println(listObject.getId());
+                intent.setFlags(1);
+                context.startActivity(intent);
 			}
 		});
 		deleteButton.setOnClickListener(new OnClickListener() {
