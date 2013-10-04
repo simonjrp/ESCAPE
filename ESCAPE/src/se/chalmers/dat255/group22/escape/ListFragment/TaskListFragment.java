@@ -49,16 +49,22 @@ public class TaskListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.pick_category :
-                //Toast.makeText(getActivity(), "task category pick", Toast.LENGTH_SHORT).show();
                 //TODO implement a way to select categories to display
                 //popUp.showAsDropDown(getActivity().findViewById(R.id.pick_category));
-
                 View menuItemView = getActivity().findViewById(R.id.pick_category);
                 PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
                 MenuInflater inflate = popup.getMenuInflater();
                 inflate.inflate(R.menu.popup_categories, popup.getMenu());
                 popup.show();
                 break;
+            case R.id.cat1:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                return true;
+            case R.id.cat2:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
