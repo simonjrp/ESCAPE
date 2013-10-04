@@ -3,7 +3,6 @@
     <string-array name="fragments_array">
         <item>Tasks</item>
         <item>Events</item>
-        <item>Pomodoro</item>
 
     </string-array>
 

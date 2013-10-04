@@ -3,30 +3,32 @@ package se.chalmers.dat255.group22.escape;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 /**
  * The main activity, to be launched when app is started.
  */
 public class MainActivity extends FragmentActivity {
 
-	private TabsPagerAdapter pagerAdapter;
-	private ViewPager viewPager;
-
+	private String[] drawerTitles;
+	private DrawerLayout drawerLayout;
+	private ListView drawerList;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		pagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), this);
-
-		viewPager = (ViewPager) findViewById(R.id.view_pager);
-		viewPager.setAdapter(pagerAdapter);
-		viewPager.setCurrentItem(1);
-
-		// switch to the events list directly after startup
-		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
+		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawerList = (ListView) findViewById(R.id.left_drawer);
+		
+		drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerTitles));
+		drawerList.setOnItemClickListener(new DrawerItemClickListener(this, drawerTitles, drawerLayout, drawerList));
+		
 
 	}
 
@@ -48,4 +50,6 @@ public class MainActivity extends FragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
 }

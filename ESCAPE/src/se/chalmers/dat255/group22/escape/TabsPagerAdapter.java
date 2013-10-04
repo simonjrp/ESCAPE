@@ -47,9 +47,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 		Fragment eventListFragment = new ExpandableEventListFragment();
 		fragmentList.add(eventListFragment);
 
-		PomodoroFragment pomodoroFragment = new PomodoroFragment();
-		fragmentList.add(pomodoroFragment);
-
 	}
 
 	@Override
