@@ -81,23 +81,27 @@ public class CustomListAdapter implements ListAdapter {
      * update the edit/remove button
      */
     protected void updateEditButtons() {
-        TextView timeText = (TextView) ((MainActivity)context).findViewById(
-                R.id.startTimeTask);
-        if (timeText != null)
-            timeText.setVisibility(View.VISIBLE);
+        try {
+            TextView timeText = (TextView) ((MainActivity)context).findViewById(
+                    R.id.startTimeTask);
+            if (timeText != null)
+                timeText.setVisibility(View.VISIBLE);
 
-        ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
-                R.id.editButton);
-        if (editButton != null) {
-            editButton.setVisibility(View.INVISIBLE);
-            editButton.clearAnimation();
-        }
+            ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
+                    R.id.editButton);
+            if (editButton != null) {
+                editButton.setVisibility(View.INVISIBLE);
+                editButton.clearAnimation();
+            }
 
-        ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
-                R.id.deleteButton);
-        if (deleteButton != null) {
-            deleteButton.setVisibility(View.INVISIBLE);
-            deleteButton.clearAnimation();
+            ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
+                    R.id.deleteButton);
+            if (deleteButton != null) {
+                deleteButton.setVisibility(View.INVISIBLE);
+                deleteButton.clearAnimation();
+            }
+        } catch (RuntimeException e) {
+            // Do nothing
         }
     }
 
