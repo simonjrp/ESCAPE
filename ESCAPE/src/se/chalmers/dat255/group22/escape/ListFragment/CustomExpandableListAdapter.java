@@ -23,9 +23,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -56,6 +60,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	// Keeps track of changes
 	private final DataSetObservable dataSetObservable = new DataSetObservable();
+
+	public class OnDeleteListener implements OnClickListener {
+
+		private View ve;
+		private final ListObject listObject;
+
+		public OnDeleteListener(Context context, View ve, ListObject listObject) {
+			this.ve = ve;
+			this.listObject = listObject;
+		}
+
+		@Override
+		public void onClick(View v) {
+
+			DBHandler dbh = new DBHandler(ve.getContext());
+			dbh.deleteListObject(listObject);
+			removeListObjectToday(listObject);
+			removeListObjectTomorrow(listObject);
+			removeListObjectThisWeek(listObject);
+
+		}
+	}
 
 	/**
 	 * Create a new custom list adapter.
@@ -125,7 +151,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		if (thisWeekEventList.size() == 0)
 			thisWeekEventList.add(emptyObject);
 
-        this.notifyDataSetChanged();
+		this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
 	}
 
@@ -184,6 +210,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			final ImageButton deleteButton = (ImageButton) convertView
 					.findViewById(R.id.deleteButton);
 
+			final CheckBox checkbox_done = (CheckBox) convertView
+					.findViewById(R.id.checkbox_done);
+
 			editButton.setVisibility(View.INVISIBLE);
 			deleteButton.setVisibility(View.INVISIBLE);
 
@@ -191,17 +220,34 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			// + 300);
 			// deleteButton.setX(convertView.getRight() + 300);
 
-			deleteButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					DBHandler dbh = new DBHandler(context);
-					dbh.deleteListObject(listObject);
-					removeListObjectToday(listObject);
-					removeListObjectTomorrow(listObject);
-					removeListObjectThisWeek(listObject);
-				}
+			deleteButton.setOnClickListener(new OnDeleteListener(context,
+					convertView, listObject));
 
-			});
+			checkbox_done.setOnClickListener(new OnDeleteListener(context, convertView, listObject))
+			
+			/*
+			setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton arg0,
+								boolean isChecked) {
+							if (isChecked) {
+
+								// TOAST
+								Toast toast = Toast.makeText(context,
+										"Checkboxchanged, woho!",
+										Toast.LENGTH_SHORT);
+								toast.show();
+
+								DBHandler dbh = new DBHandler(context);
+								dbh.deleteListObject(listObject);
+								removeListObjectToday(listObject);
+								removeListObjectTomorrow(listObject);
+								removeListObjectThisWeek(listObject);
+							}
+						}
+
+					})*/;
 
 			childLabel.setText(childText);
 			childTimeView.setText(childTimeText.equals("") ? "10:00"
@@ -290,10 +336,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		this.dataSetObservable.notifyInvalidated();
 	}
 
-    /**
-     * Call this to notify that something has changed. Makes the view update!
-     * {@inheritDoc}
-     */
+	/**
+	 * Call this to notify that something has changed. Makes the view update!
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void notifyDataSetChanged() {
 		this.dataSetObservable.notifyChanged();
