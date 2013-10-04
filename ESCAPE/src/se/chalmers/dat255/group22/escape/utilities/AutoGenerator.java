@@ -117,84 +117,89 @@ public class AutoGenerator {
 					data[i][2] = block.getTimeWindow().getNumVal();
 				}
 				ListIterator<TimeBox> it = totalList.listIterator(0);
-				while (it.hasNext()) {
-					TimeBox current = it.next();
-					TimeBox next;
-					if (it.hasNext()) {
-						next = it.next();
+				if (it.hasNext()) {
+					TimeBox current;
+					TimeBox next = it.next();
+					while (it.hasNext()) {
+						current = next;
+						if (it.hasNext()) {
+							next = it.next();
 
-						Long diffLong = next.start - current.end;
-						IBlockObject fittingBlock = null;
-						long blockTime = 0;
-						double[] percentageLeft = new double[data.length];
-						int[] order = new int[data.length];
-						for (i = 0; i < percentageLeft.length; i++) {
-							percentageLeft[i] = (double) data[i][1]
-									/ data[i][0];
-						}
+							Long diffLong = next.start - current.end;
+							IBlockObject fittingBlock = null;
+							long blockTime = 0;
+							double[] percentageLeft = new double[data.length];
+							int[] order = new int[data.length];
+							for (i = 0; i < percentageLeft.length; i++) {
+								percentageLeft[i] = (double) data[i][1]
+										/ data[i][0];
+							}
 
-						for (i = 0; i < percentageLeft.length; i++) {
-							int max = 0;
-							for (int j = 0; j < percentageLeft.length; j++) {
-								if (percentageLeft[j] > percentageLeft[max]) {
-									max = j;
+							for (i = 0; i < percentageLeft.length; i++) {
+								int max = 0;
+								for (int j = 0; j < percentageLeft.length; j++) {
+									if (percentageLeft[j] > percentageLeft[max]) {
+										max = j;
+									}
+								}
+								percentageLeft[max] = 0;
+								// Set the new order
+								order[max] = i;
+							}
+
+							for (i = 0; i < first.size(); i++) {
+								int nextOnTurn = 0;
+								for (int j = 0; j < order.length; j++) {
+									if (order[j] == i) {
+										nextOnTurn = j;
+										break;
+									}
+								}
+								IBlockObject currentBlock = first
+										.get(nextOnTurn);
+								if (data[nextOnTurn][1] > 0) {
+									blockTime = (long) 60000
+											* (data[nextOnTurn][1] == 1 ? currentBlock
+													.getLastSplitMinutes()
+													: currentBlock
+															.getSessionMinutes());
+									if (diffLong >= blockTime) {
+										fittingBlock = currentBlock;
+										// Reduce the remaining block amount with 1
+										data[nextOnTurn][1]--;
+										break;
+									}
 								}
 							}
-							percentageLeft[max] = 0;
-							// Set the new order
-							order[max] = i;
-						}
-
-						for (i = 0; i < first.size(); i++) {
-							int nextOnTurn = 0;
-							for (int j = 0; j < order.length; j++) {
-								if (order[j] == i) {
-									nextOnTurn = j;
-									break;
-								}
+							if (fittingBlock != null) {
+								// INSERT
+								ListObject insert = new ListObject(-1,
+										fittingBlock.getName());
+								lolist.add(insert);
+								insert.setTime(new Time(-1, new Date(
+										current.end), new Date(current.end
+										+ blockTime)));
+								it.previous();
+								it.add(new TimeBox(current.end, current.end
+										+ blockTime));
+								it.previous();
 							}
-							IBlockObject currentBlock = first.get(nextOnTurn);
-							if (data[nextOnTurn][1] > 0) {
-								blockTime = (long) 60000
-										* (data[nextOnTurn][1] == 1 ? currentBlock
-												.getLastSplitMinutes()
-												: currentBlock
-														.getSessionMinutes());
-								if (diffLong >= blockTime) {
-									fittingBlock = currentBlock;
-									// Reduce the remaining block amount with 1
-									data[nextOnTurn][1]--;
-									break;
-								}
+						} // else {
+							// Here we can do if there is no more timeBoxes (last
+							// space
+							// until list end
+							// }
+						// Check if we have any more blocks to place
+						boolean canPlace = false;
+						for (i = 0; i < data.length; i++) {
+							if (data[i][1] > 0) {
+								canPlace = true;
+								break;
 							}
 						}
-						if (fittingBlock != null) {
-							// INSERT
-							ListObject insert = new ListObject(-1,
-									fittingBlock.getName());
-							lolist.add(insert);
-							insert.setTime(new Time(-1, new Date(current.end),
-									new Date(current.end + blockTime)));
-							it.previous();
-							it.add(new TimeBox(current.end, current.end
-									+ blockTime));
-							it.next();
-						}
-					} // else {
-						// Here we can do if there is no more timeBoxes (last
-						// space
-						// until list end
-						// }
-					// Check if we have any more blocks to place
-					boolean canPlace = false;
-					for (i = 0; i < data.length; i++) {
-						if (data[i][1] > 0) {
-							canPlace = true;
+						if (!canPlace) {
 							break;
 						}
-					}
-					if (!canPlace) {
-						break;
 					}
 				} 
 			}
@@ -211,21 +216,23 @@ public class AutoGenerator {
 	 */
 	private void fixOverlap(LinkedList<TimeBox> fullList) {
 		Iterator<TimeBox> iterator = fullList.iterator();
-		TimeBox current, next;
-		while (iterator.hasNext()) {
-			current = iterator.next();
+		if (iterator.hasNext()) {
+			TimeBox current, next = iterator.next();
+			while (iterator.hasNext()) {
+				current = next;
 
-			if (iterator.hasNext()) {
-				next = iterator.next();
-				Long end = current.end;
-				while (end >= next.start) {
-					if (next.end >= end) {
-						end = next.end;
-					}
-					iterator.remove();
+				if (iterator.hasNext()) {
 					next = iterator.next();
+					Long end = current.end;
+					while (end >= next.start) {
+						if (next.end >= end) {
+							end = next.end;
+						}
+						iterator.remove();
+						next = iterator.next();
+					}
+					current.end = end;
 				}
-				current.end = end;
 			}
 		}
 	}
