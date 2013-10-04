@@ -42,8 +42,6 @@ public class ExpandableEventListFragment extends Fragment {
         // TODO temp fix, maybe better way to read from DB again?
         initialize();
 		listAdapter.reInit();
-        updateEditButtons();
-
 	}
 
 	/**
@@ -51,32 +49,11 @@ public class ExpandableEventListFragment extends Fragment {
 	 */
 	private void initialize() {
 		// Create the adapter used to display the list
-		listAdapter = new CustomExpandableListAdapter(getActivity(), this);
+		listAdapter = new CustomExpandableListAdapter(getActivity());
 		// getting the list view
 		expListView = (ExpandableListView) getActivity().findViewById(
 				R.id.expEventList);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
 	}
-
-    protected void updateEditButtons() {
-        TextView timeText = (TextView) getActivity().findViewById(
-                R.id.startTimeTask);
-        if (timeText != null)
-            timeText.setVisibility(View.VISIBLE);
-
-        ImageButton editButton = (ImageButton) getActivity().findViewById(
-                R.id.editButton);
-        if (editButton != null) {
-            editButton.setVisibility(View.INVISIBLE);
-            editButton.clearAnimation();
-        }
-
-        ImageButton deleteButton = (ImageButton) getActivity().findViewById(
-                R.id.deleteButton);
-        if (deleteButton != null) {
-            deleteButton.setVisibility(View.INVISIBLE);
-            deleteButton.clearAnimation();
-        }
-    }
 }

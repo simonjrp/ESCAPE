@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
 import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
@@ -40,7 +41,6 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
-    private TaskListFragment fragment;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -48,9 +48,8 @@ public class CustomListAdapter implements ListAdapter {
 	 * @param context
 	 *            The context (activity) this adapter is used in
 	 */
-	public CustomListAdapter(Context context, TaskListFragment fragment) {
+	public CustomListAdapter(Context context) {
 		this.context = context;
-        this.fragment = fragment;
 		initialize();
 	}
 
@@ -75,8 +74,32 @@ public class CustomListAdapter implements ListAdapter {
 				addListObject(lo);
 			}
 		}
+        updateEditButtons();
 	}
 
+    /**
+     * update the edit/remove button
+     */
+    protected void updateEditButtons() {
+        TextView timeText = (TextView) ((MainActivity)context).findViewById(
+                R.id.startTimeTask);
+        if (timeText != null)
+            timeText.setVisibility(View.VISIBLE);
+
+        ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
+                R.id.editButton);
+        if (editButton != null) {
+            editButton.setVisibility(View.INVISIBLE);
+            editButton.clearAnimation();
+        }
+
+        ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
+                R.id.deleteButton);
+        if (deleteButton != null) {
+            deleteButton.setVisibility(View.INVISIBLE);
+            deleteButton.clearAnimation();
+        }
+    }
 
 
 	@Override
@@ -131,7 +154,7 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-        fragment.updateEditButtons();
+        updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
 
 		final String childText = listObject.getName();

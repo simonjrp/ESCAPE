@@ -42,7 +42,6 @@ public class TaskListFragment extends Fragment {
         // TODO temp fix, maybe better way to read from DB again?
         initialize();
 		ourListAdapter.reInit();
-        updateEditButtons();
 	}
 
 	/**
@@ -50,29 +49,8 @@ public class TaskListFragment extends Fragment {
 	 */
 	private void initialize() {
 		// Initiate the lists and set the adapter to use
-		ourListAdapter = new CustomListAdapter(getActivity(), this);
+		ourListAdapter = new CustomListAdapter(getActivity());
 		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
 		ourTaskList.setAdapter(ourListAdapter);
 	}
-
-    protected void updateEditButtons() {
-        TextView timeText = (TextView) getActivity().findViewById(
-                R.id.startTimeTask);
-        if (timeText != null)
-            timeText.setVisibility(View.VISIBLE);
-
-        ImageButton editButton = (ImageButton) getActivity().findViewById(
-                R.id.editButton);
-        if (editButton != null) {
-            editButton.setVisibility(View.INVISIBLE);
-            editButton.clearAnimation();
-        }
-
-        ImageButton deleteButton = (ImageButton) getActivity().findViewById(
-                R.id.deleteButton);
-        if (deleteButton != null) {
-            deleteButton.setVisibility(View.INVISIBLE);
-            deleteButton.clearAnimation();
-        }
-    }
 }

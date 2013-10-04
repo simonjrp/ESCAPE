@@ -62,7 +62,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	// Keeps track of changes
 	private final DataSetObservable dataSetObservable = new DataSetObservable();
-    private ExpandableEventListFragment fragment;
 
 	/**
 	 * Create a new custom list adapter.
@@ -70,9 +69,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * @param context
 	 *            The context to make use of
 	 */
-	public CustomExpandableListAdapter(Context context, ExpandableEventListFragment fragment) {
+	public CustomExpandableListAdapter(Context context) {
 		this.context = context;
-        this.fragment = fragment;
 		initialize();
 	}
 
@@ -126,7 +124,32 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
+        updateEditButtons();
 	}
+
+    /**
+     * update the edit/remove button
+     */
+    protected void updateEditButtons() {
+        TextView timeText = (TextView) ((MainActivity)context).findViewById(
+                R.id.startTimeTask);
+        if (timeText != null)
+            timeText.setVisibility(View.VISIBLE);
+
+        ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
+                R.id.editButton);
+        if (editButton != null) {
+            editButton.setVisibility(View.INVISIBLE);
+            editButton.clearAnimation();
+        }
+
+        ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
+                R.id.deleteButton);
+        if (deleteButton != null) {
+            deleteButton.setVisibility(View.INVISIBLE);
+            deleteButton.clearAnimation();
+        }
+    }
 
 	@Override
 	public Object getChild(int groupPosition, int childPosititon) {
@@ -144,7 +167,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
-        fragment.updateEditButtons();
+        updateEditButtons();
 		// Get the name of the task to display for each task entry
 		final String childText = listObject.getName();
 
@@ -269,7 +292,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-        fragment.updateEditButtons();
+        updateEditButtons();
 		// Get the name of the header to display for each entry
 		String headerTitle = (String) getGroup(groupPosition);
 		if (convertView == null) {
