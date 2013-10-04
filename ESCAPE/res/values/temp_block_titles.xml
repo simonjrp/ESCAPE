@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="temp_block_titles">
+        <item>Matematik: 10h total, 2h split</item>
+        <item>Programming: 20h total, 10h split</item>
+        <item>Cooking: 4h total, 1h split</item>
+
+    </string-array>
+
+</resources>

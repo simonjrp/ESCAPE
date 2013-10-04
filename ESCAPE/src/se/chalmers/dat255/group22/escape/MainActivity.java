@@ -143,6 +143,7 @@ public class MainActivity extends FragmentActivity {
 
 				// Add all wanted fragments here
 				fragmentList.add(new TasksEventsFragment());
+				fragmentList.add(new BlocksFragment());
 				fragmentList.add(new PomodoroFragment());
 			}
 
