@@ -56,29 +56,35 @@ public class CustomOnClickListener implements View.OnClickListener {
 						.getTime(listObject).getEndDate().getTime()) : 0));
 				StringBuilder builder = new StringBuilder();
 
-				taskData.setText(
+				// Build the string
+				if (listObject.getComment() != null)
+					builder.append(listObject.getComment());
+				if (dbHandler.getPlace(listObject) != null)
+                    if(dbHandler.getPlace(listObject).getName().trim().length() != 0)
+					builder.append(NEW_ROW
+							+ dbHandler.getPlace(listObject).getName());
+				if (start != null)
+					builder.append(NEW_ROW + start.format("%H:%M"));
+				if (end != null)
+					builder.append("-" + end.format("%H:%M"));
+				if (dbHandler.getTimeAlarm(listObject) != null)
+					builder.append(NEW_ROW
+							+ "Remind me at "
+							+ dbHandler.getTimeAlarm(listObject).getDate()
+									.toString());
 
-				(listObject.getComment() != null ? listObject.getComment()
-						+ NEW_ROW : "")
-						+ (dbHandler.getPlace(listObject) != null ? dbHandler
-								.getPlace(listObject).getName() + NEW_ROW : "")
-						+ (start != null ? start.format("%H:%M") + "-" : "")
-						+ (end != null ? end.format("%H:%M") + NEW_ROW : "")
-						+ (dbHandler.getTimeAlarm(listObject) != null
-								? "Remind me at "
-										+ dbHandler.getTimeAlarm(listObject)
-												.getDate().toString()
-								: "")
+				// Set the string to textView
+				taskData.setText(builder.toString());
 
-				);
-				if (taskData.getText() != null)
+				if (taskData.getText() != null) {
 					taskData.setVisibility(View.VISIBLE);
 
-				taskData.setHeight(taskData.getLineCount()
-						* taskData.getLineHeight() + 5);
+					taskData.setHeight(taskData.getLineCount()
+							* taskData.getLineHeight() + 5);
 
-				taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
-				childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+					taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+					childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+				}
 			}
 		} else if (v.findViewById(R.id.editButton).isShown()) {
 			TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
