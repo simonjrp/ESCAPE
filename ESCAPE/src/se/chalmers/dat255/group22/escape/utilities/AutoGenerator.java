@@ -321,7 +321,44 @@ public class AutoGenerator {
 		return null;
 	}
 
-	public boolean validate() { 
-		return false;
+	public boolean validate(List<ListObject> newSchedule, List<ListObject> generatedSchedule) { 
+		List<ListObject> list = newSchedule;
+		list.addAll(generatedSchedule);
+		Collections.sort(list, new Comparator<ListObject>(){ 
+			/*
+			 * Sorts on start time
+			 */
+			@Override
+			public int compare(ListObject first, ListObject second) {
+				long a = first.getTime().getStartDate().getTime();
+				long b = second.getTime().getStartDate().getTime();
+				if (a > b){
+					return 1;
+				}
+				
+				if (a == b) {
+					return 0;
+				}
+				return -1;
+			}});
+		
+		Iterator<ListObject> iterator = list.iterator();
+		while (iterator.hasNext()){
+			ListObject current = iterator.next();
+			ListObject next;
+			
+			if (iterator.hasNext()){
+				next = iterator.next();
+			}
+			else {
+				break;
+			}
+			
+			if (next.getTime().getStartDate().getTime() < current.getTime().getEndDate().getTime()){
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
