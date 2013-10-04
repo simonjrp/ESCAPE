@@ -49,11 +49,19 @@ public class CustomOnClickListener implements View.OnClickListener {
 		if (isExpanded) {
 			if (!v.findViewById(R.id.editButton).isShown()) {
 				Time start = new Time();
-				start.set((dbHandler.getTime(listObject) != null ? (dbHandler
-						.getTime(listObject).getStartDate().getTime()) : 0));
-				Time end = new Time();
-				end.set((dbHandler.getTime(listObject) != null ? (dbHandler
-						.getTime(listObject).getEndDate().getTime()) : 0));
+                Time end = new Time();
+                if(dbHandler.getTime(listObject) != null ) {
+                    long startTime = dbHandler
+                            .getTime(listObject).getStartDate().getTime();
+                    long endTime = dbHandler
+                            .getTime(listObject).getEndDate().getTime();
+                    start.set(startTime);
+                    end.set(endTime);
+                } else {
+                    start = null;
+                    end = null;
+                }
+
 				StringBuilder builder = new StringBuilder();
 
 				// Build the string
