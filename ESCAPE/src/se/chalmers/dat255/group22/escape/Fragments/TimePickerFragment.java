@@ -60,8 +60,6 @@ public class TimePickerFragment extends DialogFragment implements
 		tempCalendar.set(Calendar.SECOND, 0);
 		tempCalendar.set(Calendar.MILLISECOND, 0);
 
-		
-
 		adapter.addData(new Date(tempCalendar.getTimeInMillis()));
 
 	}

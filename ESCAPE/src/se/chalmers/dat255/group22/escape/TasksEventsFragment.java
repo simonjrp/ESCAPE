@@ -41,10 +41,9 @@ public class TasksEventsFragment extends Fragment {
 
 		viewPager = (ViewPager) getActivity().findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-		viewPager.setCurrentItem(1);
+		
+		viewPager.setCurrentItem(TabsPagerAdapter.TASKS_FRAGMENT);
 
-		// switch to the events list directly after startup
-		viewPager.setCurrentItem(TabsPagerAdapter.EVENTS_FRAGMENT);
 	}
 
 	/*

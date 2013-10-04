@@ -46,5 +46,6 @@
     <string name="oneMonthLabel">1 month</string>
     <string name="custom_category">Add new category...</string>
     <string name="nextweeksameday">Next</string>
+    <string name="new_task">New task</string>
 
 </resources>
