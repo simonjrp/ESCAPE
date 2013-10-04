@@ -23,7 +23,7 @@ import se.chalmers.dat255.group22.escape.objects.TimeWindow;
  * @author anno
  * 
  */
-public abstract class AutoGenerator {
+public class AutoGenerator {
 
 	public static final int NIGHT_START = 22;
 	public static final int NIGHT_END = 8;
@@ -54,7 +54,7 @@ public abstract class AutoGenerator {
 		while (end.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 			end.add(Calendar.DAY_OF_WEEK, 1);
 		}
-		end.add(Calendar.HOUR_OF_DAY, NIGHT_START);
+		end.add(Calendar.HOUR_OF_DAY, 24);
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
@@ -68,31 +68,6 @@ public abstract class AutoGenerator {
 		Collections.sort(totalList);
 		fixOverlap(totalList);
 
-		// ListIterator<TimeBox> iterator = totalList.listIterator();
-		// while (!schedule.isEmpty()) {
-		// ListObject first = schedule.get(0);
-		// TimeBox tb = TimeBox.convertListObject(first);
-		// if (totalList.isEmpty()) {
-		// // TODO
-		// } else {
-		// if (iterator.hasNext()) {
-		// TimeBox current = iterator.next();
-		// if (tb.end > current.start) {
-		// if (tb.start < current.start) {
-		// // Here they overlap and we extend the timebox
-		// // instead of inserting
-		// // TODO Check if it extends into previous as well
-		// current.start = tb.start;
-		// } else {
-		// // Here we check if the inserting timebox is
-		// // contained within another
-		// if(tb.start < current.end)
-		// }
-		// }
-		// }
-		// }
-		// }
-
 		// Prioritize the blocks depending on if they are constrained to working
 		// hours or leisure (or all)
 		ArrayList<IBlockObject> first = new ArrayList<IBlockObject>();
@@ -105,6 +80,9 @@ public abstract class AutoGenerator {
 				second.add(block);
 			}
 		}
+		List<ArrayList<IBlockObject>> priolists = new LinkedList<ArrayList<IBlockObject>>();
+		priolists.add(first);
+		priolists.add(second);
 
 		// Place the splits into the time slots
 		// -- Prioritize the splits that can only be
@@ -112,89 +90,120 @@ public abstract class AutoGenerator {
 
 		List<ListObject> lolist = new LinkedList<ListObject>();
 
-		if (!first.isEmpty()) {
-			// First priority
-			Collections.sort(first, new Comparator<IBlockObject>() {
+		for (ArrayList<IBlockObject> list : priolists) {
+			if (!list.isEmpty()) {
+				// First priority
+				Collections.sort(first, new Comparator<IBlockObject>() {
 
-				/*
-				 * Sorts on session size
-				 */
-				@Override
-				public int compare(IBlockObject first, IBlockObject second) {
-					int a = first.getSessionMinutes(), b = second
-							.getSessionMinutes();
-					if (a == b) {
-						return 0;
+					/*
+					 * Sorts on session size
+					 */
+					@Override
+					public int compare(IBlockObject first, IBlockObject second) {
+						int a = first.getSessionMinutes(), b = second
+								.getSessionMinutes();
+						if (a == b) {
+							return 0;
+						}
+						return a - b;
 					}
-					return a - b;
+
+				});
+				int[][] data = new int[first.size()][3];
+				int i = 0;
+				for (IBlockObject block : first) {
+					data[i][0] = block.getSplitAmount();
+					data[i][1] = block.getSplitAmount();
+					data[i][2] = block.getTimeWindow().getNumVal();
 				}
+				ListIterator<TimeBox> it = totalList.listIterator(0);
+				while (it.hasNext()) {
+					TimeBox current = it.next();
+					TimeBox next;
+					if (it.hasNext()) {
+						next = it.next();
 
-			});
-			int[][] data = new int[first.size()][3];
-			int i = 0;
-			for (IBlockObject block : first) {
-				data[i][0] = block.getSplitAmount();
-				data[i][1] = block.getSplitAmount();
-				data[i][2] = block.getTimeWindow().getNumVal();
-			}
-			ListIterator<TimeBox> it = totalList.listIterator(0);
-			while (it.hasNext()) {
-				TimeBox current = it.next();
-				TimeBox next;
-				if (it.hasNext()) {
-					next = it.next();
+						Long diffLong = next.start - current.end;
+						IBlockObject fittingBlock = null;
+						long blockTime = 0;
+						double[] percentageLeft = new double[data.length];
+						int[] order = new int[data.length];
+						for (i = 0; i < percentageLeft.length; i++) {
+							percentageLeft[i] = (double) data[i][1]
+									/ data[i][0];
+						}
 
-					Long diffLong = next.start - current.end;
-					IBlockObject fittingBlock = null;
-					long blockTime = 0;
-					for (i = 0; i < first.size(); i++) {
-						IBlockObject currentBlock = first.get(i);
-						if (data[i][1] > 0) {
-							blockTime = (long) 60000
-									* (data[i][1] == 1 ? currentBlock
-											.getLastSplitMinutes()
-											: currentBlock.getSessionMinutes());
-							if (diffLong >= blockTime * 60000) {
-								fittingBlock = currentBlock;
-								// Reduce the remaining block amount with 1
-								data[i][1]--;
-								break;
+						for (i = 0; i < percentageLeft.length; i++) {
+							int max = 0;
+							for (int j = 0; j < percentageLeft.length; j++) {
+								if (percentageLeft[j] > percentageLeft[max]) {
+									max = j;
+								}
+							}
+							percentageLeft[max] = 0;
+							// Set the new order
+							order[max] = i;
+						}
+
+						for (i = 0; i < first.size(); i++) {
+							int nextOnTurn = 0;
+							for (int j = 0; j < order.length; j++) {
+								if (order[j] == i) {
+									nextOnTurn = j;
+									break;
+								}
+							}
+							IBlockObject currentBlock = first.get(nextOnTurn);
+							if (data[nextOnTurn][1] > 0) {
+								blockTime = (long) 60000
+										* (data[nextOnTurn][1] == 1 ? currentBlock
+												.getLastSplitMinutes()
+												: currentBlock
+														.getSessionMinutes());
+								if (diffLong >= blockTime) {
+									fittingBlock = currentBlock;
+									// Reduce the remaining block amount with 1
+									data[nextOnTurn][1]--;
+									break;
+								}
 							}
 						}
+						if (fittingBlock != null) {
+							// INSERT
+							ListObject insert = new ListObject(-1,
+									fittingBlock.getName());
+							lolist.add(insert);
+							insert.setTime(new Time(-1, new Date(current.end),
+									new Date(current.end + blockTime)));
+							it.previous();
+							it.add(new TimeBox(current.end, current.end
+									+ blockTime));
+							it.next();
+						}
+					} // else {
+						// Here we can do if there is no more timeBoxes (last
+						// space
+						// until list end
+						// }
+					// Check if we have any more blocks to place
+					boolean canPlace = false;
+					for (i = 0; i < data.length; i++) {
+						if (data[i][1] > 0) {
+							canPlace = true;
+							break;
+						}
 					}
-					if (fittingBlock != null) {
-						// INSERT
-						ListObject insert = new ListObject(-1,
-								fittingBlock.getName());
-						lolist.add(insert);
-						insert.setTime(new Time(-1, new Date(current.end),
-								new Date(current.end + blockTime)));
-						it.previous();
-						it.add(new TimeBox(current.end, current.end + blockTime));
-						it.next();
-					}
-				} // else {
-					// Here we can do if there is no more timeBoxes (last space
-					// until list end
-					// }
-				// Check if we have any more blocks to place
-				boolean canPlace = false;
-				for (i = 0; i < data.length; i++) {
-					if (data[i][1] > 0) {
-						canPlace = true;
+					if (!canPlace) {
 						break;
 					}
-				}
-				if (!canPlace) {
-					break;
-				}
-			} // TODO I WAS HERE
+				} 
+			}
 		}
 
-		// If not all splits fit, overflow somewhere
+		// Splits not used is stored.
 
 		// Return the list with the newly created listObjects
-		return null;
+		return lolist;
 	}
 
 	/*
@@ -312,6 +321,7 @@ public abstract class AutoGenerator {
 		return null;
 	}
 
-	public abstract boolean validate();
-
+	public boolean validate() { 
+		return false;
+	}
 }
