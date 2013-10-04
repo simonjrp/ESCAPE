@@ -95,9 +95,9 @@ public class NewTaskActivity extends Activity {
 			if (bundle != null) {
 				// TODO Should keep track of wether this is a new event or an
 				// TODO event in editing, maybe a better way for this?
-                DBHandler dbHandler = new DBHandler(this);
-                long id = bundle.getInt("ID");
-                ListObject listObject = dbHandler.getListObject(id);
+				DBHandler dbHandler = new DBHandler(this);
+				long id = bundle.getInt("ID");
+				ListObject listObject = dbHandler.getListObject(id);
 
 				editing = true;
 
@@ -129,37 +129,40 @@ public class NewTaskActivity extends Activity {
 				// Get data from the ListObject that "called" the activity
 
 				String nameString = listObject.getName().toString();
-                String descriptionString = "";
-                String locationString = "";
-                String timeAlarmString = "";
-                String timeStartString = "";
-                String timeEndString = "";
-                if(listObject.getComment() != null)
-                    descriptionString = listObject.getComment();
-                if(dbHandler.getPlace(listObject) != null)
-				    locationString = dbHandler.getPlace(listObject).getName();
+				String descriptionString = "";
+				String locationString = "";
+				String timeAlarmString = "";
+				String timeStartString = "";
+				String timeEndString = "";
+				if (listObject.getComment() != null)
+					descriptionString = listObject.getComment();
+				if (dbHandler.getPlace(listObject) != null)
+					locationString = dbHandler.getPlace(listObject).getName();
 				Boolean isImportant = listObject.isImportant();
-                if(dbHandler.getTimeAlarm(listObject) != null)
-				    timeAlarmString = dbHandler.getTimeAlarm(listObject).getDate().toString();
-                if(dbHandler.getTime(listObject) != null)
-				    timeStartString = dbHandler.getTime(listObject).getStartDate().toString();
-                if(dbHandler.getTime(listObject) != null)
-				timeEndString = dbHandler.getTime(listObject).getEndDate().toString();
+				if (dbHandler.getTimeAlarm(listObject) != null)
+					timeAlarmString = dbHandler.getTimeAlarm(listObject)
+							.getDate().toString();
+				if (dbHandler.getTime(listObject) != null)
+					timeStartString = dbHandler.getTime(listObject)
+							.getStartDate().toString();
+				if (dbHandler.getTime(listObject) != null)
+					timeEndString = dbHandler.getTime(listObject).getEndDate()
+							.toString();
 
 				// TODO This should also be saved into the object/database when
 				// TODO pausing/destroying the activity!
 				title.setText(nameString);
-                if(descriptionString != null) {
-                    if(descriptionString.trim().length() != 0)
-                        description.setText(descriptionString);
-                }
-                if(locationString != null) {
-                    if(locationString.trim().length() != 0)
-                        location.setText(locationString);
-                }
-                important.setChecked(isImportant);
+				if (descriptionString != null) {
+					if (descriptionString.trim().length() != 0)
+						description.setText(descriptionString);
+				}
+				if (locationString != null) {
+					if (locationString.trim().length() != 0)
+						location.setText(locationString);
+				}
+				important.setChecked(isImportant);
 
-                // TODO FIX TIMES AND STUFF
+				// TODO FIX TIMES AND STUFF
 			}
 		}
 	}
@@ -279,14 +282,26 @@ public class NewTaskActivity extends Activity {
 
 			if (editing) {
 				// TODO Update? Remove+Add? Cookies?
+				Bundle bundle = getIntent().getBundleExtra("Edit Task");
+				DBHandler dbHandler = new DBHandler(this);
+				long id = bundle.getInt("ID");
+				ListObject listObject = dbHandler.getListObject(id);
 				DBHandler db = new DBHandler(this);
-				db.updateListObject(lo);
+
+				listObject.setName(lo.getName());
+				listObject.setComment(lo.getComment());
+				listObject.setPlace(lo.getPlace());
+                listObject.setImportant(lo.isImportant());
+                db.updatePlaces(listObject.getPlace());
+				db.updateListObject(listObject);
 			} else {
 				saveToDatabase(lo);
 			}
+
 		} else {
 
 		}
+
 		super.onBackPressed();
 	}
 

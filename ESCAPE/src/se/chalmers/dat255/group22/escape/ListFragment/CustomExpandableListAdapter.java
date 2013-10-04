@@ -197,7 +197,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                     intent.putExtra("Edit Task", bundle);
 
                     bundle.putInt("ID", listObject.getId());
-                    System.out.println(listObject.getId());
                     intent.setFlags(1);
                     context.startActivity(intent);
                 }

@@ -179,7 +179,6 @@ public class CustomListAdapter implements ListAdapter {
                 intent.putExtra("Edit Task", bundle);
 
                 bundle.putInt("ID", listObject.getId());
-                System.out.println(listObject.getId());
                 intent.setFlags(1);
                 context.startActivity(intent);
 			}

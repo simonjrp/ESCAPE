@@ -39,6 +39,8 @@ public class ExpandableEventListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+        // TODO temp fix, maybe better way to read from DB again?
+        initialize();
 		listAdapter.reInit();
         updateEditButtons();
 
