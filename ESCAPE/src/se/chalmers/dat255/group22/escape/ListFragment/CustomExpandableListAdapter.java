@@ -83,6 +83,24 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		}
 	}
 
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (isChecked) {
+
+			// TOAST
+			Toast toast = Toast.makeText(context, "Checkboxchanged, woho!",
+					Toast.LENGTH_SHORT);
+			toast.show();
+
+			/*
+			 * DBHandler dbh = new DBHandler(context);
+			 * dbh.deleteListObject(listObject);
+			 * removeListObjectToday(listObject);
+			 * removeListObjectTomorrow(listObject);
+			 * removeListObjectThisWeek(listObject);
+			 */
+		}
+	}
+
 	/**
 	 * Create a new custom list adapter.
 	 * 
@@ -223,31 +241,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			deleteButton.setOnClickListener(new OnDeleteListener(context,
 					convertView, listObject));
 
-			checkbox_done.setOnClickListener(new OnDeleteListener(context, convertView, listObject))
-			
-			/*
-			setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-						@Override
-						public void onCheckedChanged(CompoundButton arg0,
-								boolean isChecked) {
-							if (isChecked) {
-
-								// TOAST
-								Toast toast = Toast.makeText(context,
-										"Checkboxchanged, woho!",
-										Toast.LENGTH_SHORT);
-								toast.show();
-
-								DBHandler dbh = new DBHandler(context);
-								dbh.deleteListObject(listObject);
-								removeListObjectToday(listObject);
-								removeListObjectTomorrow(listObject);
-								removeListObjectThisWeek(listObject);
-							}
-						}
-
-					})*/;
+			checkbox_done
+					.setOnClickListener(new CheckBoxOnClickListener(
+							listObject, convertView, this));
 
 			childLabel.setText(childText);
 			childTimeView.setText(childTimeText.equals("") ? "10:00"

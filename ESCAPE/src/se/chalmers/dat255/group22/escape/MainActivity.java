@@ -1,11 +1,15 @@
 package se.chalmers.dat255.group22.escape;
 
+import se.chalmers.dat255.group22.escape.database.DBHandler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
  * The main activity, to be launched when app is started.
@@ -48,4 +52,5 @@ public class MainActivity extends FragmentActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
 }
