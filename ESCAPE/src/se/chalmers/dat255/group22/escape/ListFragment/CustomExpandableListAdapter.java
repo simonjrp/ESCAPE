@@ -62,6 +62,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	// Keeps track of changes
 	private final DataSetObservable dataSetObservable = new DataSetObservable();
+    private ExpandableEventListFragment fragment;
 
 	/**
 	 * Create a new custom list adapter.
@@ -69,9 +70,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * @param context
 	 *            The context to make use of
 	 */
-	public CustomExpandableListAdapter(Context context) {
+	public CustomExpandableListAdapter(Context context, ExpandableEventListFragment fragment) {
 		this.context = context;
-
+        this.fragment = fragment;
 		initialize();
 	}
 
@@ -141,10 +142,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
-
+        fragment.updateEditButtons();
 		// Get the name of the task to display for each task entry
 		final String childText = listObject.getName();
 
@@ -270,7 +270,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-
+        fragment.updateEditButtons();
 		// Get the name of the header to display for each entry
 		String headerTitle = (String) getGroup(groupPosition);
 		if (convertView == null) {

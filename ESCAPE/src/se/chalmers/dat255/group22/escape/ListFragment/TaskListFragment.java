@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -38,6 +40,7 @@ public class TaskListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		ourListAdapter.reInit();
+        updateEditButtons();
 	}
 
 	/**
@@ -45,8 +48,29 @@ public class TaskListFragment extends Fragment {
 	 */
 	private void initialize() {
 		// Initiate the lists and set the adapter to use
-		ourListAdapter = new CustomListAdapter(getActivity());
+		ourListAdapter = new CustomListAdapter(getActivity(), this);
 		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
 		ourTaskList.setAdapter(ourListAdapter);
 	}
+
+    protected void updateEditButtons() {
+        TextView timeText = (TextView) getActivity().findViewById(
+                R.id.startTimeTask);
+        if (timeText != null)
+            timeText.setVisibility(View.VISIBLE);
+
+        ImageButton editButton = (ImageButton) getActivity().findViewById(
+                R.id.editButton);
+        if (editButton != null) {
+            editButton.setVisibility(View.INVISIBLE);
+            editButton.clearAnimation();
+        }
+
+        ImageButton deleteButton = (ImageButton) getActivity().findViewById(
+                R.id.deleteButton);
+        if (deleteButton != null) {
+            deleteButton.setVisibility(View.INVISIBLE);
+            deleteButton.clearAnimation();
+        }
+    }
 }

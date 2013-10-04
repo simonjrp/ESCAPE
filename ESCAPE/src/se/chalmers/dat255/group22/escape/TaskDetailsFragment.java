@@ -10,7 +10,7 @@ public class TaskDetailsFragment extends Fragment {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.new_task, container, false);
+		View v = inflater.inflate(R.layout.task_details, container, false);
 		return v;
 	}
 

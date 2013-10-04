@@ -40,6 +40,7 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
+    private TaskListFragment fragment;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -47,8 +48,9 @@ public class CustomListAdapter implements ListAdapter {
 	 * @param context
 	 *            The context (activity) this adapter is used in
 	 */
-	public CustomListAdapter(Context context) {
+	public CustomListAdapter(Context context, TaskListFragment fragment) {
 		this.context = context;
+        this.fragment = fragment;
 		initialize();
 	}
 
@@ -74,6 +76,8 @@ public class CustomListAdapter implements ListAdapter {
 			}
 		}
 	}
+
+
 
 	@Override
 	public boolean areAllItemsEnabled() {
@@ -127,7 +131,7 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-
+        fragment.updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
 
 		final String childText = listObject.getName();
@@ -195,7 +199,7 @@ public class CustomListAdapter implements ListAdapter {
 		// TODO tasks don't have time!
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("")
-				? "event"
+				? ""
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);

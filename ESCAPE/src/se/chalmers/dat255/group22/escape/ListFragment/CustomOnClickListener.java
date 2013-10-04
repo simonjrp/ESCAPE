@@ -6,6 +6,7 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.graphics.Paint;
 import android.text.format.Time;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 /**
@@ -79,10 +80,25 @@ public class CustomOnClickListener implements View.OnClickListener {
 				taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
 				childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 			}
+		} else if (v.findViewById(R.id.editButton).isShown()) {
+			TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
+			timeText.setVisibility(View.VISIBLE);
+
+			ImageButton editButton = (ImageButton) v
+					.findViewById(R.id.editButton);
+			editButton.setVisibility(View.INVISIBLE);
+			editButton.clearAnimation();
+
+			ImageButton deleteButton = (ImageButton) v
+					.findViewById(R.id.deleteButton);
+			deleteButton.setVisibility(View.INVISIBLE);
+			deleteButton.clearAnimation();
+
 		} else {
 			taskData.setVisibility(View.INVISIBLE);
 			taskData.setHeight(0);
 			childLabel.setPaintFlags(1);
+
 		}
 
 	}

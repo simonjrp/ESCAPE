@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * A fragment displaying an expandable list with events.<br>
@@ -17,14 +19,13 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableEventListFragment extends Fragment {
 
+	private static final String EMPTY_LIST = "EMPTY";
 	CustomExpandableListAdapter listAdapter;
 	ExpandableListView expListView;
-	private static final String EMPTY_LIST = "EMPTY";
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		initialize();
 	}
 
@@ -39,6 +40,8 @@ public class ExpandableEventListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		listAdapter.reInit();
+        updateEditButtons();
+
 	}
 
 	/**
@@ -46,11 +49,32 @@ public class ExpandableEventListFragment extends Fragment {
 	 */
 	private void initialize() {
 		// Create the adapter used to display the list
-		listAdapter = new CustomExpandableListAdapter(getActivity());
+		listAdapter = new CustomExpandableListAdapter(getActivity(), this);
 		// getting the list view
 		expListView = (ExpandableListView) getActivity().findViewById(
 				R.id.expEventList);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
 	}
+
+    protected void updateEditButtons() {
+        TextView timeText = (TextView) getActivity().findViewById(
+                R.id.startTimeTask);
+        if (timeText != null)
+            timeText.setVisibility(View.VISIBLE);
+
+        ImageButton editButton = (ImageButton) getActivity().findViewById(
+                R.id.editButton);
+        if (editButton != null) {
+            editButton.setVisibility(View.INVISIBLE);
+            editButton.clearAnimation();
+        }
+
+        ImageButton deleteButton = (ImageButton) getActivity().findViewById(
+                R.id.deleteButton);
+        if (deleteButton != null) {
+            deleteButton.setVisibility(View.INVISIBLE);
+            deleteButton.clearAnimation();
+        }
+    }
 }
