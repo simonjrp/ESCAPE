@@ -21,7 +21,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 	public static final int TASKS_FRAGMENT = 0;
 	public static final int EVENTS_FRAGMENT = 1;
-	public static final int POMODORO_FRAGMENT = 2;
 
 	/**
 	 * Creates a new TabsPagerAdapter.
@@ -41,14 +40,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 		// Create all wanted fragments and add them to fragmentList here
 
-		Fragment taskListFragment = new TaskListFragment();
-		fragmentList.add(taskListFragment);
-
 		Fragment eventListFragment = new ExpandableEventListFragment();
 		fragmentList.add(eventListFragment);
-
-		PomodoroFragment pomodoroFragment = new PomodoroFragment();
-		fragmentList.add(pomodoroFragment);
+		
+		Fragment taskListFragment = new TaskListFragment();
+		fragmentList.add(taskListFragment);
 
 	}
 
@@ -65,7 +61,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	 * {@inheritDoc}
 	 */
 	public int getCount() {
-		// TODO make non-static
 		return fragmentList.size();
 	}
 
