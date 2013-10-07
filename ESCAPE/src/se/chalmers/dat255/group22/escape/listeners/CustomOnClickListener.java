@@ -133,7 +133,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 			deleteButton.setVisibility(View.INVISIBLE);
 			deleteButton.clearAnimation();
 		} else {
-			// Should be unreachable, so do nothing
+            // If the view is only expanded, hide it again
+            taskData.setVisibility(View.INVISIBLE);
+            taskData.setHeight(0);
+            childLabel.setPaintFlags(1);
 		}
 
 	}
