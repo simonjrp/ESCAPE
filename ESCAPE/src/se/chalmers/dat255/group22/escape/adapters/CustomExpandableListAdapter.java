@@ -101,6 +101,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	}
 
+	/**
+	 * Fetches all objects from database and adds all events to what is
+	 * displayed.
+	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
 
@@ -115,7 +119,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		ExpandableListView expLv = (ExpandableListView) mActivity
 				.findViewById(R.id.expEventList);
 
-		this.notifyDataSetChanged();
+		// First expandable group is always expanded when adapter reinits
 		expLv.expandGroup(0, true);
 	}
 
@@ -146,7 +150,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			}
 
 		} catch (Exception e) {
-			// Do nothing
+			// Do nothing. Only used in order to make testing possible
 		}
 	}
 
