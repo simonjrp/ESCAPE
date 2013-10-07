@@ -11,7 +11,6 @@ import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -73,37 +72,36 @@ public class CustomListAdapter implements ListAdapter {
 				addListObject(lo);
 			}
 		}
-        updateEditButtons();
+		updateEditButtons();
 	}
 
-    /**
-     * update the edit/remove button
-     */
-    protected void updateEditButtons() {
-        try {
-            TextView timeText = (TextView) ((MainActivity)context).findViewById(
-                    R.id.startTimeTask);
-            if (timeText != null)
-                timeText.setVisibility(View.VISIBLE);
+	/**
+	 * update the edit/remove button
+	 */
+	protected void updateEditButtons() {
+		try {
+			TextView timeText = (TextView) ((MainActivity) context)
+					.findViewById(R.id.startTimeTask);
+			if (timeText != null)
+				timeText.setVisibility(View.VISIBLE);
 
-            ImageButton editButton = (ImageButton) ((MainActivity)context).findViewById(
-                    R.id.editButton);
-            if (editButton != null) {
-                editButton.setVisibility(View.INVISIBLE);
-                editButton.clearAnimation();
-            }
+			ImageButton editButton = (ImageButton) ((MainActivity) context)
+					.findViewById(R.id.editButton);
+			if (editButton != null) {
+				editButton.setVisibility(View.INVISIBLE);
+				editButton.clearAnimation();
+			}
 
-            ImageButton deleteButton = (ImageButton) ((MainActivity)context).findViewById(
-                    R.id.deleteButton);
-            if (deleteButton != null) {
-                deleteButton.setVisibility(View.INVISIBLE);
-                deleteButton.clearAnimation();
-            }
-        } catch (RuntimeException e) {
-            // Do nothing
-        }
-    }
-
+			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
+					.findViewById(R.id.deleteButton);
+			if (deleteButton != null) {
+				deleteButton.setVisibility(View.INVISIBLE);
+				deleteButton.clearAnimation();
+			}
+		} catch (RuntimeException e) {
+			// Do nothing
+		}
+	}
 
 	@Override
 	public boolean areAllItemsEnabled() {
@@ -157,7 +155,7 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-        updateEditButtons();
+		updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
 
 		final String childText = listObject.getName();
@@ -199,14 +197,14 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Intent intent = new Intent(context, NewTaskActivity.class);
+				Intent intent = new Intent(context, NewTaskActivity.class);
 
-                Bundle bundle = new Bundle();
-                intent.putExtra("Edit Task", bundle);
+				Bundle bundle = new Bundle();
+				intent.putExtra("Edit Task", bundle);
 
-                bundle.putInt("ID", listObject.getId());
-                intent.setFlags(1);
-                context.startActivity(intent);
+				bundle.putInt("ID", listObject.getId());
+				intent.setFlags(1);
+				context.startActivity(intent);
 			}
 		});
 		deleteButton.setOnClickListener(new OnClickListener() {
@@ -223,9 +221,7 @@ public class CustomListAdapter implements ListAdapter {
 
 		// TODO tasks don't have time!
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("")
-				? ""
-				: childTimeText);
+		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 

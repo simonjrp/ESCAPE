@@ -49,18 +49,18 @@ public class CustomOnClickListener implements View.OnClickListener {
 		if (isExpanded) {
 			if (!v.findViewById(R.id.editButton).isShown()) {
 				Time start = new Time();
-                Time end = new Time();
-                if(dbHandler.getTime(listObject) != null ) {
-                    long startTime = dbHandler
-                            .getTime(listObject).getStartDate().getTime();
-                    long endTime = dbHandler
-                            .getTime(listObject).getEndDate().getTime();
-                    start.set(startTime);
-                    end.set(endTime);
-                } else {
-                    start = null;
-                    end = null;
-                }
+				Time end = new Time();
+				if (dbHandler.getTime(listObject) != null) {
+					long startTime = dbHandler.getTime(listObject)
+							.getStartDate().getTime();
+					long endTime = dbHandler.getTime(listObject).getEndDate()
+							.getTime();
+					start.set(startTime);
+					end.set(endTime);
+				} else {
+					start = null;
+					end = null;
+				}
 
 				StringBuilder builder = new StringBuilder();
 
@@ -68,9 +68,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 				if (listObject.getComment() != null)
 					builder.append(listObject.getComment());
 				if (dbHandler.getPlace(listObject) != null)
-                    if(dbHandler.getPlace(listObject).getName().trim().length() != 0)
-					builder.append(NEW_ROW
-							+ dbHandler.getPlace(listObject).getName());
+					if (dbHandler.getPlace(listObject).getName().trim()
+							.length() != 0)
+						builder.append(NEW_ROW
+								+ dbHandler.getPlace(listObject).getName());
 				if (start != null)
 					builder.append(NEW_ROW + start.format("%H:%M"));
 				if (end != null)

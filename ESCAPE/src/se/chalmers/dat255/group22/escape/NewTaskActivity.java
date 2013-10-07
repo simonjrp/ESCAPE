@@ -38,7 +38,6 @@ import android.widget.Spinner;
  */
 public class NewTaskActivity extends Activity {
 
-	private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private boolean hasReminder;
 	private boolean isTimeReminder;
 	private boolean isLocationReminder;
@@ -180,11 +179,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-			case android.R.id.home :
-				onBackPressed();
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -293,8 +292,8 @@ public class NewTaskActivity extends Activity {
 				listObject.setName(lo.getName());
 				listObject.setComment(lo.getComment());
 				listObject.setPlace(lo.getPlace());
-                listObject.setImportant(lo.isImportant());
-                db.updatePlaces(listObject.getPlace());
+				listObject.setImportant(lo.isImportant());
+				db.updatePlaces(listObject.getPlace());
 				db.updateListObject(listObject);
 			} else {
 				saveToDatabase(lo);
@@ -457,12 +456,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = {R.drawable.device_access_alarms,
-				R.drawable.location_place};
+		int imgArr[] = { R.drawable.device_access_alarms,
+				R.drawable.location_place };
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = {getString(R.string.time_reminder),
-				getString(R.string.location_reminder)};
+		String[] strTypeArr = { getString(R.string.time_reminder),
+				getString(R.string.location_reminder) };
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -549,10 +548,10 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		// Array of strings for different intervals
-		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
+		String[] strIntervalArr = { getString(R.string.oneWeekLabel),
 				getString(R.string.twoWeeksLabel),
 				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel)};
+				getString(R.string.oneMonthLabel) };
 
 		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
 				this, R.layout.simple_spinner_item, strIntervalArr);

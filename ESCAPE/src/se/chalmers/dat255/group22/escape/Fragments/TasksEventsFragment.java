@@ -44,7 +44,7 @@ public class TasksEventsFragment extends Fragment {
 
 		viewPager = (ViewPager) getActivity().findViewById(R.id.view_pager);
 		viewPager.setAdapter(pagerAdapter);
-		
+
 		viewPager.setCurrentItem(TabsPagerAdapter.TASKS_FRAGMENT);
 
 	}
