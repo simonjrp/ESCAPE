@@ -1,21 +1,8 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,8 +19,22 @@ import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.*;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -225,7 +226,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				dbh.deleteListObject(listObject);
 				removeListObjectToday(listObject);
 				removeListObjectTomorrow(listObject);
-				removeListObjectThisWeek(listObject);
+				removeListObjectSomeday(listObject);
 			}
 
 		});
@@ -341,7 +342,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	/**
 	 * Add a list object to the expandable list. Object should automatically be
-	 * placed where it should be.
+	 * placed where it should be. Atleast a start date must be defined in the
+	 * database!
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -358,7 +360,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			} else if (isTomorrow(theDate)) {
 				addListObjectTomorrow(listObject);
 			} else {
-				addListObjectThisWeek(listObject);
+				addListObjectSomeday(listObject);
 			}
 		}
 	}
@@ -395,7 +397,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * @param listObject
 	 *            the listObject to add
 	 */
-	public void addListObjectThisWeek(ListObject listObject) {
+	public void addListObjectSomeday(ListObject listObject) {
 		if (!somedayEventList.contains(listObject)) {
 			somedayEventList.add(listObject);
 			this.notifyDataSetChanged();
@@ -403,7 +405,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Remove a event for today.
+	 * Remove a event from today.
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
@@ -416,7 +418,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Remove a event for tomorrow.
+	 * Remove a event from tomorrow.
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
@@ -429,12 +431,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * Remove a event for someday.
+	 * Remove a event from someday.
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
 	 */
-	public void removeListObjectThisWeek(ListObject listObject) {
+	public void removeListObjectSomeday(ListObject listObject) {
 		if (somedayEventList.contains(listObject)) {
 			somedayEventList.remove(listObject);
 			this.notifyDataSetChanged();
@@ -476,14 +478,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 *            number of object to return
 	 * @return the specified list object
 	 */
-	public ListObject getListObjectThisWeek(int i) {
+	public ListObject getListObjectSomeday(int i) {
 		if (0 <= i && i < somedayEventList.size()) {
 			return somedayEventList.get(i);
 		}
 		return null;
 	}
-
-	// TODO Look into better way to check if it is today or tomorrow
 
 	/**
 	 * Method to check if a date is today. Also returns true if the date is
@@ -491,18 +491,20 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * 
 	 * @param theDate
 	 *            the date to see if it is today
-	 * @return true if it is today or earlier
+	 * @return true if theDate is today or earlier
 	 */
 	public boolean isToday(Date theDate) {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and set it to day after today
-		Calendar tomorrow = Calendar.getInstance();
-		tomorrow.roll(Calendar.DAY_OF_YEAR, true);
-		tomorrow.set(Calendar.HOUR_OF_DAY, 0);
-
-		return theCalendar.before(tomorrow);
+		// Get a calendar with current system time to compare with
+		Calendar systemCalendar = Calendar.getInstance();
+		// If it should return true only if today and not before use == instead
+		// of >=
+		return systemCalendar.get(Calendar.YEAR) >= theCalendar
+				.get(Calendar.YEAR)
+				&& systemCalendar.get(Calendar.DAY_OF_YEAR) >= theCalendar
+						.get(Calendar.DAY_OF_YEAR);
 	}
 
 	/**
@@ -516,16 +518,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and set it to day after
-		// tomorrow
-		Calendar dayAfterTomorrow = Calendar.getInstance();
-		dayAfterTomorrow.set(Calendar.HOUR_OF_DAY, 0);
-		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
-		if (theCalendar.before(dayAfterTomorrow)) {
-			return false;
-		}
-		dayAfterTomorrow.roll(Calendar.DAY_OF_YEAR, true);
+		// Get a calendar with current system time and change its value so it
+		// can be used in comparison with the given date.
+		Calendar tmpDate = Calendar.getInstance();
+		tmpDate.roll(Calendar.DAY_OF_YEAR, true);
 
-		return theCalendar.before(dayAfterTomorrow);
+		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
+				&& tmpDate.get(Calendar.DAY_OF_YEAR) == theCalendar
+						.get(Calendar.DAY_OF_YEAR);
 	}
 }
