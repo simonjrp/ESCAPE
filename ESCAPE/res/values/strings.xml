@@ -11,8 +11,6 @@
     <string name="somedayLabel">Someday</string>
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>
-    <string name="thisWeekLabel">This week</string>
-    <string name="taskHeader">Remember...</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
@@ -23,8 +21,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="notification_done">Done</string>
     <string name="notification_snooze">In an hour</string>
-    <string name="pickTimeLabel">Pick a time...</string>
-    <string name="pickDayLabel">Pick a day...</string>
+    <string name="pickTimeLabel">Pick a time(&#8230;)</string>
+    <string name="pickDayLabel">Pick a day(&#8230;)</string>
     <string name="repeat">Repeat</string>
     <string name="repeatLabel">Every</string>
     <string name="monday_short">Mon</string>
@@ -44,10 +42,15 @@
     <string name="twoWeeksLabel">2 weeks</string>
     <string name="threeWeeksLabel">3 weeks</string>
     <string name="oneMonthLabel">1 month</string>
-    <string name="custom_category">Add new category...</string>
+    <string name="custom_category">Add new category(&#8230;)</string>
     <string name="nextweeksameday">Next</string>
     <string name="new_task">New Task</string>
     <string name="new_block">New Block</string>
     <string name="title_activity_new_block">New Block</string>
+    <string name="titleHint">Title</string>
+    <string name="descriptionHint">Description</string>
+    <string name="locationHint">Location</string>
+    <string name="markAsImportant">Mark as important</string>
+    <string name="convertToEvent">Convert to event</string>
 
 </resources>
