@@ -9,10 +9,10 @@ import android.view.View.OnTouchListener;
 
 /**
  * This onTouchListener checks the duration of a touch down press in order to
- * handle long touch presses
+ * handle long touch presses. <br>
  * 
  * We found this implementation online and decided to use it instead of
- * implementing our own
+ * implementing our own.
  * 
  * @author found online
  * 

@@ -35,7 +35,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 *            the TextView that the listener will be added to.
 	 * @param taskData
 	 *            the TextView containing the data that is associated with this
-	 *            particular listObject
+	 *            particular {@link se.chalmers.dat255.group22.escape.objects.ListObject}
 	 */
 	public CustomOnClickListener(ListObject listObject, TextView childLabel,
 			TextView taskData) {
