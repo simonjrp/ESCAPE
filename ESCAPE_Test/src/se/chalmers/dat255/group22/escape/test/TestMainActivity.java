@@ -1,7 +1,7 @@
 package se.chalmers.dat255.group22.escape.test;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.TabsPagerAdapter;
+import se.chalmers.dat255.group22.escape.adapters.TabsPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 

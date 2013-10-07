@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape.listFragments;
+package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
@@ -20,7 +20,9 @@ import android.widget.ExpandableListView;
 public class ExpandableEventListFragment extends Fragment {
 
 	private static final String EMPTY_LIST = "EMPTY";
+    // The adapter used to display out ListObjects
 	CustomExpandableListAdapter listAdapter;
+    // the list objects are displayed in
 	ExpandableListView expListView;
 
 	@Override
@@ -45,7 +47,7 @@ public class ExpandableEventListFragment extends Fragment {
 	}
 
 	/**
-	 * Initialize the database, lists and adapter
+	 * Initialize the lists and adapter
 	 */
 	private void initialize() {
 		// Create the adapter used to display the list
