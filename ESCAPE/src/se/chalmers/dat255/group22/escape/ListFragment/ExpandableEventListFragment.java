@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 /**
  * A fragment displaying an expandable list with events.<br>
@@ -39,8 +37,8 @@ public class ExpandableEventListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        // TODO temp fix, maybe better way to read from DB again?
-        initialize();
+		// TODO temp fix, maybe better way to read from DB again?
+		initialize();
 		listAdapter.reInit();
 	}
 

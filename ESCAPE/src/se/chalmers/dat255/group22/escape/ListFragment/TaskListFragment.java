@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -39,8 +37,8 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        // TODO temp fix, maybe better way to read from DB again?
-        initialize();
+		// TODO temp fix, maybe better way to read from DB again?
+		initialize();
 		ourListAdapter.reInit();
 	}
 

@@ -42,7 +42,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 		Fragment eventListFragment = new ExpandableEventListFragment();
 		fragmentList.add(eventListFragment);
-		
+
 		Fragment taskListFragment = new TaskListFragment();
 		fragmentList.add(taskListFragment);
 

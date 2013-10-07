@@ -1,12 +1,12 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.support.v4.app.NavUtils;
 
 public class NewBlockActivity extends Activity {
 
@@ -16,22 +16,28 @@ public class NewBlockActivity extends Activity {
 		setContentView(R.layout.activity_new_block);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		Spinner totalHoursSpinner = (Spinner)findViewById(R.id.block_hours_spinner);
-		Spinner splitTimeSpinner = (Spinner)findViewById(R.id.split_time_spinner);
+
+		Spinner totalHoursSpinner = (Spinner) findViewById(R.id.block_hours_spinner);
+		Spinner splitTimeSpinner = (Spinner) findViewById(R.id.split_time_spinner);
 		Spinner whenSpinner = (Spinner) findViewById(R.id.when_to_gen);
-		
-		ArrayAdapter<CharSequence> totalHoursAdapter = ArrayAdapter.createFromResource(this, R.array.temp_amount_hours_values, android.R.layout.simple_spinner_item);
-		ArrayAdapter<CharSequence> splitTimeAdapter = ArrayAdapter.createFromResource(this, R.array.temp_duration_values, android.R.layout.simple_spinner_item);
-		ArrayAdapter<CharSequence> whenAdapter = ArrayAdapter.createFromResource(this, R.array.when_to_gen, android.R.layout.simple_spinner_item);
 
-		totalHoursAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		splitTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		whenAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<CharSequence> totalHoursAdapter = ArrayAdapter
+				.createFromResource(this, R.array.temp_amount_hours_values,
+						android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> splitTimeAdapter = ArrayAdapter
+				.createFromResource(this, R.array.temp_duration_values,
+						android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> whenAdapter = ArrayAdapter
+				.createFromResource(this, R.array.when_to_gen,
+						android.R.layout.simple_spinner_item);
 
-		
-		
-		
+		totalHoursAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		splitTimeAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		whenAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 		totalHoursSpinner.setAdapter(totalHoursAdapter);
 		splitTimeSpinner.setAdapter(splitTimeAdapter);
 		whenSpinner.setAdapter(whenAdapter);

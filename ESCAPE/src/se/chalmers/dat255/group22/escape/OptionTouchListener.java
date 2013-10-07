@@ -13,6 +13,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 	private TextView timeText;
 	private ImageButton editButton;
 	private ImageButton deleteButton;
+
 	public OptionTouchListener(Context context, View ve) {
 		super(context);
 		this.ve = ve;
