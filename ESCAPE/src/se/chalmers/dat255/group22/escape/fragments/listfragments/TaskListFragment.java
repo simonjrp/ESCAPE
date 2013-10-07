@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape.listFragments;
+package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;

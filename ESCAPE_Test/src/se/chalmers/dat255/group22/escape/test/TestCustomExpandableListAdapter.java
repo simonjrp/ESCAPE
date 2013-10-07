@@ -2,7 +2,7 @@ package se.chalmers.dat255.group22.escape.test;
 
 import java.sql.Date;
 
-import se.chalmers.dat255.group22.escape.ListFragment.CustomExpandableListAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
@@ -100,7 +100,7 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 		assertEquals(
 				true,
 				db.getListObject(somedayEventID).equals(
-						adapter.getListObjectSomeday(0)));
+						adapter.getListObjectThisWeek(0)));
 	}
 
 	public void testAddListObjectToday() {
@@ -153,7 +153,7 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 		assertEquals(
 				true,
 				db.getListObject(somedayEventID).equals(
-						adapter.getListObjectSomeday(0)));
+						adapter.getListObjectThisWeek(0)));
 		assertEquals(false, adapter.isEmpty());
 	}
 

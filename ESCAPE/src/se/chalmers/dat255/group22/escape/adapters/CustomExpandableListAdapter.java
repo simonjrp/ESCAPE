@@ -484,11 +484,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	// TODO Look into better way to check if it is today or tomorrow
 
 	/**
-	 * Method to check if a date is today
+	 * Method to check if a date is today. Also returns true if the date is
+	 * earlier than today
 	 * 
 	 * @param theDate
 	 *            the date to see if it is today
-	 * @return true if it is today
+	 * @return true if it is today or earlier
 	 */
 	public boolean isToday(Date theDate) {
 		// Get a calendar with the events start time
