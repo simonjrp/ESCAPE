@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import se.chalmers.dat255.group22.escape.R;
@@ -55,12 +56,19 @@ public class TimePickerFragment extends DialogFragment
 		SpinnerTimeAdapter adapter = (SpinnerTimeAdapter) spinner.getAdapter();
 		adapter.clear();
 
+        // Formats the time so that, for example, 12 o clock is shown as 12:00 instead of 12:0
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+        String formattedTime = timeFormatter.format(calendar.getTime());
+
 		// Add the standard time labels to the spinner again.
 		adapter.add(activity.getString(R.string.morning));
 		adapter.add(activity.getString(R.string.afternoon));
 		adapter.add(activity.getString(R.string.evening));
 		adapter.add(activity.getString(R.string.night));
-		adapter.add(hour + ":" + minute);
+		adapter.add(formattedTime);
 		adapter.add(activity.getString(R.string.pickTimeLabel));
 		spinner.setSelection(adapter.getCount() - 2, true);
 

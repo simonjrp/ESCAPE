@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -78,6 +79,13 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		TextView timeAsTime = (TextView) row
 				.findViewById(R.id.spinnerTimeAsTime);
 
+        if(position < getCount() - 1) {
+            Date date = getData(position);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            timeAsTime.setText(dateFormat.format(date));
+        }
+
+
 		timeAsTime.setVisibility(View.VISIBLE);
 
 		if (position == getCount() - 1) {
@@ -99,6 +107,10 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 				.findViewById(R.id.spinnerTimeAsText);
 
 		timeAsText.setText(times.get(position));
+
+        // TODO How the **** did this do the trick???
+        parent.getLayoutParams().width = timeAsText.getLayoutParams().width-100;
+        row.getLayoutParams().width = timeAsText.getLayoutParams().width-100;
 
 		return row;
 	}

@@ -86,6 +86,10 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		day.setText(days.get(position));
 
+        // TODO How the **** did this do the trick???
+        parent.getLayoutParams().width = day.getLayoutParams().width-100;
+        row.getLayoutParams().width = day.getLayoutParams().width-100;
+
 		return row;
 
 	}
