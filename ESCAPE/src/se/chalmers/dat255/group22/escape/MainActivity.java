@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity {
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// Hide all buttons in actionbar if navigation drawer is open
+		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
 
@@ -125,12 +125,19 @@ public class MainActivity extends FragmentActivity {
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	/*
+	 * Class for handling clicks in the navigation drawer.
+	 */
 	private class DrawerItemClickListener
 			implements
 				ListView.OnItemClickListener {
 
 		private List<Fragment> fragmentList;
 
+		/*
+		 * Constructor for creating a new DrawerItemClickListener. Automatically
+		 * selects and shows the first fragment in the fragments list
+		 */
 		public DrawerItemClickListener() {
 			selectItem(0);
 		}
@@ -141,6 +148,13 @@ public class MainActivity extends FragmentActivity {
 			selectItem(position);
 		}
 
+		/*
+		 * Method for selecting/showing fragments when user clicks on an item in
+		 * the navigation drawer.
+		 * 
+		 * @param position The position (in the fragments list) of the fragment
+		 * to be shown.
+		 */
 		private void selectItem(int position) {
 			if (fragmentList == null) {
 				fragmentList = new ArrayList<Fragment>();
@@ -162,9 +176,14 @@ public class MainActivity extends FragmentActivity {
 
 		}
 
+		/*
+		 * Method for setting the title of the app properly. Used to be able to
+		 * have a dynamic app title.
+		 * 
+		 * @param string The new title of the app.
+		 */
 		private void setTitle(String string) {
 			title = string;
-
 		}
 	}
 }
