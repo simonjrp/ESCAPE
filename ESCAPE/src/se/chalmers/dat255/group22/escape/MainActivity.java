@@ -23,6 +23,7 @@ import android.widget.ListView;
 
 /**
  * The main activity, to be launched when app is started.
+ * @author Carl, Erik, Mike, Johanna, Simon Persson
  */
 public class MainActivity extends FragmentActivity {
 

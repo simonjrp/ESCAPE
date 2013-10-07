@@ -2,6 +2,8 @@ package se.chalmers.dat255.group22.escape.fragments;
 
 import java.lang.reflect.Field;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.TabsPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,16 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.TabsPagerAdapter;
-
 /**
  * Fragment containing a viewpager (swipeable tabs) holding
  * ExpandableEventListFragment and TaskListFragment.
  * 
- * @author simon
- * @see se.chalmers.dat255.group22.escape.listFragments.ExpandableEventListFragment
- * @see se.chalmers.dat255.group22.escape.listFragments.TaskListFragment
+ * @author Simon Persson
+ * @see se.chalmers.dat255.group22.escape.fragments.listfragments.ExpandableEventListFragment
+ * @see se.chalmers.dat255.group22.escape.fragments.listfragments.TaskListFragment
  * 
  */
 public class TasksEventsFragment extends Fragment {
@@ -50,11 +49,11 @@ public class TasksEventsFragment extends Fragment {
 	}
 
 	/*
-	 * This is a little hack necessary to reset the activity's
-	 * childfragmentmanager after this fragment is detached and get a new one
-	 * every time it's attached again. Otherwise the childfragmentmanager tries
-	 * to reuse old fragments (Task and Event fragment) that's already been
-	 * destroyed.
+	 * This is a little hack necessary to reset the MainActivity's child
+	 * fragment manager after this fragment is detached and get a new one every
+	 * time it's attached again. Otherwise the child fragment manager tries to
+	 * reuse old fragments (Task and Event fragment) that's already been
+	 * destroyed and throws an exception.
 	 * 
 	 * @see android.support.v4.app.Fragment#onDetach()
 	 */

@@ -35,7 +35,7 @@ import android.widget.Spinner;
 /**
  * An activity used for creating a new task
  * 
- * @author Erik, Carl, Simon
+ * @author Erik, Carl, Simon Persson
  */
 public class NewTaskActivity extends Activity {
 

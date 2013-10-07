@@ -14,21 +14,34 @@ import android.text.format.DateFormat;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
-public class TimePickerFragment extends DialogFragment implements
-		TimePickerDialog.OnTimeSetListener {
+/**
+ * Class representing a time picker fragment.
+ * 
+ * @author Simon Persson
+ */
+public class TimePickerFragment extends DialogFragment
+		implements
+			TimePickerDialog.OnTimeSetListener {
 
-	private int spinnerId;
+	/**
+	 * Constant used to get the ID of the spinner that wants to bring up this
+	 * dialog
+	 */
 	public static final String SPINNER_ID = "SPINNER_ID";
+	private int spinnerId;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+		// Gets the current date and initializes the date picker with
+		// it.
 		final Calendar calendar = Calendar.getInstance();
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
 
 		TimePickerDialog timePicker = new TimePickerDialog(getActivity(), this,
 				hour, minute, DateFormat.is24HourFormat(getActivity()));
-		spinnerId = this.getArguments().getInt("SPINNER_ID");
+		spinnerId = this.getArguments().getInt(SPINNER_ID);
 
 		return timePicker;
 	}
@@ -37,12 +50,12 @@ public class TimePickerFragment extends DialogFragment implements
 	public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 		Activity activity = getActivity();
 
-		// Retrieve spinner and adapter to be able to add new custom time
+		// Retrieve spinner and adapter and clear item list.
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerTimeAdapter adapter = (SpinnerTimeAdapter) spinner.getAdapter();
 		adapter.clear();
 
-		// Add the standard time labels to the spinner again
+		// Add the standard time labels to the spinner again.
 		adapter.add(activity.getString(R.string.morning));
 		adapter.add(activity.getString(R.string.afternoon));
 		adapter.add(activity.getString(R.string.evening));
