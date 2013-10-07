@@ -1,21 +1,8 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,8 +19,22 @@ import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.*;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -341,7 +342,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	/**
 	 * Add a list object to the expandable list. Object should automatically be
-	 * placed where it should be.
+	 * placed where it should be. Atleast a start date must be defined in the
+	 * database!
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -496,12 +498,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
 		// Get a calendar with current system time and set it to tomorrow
-		Calendar tomorrow = Calendar.getInstance();
-		tomorrow.roll(Calendar.DAY_OF_YEAR, true);
-		tomorrow.set(Calendar.HOUR_OF_DAY, 0);
-		//tomorrow.set(Calendar.MINUTE, 0);
-        //TODO minute is not checked!
-		return theCalendar.before(tomorrow);
+		Calendar systemCalendar = Calendar.getInstance();
+		return systemCalendar.get(Calendar.YEAR) == theCalendar
+				.get(Calendar.YEAR)
+				&& systemCalendar.get(Calendar.DAY_OF_YEAR) == theCalendar
+						.get(Calendar.DAY_OF_YEAR);
 	}
 
 	/**
@@ -518,15 +519,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// Get a calendar with current system time and change its value so it
 		// can be used in comparison with the given date.
 		Calendar tmpDate = Calendar.getInstance();
-		tmpDate.set(Calendar.HOUR_OF_DAY, 0);
-		//tmpDate.set(Calendar.MINUTE, 0);
 		tmpDate.roll(Calendar.DAY_OF_YEAR, true);
-		if (theCalendar.before(tmpDate)) {
-			// If given date before tomorrow return false
-			return false;
-		}
-		tmpDate.roll(Calendar.DAY_OF_YEAR, true);
-		// If given date before the day after next return true
-		return theCalendar.before(tmpDate);
+
+		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
+				&& tmpDate.get(Calendar.DAY_OF_YEAR) == theCalendar
+						.get(Calendar.DAY_OF_YEAR);
 	}
 }
