@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape.Fragments;
+package se.chalmers.dat255.group22.escape.fragments;
 
 import java.sql.Date;
 import java.util.Calendar;

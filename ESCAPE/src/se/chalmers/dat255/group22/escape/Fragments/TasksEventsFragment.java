@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.fragments;
 
 import java.lang.reflect.Field;
 
@@ -10,13 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.TabsPagerAdapter;
+
 /**
  * Fragment containing a viewpager (swipeable tabs) holding
  * ExpandableEventListFragment and TaskListFragment.
  * 
  * @author simon
- * @see se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment
- * @see se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment
+ * @see se.chalmers.dat255.group22.escape.listFragments.ExpandableEventListFragment
+ * @see se.chalmers.dat255.group22.escape.listFragments.TaskListFragment
  * 
  */
 public class TasksEventsFragment extends Fragment {

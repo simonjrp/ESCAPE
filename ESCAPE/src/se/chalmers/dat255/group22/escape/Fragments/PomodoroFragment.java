@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.fragments;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,6 +18,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.R;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 

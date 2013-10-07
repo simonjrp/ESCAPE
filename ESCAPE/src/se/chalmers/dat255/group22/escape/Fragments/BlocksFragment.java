@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
+import se.chalmers.dat255.group22.escape.NewBlockActivity;
+import se.chalmers.dat255.group22.escape.R;
 
 public class BlocksFragment extends Fragment implements OnClickListener {
 

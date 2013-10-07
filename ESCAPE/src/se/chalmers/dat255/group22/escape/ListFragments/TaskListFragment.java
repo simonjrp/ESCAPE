@@ -1,14 +1,14 @@
-package se.chalmers.dat255.group22.escape.ListFragment;
+package se.chalmers.dat255.group22.escape.listFragments;
 
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event

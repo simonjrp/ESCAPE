@@ -1,7 +1,7 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.listeners;
 
-import se.chalmers.dat255.group22.escape.Fragments.DatePickerFragment;
-import se.chalmers.dat255.group22.escape.Fragments.TimePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.DatePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.TimePickerFragment;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;

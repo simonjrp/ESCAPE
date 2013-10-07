@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape.ListFragment;
+package se.chalmers.dat255.group22.escape.listeners;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;

@@ -1,10 +1,12 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.listeners;
 
 import android.content.Context;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import se.chalmers.dat255.group22.escape.R;
 
 public class OptionTouchListener extends LongTouchActionListener {
 	private View ve;

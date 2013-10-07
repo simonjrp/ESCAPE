@@ -10,6 +10,8 @@ import se.chalmers.dat255.group22.escape.adapters.SpinnerIntervalAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
+import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
@@ -370,8 +372,8 @@ public class NewTaskActivity extends Activity {
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 		dateFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateFromSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+                        dateFromSpinner.getId()));
 
 		//
 		/* From: DateSpinner */
@@ -394,8 +396,8 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 		timeFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeFromSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+                        timeFromSpinner.getId()));
 
 		// Array containing different times for an event
 		ArrayList<String> strTimeArr = new ArrayList<String>();
@@ -417,14 +419,14 @@ public class NewTaskActivity extends Activity {
 		dateToSpinner.setAdapter(dayAdapter);
 		dateToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateToSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+                        dateToSpinner.getId()));
 
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
 		timeToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeToSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+                        timeToSpinner.getId()));
 
 		timeToSpinner.setAdapter(timeAdapter);
 
@@ -470,21 +472,21 @@ public class NewTaskActivity extends Activity {
 
 		typeSpinner
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-					@Override
-					public void onItemSelected(AdapterView<?> parent,
-							View view, int position, long id) {
-						if (position == 0) {
-							showTimeReminderInput();
-						} else if (position == 1) {
-							showLocationReminderInput();
-						}
-					}
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent,
+                                               View view, int position, long id) {
+                        if (position == 0) {
+                            showTimeReminderInput();
+                        } else if (position == 1) {
+                            showLocationReminderInput();
+                        }
+                    }
 
-					@Override
-					public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-					}
-				});
+                    }
+                });
 
 		/* Next up is the date of the reminder, simple enough */
 		// ArrayList containing different days for an event
@@ -502,8 +504,8 @@ public class NewTaskActivity extends Activity {
 		dateSpinner.setAdapter(dayAdapter);
 		dateSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+                        dateSpinner.getId()));
 
 		/*
 		 * Last but not least, time of the reminder with a clarification of the
@@ -524,8 +526,8 @@ public class NewTaskActivity extends Activity {
 		timeSpinner.setAdapter(timeAdapter);
 		timeSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+                        timeSpinner.getId()));
 		hasReminder = true;
 
 	}

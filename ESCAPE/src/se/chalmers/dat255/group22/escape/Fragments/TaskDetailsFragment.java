@@ -1,10 +1,12 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import se.chalmers.dat255.group22.escape.R;
 
 public class TaskDetailsFragment extends Fragment {
 

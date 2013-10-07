@@ -18,6 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+
 /**
  * The main activity, to be launched when app is started.
  */

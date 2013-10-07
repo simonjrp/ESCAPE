@@ -1,18 +1,17 @@
-package se.chalmers.dat255.group22.escape.ListFragment;
+package se.chalmers.dat255.group22.escape.adapters;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Place;
-import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;

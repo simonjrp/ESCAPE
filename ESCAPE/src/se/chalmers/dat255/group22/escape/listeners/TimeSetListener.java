@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.listeners;
 
 import android.app.TimePickerDialog;
 import android.widget.TimePicker;

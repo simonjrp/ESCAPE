@@ -1,4 +1,4 @@
-package se.chalmers.dat255.group22.escape.ListFragment;
+package se.chalmers.dat255.group22.escape.adapters;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -9,9 +9,10 @@ import java.util.List;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
@@ -42,13 +43,12 @@ import android.widget.TextView;
  */
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
-	private static final String EMPTY_LIST = "EMPTY";
 	// Keeps track of changes
 	private final DataSetObservable dataSetObservable = new DataSetObservable();
 	// The lists
 	List<ListObject> todayEventList;
 	List<ListObject> tomorrowEventList;
-	List<ListObject> thisWeekEventList;
+	List<ListObject> somedayEventList;
 	// The context this is used in
 	private Context context;
 	// header titles
@@ -80,7 +80,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap = new HashMap<String, List<ListObject>>();
 		todayEventList = new ArrayList<ListObject>();
 		tomorrowEventList = new ArrayList<ListObject>();
-		thisWeekEventList = new ArrayList<ListObject>();
+		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
 		headerList.add(context.getResources().getString(R.string.todayLabel));
@@ -97,7 +97,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				tomorrowEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.thisWeekLabel),
-				thisWeekEventList);
+				somedayEventList);
 
 	}
 
@@ -145,7 +145,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				deleteButton.clearAnimation();
 			}
 
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			// Do nothing
 		}
 	}
@@ -182,83 +182,72 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		convertView = infalInflater.inflate(R.layout.list_task, null);
 
-		if (listObject.getName().equals(EMPTY_LIST)) {
-			LayoutInflater inflaInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflaInflater.inflate(R.layout.empty_list, null);
-		} else {
+		// Get a textview for the object
+		TextView childLabel = (TextView) convertView
+				.findViewById(R.id.listTask);
 
-			// Get a textview for the object
-			TextView childLabel = (TextView) convertView
-					.findViewById(R.id.listTask);
+		TextView childTimeView = (TextView) convertView
+				.findViewById(R.id.startTimeTask);
 
-			TextView childTimeView = (TextView) convertView
-					.findViewById(R.id.startTimeTask);
+		ImageButton editButton = (ImageButton) convertView
+				.findViewById(R.id.editButton);
 
-			ImageButton editButton = (ImageButton) convertView
-					.findViewById(R.id.editButton);
+		ImageButton deleteButton = (ImageButton) convertView
+				.findViewById(R.id.deleteButton);
 
-			ImageButton deleteButton = (ImageButton) convertView
-					.findViewById(R.id.deleteButton);
+		updateEditButtons();
 
-			updateEditButtons();
+		// OnClickListener for sending an intent with the ID of the listObject
+		// that was clicked
+		editButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, NewTaskActivity.class);
 
-			// editButton.setX(convertView.getRight() + deleteButton.getWidth()
-			// + 300);
-			// deleteButton.setX(convertView.getRight() + 300);
-			editButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(context, NewTaskActivity.class);
+				Bundle bundle = new Bundle();
+				intent.putExtra("Edit Task", bundle);
 
-					Bundle bundle = new Bundle();
-					intent.putExtra("Edit Task", bundle);
+				bundle.putInt("ID", listObject.getId());
+				intent.setFlags(1);
+				context.startActivity(intent);
+			}
+		});
+		deleteButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				DBHandler dbh = new DBHandler(context);
+				dbh.deleteListObject(listObject);
+				removeListObjectToday(listObject);
+				removeListObjectTomorrow(listObject);
+				removeListObjectThisWeek(listObject);
+			}
 
-					bundle.putInt("ID", listObject.getId());
-					intent.setFlags(1);
-					context.startActivity(intent);
-				}
-			});
-			deleteButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					DBHandler dbh = new DBHandler(context);
-					dbh.deleteListObject(listObject);
-					removeListObjectToday(listObject);
-					removeListObjectTomorrow(listObject);
-					removeListObjectThisWeek(listObject);
-				}
+		});
 
-			});
+		childLabel.setText(childText);
+		childTimeView.setText(childTimeText.equals("")
+				? "no start time"
+				: childTimeText);
+		// Get a textview for the object's data
+		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
 
-			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("")
-					? "no start time"
-					: childTimeText);
-			// Get a textview for the object's data
-			TextView childData = (TextView) convertView
-					.findViewById(R.id.taskData);
+		// We don't want the data to show yet...
+		childData.setVisibility(View.INVISIBLE);
+		childData.setHeight(0);
 
-			// We don't want the data to show yet...
-			childData.setVisibility(View.INVISIBLE);
-			childData.setHeight(0);
+		childLabel.setText(childText);
 
-			childLabel.setText(childText);
+		// Custom listener for showing/hiding data relevant to the listObject
+		CustomOnClickListener clickListener = new CustomOnClickListener(
+				listObject, childLabel, childData);
+		convertView.setOnClickListener(clickListener);
 
-			CustomOnClickListener clickListener = new CustomOnClickListener(
-					listObject, childLabel, childData);
-			convertView.setOnClickListener(clickListener);
+		// We add two listeners since it wont work on one if the other is added
+		// too
 
-			// TODO We add two listeners since it wont work on one if the other
-			// is
-			// added to
-			// Adding touchlisteners
-			convertView.setOnTouchListener(new OptionTouchListener(context,
-					convertView));
-			// convertView.setOnTouchListener(new OptionTouchListener(context,
-			// convertView));
-
-		}
+		// Adding touchlisteners
+		convertView.setOnTouchListener(new OptionTouchListener(context,
+				convertView));
 
 		return convertView;
 	}
@@ -317,7 +306,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isEmpty() {
 		return todayEventList.isEmpty() && tomorrowEventList.isEmpty()
-				&& thisWeekEventList.isEmpty();
+				&& somedayEventList.isEmpty();
 	}
 
 	@Override
@@ -401,8 +390,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 *            the listObject to add
 	 */
 	public void addListObjectThisWeek(ListObject listObject) {
-		if (!thisWeekEventList.contains(listObject)) {
-			thisWeekEventList.add(listObject);
+		if (!somedayEventList.contains(listObject)) {
+			somedayEventList.add(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -440,8 +429,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 *            the listObject to remove
 	 */
 	public void removeListObjectThisWeek(ListObject listObject) {
-		if (thisWeekEventList.contains(listObject)) {
-			thisWeekEventList.remove(listObject);
+		if (somedayEventList.contains(listObject)) {
+			somedayEventList.remove(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -482,8 +471,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 * @return the specified list object
 	 */
 	public ListObject getListObjectThisWeek(int i) {
-		if (0 <= i && i < thisWeekEventList.size()) {
-			return thisWeekEventList.get(i);
+		if (0 <= i && i < somedayEventList.size()) {
+			return somedayEventList.get(i);
 		}
 		return null;
 	}

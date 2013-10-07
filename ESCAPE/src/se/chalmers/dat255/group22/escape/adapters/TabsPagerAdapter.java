@@ -1,10 +1,12 @@
-package se.chalmers.dat255.group22.escape;
+package se.chalmers.dat255.group22.escape.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
-import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
+import se.chalmers.dat255.group22.escape.listFragments.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.listFragments.TaskListFragment;
+import se.chalmers.dat255.group22.escape.R;
+
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
