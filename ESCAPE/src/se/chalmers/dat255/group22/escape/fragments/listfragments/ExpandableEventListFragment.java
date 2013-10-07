@@ -19,7 +19,6 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableEventListFragment extends Fragment {
 
-	private static final String EMPTY_LIST = "EMPTY";
     // The adapter used to display out ListObjects
 	CustomExpandableListAdapter listAdapter;
     // the list objects are displayed in

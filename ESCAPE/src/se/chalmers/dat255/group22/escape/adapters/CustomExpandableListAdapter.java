@@ -124,9 +124,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * update the edit/remove button
+	 *
 	 */
-	protected void updateEditButtons() {
+	protected void resetEditButtons() {
 		try {
 			RelativeLayout layout = (RelativeLayout) ((MainActivity) context)
 					.findViewById(R.id.listTask);
@@ -199,7 +199,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		ImageButton deleteButton = (ImageButton) convertView
 				.findViewById(R.id.deleteButton);
 
-		updateEditButtons();
+		resetEditButtons();
 
 		// OnClickListener for sending an intent with the ID of the listObject
 		// that was clicked
@@ -281,7 +281,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		updateEditButtons();
+		resetEditButtons();
 		// Get the name of the header to display for each entry
 		String headerTitle = (String) getGroup(groupPosition);
 

@@ -20,8 +20,8 @@ import android.widget.TextView;
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
-	public static final long oneDayInMillis = 86400000;
-	public static final long oneWeekInMillis = 604800000;
+	public static final long oneDayInMillis = 1000*60*60*24;
+	public static final long oneWeekInMillis = oneDayInMillis*7;
 	private ArrayList<String> days;
 	private Context context;
 	private List<Date> dateData;
