@@ -35,7 +35,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 *            the TextView that the listener will be added to.
 	 * @param taskData
 	 *            the TextView containing the data that is associated with this
-	 *            particular {@link se.chalmers.dat255.group22.escape.objects.ListObject}
+	 *            particular listObject
 	 */
 	public CustomOnClickListener(ListObject listObject, TextView childLabel,
 			TextView taskData) {
@@ -82,20 +82,17 @@ public class CustomOnClickListener implements View.OnClickListener {
 					// No "    " or places as such are allowed.
 					if (dbHandler.getPlace(listObject).getName().trim()
 							.length() != 0)
-						builder.append(NEW_ROW
-								+ dbHandler.getPlace(listObject).getName());
+						builder.append(NEW_ROW).append(dbHandler.getPlace(listObject).getName());
 				if (start != null)
 					// Format the start time to HH:MM...
-					builder.append(NEW_ROW + start.format("%H:%M"));
+					builder.append(NEW_ROW).append(start.format("%H:%M"));
 				if (end != null)
 					// ...and format the end time to HH:MM
-					builder.append("-" + end.format("%H:%M"));
+					builder.append("-").append(end.format("%H:%M"));
 				if (dbHandler.getTimeAlarm(listObject) != null)
 					// If this listObject has a reminder, present is aswell
-					builder.append(NEW_ROW
-							+ "Remind me at "
-							+ dbHandler.getTimeAlarm(listObject).getDate()
-									.toString());
+					builder.append(NEW_ROW + "Remind me at ").append(dbHandler.getTimeAlarm(listObject).getDate()
+                            .toString());
 
 				// Set the string to textView
 				taskData.setText(builder.toString());

@@ -119,7 +119,7 @@ public class NewTaskActivity extends Activity {
 				// ...and get data from the listObject that "called" the
 				// activity
 
-				String nameString = listObject.getName().toString();
+				String nameString = listObject.getName();
 
 				// Avoid NullPointerException
 				String descriptionString = "";

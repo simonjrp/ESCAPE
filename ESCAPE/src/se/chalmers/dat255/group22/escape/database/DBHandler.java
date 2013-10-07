@@ -744,7 +744,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
 				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR,
 				COLUMN_CATEGORIES_IMPORTANT_COLOR }, COLUMN_CATEGORIES_NAME
-				+ "=?", new String[] { name.toString() }, null, null, null);
+				+ "=?", new String[] { name }, null, null, null);
 
 		List<Category> list = new LinkedList<Category>();
 		if (cursor.moveToFirst()) {
