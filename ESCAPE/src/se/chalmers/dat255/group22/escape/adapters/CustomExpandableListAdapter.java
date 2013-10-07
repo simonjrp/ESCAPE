@@ -497,11 +497,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// Get a calendar with the events start time
 		GregorianCalendar theCalendar = new GregorianCalendar();
 		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and set it to tomorrow
+		// Get a calendar with current system time to compare with
 		Calendar systemCalendar = Calendar.getInstance();
-		return systemCalendar.get(Calendar.YEAR) == theCalendar
+		// If it should return true only if today and not before use == instead
+		// of >=
+		return systemCalendar.get(Calendar.YEAR) >= theCalendar
 				.get(Calendar.YEAR)
-				&& systemCalendar.get(Calendar.DAY_OF_YEAR) == theCalendar
+				&& systemCalendar.get(Calendar.DAY_OF_YEAR) >= theCalendar
 						.get(Calendar.DAY_OF_YEAR);
 	}
 
