@@ -1,13 +1,16 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.graphics.Paint;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
@@ -18,6 +21,7 @@ import android.widget.TextView;
  */
 public class CustomOnClickListener implements View.OnClickListener {
 	private final static String NEW_ROW = "\n";
+	private final String REMIND_ME_AT;
 	private TextView childLabel;
 	private TextView taskData;
 	private ListObject listObject;
@@ -44,6 +48,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 		this.taskData = taskData;
 		isExpanded = false;
 		dbHandler = new DBHandler(childLabel.getContext());
+		REMIND_ME_AT = childLabel.getContext().getString(R.string.remind_me)
+				+ " ";
 	}
 
 	@Override
@@ -82,17 +88,20 @@ public class CustomOnClickListener implements View.OnClickListener {
 					// No "    " or places as such are allowed.
 					if (dbHandler.getPlace(listObject).getName().trim()
 							.length() != 0)
-						builder.append(NEW_ROW).append(dbHandler.getPlace(listObject).getName());
+						builder.append(NEW_ROW).append(
+								dbHandler.getPlace(listObject).getName());
 				if (start != null)
 					// Format the start time to HH:MM...
-					builder.append(NEW_ROW).append(start.format("%H:%M"));
+					builder.append(NEW_ROW).append(
+							start.format(HOUR_MINUTE_FORMAT));
 				if (end != null)
 					// ...and format the end time to HH:MM
-					builder.append("-").append(end.format("%H:%M"));
+					builder.append("-").append(end.format(HOUR_MINUTE_FORMAT));
 				if (dbHandler.getTimeAlarm(listObject) != null)
 					// If this listObject has a reminder, present is aswell
-					builder.append(NEW_ROW + "Remind me at ").append(dbHandler.getTimeAlarm(listObject).getDate()
-                            .toString());
+					builder.append(NEW_ROW + REMIND_ME_AT).append(
+							dbHandler.getTimeAlarm(listObject).getDate()
+									.toString());
 
 				// Set the string to textView
 				taskData.setText(builder.toString());
@@ -133,10 +142,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 			deleteButton.setVisibility(View.INVISIBLE);
 			deleteButton.clearAnimation();
 		} else {
-            // If the view is only expanded, hide it again
-            taskData.setVisibility(View.INVISIBLE);
-            taskData.setHeight(0);
-            childLabel.setPaintFlags(1);
+			// If the view is only expanded, hide it again
+			taskData.setVisibility(View.INVISIBLE);
+			taskData.setHeight(0);
+			childLabel.setPaintFlags(1);
 		}
 
 	}

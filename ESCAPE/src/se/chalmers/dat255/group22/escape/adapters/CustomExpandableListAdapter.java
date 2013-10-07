@@ -1,20 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
@@ -31,6 +16,24 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.NewTaskActivity;
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Time;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.*;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -86,8 +89,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList.add(context.getResources().getString(R.string.todayLabel));
 		headerList
 				.add(context.getResources().getString(R.string.tomorrowLabel));
-		headerList
-				.add(context.getResources().getString(R.string.somedayLabel));
+		headerList.add(context.getResources().getString(R.string.somedayLabel));
 
 		objectDataMap.put(
 				context.getResources().getString(R.string.todayLabel),
@@ -209,10 +211,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				Intent intent = new Intent(context, NewTaskActivity.class);
 
 				Bundle bundle = new Bundle();
-				intent.putExtra("Edit Task", bundle);
+				intent.putExtra(EDIT_TASK_MSG, bundle);
 
-				bundle.putInt("ID", listObject.getId());
-				intent.setFlags(1);
+				bundle.putInt(INTENT_GET_ID, listObject.getId());
+				intent.setFlags(EDIT_TASK_ID);
 				context.startActivity(intent);
 			}
 		});

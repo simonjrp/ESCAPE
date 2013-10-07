@@ -1,5 +1,19 @@
 package se.chalmers.dat255.group22.escape;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,19 +32,10 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * An activity used for creating a new task
@@ -108,12 +113,12 @@ public class NewTaskActivity extends Activity {
 		 * creating a new one.
 		 */
 		Intent intent = getIntent();
-		// TODO Constants class!!!
-		if (intent.getFlags() == 1) {
+
+		if (intent.getFlags() == EDIT_TASK_ID) {
 			// Get the bundle and the ID of the listObject...
-			Bundle bundle = intent.getBundleExtra("Edit Task");
+			Bundle bundle = intent.getBundleExtra(EDIT_TASK_MSG);
 			if (bundle != null) {
-				long id = bundle.getInt("ID");
+				long id = bundle.getInt(INTENT_GET_ID);
 
 				ListObject listObject = dbHandler.getListObject(id);
 				editing = true;
@@ -307,9 +312,9 @@ public class NewTaskActivity extends Activity {
 			 * with the new values
 			 */
 			if (editing) {
-				Bundle bundle = getIntent().getBundleExtra("Edit Task");
+				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
 				DBHandler dbHandler = new DBHandler(this);
-				long id = bundle.getInt("ID");
+				long id = bundle.getInt(INTENT_GET_ID);
 				ListObject listObject = dbHandler.getListObject(id);
 				DBHandler db = new DBHandler(this);
 
