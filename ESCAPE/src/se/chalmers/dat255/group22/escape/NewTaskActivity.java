@@ -3,6 +3,7 @@ package se.chalmers.dat255.group22.escape;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
@@ -58,6 +59,7 @@ public class NewTaskActivity extends Activity {
 					.add(R.id.container_new_task, new TaskDetailsFragment())
 					.commit();
 		}
+		// Get the current day to display as the dynamic spinner item
 		Calendar tempCalendar = Calendar.getInstance();
 		int weekday = tempCalendar.get(Calendar.DAY_OF_WEEK);
 		String[] weekDays = getResources().getStringArray(R.array.weekdays);
@@ -69,13 +71,21 @@ public class NewTaskActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
+		DBHandler dbHandler = new DBHandler(this);
 		// Set up the spinner for different categories
 		Spinner categorySpinner = (Spinner) this
 				.findViewById(R.id.task_categories);
 
-		// TODO This array should be grabbed from the database
 		ArrayList<String> categories = new ArrayList<String>();
+		// Grab all the categories from the DB...
+		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
+		// ...and add them to the array used in the spinner
+		// TODO Catch eventual NullPointerException?
+		for (Category c : categoriesFromDB) {
+			categories.add(c.getName());
+		}
+		// Add the last item that will act as a button for adding a new category
 		categories.add(getString(R.string.custom_category));
 
 		// The DayAdapter only makes use of simple strings and presents its
@@ -88,21 +98,53 @@ public class NewTaskActivity extends Activity {
 
 		categorySpinner.setAdapter(categoryAdapter);
 
+		/*
+		 * Check if the activity was called from an already created listObject
+		 * by checking the flag of the intent.
+		 * 
+		 * In other words, check if we are editing a current listObject or
+		 * creating a new one.
+		 */
 		Intent intent = getIntent();
-
-		// TODO Fix this ugly check?
+		// TODO Constants class!!!
 		if (intent.getFlags() == 1) {
+			// Get the bundle and the ID of the listObject...
 			Bundle bundle = intent.getBundleExtra("Edit Task");
 			if (bundle != null) {
-				// TODO Should keep track of wether this is a new event or an
-				// TODO event in editing, maybe a better way for this?
-				DBHandler dbHandler = new DBHandler(this);
 				long id = bundle.getInt("ID");
-				ListObject listObject = dbHandler.getListObject(id);
 
+				ListObject listObject = dbHandler.getListObject(id);
 				editing = true;
 
-				// References to all the input fields
+				// ...and get data from the listObject that "called" the
+				// activity
+
+				String nameString = listObject.getName().toString();
+
+				// Avoid NullPointerException
+				String descriptionString = "";
+				String locationString = "";
+				String timeAlarmString = "";
+				String timeStartString = "";
+				String timeEndString = "";
+
+				if (listObject.getComment() != null)
+					descriptionString = listObject.getComment();
+				if (dbHandler.getPlace(listObject) != null)
+					locationString = dbHandler.getPlace(listObject).getName();
+				Boolean isImportant = listObject.isImportant();
+				if (dbHandler.getTimeAlarm(listObject) != null)
+					timeAlarmString = dbHandler.getTimeAlarm(listObject)
+							.getDate().toString();
+				if (dbHandler.getTime(listObject) != null)
+					timeStartString = dbHandler.getTime(listObject)
+							.getStartDate().toString();
+				if (dbHandler.getTime(listObject) != null)
+					timeEndString = dbHandler.getTime(listObject).getEndDate()
+							.toString();
+
+				// Grab references to all the input fields...
+
 				EditText title = (EditText) findViewById(R.id.task_title);
 				Spinner category = (Spinner) findViewById(R.id.task_categories);
 				EditText description = (EditText) findViewById(R.id.task_description);
@@ -127,31 +169,7 @@ public class NewTaskActivity extends Activity {
 				CheckBox sundayBox = (CheckBox) findViewById(R.id.sundayBox);
 				Spinner interval = (Spinner) findViewById(R.id.repeatIntervalSpinner);
 
-				// Get data from the ListObject that "called" the activity
-
-				String nameString = listObject.getName().toString();
-				String descriptionString = "";
-				String locationString = "";
-				String timeAlarmString = "";
-				String timeStartString = "";
-				String timeEndString = "";
-				if (listObject.getComment() != null)
-					descriptionString = listObject.getComment();
-				if (dbHandler.getPlace(listObject) != null)
-					locationString = dbHandler.getPlace(listObject).getName();
-				Boolean isImportant = listObject.isImportant();
-				if (dbHandler.getTimeAlarm(listObject) != null)
-					timeAlarmString = dbHandler.getTimeAlarm(listObject)
-							.getDate().toString();
-				if (dbHandler.getTime(listObject) != null)
-					timeStartString = dbHandler.getTime(listObject)
-							.getStartDate().toString();
-				if (dbHandler.getTime(listObject) != null)
-					timeEndString = dbHandler.getTime(listObject).getEndDate()
-							.toString();
-
-				// TODO This should also be saved into the object/database when
-				// TODO pausing/destroying the activity!
+				// ...and set their default values from the listObject!
 				title.setText(nameString);
 				if (descriptionString != null) {
 					if (descriptionString.trim().length() != 0)
@@ -257,11 +275,12 @@ public class NewTaskActivity extends Activity {
 
 		// GPS Alarm
 
+		// TODO Fix colors here
 		Category newCategory = new Category(category, "Random Color",
 				"Another random Color");
 		Place place = new Place(1, location);
 
-		// If a name is set create ListObject
+		// If a name is set, create ListObject...
 		if (name.trim().length() != 0) {
 			ListObject lo = new ListObject(1, name);
 
@@ -281,8 +300,11 @@ public class NewTaskActivity extends Activity {
 				lo.setTime(time);
 			}
 
+			/*
+			 * If we are editing an already created task, update the database
+			 * with the new values
+			 */
 			if (editing) {
-				// TODO Update? Remove+Add? Cookies?
 				Bundle bundle = getIntent().getBundleExtra("Edit Task");
 				DBHandler dbHandler = new DBHandler(this);
 				long id = bundle.getInt("ID");
@@ -300,7 +322,7 @@ public class NewTaskActivity extends Activity {
 			}
 
 		} else {
-
+			// ... do nothing
 		}
 
 		super.onBackPressed();
@@ -655,6 +677,7 @@ public class NewTaskActivity extends Activity {
 		isTimeReminder = false;
 	}
 
+	/* Get the time from Spinners */
 	private Time getTimeFromSpinners(String dateFromString, String dateToString) {
 
 		// Gets all date and time spinners in convert event view
