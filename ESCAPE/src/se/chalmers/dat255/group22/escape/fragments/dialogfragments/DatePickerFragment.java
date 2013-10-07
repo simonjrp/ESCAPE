@@ -64,7 +64,7 @@ public class DatePickerFragment extends DialogFragment
 		// Add the standard date labels to the spinner again
 		adapter.add(getActivity().getString(R.string.todayLabel));
 		adapter.add(nextWeekSameDayLabel);
-		adapter.add(getActivity().getString(R.string.thisWeekLabel));
+		adapter.add(getActivity().getString(R.string.somedayLabel));
 
 		// Doesn't add year to text in spinner if chosen year equals current
 		// year
