@@ -95,8 +95,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 				.setStyle(
 						new NotificationCompat.BigTextStyle()
 								.bigText(description))
-				.addAction(R.drawable.task_done, context.getString(R.string.notification_done), donePendingIntent)
-				.addAction(R.drawable.task_snooze, context.getString(R.string.notification_snooze),
+				.addAction(R.drawable.task_done,
+						context.getString(R.string.notification_done),
+						donePendingIntent)
+				.addAction(R.drawable.task_snooze,
+						context.getString(R.string.notification_snooze),
 						snoozePendingIntent);
 
 		// Enables sound and vibration for the notification
@@ -141,7 +144,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		dbH.purgeListObject(dbH.getListObject(id));
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel((int)id);
+		notificationManager.cancel((int) id);
 	}
 
 	/*
@@ -168,7 +171,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// Creates new notification reminder with the new time alarm.
 		NotificationHandler nH = new NotificationHandler(context);
 		nH.addTimeReminder(listObject);
-		
+
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel((int) id);

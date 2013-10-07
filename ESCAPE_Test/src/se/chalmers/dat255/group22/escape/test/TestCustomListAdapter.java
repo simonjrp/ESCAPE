@@ -2,7 +2,7 @@ package se.chalmers.dat255.group22.escape.test;
 
 import java.sql.Date;
 
-import se.chalmers.dat255.group22.escape.ListFragment.CustomListAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;

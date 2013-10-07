@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="when_to_gen">
+        <item>Workhours</item>
+        <item>Leisure time</item>
+        <item>Whenever</item>
+
+    </string-array>
+
+</resources>
