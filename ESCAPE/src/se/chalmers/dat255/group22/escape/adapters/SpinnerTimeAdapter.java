@@ -79,7 +79,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		TextView timeAsTime = (TextView) row
 				.findViewById(R.id.spinnerTimeAsTime);
 
-        if(position < times.size() - 1) {
+        if(position < getCount() - 1) {
             Date date = getData(position);
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
             timeAsTime.setText(dateFormat.format(date));
