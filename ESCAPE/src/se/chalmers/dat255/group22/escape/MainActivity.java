@@ -3,6 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,10 +20,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
-import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 
 /**
  * The main activity, to be launched when app is started.
@@ -69,7 +68,6 @@ public class MainActivity extends FragmentActivity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-		// switch to the events list directly after startup
 
 	}
 
@@ -79,30 +77,6 @@ public class MainActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
-	// public void createNotification(View view) {
-	// // Prepare intent which is triggered if the
-	// // notification is selected
-	// Intent intent = new Intent(this, MainActivity.class);
-	// PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-	//
-	// // Build notification
-	// // Actions are just fake
-	// Notification noti = new Notification.Builder(this)
-	// .setContentTitle("New mail from " + "test@gmail.com")
-	// .setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
-	// .setContentIntent(pIntent)
-	// .addAction(R.drawable.ic_launcher, "Call", pIntent)
-	// .addAction(R.drawable.ic_launcher, "More", pIntent)
-	// .addAction(R.drawable.ic_launcher, "And more", pIntent).build();
-	// NotificationManager notificationManager = (NotificationManager)
-	// getSystemService(NOTIFICATION_SERVICE);
-	// // Hide the notification after its selected
-	// noti.flags |= Notification.FLAG_AUTO_CANCEL;
-	//
-	// notificationManager.notify(0, noti);
-	//
-	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -116,9 +90,9 @@ public class MainActivity extends FragmentActivity {
 
 		// Handle all action bar items except for the back/up button here.
 		switch (item.getItemId()) {
-		case R.id.add_task:
-			Intent intent = new Intent(this, NewTaskActivity.class);
-			startActivity(intent);
+			case R.id.add_task :
+				Intent intent = new Intent(this, NewTaskActivity.class);
+				startActivity(intent);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -151,8 +125,9 @@ public class MainActivity extends FragmentActivity {
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener
+			implements
+				ListView.OnItemClickListener {
 
 		private List<Fragment> fragmentList;
 
