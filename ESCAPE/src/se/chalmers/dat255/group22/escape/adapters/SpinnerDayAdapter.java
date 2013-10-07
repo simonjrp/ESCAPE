@@ -16,7 +16,7 @@ import android.widget.TextView;
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
  * 
- * @author tholene
+ * @author tholene, Simon Persson
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 

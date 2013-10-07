@@ -17,7 +17,7 @@ import android.widget.TextView;
  * An adapter that customizes the way spinners for choosing a time are
  * presented.
  * 
- * @author tholene
+ * @author tholene, Simon Persson
  */
 public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 

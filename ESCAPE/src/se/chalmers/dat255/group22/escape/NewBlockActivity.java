@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+/**
+ * Class representing the activity started when user adds new time blocks (autogen).
+ * @author Simon Persson
+ */
 public class NewBlockActivity extends Activity {
 
 	@Override
@@ -17,6 +21,7 @@ public class NewBlockActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+        // TODO Assigns test data (temporary) to all spinners.
 		Spinner totalHoursSpinner = (Spinner) findViewById(R.id.block_hours_spinner);
 		Spinner splitTimeSpinner = (Spinner) findViewById(R.id.split_time_spinner);
 		Spinner whenSpinner = (Spinner) findViewById(R.id.when_to_gen);

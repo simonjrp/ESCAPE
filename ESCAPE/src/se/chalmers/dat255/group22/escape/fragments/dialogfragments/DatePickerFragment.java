@@ -14,15 +14,29 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 
-public class DatePickerFragment extends DialogFragment implements
-		OnDateSetListener {
+/**
+ * Class representing a date picker fragment.
+ * 
+ * @author Simon Persson
+ */
+public class DatePickerFragment extends DialogFragment
+		implements
+			OnDateSetListener {
 
-	private int spinnerId;
+	/**
+	 * Constant used to get the ID of the spinner that wants to bring up this
+	 * dialog
+	 */
 	public static final String SPINNER_ID = "SPINNER_ID";
+	private int spinnerId;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+		// Gets the current date and initializes the date picker with
+		// it.
 		final Calendar calendar = Calendar.getInstance();
+
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH);
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -74,6 +88,16 @@ public class DatePickerFragment extends DialogFragment implements
 
 	}
 
+	// TODO make more general.
+
+	/**
+	 * Method for getting the text representation of a month, providing the
+	 * number of the month.
+	 * 
+	 * @param month
+	 *            The number of the month.
+	 * @return A String containing the text representation of the wanted month.
+	 */
 	public String getMonthLabel(int month) {
 		String[] months = getActivity().getResources().getStringArray(
 				R.array.months);

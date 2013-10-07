@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
  * Class representing an OnItemSelectedListener for spinners. Used mainly to
  * bring up date or time dialog pickers when clicking on a specific item in some
  * spinners.
+ * 
+ * @author Simon Persson
  */
 public class OnItemSelectedSpinnerListener implements OnItemSelectedListener {
 
