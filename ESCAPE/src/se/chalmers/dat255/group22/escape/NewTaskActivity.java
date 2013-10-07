@@ -83,7 +83,9 @@ public class NewTaskActivity extends Activity {
 		// ...and add them to the array used in the spinner
 		// TODO Catch eventual NullPointerException?
 		for (Category c : categoriesFromDB) {
-			categories.add(c.getName());
+			if (!c.getName().equals(getString(R.string.custom_category)))
+				categories.add(c.getName());
+
 		}
 		// Add the last item that will act as a button for adding a new category
 		categories.add(getString(R.string.custom_category));
@@ -319,6 +321,7 @@ public class NewTaskActivity extends Activity {
 				db.updateListObject(listObject);
 			} else {
 				saveToDatabase(lo);
+
 			}
 
 		} else {
@@ -363,7 +366,8 @@ public class NewTaskActivity extends Activity {
 		}
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
-				tmpId = dbHandler.addCategory(cat);
+				if (!cat.getName().equals(getString(R.string.custom_category)))
+					tmpId = dbHandler.addCategory(cat);
 				// TODO implement methods for setting category!
 				// dbHandler.addCategoryWithListObject(cat,
 				// dbHandler.getListObject(objId));
