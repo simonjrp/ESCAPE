@@ -34,7 +34,7 @@ import android.widget.Spinner;
 /**
  * An activity used for creating a new task
  * 
- * @author Erik, Carl
+ * @author Erik, Carl, Simon
  */
 public class NewTaskActivity extends Activity {
 
@@ -179,11 +179,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -313,10 +313,16 @@ public class NewTaskActivity extends Activity {
 	 *            ListObject to save
 	 */
 	public void saveToDatabase(ListObject lo) {
+		// instantiate the database
 		DBHandler dbHandler = new DBHandler(this);
+		// Save the ListObject framework and save the database id.
 		long objId = dbHandler.addListObject(lo);
+		// A temporary id to use when saving associated data to connect them
 		long tmpId;
-
+		/*
+		 * If an associated data is not null it will be saved and the tmp id
+		 * will be connected to the list object
+		 */
 		if (lo.getTimeAlarm() != null) {
 			tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
 			dbHandler.addListObjectWithTimeAlarm(
@@ -371,8 +377,8 @@ public class NewTaskActivity extends Activity {
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 		dateFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-                        dateFromSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+						dateFromSpinner.getId()));
 
 		//
 		/* From: DateSpinner */
@@ -395,8 +401,8 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 		timeFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-                        timeFromSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+						timeFromSpinner.getId()));
 
 		// Array containing different times for an event
 		ArrayList<String> strTimeArr = new ArrayList<String>();
@@ -418,14 +424,14 @@ public class NewTaskActivity extends Activity {
 		dateToSpinner.setAdapter(dayAdapter);
 		dateToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-                        dateToSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+						dateToSpinner.getId()));
 
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
 		timeToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-                        timeToSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+						timeToSpinner.getId()));
 
 		timeToSpinner.setAdapter(timeAdapter);
 
@@ -456,12 +462,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -471,21 +477,21 @@ public class NewTaskActivity extends Activity {
 
 		typeSpinner
 				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent,
-                                               View view, int position, long id) {
-                        if (position == 0) {
-                            showTimeReminderInput();
-                        } else if (position == 1) {
-                            showLocationReminderInput();
-                        }
-                    }
+					@Override
+					public void onItemSelected(AdapterView<?> parent,
+							View view, int position, long id) {
+						if (position == 0) {
+							showTimeReminderInput();
+						} else if (position == 1) {
+							showLocationReminderInput();
+						}
+					}
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+					@Override
+					public void onNothingSelected(AdapterView<?> parent) {
 
-                    }
-                });
+					}
+				});
 
 		/* Next up is the date of the reminder, simple enough */
 		// ArrayList containing different days for an event
@@ -503,8 +509,8 @@ public class NewTaskActivity extends Activity {
 		dateSpinner.setAdapter(dayAdapter);
 		dateSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-                        dateSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
+						dateSpinner.getId()));
 
 		/*
 		 * Last but not least, time of the reminder with a clarification of the
@@ -525,8 +531,8 @@ public class NewTaskActivity extends Activity {
 		timeSpinner.setAdapter(timeAdapter);
 		timeSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-                        timeSpinner.getId()));
+						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+						timeSpinner.getId()));
 		hasReminder = true;
 
 	}
@@ -548,10 +554,10 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		// Array of strings for different intervals
-		String[] strIntervalArr = { getString(R.string.oneWeekLabel),
+		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
 				getString(R.string.twoWeeksLabel),
 				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel) };
+				getString(R.string.oneMonthLabel)};
 
 		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
 				this, R.layout.simple_spinner_item, strIntervalArr);

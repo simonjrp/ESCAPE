@@ -45,7 +45,7 @@ public class TaskListFragment extends Fragment {
 	}
 
 	/**
-	 * Initialize the database, lists and adapter
+	 * Initialize the list and adapter
 	 */
 	private void initialize() {
 		// Initiate the lists and set the adapter to use
