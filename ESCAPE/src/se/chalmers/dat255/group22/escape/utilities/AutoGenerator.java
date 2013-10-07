@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape.utilities;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -11,6 +12,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
+import android.util.Log;
 
 import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
@@ -44,9 +47,11 @@ public class AutoGenerator {
 	}
 
 	public List<ListObject> generate() {
+//		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm:ss.SSS");
 		// ** When is the user free?
 		// Find where in the week we are
 		Calendar now = new GregorianCalendar();
+		now.setTimeInMillis(System.currentTimeMillis());
 		// Find the next Sunday 22.00
 		Calendar end = new GregorianCalendar(now.get(Calendar.YEAR),
 				now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
@@ -55,6 +60,8 @@ public class AutoGenerator {
 			end.add(Calendar.DAY_OF_WEEK, 1);
 		}
 		end.add(Calendar.HOUR_OF_DAY, 24);
+//		Log.d("Generate: TODAY", sdf.format(now.getTimeInMillis()));
+//		Log.d("Generate: SUNDAY", sdf.format(end.getTimeInMillis()));
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
@@ -165,7 +172,8 @@ public class AutoGenerator {
 															.getSessionMinutes());
 									if (diffLong >= blockTime) {
 										fittingBlock = currentBlock;
-										// Reduce the remaining block amount with 1
+										// Reduce the remaining block amount
+										// with 1
 										data[nextOnTurn][1]--;
 										break;
 									}
@@ -185,7 +193,8 @@ public class AutoGenerator {
 								it.previous();
 							}
 						} // else {
-							// Here we can do if there is no more timeBoxes (last
+							// Here we can do if there is no more timeBoxes
+							// (last
 							// space
 							// until list end
 							// }
@@ -201,20 +210,52 @@ public class AutoGenerator {
 							break;
 						}
 					}
-				} 
+				}
 			}
 		}
 
 		// Splits not used is stored.
 
 		// Return the list with the newly created listObjects
+
+//		StringBuilder sb = new StringBuilder();
+//		int i = 1;
+//		for (ListObject lo : lolist) {
+//			Time time = lo.getTime();
+//			sb.append("" + i + " " + sdf.format(time.getStartDate().getTime())
+//					+ " to " + sdf.format(time.getEndDate().getTime()) + "\n");
+//			i++;
+//		}
+//		Log.d("ListObjectList", sb.toString());
+		
+		
+		
+//		Log.d("ListObjectAmount", "" + lolist.size());
+//		Log.d("ListObjectFirstAndLast",
+//				""
+//						+ sdf.format(lolist.get(0).getTime().getStartDate()
+//								.getTime())
+//						+ " to "
+//						+ sdf.format(lolist.get(0).getTime().getEndDate()
+//								.getTime())
+//						+ "\n"
+//						+ sdf.format(lolist.get(lolist.size()-1).getTime().getStartDate()
+//								.getTime())
+//						+ " to "
+//						+ sdf.format(lolist.get(lolist.size()-1).getTime().getEndDate()
+//								.getTime()));
 		return lolist;
 	}
+	
+	
 
 	/*
 	 * Fixes overlap between TimeBoxes in a list.
+	 * 
+	 * @param an already sorted LinkedList<TimeBox>. Should be sorted such that
+	 * the TimeBox that starts first is added first to the left
 	 */
-	private void fixOverlap(LinkedList<TimeBox> fullList) {
+	public void fixOverlap(LinkedList<TimeBox> fullList) {
 		Iterator<TimeBox> iterator = fullList.iterator();
 		if (iterator.hasNext()) {
 			TimeBox current, next = iterator.next();
@@ -229,7 +270,11 @@ public class AutoGenerator {
 							end = next.end;
 						}
 						iterator.remove();
-						next = iterator.next();
+						if (iterator.hasNext()) {
+							next = iterator.next();
+						} else {
+							break;
+						}
 					}
 					current.end = end;
 				}
@@ -237,7 +282,7 @@ public class AutoGenerator {
 		}
 	}
 
-	private LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
+	public LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
 		// If start is after or the same time as end, return null
 		if (start.compareTo(end) > -1) {
 			return null;
@@ -271,6 +316,9 @@ public class AutoGenerator {
 		// next night
 		while (s.compareTo(e) < 0) {
 			if (s.get(Calendar.HOUR_OF_DAY) == NIGHT_START) {
+				s.set(Calendar.MINUTE, 0);
+				s.set(Calendar.SECOND, 0);
+				s.set(Calendar.MILLISECOND, 0);
 				Long timeBoxStart = s.getTimeInMillis();
 				// Calculate the night span
 				int nightSpan = NIGHT_END;
@@ -282,36 +330,30 @@ public class AutoGenerator {
 				// Add the night to the list
 				nightList.add(new TimeBox(timeBoxStart, s.getTimeInMillis()));
 			}
-
 			s.add(Calendar.HOUR_OF_DAY, 1);
 		}
+
 		return nightList;
 	}
 
 	// This inner class represents a "timebox", i.e. a start- and an endtime
 	// that belongs together.
 	// The start and end time is represented by milliseconds (since 1970 Jan 1)
-	protected class TimeBox implements Comparable<TimeBox> {
+	public class TimeBox implements Comparable<TimeBox> {
 		public Long start;
 		public Long end;
 
-		TimeBox(Long start, Long end) {
+		public TimeBox(Long start, Long end) {
 			this.start = start;
 			this.end = end;
 		}
 
 		@Override
 		public int compareTo(TimeBox another) {
-			if (this.start >= another.end) {
-				return 1;
-			} else if (this.end <= another.start) {
+			if (this.start < another.start) {
 				return -1;
-			} else if ((this.start < another.end && this.end > another.end)
-					|| (this.end > another.start && this.start < another.start)) {
+			} else if (this.start > another.start) {
 				return 1;
-			} else if ((another.start > this.end && another.end > this.end)
-					|| (another.end > this.start && another.start < this.start)) {
-				return -1;
 			}
 			return 0;
 		}
@@ -328,10 +370,11 @@ public class AutoGenerator {
 		return null;
 	}
 
-	public boolean validate(List<ListObject> newSchedule, List<ListObject> generatedSchedule) { 
+	public boolean validate(List<ListObject> newSchedule,
+			List<ListObject> generatedSchedule) {
 		List<ListObject> list = newSchedule;
 		list.addAll(generatedSchedule);
-		Collections.sort(list, new Comparator<ListObject>(){ 
+		Collections.sort(list, new Comparator<ListObject>() {
 			/*
 			 * Sorts on start time
 			 */
@@ -339,33 +382,34 @@ public class AutoGenerator {
 			public int compare(ListObject first, ListObject second) {
 				long a = first.getTime().getStartDate().getTime();
 				long b = second.getTime().getStartDate().getTime();
-				if (a > b){
+				if (a > b) {
 					return 1;
 				}
-				
+
 				if (a == b) {
 					return 0;
 				}
 				return -1;
-			}});
-		
+			}
+		});
+
 		Iterator<ListObject> iterator = list.iterator();
-		while (iterator.hasNext()){
+		while (iterator.hasNext()) {
 			ListObject current = iterator.next();
 			ListObject next;
-			
-			if (iterator.hasNext()){
+
+			if (iterator.hasNext()) {
 				next = iterator.next();
-			}
-			else {
+			} else {
 				break;
 			}
-			
-			if (next.getTime().getStartDate().getTime() < current.getTime().getEndDate().getTime()){
+
+			if (next.getTime().getStartDate().getTime() < current.getTime()
+					.getEndDate().getTime()) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }
