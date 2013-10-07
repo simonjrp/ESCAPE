@@ -80,15 +80,6 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		timeAsTime.setVisibility(View.VISIBLE);
 
-		if (timeAsText.getText().equals(context.getString(R.string.morning)))
-			timeAsTime.setText("09:00");
-		if (timeAsText.getText().equals(context.getString(R.string.afternoon)))
-			timeAsTime.setText("13:00");
-		if (timeAsText.getText().equals(context.getString(R.string.evening)))
-			timeAsTime.setText("17:00");
-		if (timeAsText.getText().equals(context.getString(R.string.night)))
-			timeAsTime.setText("20:00");
-
 		if (position == getCount() - 1) {
 
 			View v = (View) timeAsText.getParent();
