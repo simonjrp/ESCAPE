@@ -25,6 +25,16 @@ public final class Constants {
      * The string to be used for a time format as HH:MM
      */
     public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+
+    /**
+     * The integer describing how many predefined values there is in a date spinner.
+     */
+    public static final int NBR_OF_CONSTANT_DATES = 3;
+
+    /**
+     * The integer describing how many predefined values there is in a time spinner.
+     */
+    public static final int NBR_OF_CONSTANS_TIMES = 4;
 	private Constants() {
 	}
 }
