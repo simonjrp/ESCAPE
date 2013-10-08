@@ -88,9 +88,9 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow.setAdapter(new ArrayAdapter(getActivity(),
 				R.layout.popup_categories, products));
 		listPopupWindow.setAnchorView(menuItemView);
+        listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
 		listPopupWindow.setHeight(400);
-		listPopupWindow.setModal(true);
 		// listPopupWindow.setOnItemClickListener();
 	}
 
@@ -99,6 +99,5 @@ public class TaskListFragment extends Fragment {
      */
 	private void getPopup() {
 		listPopupWindow.show();
-
 	}
 }
