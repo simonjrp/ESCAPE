@@ -24,6 +24,10 @@ import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
 /**
  * Adapter for displaying ListObjects in an ordinary list
  * 
@@ -197,14 +201,14 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
+                Intent intent = new Intent(context, NewTaskActivity.class);
 
-				Bundle bundle = new Bundle();
-				intent.putExtra("Edit Task", bundle);
+                Bundle bundle = new Bundle();
+                intent.putExtra(EDIT_TASK_MSG, bundle);
 
-				bundle.putInt("ID", listObject.getId());
-				intent.setFlags(1);
-				context.startActivity(intent);
+                bundle.putInt(INTENT_GET_ID, listObject.getId());
+                intent.setFlags(EDIT_TASK_ID);
+                context.startActivity(intent);
 			}
 		});
 		deleteButton.setOnClickListener(new OnClickListener() {

@@ -1,5 +1,26 @@
 package se.chalmers.dat255.group22.escape;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
+import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -14,29 +35,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerIntervalAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
-import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
-import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Place;
-import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
-
 /**
  * An activity used for creating a new task
  * 
@@ -47,7 +45,6 @@ public class NewTaskActivity extends Activity {
 	private boolean hasReminder;
 	private boolean isTimeReminder;
 	private boolean isLocationReminder;
-	private boolean isRepeating;
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
@@ -105,7 +102,7 @@ public class NewTaskActivity extends Activity {
 
 		categorySpinner.setAdapter(categoryAdapter);
 
-		/*
+		/**
 		 * Check if the activity was called from an already created listObject
 		 * by checking the flag of the intent.
 		 * 
@@ -131,24 +128,27 @@ public class NewTaskActivity extends Activity {
 				// Avoid NullPointerException
 				String descriptionString = "";
 				String locationString = "";
-				String timeAlarmString = "";
-				String timeStartString = "";
-				String timeEndString = "";
+				TimeAlarm timeAlarm = null;
+				Date timeStart = null;
+				Date timeEnd = null;
 
 				if (listObject.getComment() != null)
 					descriptionString = listObject.getComment();
+
 				if (dbHandler.getPlace(listObject) != null)
 					locationString = dbHandler.getPlace(listObject).getName();
+
 				Boolean isImportant = listObject.isImportant();
-				if (dbHandler.getTimeAlarm(listObject) != null)
-					timeAlarmString = dbHandler.getTimeAlarm(listObject)
-							.getDate().toString();
+
+				if (dbHandler.getTimeAlarm(listObject) != null) {
+					timeAlarm = dbHandler.getTimeAlarm(listObject);
+				}
+
 				if (dbHandler.getTime(listObject) != null)
-					timeStartString = dbHandler.getTime(listObject)
-							.getStartDate().toString();
+					timeStart = dbHandler.getTime(listObject).getStartDate();
+
 				if (dbHandler.getTime(listObject) != null)
-					timeEndString = dbHandler.getTime(listObject).getEndDate()
-							.toString();
+					timeEnd = dbHandler.getTime(listObject).getEndDate();
 
 				// Grab references to all the input fields...
 
@@ -167,15 +167,6 @@ public class NewTaskActivity extends Activity {
 				Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
 				Spinner timeTo = (Spinner) findViewById(R.id.time_to);
 
-				CheckBox mondayBox = (CheckBox) findViewById(R.id.mondayBox);
-				CheckBox tuesdayBox = (CheckBox) findViewById(R.id.tuesdayBox);
-				CheckBox wednesdayBox = (CheckBox) findViewById(R.id.wednesdayBox);
-				CheckBox thursdayBox = (CheckBox) findViewById(R.id.thursdayBox);
-				CheckBox fridayBox = (CheckBox) findViewById(R.id.fridayBox);
-				CheckBox saturdayBox = (CheckBox) findViewById(R.id.saturdayBox);
-				CheckBox sundayBox = (CheckBox) findViewById(R.id.sundayBox);
-				Spinner interval = (Spinner) findViewById(R.id.repeatIntervalSpinner);
-
 				// ...and set their default values from the listObject!
 				title.setText(nameString);
 				if (descriptionString != null) {
@@ -187,6 +178,17 @@ public class NewTaskActivity extends Activity {
 						location.setText(locationString);
 				}
 				important.setChecked(isImportant);
+                // Open up the reminder field if it has a reminder...
+				if (timeAlarm != null) {
+					RelativeLayout remindMe = (RelativeLayout)findViewById(R.id.remindMeField);
+					onRemindMe(remindMe);
+				}
+
+                // ...and the event field if it is an event...
+                if(timeStart != null) {
+                    Button remindMe = (Button)findViewById(R.id.task_convert_event);
+                    onConvertEvent(remindMe);
+                }
 
 				// TODO FIX TIMES AND STUFF
 			}
@@ -246,14 +248,12 @@ public class NewTaskActivity extends Activity {
 			dateFromString = dateFrom.getSelectedItem().toString();
 
 			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
-			// TODO DON'T FORGET THIS DECLARATION
 			String timeFromString = timeFrom.getSelectedItem().toString();
 
 			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
 			dateToString = dateTo.getSelectedItem().toString();
 
 			Spinner timeTo = (Spinner) findViewById(R.id.time_to);
-			// TODO DON'T FORGET THIS DECLARATION
 			String timeToString = timeTo.getSelectedItem().toString();
 		}
 
@@ -569,38 +569,6 @@ public class NewTaskActivity extends Activity {
 	}
 
 	/**
-	 * When the "Repeat" button is pressed, this method is called and the button
-	 * is switched to a view containing the required forms for a repeating
-	 * event.
-	 * 
-	 * @param v
-	 *            the view that calls this method.
-	 */
-
-	public void onRepeat(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
-
-		currentLayout.setVisibility(View.INVISIBLE);
-		toBeShownLayout.setVisibility(View.VISIBLE);
-
-		// Array of strings for different intervals
-		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
-				getString(R.string.twoWeeksLabel),
-				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel)};
-
-		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
-				this, R.layout.simple_spinner_item, strIntervalArr);
-
-		Spinner repeatIntervalSpinner = (Spinner) findViewById(R.id.repeatIntervalSpinner);
-
-		repeatIntervalSpinner.setAdapter(intervalAdapter);
-
-		isRepeating = true;
-	}
-
-	/**
 	 * When the "X" button next to the reminder field is pressed, this method is
 	 * called and the layout is restored to its previous state.
 	 * 
@@ -625,29 +593,12 @@ public class NewTaskActivity extends Activity {
 	 */
 	public void onCancelEvent(View v) {
 		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
-		Button toBeShownButton = (Button) findViewById(R.id.task_add_reminder);
+		Button toBeShownButton = (Button) findViewById(R.id.task_convert_event);
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownButton.setVisibility(View.VISIBLE);
 
 		isEvent = false;
-	}
-
-	/**
-	 * When the "X" button next to the repeat field is pressed, this method is
-	 * called and the layout is restored to its previous state.
-	 * 
-	 * @param v
-	 *            the view that calls this method.
-	 */
-	public void onCancelRepeat(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.repeatActiveLayout);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.repeatInactiveLayout);
-
-		currentLayout.setVisibility(View.INVISIBLE);
-		toBeShownLayout.setVisibility(View.VISIBLE);
-
-		isRepeating = false;
 	}
 
 	/*
