@@ -17,6 +17,7 @@ import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
 import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
@@ -129,6 +130,7 @@ public class NewTaskActivity extends Activity {
 				String descriptionString = "";
 				String locationString = "";
 				TimeAlarm timeAlarm = null;
+                GPSAlarm gpsAlarm = null;
 				Date timeStart = null;
 				Date timeEnd = null;
 
@@ -143,6 +145,10 @@ public class NewTaskActivity extends Activity {
 				if (dbHandler.getTimeAlarm(listObject) != null) {
 					timeAlarm = dbHandler.getTimeAlarm(listObject);
 				}
+
+                if (dbHandler.getGPSAlarm(listObject) != null) {
+                    gpsAlarm = dbHandler.getGPSAlarm(listObject);
+                }
 
 				if (dbHandler.getTime(listObject) != null)
 					timeStart = dbHandler.getTime(listObject).getStartDate();
@@ -182,7 +188,15 @@ public class NewTaskActivity extends Activity {
 				if (timeAlarm != null) {
 					RelativeLayout remindMe = (RelativeLayout)findViewById(R.id.remindMeField);
 					onRemindMe(remindMe);
+                    remindType.setSelection(0);
+                    showTimeReminderInput();
 				}
+                if (gpsAlarm != null) {
+                    RelativeLayout remindMe = (RelativeLayout)findViewById(R.id.remindMeField);
+                    onRemindMe(remindMe);
+                    remindType.setSelection(1);
+                    showLocationReminderInput();
+                }
 
                 // ...and the event field if it is an event...
                 if(timeStart != null) {
