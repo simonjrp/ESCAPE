@@ -66,8 +66,6 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// TODO temp fix, maybe better way to read from DB again?
-		// initialize();
 		ourListAdapter.reInit();
 	}
 
