@@ -27,14 +27,14 @@ public final class Constants {
     public static final String HOUR_MINUTE_FORMAT = "%H:%M";
 
     /**
-     * The integer describing how many predefined values there is in a date spinner.
+     * The integer describing how many relative date values there is in a date spinner.
      */
-    public static final int NBR_OF_CONSTANT_DATES = 3;
+    public static final int NBR_OF_REL_DATES = 3;
 
     /**
-     * The integer describing how many predefined values there is in a time spinner.
+     * The integer describing how many relative time values there is in a time spinner.
      */
-    public static final int NBR_OF_CONSTANS_TIMES = 4;
+    public static final int NBR_OF_REL_TIMES = 4;
 	private Constants() {
 	}
 }

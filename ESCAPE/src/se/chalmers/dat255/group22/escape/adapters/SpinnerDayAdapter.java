@@ -1,17 +1,19 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -20,8 +22,8 @@ import android.widget.TextView;
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
-	public static final long ONE_DAY_IN_MILLIS = 1000*60*60*24;
-	public static final long ONE_WEEK_IN_MILLIS = ONE_DAY_IN_MILLIS *7;
+	public static final long ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+	public static final long ONE_WEEK_IN_MILLIS = ONE_DAY_IN_MILLIS * 7;
 	private ArrayList<String> days;
 	private Context context;
 	private List<Date> dateData;
@@ -86,9 +88,9 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		day.setText(days.get(position));
 
-        // TODO How the **** did this do the trick???
-        parent.getLayoutParams().width = day.getLayoutParams().width-100;
-        row.getLayoutParams().width = day.getLayoutParams().width-100;
+		// TODO How the **** did this do the trick???
+		parent.getLayoutParams().width = day.getLayoutParams().width - 100;
+		row.getLayoutParams().width = day.getLayoutParams().width - 100;
 
 		return row;
 
@@ -98,26 +100,29 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		return dateData.get(position);
 	}
 
-    public List<Date> getAllData() {
-        return dateData;
-    }
-
-	private void addData(Date date) {
-		dateData.add(date);
+	public List<Date> getAllData() {
+		return dateData;
 	}
 
-    public void addCustomEntry(String customDateLabel, Date customDate) {
-        addData(customDate);
-        String nextWeekSameDayLabel = days.get(2);
-        Calendar tempCalendar = Calendar.getInstance();
+	public void addCustomEntry(String customDateLabel, Date customDate) {
 
-        clear();
-        add(context.getString(R.string.todayLabel));
-        add(context.getString(R.string.tomorrowLabel));
-        add(nextWeekSameDayLabel);
-        add(customDateLabel);
-        add(context.getString(R.string.pickDayLabel));
+		// Makes sure that only one extra custom date is stored in the dateData
+		// list.
+		if (dateData.size() > Constants.NBR_OF_REL_DATES) {
+			dateData.remove(dateData.size() - 2);
+		}
+		dateData.add(customDate);
 
-    }
+		String nextWeekSameDayLabel = days.get(2);
+
+		clear();
+
+		add(context.getString(R.string.todayLabel));
+		add(context.getString(R.string.tomorrowLabel));
+		add(nextWeekSameDayLabel);
+		add(customDateLabel);
+		add(context.getString(R.string.pickDayLabel));
+
+	}
 
 }

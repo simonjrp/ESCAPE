@@ -69,14 +69,14 @@ public class TimePickerFragment extends DialogFragment
 		// spinner
 		List<Date> spinnerData = adapter.getAllData();
 		int itemPosition = -1;
-		for (int i = 0; i < 4; i++) {
+		for (Date spinnerTime : spinnerData) {
 			Calendar spinnerTimeAsCal = Calendar.getInstance();
-			spinnerTimeAsCal.setTime(spinnerData.get(i));
+			spinnerTimeAsCal.setTime(spinnerTime);
 			int spinnerHour = spinnerTimeAsCal.get(Calendar.HOUR_OF_DAY);
 			int spinnerMinute = spinnerTimeAsCal.get(Calendar.MINUTE);
 			boolean alreadyExists = (spinnerHour == hour && spinnerMinute == minute);
 			if (alreadyExists) {
-				itemPosition = i;
+				itemPosition = spinnerData.indexOf(spinnerTime);
 				break;
 			}
 		}
