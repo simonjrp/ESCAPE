@@ -106,8 +106,8 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		dateData.add(date);
 	}
 
-    public void addCustomEntry(String customDateLabel, Date date) {
-        addData(date);
+    public void addCustomEntry(String customDateLabel, Date customDate) {
+        addData(customDate);
         String nextWeekSameDayLabel = days.get(2);
         Calendar tempCalendar = Calendar.getInstance();
 

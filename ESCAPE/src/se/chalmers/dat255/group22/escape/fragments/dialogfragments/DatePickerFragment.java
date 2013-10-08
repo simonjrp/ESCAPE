@@ -56,9 +56,11 @@ public class DatePickerFragment extends DialogFragment
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerDayAdapter adapter = (SpinnerDayAdapter) spinner.getAdapter();
 
-		// Stores new date in a Calendar object.
+		// Stores new date and current date in Calendar objects.
 		Calendar tempCalendar = Calendar.getInstance();
-		tempCalendar.set(Calendar.YEAR, year);
+        Calendar today = Calendar.getInstance();
+
+        tempCalendar.set(Calendar.YEAR, year);
 		tempCalendar.set(Calendar.MONTH, month);
 		tempCalendar.set(Calendar.DAY_OF_MONTH, day);
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -70,16 +72,17 @@ public class DatePickerFragment extends DialogFragment
 		// spinner
 		List<Date> spinnerData = adapter.getAllData();
 		int itemPosition = -1;
-		for (Date spinnerDate : spinnerData) {
-			Calendar spinnerDateAsCalendar = Calendar.getInstance();
-			spinnerDateAsCalendar.setTime(spinnerDate);
-			int spinnerYear = spinnerDateAsCalendar.get(Calendar.YEAR);
-			int spinnerMonth = spinnerDateAsCalendar.get(Calendar.MONTH);
-			int spinnerDay = spinnerDateAsCalendar.get(Calendar.DAY_OF_MONTH);
+        List<Date> allTimes = adapter.getAllData();
+		for (int i = 0; i < 3; i++) {
+			Calendar spinnerDateAsCal = Calendar.getInstance();
+			spinnerDateAsCal.setTime(allTimes.get(i));
+			int spinnerYear = spinnerDateAsCal.get(Calendar.YEAR);
+			int spinnerMonth = spinnerDateAsCal.get(Calendar.MONTH);
+			int spinnerDay = spinnerDateAsCal.get(Calendar.DAY_OF_MONTH);
 			boolean alreadyExists = (spinnerYear == year
 					&& spinnerMonth == month && spinnerDay == day);
 			if (alreadyExists) {
-				itemPosition = spinnerData.indexOf(spinnerDate);
+				itemPosition = i;
 				break;
 			}
 		}
@@ -89,14 +92,14 @@ public class DatePickerFragment extends DialogFragment
 		} else {
 			// Creates a custom day label for the spinner
 			String customLabel = null;
-			if (year == tempCalendar.get(Calendar.YEAR)) {
+			if (year == today.get(Calendar.YEAR)) {
 				customLabel = getMonthLabel(month) + " " + day;
 			} else {
-				customLabel = getMonthLabel(month) + " " + day + "," + year;
+				customLabel = getMonthLabel(month) + " " + day + ", " + year;
 			}
             adapter.addCustomEntry(customLabel,
                     new Date(tempCalendar.getTimeInMillis()));
-			spinner.setSelection(spinner.getCount() - 1, true);
+			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 
 	}
