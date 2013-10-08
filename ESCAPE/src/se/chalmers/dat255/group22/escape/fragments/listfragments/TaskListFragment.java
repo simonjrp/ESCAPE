@@ -2,7 +2,6 @@ package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,10 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.Toast;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -29,32 +27,35 @@ public class TaskListFragment extends Fragment {
 	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
 
-    PopupWindow popUp;
+	ListPopupWindow listPopupWindow;
+
+	// TODO delete this tmp crap
+	String[] products = {"A list", "containing", "meaningless", "nonsense",
+			"Just like Television!"};
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        // Make fragment aware it has an action bar object!
-        setHasOptionsMenu(true);
-        initialize();
+		// Make fragment aware it has an action bar object!
+		setHasOptionsMenu(true);
+		initialize();
 	}
 
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_action, menu);
-    }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_action, menu);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.pick_category :
-                getPopup();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.pick_category :
+				getPopup();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,47 +67,40 @@ public class TaskListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		// TODO temp fix, maybe better way to read from DB again?
-		initialize();
+		// initialize();
 		ourListAdapter.reInit();
 	}
 
 	/**
-	 * Initialize the list and adapter
+	 * Initialize the list, adapter and popup
 	 */
 	private void initialize() {
-		// Initiate the lists and set the adapter to use
 		ourListAdapter = new CustomListAdapter(getActivity());
 		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
 		ourTaskList.setAdapter(ourListAdapter);
+		initPopup();
 	}
 
-    private void getPopup(){
-        //TODO implement a way to select categories to display
-        View menuItemView = getActivity().findViewById(R.id.pick_category);
-        PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
-        popup.setOnMenuItemClickListener(new tmpListener());
-        MenuInflater inflate = popup.getMenuInflater();
-        inflate.inflate(R.menu.popup_categories, popup.getMenu());
-        popup.show();
-    }
-    private class tmpListener implements PopupMenu.OnMenuItemClickListener{
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.cat1:
-                    //TODO checkboxes are not set atm!
-                    if (item.isChecked()) item.setChecked(false);
-                    else item.setChecked(true);
-                    Toast.makeText(getActivity(), "shit", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.cat2:
-                    if (item.isChecked()) item.setChecked(false);
-                    else item.setChecked(true);
-                    return true;
-                default:
-                    return false;
-            }
-        }
-    }
-}
+	/**
+	 * Create the popup used to pick what categories to display
+	 */
+	private void initPopup() {
+		View menuItemView = getActivity().findViewById(R.id.pick_category);
+		listPopupWindow = new ListPopupWindow(getActivity());
+		listPopupWindow.setAdapter(new ArrayAdapter(getActivity(),
+				R.layout.popup_categories, products));
+		listPopupWindow.setAnchorView(menuItemView);
+		listPopupWindow.setWidth(300);
+		listPopupWindow.setHeight(400);
+		listPopupWindow.setModal(true);
+		// listPopupWindow.setOnItemClickListener();
+	}
 
+    /**
+     * Called when popup should be displayed
+     */
+	private void getPopup() {
+		listPopupWindow.show();
+
+	}
+}
