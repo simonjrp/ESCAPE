@@ -2,10 +2,11 @@ package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
-import se.chalmers.dat255.group22.escape.NewTaskActivity;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
@@ -49,33 +50,14 @@ public class DatePickerFragment extends DialogFragment
 
 	@Override
 	public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-		NewTaskActivity activity = (NewTaskActivity) getActivity();
-
-		// Used to check if year chosen is current year
-		Calendar tempCalendar = Calendar.getInstance();
 
 		// Retrieve spinner and adapter to be able to add new custom date
+		Activity activity = getActivity();
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerDayAdapter adapter = (SpinnerDayAdapter) spinner.getAdapter();
-		// TODO hacky code
-		String nextWeekSameDayLabel = adapter.getItem(2);
-		adapter.clear();
 
-		// Add the standard date labels to the spinner again
-		adapter.add(getActivity().getString(R.string.todayLabel));
-		adapter.add(nextWeekSameDayLabel);
-		adapter.add(getActivity().getString(R.string.somedayLabel));
-
-		// Doesn't add year to text in spinner if chosen year equals current
-		// year
-		if (year == tempCalendar.get(Calendar.YEAR)) {
-			adapter.add(getMonthLabel(month) + " " + day);
-		} else {
-			adapter.add(getMonthLabel(month) + " " + day + "," + year);
-		}
-		adapter.add(getActivity().getString(R.string.pickDayLabel));
-		spinner.setSelection(adapter.getCount() - 2, true);
-
+		// Stores new date in a Calendar object.
+		Calendar tempCalendar = Calendar.getInstance();
 		tempCalendar.set(Calendar.YEAR, year);
 		tempCalendar.set(Calendar.MONTH, month);
 		tempCalendar.set(Calendar.DAY_OF_MONTH, day);
@@ -84,7 +66,38 @@ public class DatePickerFragment extends DialogFragment
 		tempCalendar.set(Calendar.SECOND, 0);
 		tempCalendar.set(Calendar.MILLISECOND, 0);
 
-		adapter.addData(new Date(tempCalendar.getTimeInMillis()));
+		// Check if the custom date equals to some predefined value in the
+		// spinner
+		List<Date> spinnerData = adapter.getAllData();
+		int itemPosition = -1;
+		for (Date spinnerDate : spinnerData) {
+			Calendar spinnerDateAsCalendar = Calendar.getInstance();
+			spinnerDateAsCalendar.setTime(spinnerDate);
+			int spinnerYear = spinnerDateAsCalendar.get(Calendar.YEAR);
+			int spinnerMonth = spinnerDateAsCalendar.get(Calendar.MONTH);
+			int spinnerDay = spinnerDateAsCalendar.get(Calendar.DAY_OF_MONTH);
+			boolean alreadyExists = (spinnerYear == year
+					&& spinnerMonth == month && spinnerDay == day);
+			if (alreadyExists) {
+				itemPosition = spinnerData.indexOf(spinnerDate);
+				break;
+			}
+		}
+
+		if (itemPosition != -1) {
+			spinner.setSelection(itemPosition);
+		} else {
+			// Creates a custom day label for the spinner
+			String customLabel = null;
+			if (year == tempCalendar.get(Calendar.YEAR)) {
+				customLabel = getMonthLabel(month) + " " + day;
+			} else {
+				customLabel = getMonthLabel(month) + " " + day + "," + year;
+			}
+            adapter.addCustomEntry(customLabel,
+                    new Date(tempCalendar.getTimeInMillis()));
+			spinner.setSelection(spinner.getCount() - 1, true);
+		}
 
 	}
 

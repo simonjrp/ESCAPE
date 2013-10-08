@@ -20,8 +20,8 @@ import android.widget.TextView;
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
-	public static final long oneDayInMillis = 1000*60*60*24;
-	public static final long oneWeekInMillis = oneDayInMillis*7;
+	public static final long ONE_DAY_IN_MILLIS = 1000*60*60*24;
+	public static final long ONE_WEEK_IN_MILLIS = ONE_DAY_IN_MILLIS *7;
 	private ArrayList<String> days;
 	private Context context;
 	private List<Date> dateData;
@@ -55,7 +55,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		long currentTimeInMillis = tempCalendar.getTimeInMillis();
 		dateData.add(new Date(currentTimeInMillis));
 		dateData.add(new Date(currentTimeInMillis + 86400000));
-		dateData.add(new Date(currentTimeInMillis + oneWeekInMillis));
+		dateData.add(new Date(currentTimeInMillis + ONE_WEEK_IN_MILLIS));
 	}
 
 	@Override
@@ -98,8 +98,26 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		return dateData.get(position);
 	}
 
-	public void addData(Date date) {
+    public List<Date> getAllData() {
+        return dateData;
+    }
+
+	private void addData(Date date) {
 		dateData.add(date);
 	}
+
+    public void addCustomEntry(String customDateLabel, Date date) {
+        addData(date);
+        String nextWeekSameDayLabel = days.get(2);
+        Calendar tempCalendar = Calendar.getInstance();
+
+        clear();
+        add(context.getString(R.string.todayLabel));
+        add(context.getString(R.string.tomorrowLabel));
+        add(nextWeekSameDayLabel);
+        add(customDateLabel);
+        add(context.getString(R.string.pickDayLabel));
+
+    }
 
 }
