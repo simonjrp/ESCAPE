@@ -4,12 +4,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;

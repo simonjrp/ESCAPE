@@ -21,10 +21,11 @@ public final class Constants {
 	 * intent
 	 */
 	public static final String INTENT_GET_ID = "ID";
-    /**
-     * The string to be used for a time format as HH:MM
-     */
-    public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+	/**
+	 * The string to be used for a time format as HH:MM
+	 */
+	public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+
 	private Constants() {
 	}
 }

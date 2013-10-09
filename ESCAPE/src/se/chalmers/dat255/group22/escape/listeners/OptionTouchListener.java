@@ -45,7 +45,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 
 	@Override
 	public void onClick(View v) {
-        // the CustomOnClickListener takes care of this
+		// the CustomOnClickListener takes care of this
 	}
 
 	@Override

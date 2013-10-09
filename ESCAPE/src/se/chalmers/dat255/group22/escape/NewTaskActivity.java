@@ -1,18 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,10 +22,19 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 /**
  * An activity used for creating a new task
@@ -204,11 +203,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-			case android.R.id.home :
-				onBackPressed();
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -493,12 +492,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = {R.drawable.device_access_alarms,
-				R.drawable.location_place};
+		int imgArr[] = { R.drawable.device_access_alarms,
+				R.drawable.location_place };
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = {getString(R.string.time_reminder),
-				getString(R.string.location_reminder)};
+		String[] strTypeArr = { getString(R.string.time_reminder),
+				getString(R.string.location_reminder) };
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -585,10 +584,10 @@ public class NewTaskActivity extends Activity {
 		toBeShownLayout.setVisibility(View.VISIBLE);
 
 		// Array of strings for different intervals
-		String[] strIntervalArr = {getString(R.string.oneWeekLabel),
+		String[] strIntervalArr = { getString(R.string.oneWeekLabel),
 				getString(R.string.twoWeeksLabel),
 				getString(R.string.threeWeeksLabel),
-				getString(R.string.oneMonthLabel)};
+				getString(R.string.oneMonthLabel) };
 
 		SpinnerIntervalAdapter intervalAdapter = new SpinnerIntervalAdapter(
 				this, R.layout.simple_spinner_item, strIntervalArr);

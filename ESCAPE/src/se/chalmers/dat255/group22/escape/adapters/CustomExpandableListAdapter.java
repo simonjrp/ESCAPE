@@ -232,8 +232,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		});
 
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("")
-				? "no start time"
+		childTimeView.setText(childTimeText.equals("") ? "no start time"
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
