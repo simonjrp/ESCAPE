@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,23 +80,28 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 
 	}
-	
+
 	/**
 	 * Method for checking if Google Play services are connected on the device
-	 * @return true if connected, false other
+	 * 
+	 * @return true if connected, false otherwise
 	 */
 	protected boolean servicesConnected() {
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		
-		if(resultCode == ConnectionResult.SUCCESS) {
-			Log.d("Geofnce Detection", "Google Play services is available.");
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+
+		if (resultCode == ConnectionResult.SUCCESS) {
+			Log.d(Constants.APPTAG, "Google Play services is available.");
 			return true;
 		} else {
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) this, Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			if(errorDialog != null) {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+					resultCode, this,
+					Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			if (errorDialog != null) {
 				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
 				errorDialogFragment.setDialog(errorDialog);
-				errorDialogFragment.show(getSupportFragmentManager(), "Geofence Detecion");
+				errorDialogFragment.show(getSupportFragmentManager(),
+						"Geofence Detecion");
 			}
 		}
 		return false;

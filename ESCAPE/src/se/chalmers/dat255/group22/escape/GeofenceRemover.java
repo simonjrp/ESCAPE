@@ -152,7 +152,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+		Log.d(Constants.APPTAG,
 				Constants.DEBUG_GEOFENCES_CONNECTED);
 
 		// Now that the location client is connected, continue with actually
@@ -185,12 +185,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.DEBUG_GEOFENCES_TAG,
+			Log.d(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.DEBUG_GEOFENCES_TAG,
+			Log.e(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
@@ -211,12 +211,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.DEBUG_GEOFENCES_TAG,
+			Log.d(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.DEBUG_GEOFENCES_TAG,
+			Log.e(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
@@ -241,7 +241,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+		Log.d(Constants.APPTAG,
 				Constants.DEBUG_GEOFENCES_DISCONNECTED);
 
 		// Reset current location client
@@ -258,7 +258,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 			// try to start a Google Play services activity that resolves it.
 			try {
 				// The requestcode is the one received by the activity when the
-				// started activity returns some results.
+				// started resolution returns some results.
 				result.startResolutionForResult(activity,
 						Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 			} catch (SendIntentException e) {

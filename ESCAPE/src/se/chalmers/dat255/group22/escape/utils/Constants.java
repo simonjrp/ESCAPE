@@ -34,9 +34,9 @@ public final class Constants {
 	 */
 
 	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	public static final String APPTAG = "ESCAPE";
 
 	// Debug constants
-	public static final String DEBUG_GEOFENCES_TAG = "Geofences";
 
 	public static final String DEBUG_GEOFENCES_CONNECTED = "Connects to Location Services";
 

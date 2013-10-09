@@ -2,6 +2,7 @@ package se.chalmers.dat255.group22.escape;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 
@@ -172,12 +175,14 @@ public class NotificationHandler {
 			e.printStackTrace();
 		}
 
+		// Create a geofence from first item in the addresses list
 		Address address = addresses.get(0);
-		SimpleGeofence geofence = new SimpleGeofence(place.getId() + "",
-				address.getLatitude(), address.getLongitude(), 200, 0,
+		SimpleGeofence simpleGeofence = new SimpleGeofence(place.getId() + "",
+				address.getLatitude(), address.getLongitude(), 200, Geofence.NEVER_EXPIRE,
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 
 		Bundle args = generateBundle(listObject);
+
 		// Creates an intent holding the AlarmReceiver, and attaches the
 		// generated bundle
 		Intent alarmIntent = new Intent();
@@ -186,6 +191,19 @@ public class NotificationHandler {
 
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
 				alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		List<Geofence> geofenceList = new ArrayList<Geofence>();
+		geofenceList.add(simpleGeofence.toGeofence());
+
+		// TODO Have to test if services are connected!!!!
+//		if (((MainActivity) context).servicesConnected()) {
+			GeofenceRequester requester = new GeofenceRequester(
+					(Activity) context);
+			requester.setPendingIntent(pendingIntent);
+			requester.addGeofences(geofenceList);
+//		} else {
+//			Toast.makeText(context, "No Google Play services installed", Toast.LENGTH_LONG).show();
+//		}
 
 	}
 }

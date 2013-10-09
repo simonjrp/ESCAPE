@@ -144,7 +144,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+		Log.d(Constants.APPTAG,
 				Constants.DEBUG_GEOFENCES_CONNECTED);
 
 		// Now that the location client is connected, continue with actually
@@ -168,13 +168,13 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 
 		if (LocationStatusCodes.SUCCESS == statusCode) {
 
-			Log.d(Constants.DEBUG_GEOFENCES_TAG,
+			Log.d(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_ADD_SUCCESS);
 
 			broadcast.setAction(Constants.ACTION_GEOFENCES_ADDED);
 		} else {
 
-			Log.e(Constants.DEBUG_GEOFENCES_TAG,
+			Log.e(Constants.APPTAG,
 					Constants.DEBUG_GEOFENCES_ADD_ERROR);
 
 			broadcast.setAction(Constants.DEBUG_GEOFENCES_ADD_ERROR);
@@ -195,7 +195,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+		Log.d(Constants.APPTAG,
 				Constants.DEBUG_GEOFENCES_DISCONNECTED);
 
 		// Reset current location client
@@ -212,7 +212,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 			// try to start a Google Play services activity that resolves it.
 			try {
 				// The requestcode is the one received by the activity when the
-				// started activity returns some results.
+				// started resolution returns some results.
 				result.startResolutionForResult(activity,
 						Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 			} catch (SendIntentException e) {
