@@ -3,11 +3,14 @@ package se.chalmers.dat255.group22.escape.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 
 /**
@@ -91,9 +94,20 @@ public class CategoryAdapter implements ListAdapter {
 	}
 
 	@Override
-	public View getView(int i, View view, ViewGroup viewGroup) {
-		// TODO Fix a checkbox view!
-		return null;
+	public View getView(int position, View view, ViewGroup viewGroup) {
+
+        final Category theCategory = (Category) getItem(position);
+
+        if (view == null) {
+            view = new CheckBox(context);
+        }
+        CheckBox myBox = (CheckBox)view;
+        myBox.setText(theCategory.getName());
+        myBox.setChecked(false/*see if checked*/);
+        view = myBox;
+
+        // TODO Fix this so it actually works as intended!
+		return view;
 	}
 
 	@Override

@@ -1,7 +1,10 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
+import se.chalmers.dat255.group22.escape.objects.Category;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -85,8 +91,15 @@ public class TaskListFragment extends Fragment {
 	private void initPopup() {
 		View menuItemView = getActivity().findViewById(R.id.pick_category);
 		listPopupWindow = new ListPopupWindow(getActivity());
-		listPopupWindow.setAdapter(new ArrayAdapter(getActivity(),
-				R.layout.popup_categories, products));
+		//listPopupWindow.setAdapter(new ArrayAdapter(getActivity(),
+		//		R.layout.popup_categories, products));
+        CategoryAdapter tmpAdapter = new CategoryAdapter(getActivity());
+        List<Category> tmpList = new ArrayList<Category>();
+        tmpList.add(new Category("tmp1", null, null));
+        tmpList.add(new Category("tmp2", null, null));
+        tmpList.add(new Category("tmp3", null, null));
+        tmpAdapter.setCategories(tmpList);
+        listPopupWindow.setAdapter(tmpAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
         listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
