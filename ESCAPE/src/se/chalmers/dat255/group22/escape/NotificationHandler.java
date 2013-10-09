@@ -161,8 +161,7 @@ public class NotificationHandler {
 	}
 
 	public void addPlaceReminder(ListObject listObject) {
-		DBHandler dbHandler = new DBHandler(context);
-		Place place = dbHandler.getPlace(listObject);
+		Place place = dBH.getPlace(listObject);
 		Geocoder geocoder = new Geocoder(context);
 
 		List<Address> addresses = null;

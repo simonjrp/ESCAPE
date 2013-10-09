@@ -52,6 +52,8 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	 * Constructor for creating a new GeofenceRequester.
 	 * 
 	 * @param activity
+	 *            The activity context. Used to create a location client, make
+	 *            broadcasts etc.
 	 */
 	public GeofenceRequester(Activity activity) {
 		this.activity = activity;
@@ -114,7 +116,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 			throws UnsupportedOperationException {
 		currentGeoFences = (ArrayList<Geofence>) geofences;
 
-		// Request connection if now other request is in progress, and set in
+		// Request connection if no other request is in progress, and set in
 		// progress flag to true
 		if (!inProgress) {
 			inProgress = true;
@@ -167,15 +169,15 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 		if (LocationStatusCodes.SUCCESS == statusCode) {
 
 			Log.d(Constants.DEBUG_GEOFENCES_TAG,
-					Constants.DEBUG_GEOFENCES_ADDED_SUCCESS);
+					Constants.DEBUG_GEOFENCES_ADD_SUCCESS);
 
 			broadcast.setAction(Constants.ACTION_GEOFENCES_ADDED);
 		} else {
 
-			Log.d(Constants.DEBUG_GEOFENCES_TAG,
-					Constants.DEBUG_GEOFENCES_ADDED_ERROR);
+			Log.e(Constants.DEBUG_GEOFENCES_TAG,
+					Constants.DEBUG_GEOFENCES_ADD_ERROR);
 
-			broadcast.setAction(Constants.ACTION_GEOFENCES_ADD_ERROR);
+			broadcast.setAction(Constants.DEBUG_GEOFENCES_ADD_ERROR);
 		}
 
 		LocalBroadcastManager.getInstance(activity).sendBroadcast(broadcast);
@@ -185,7 +187,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	}
 
 	// Disconnects from location services
-	public void requestDisconnection() {
+	private void requestDisconnection() {
 		getLocationClient().disconnect();
 	}
 
