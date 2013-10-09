@@ -4,10 +4,21 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
@@ -25,15 +36,21 @@ import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 /**
@@ -49,6 +66,9 @@ public class NewTaskActivity extends Activity {
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
+	private PlacesTask placesTask;
+	private ParserTask parserTask;
+	private AutoCompleteTextView autoCompleteTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +88,7 @@ public class NewTaskActivity extends Activity {
 		String[] weekDays = getResources().getStringArray(R.array.weekdays);
 		nextWeekSameDay = getResources().getString(R.string.nextweeksameday)
 				+ " " + weekDays[weekday];
+
 	}
 
 	@Override
@@ -130,7 +151,7 @@ public class NewTaskActivity extends Activity {
 				String descriptionString = "";
 				String locationString = "";
 				TimeAlarm timeAlarm = null;
-                GPSAlarm gpsAlarm = null;
+				GPSAlarm gpsAlarm = null;
 				Date timeStart = null;
 				Date timeEnd = null;
 
@@ -146,9 +167,9 @@ public class NewTaskActivity extends Activity {
 					timeAlarm = dbHandler.getTimeAlarm(listObject);
 				}
 
-                if (dbHandler.getGPSAlarm(listObject) != null) {
-                    gpsAlarm = dbHandler.getGPSAlarm(listObject);
-                }
+				if (dbHandler.getGPSAlarm(listObject) != null) {
+					gpsAlarm = dbHandler.getGPSAlarm(listObject);
+				}
 
 				if (dbHandler.getTime(listObject) != null)
 					timeStart = dbHandler.getTime(listObject).getStartDate();
@@ -184,29 +205,56 @@ public class NewTaskActivity extends Activity {
 						location.setText(locationString);
 				}
 				important.setChecked(isImportant);
-                // Open up the reminder field if it has a reminder...
+				// Open up the reminder field if it has a reminder...
 				if (timeAlarm != null) {
-					RelativeLayout remindMe = (RelativeLayout)findViewById(R.id.remindMeField);
+					RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
 					onRemindMe(remindMe);
-                    remindType.setSelection(0);
-                    showTimeReminderInput();
+					remindType.setSelection(0);
+					showTimeReminderInput();
 				}
-                if (gpsAlarm != null) {
-                    RelativeLayout remindMe = (RelativeLayout)findViewById(R.id.remindMeField);
-                    onRemindMe(remindMe);
-                    remindType.setSelection(1);
-                    showLocationReminderInput();
-                }
+				if (gpsAlarm != null) {
+					RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
+					onRemindMe(remindMe);
+					remindType.setSelection(1);
+					showLocationReminderInput();
+				}
 
-                // ...and the event field if it is an event...
-                if(timeStart != null) {
-                    Button remindMe = (Button)findViewById(R.id.task_convert_event);
-                    onConvertEvent(remindMe);
-                }
+				// ...and the event field if it is an event...
+				if (timeStart != null) {
+					Button remindMe = (Button) findViewById(R.id.task_convert_event);
+					onConvertEvent(remindMe);
+				}
 
 				// TODO FIX TIMES AND STUFF
 			}
 		}
+
+		autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		autoCompleteTextView.setThreshold(1);
+
+		autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+				placesTask = new PlacesTask();
+				placesTask.execute(s.toString());
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+			}
+		});
+
 	}
 
 	@Override
@@ -601,7 +649,8 @@ public class NewTaskActivity extends Activity {
 	/**
 	 * When the "X" button next to the event field is pressed, this method is
 	 * called and the layout is restored to its previous state.
-	 * 
+     *
+     *
 	 * @param v
 	 *            the view that calls this method.
 	 */
@@ -628,7 +677,7 @@ public class NewTaskActivity extends Activity {
 
 		// Also hiding previous input
 
-		EditText location = (EditText) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
 		location.setVisibility(View.INVISIBLE);
 		isLocationReminder = false;
 	}
@@ -638,7 +687,7 @@ public class NewTaskActivity extends Activity {
 	 */
 	private void showLocationReminderInput() {
 		isLocationReminder = true;
-		EditText location = (EditText) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
 		location.setVisibility(View.VISIBLE);
 
 		// Also hiding previous input
@@ -703,4 +752,144 @@ public class NewTaskActivity extends Activity {
 
 		return new Date(dateCalendar.getTimeInMillis());
 	}
+
+	/** A method to download json data from url */
+	private String downloadUrl(String strUrl) throws IOException {
+		String data = "";
+		InputStream iStream = null;
+		HttpURLConnection urlConnection = null;
+		try {
+			URL url = new URL(strUrl);
+
+			// Creating an http connection to communicate with url
+			urlConnection = (HttpURLConnection) url.openConnection();
+
+			// Connecting to url
+			urlConnection.connect();
+
+			// Reading data from url
+			iStream = urlConnection.getInputStream();
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					iStream));
+
+			StringBuffer sb = new StringBuffer();
+
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+			data = sb.toString();
+
+			br.close();
+
+		} catch (Exception e) {
+			Log.d("Exception while downloading url", e.toString());
+		} finally {
+			iStream.close();
+			urlConnection.disconnect();
+		}
+		return data;
+	}
+
+	// Fetches all places from GooglePlaces AutoComplete Web Service
+	private class PlacesTask extends AsyncTask<String, Void, String> {
+
+		@Override
+		protected String doInBackground(String... place) {
+			// For storing data from web service
+			String data = "";
+
+			// Obtain browser key from https://code.google.com/apis/console
+			String key = "key=AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc";
+
+			String input = "";
+
+			try {
+				input = "input=" + URLEncoder.encode(place[0], "utf-8");
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+
+			// place type to be searched
+			String types = "types=geocode";
+
+			// Sensor enabled
+			String sensor = "sensor=false";
+
+			// Building the parameters to the web service
+			String parameters = input + "&" + types + "&language=se&" + sensor + "&" + key;
+
+			// Output format
+			String output = "json";
+
+			// Building the url to the web service
+			String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"
+					+ output + "?" + parameters;
+
+			try {
+				// Fetching the data from we service
+				data = downloadUrl(url);
+			} catch (Exception e) {
+				Log.d("Background Task", e.toString());
+			}
+            System.out.println(data);
+			return data;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+
+			// Creating ParserTask
+			parserTask = new ParserTask();
+
+			// Starting Parsing the JSON string returned by Web Service
+			parserTask.execute(result);
+		}
+	}
+
+	/** A class to parse the Google Places in JSON format */
+	private class ParserTask
+			extends
+				AsyncTask<String, Integer, List<HashMap<String, String>>> {
+
+		JSONObject jObject;
+
+		@Override
+		protected List<HashMap<String, String>> doInBackground(
+				String... jsonData) {
+
+			List<HashMap<String, String>> places = null;
+
+			PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+
+			try {
+				jObject = new JSONObject(jsonData[0]);
+
+				// Getting the parsed data as a List construct
+				places = placeJsonParser.parse(jObject);
+
+			} catch (Exception e) {
+				Log.d("Exception", e.toString());
+			}
+			return places;
+		}
+
+		@Override
+		protected void onPostExecute(List<HashMap<String, String>> result) {
+
+			String[] from = new String[]{"description"};
+			int[] to = new int[]{android.R.id.text1};
+
+			// Creating a SimpleAdapter for the AutoCompleteTextView
+			SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result,
+					R.layout.location_item, from, to);
+
+			// Setting the adapter
+			autoCompleteTextView.setAdapter(adapter);
+ }
+    }
+
 }
