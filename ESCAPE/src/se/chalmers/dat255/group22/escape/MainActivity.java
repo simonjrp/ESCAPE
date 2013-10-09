@@ -10,6 +10,7 @@ import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -78,6 +79,27 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
+	}
+	
+	/**
+	 * Method for checking if Google Play services are connected on the device
+	 * @return true if connected, false other
+	 */
+	protected boolean servicesConnected() {
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		
+		if(resultCode == ConnectionResult.SUCCESS) {
+			Log.d("Geofnce Detection", "Google Play services is available.");
+			return true;
+		} else {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) this, Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			if(errorDialog != null) {
+				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
+				errorDialogFragment.setDialog(errorDialog);
+				errorDialogFragment.show(getSupportFragmentManager(), "Geofence Detecion");
+			}
+		}
+		return false;
 	}
 
 	@Override
