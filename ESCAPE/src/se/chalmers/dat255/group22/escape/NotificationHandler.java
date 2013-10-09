@@ -1,17 +1,32 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.Geofence;
 
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 /**
  * A notification handler for creating notifications that should appear at a
@@ -44,6 +59,9 @@ public class NotificationHandler {
 	/**
 	 * Constant to use when setting/getting a ListObject id from a bundle
 	 */
+	
+	private static final int GPLAY_FAILURE_REQUEST = 9000;
+
 	public static String NOTIFICATION_ID = "ID";
 	private DBHandler dBH;
 	private Context context;
@@ -84,7 +102,7 @@ public class NotificationHandler {
 				.getSystemService(Context.ALARM_SERVICE);
 
 		// Creates an intent holding the AlarmReceiver, and attaches the
-		// generates bundle
+		// generated bundle
 		Intent alarmIntent = new Intent();
 		alarmIntent.setAction(AlarmReceiver.NEW_TIME_NOTIFICATION);
 		alarmIntent.putExtras(args);
@@ -149,5 +167,53 @@ public class NotificationHandler {
 
 		return bundle;
 
+	}
+
+	public void addPlaceReminder(ListObject listObject) {
+		DBHandler dbHandler = new DBHandler(context);
+		Place place = dbHandler.getPlace(listObject);
+		Geocoder geocoder = new Geocoder(context);
+
+		List<Address> addresses = null;
+		try {
+			addresses = geocoder.getFromLocationName(place.getName(), 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Address address = addresses.get(0);
+		SimpleGeofence geofence = new SimpleGeofence(place.getId() + "",
+				address.getLatitude(), address.getLongitude(), 200, 0,
+				Geofence.GEOFENCE_TRANSITION_ENTER);
+
+		Bundle args = generateBundle(listObject);
+		// Creates an intent holding the AlarmReceiver, and attaches the
+		// generated bundle
+		Intent alarmIntent = new Intent();
+		alarmIntent.setAction(AlarmReceiver.NEW_LOCATION_NOTIFICATION);
+		alarmIntent.putExtras(args);
+
+		
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+				alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+	}
+	
+	protected boolean servicesConnected() {
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		
+		if(resultCode == ConnectionResult.SUCCESS) {
+			Log.d("Geofnce Detection", "Google Play services is available.");
+			return true;
+		} else {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) context, GPLAY_FAILURE_REQUEST);
+			if(errorDialog != null) {
+				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
+				errorDialogFragment.setDialog(errorDialog);
+				errorDialogFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "Geofence Detecion");
+			}
+		}
+		return false;
 	}
 }

@@ -42,8 +42,6 @@ public class MainActivity extends FragmentActivity {
 	private CharSequence title;
 	private CharSequence drawerTitle;
 	
-	private static final int GPLAY_FAILURE_REQUEST = 9000;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -195,38 +193,5 @@ public class MainActivity extends FragmentActivity {
 		private void setTitle(String string) {
 			title = string;
 		}
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		switch(requestCode) {
-		
-		case GPLAY_FAILURE_REQUEST :
-			switch(resultCode) {
-			case Activity.RESULT_OK:
-				//TODO Try to connect again
-				break;
-			}
-		
-		
-		}
-	}
-	
-	private boolean servicesConnected() {
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		
-		if(resultCode == ConnectionResult.SUCCESS) {
-			Log.d("Geofnce Detection", "Google Play services is available.");
-			return true;
-		} else {
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, GPLAY_FAILURE_REQUEST);
-			if(errorDialog != null) {
-				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
-				errorDialogFragment.setDialog(errorDialog);
-				errorDialogFragment.show(getSupportFragmentManager(), "Geofence Detecion");
-			}
-		}
-		return false;
 	}
 }

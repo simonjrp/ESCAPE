@@ -386,6 +386,10 @@ public class NewTaskActivity extends Activity {
 			tmpId = dbHandler.addPlace(lo.getPlace());
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
 					dbHandler.getPlace(tmpId));
+			
+			NotificationHandler nf = new NotificationHandler(this);
+			nf.addPlaceReminder(dbHandler.getListObject(objId));
+			
 		}
 	}
 
