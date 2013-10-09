@@ -3,9 +3,15 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +41,8 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
+	
+	private static final int GPLAY_FAILURE_REQUEST = 9000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,5 +195,38 @@ public class MainActivity extends FragmentActivity {
 		private void setTitle(String string) {
 			title = string;
 		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		switch(requestCode) {
+		
+		case GPLAY_FAILURE_REQUEST :
+			switch(resultCode) {
+			case Activity.RESULT_OK:
+				//TODO Try to connect again
+				break;
+			}
+		
+		
+		}
+	}
+	
+	private boolean servicesConnected() {
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		
+		if(resultCode == ConnectionResult.SUCCESS) {
+			Log.d("Geofnce Detection", "Google Play services is available.");
+			return true;
+		} else {
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, GPLAY_FAILURE_REQUEST);
+			if(errorDialog != null) {
+				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
+				errorDialogFragment.setDialog(errorDialog);
+				errorDialogFragment.show(getSupportFragmentManager(), "Geofence Detecion");
+			}
+		}
+		return false;
 	}
 }
