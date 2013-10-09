@@ -23,9 +23,7 @@ import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListen
 import com.google.android.gms.location.LocationStatusCodes;
 
 /**
- * Class to be used for adding geofences for location reminders. Since it
- * connects to the Location Services during the request process, it might
- * produce some errors.
+ * Class to be used for adding geofences for location reminders.
  * 
  * @author Simon Persson
  * 
@@ -43,13 +41,18 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	// A list for storing all current geofences.
 	private ArrayList<Geofence> currentGeoFences;
 
-	// TODO add comment
+	// The location client used to connect to the Location Services
 	private LocationClient locationClient;
 
 	// Flag used for indicating if an add or remove request of a geofence is
 	// active or not
 	private boolean inProgress;
 
+	/**
+	 * Constructor for creating a new GeofenceRequester.
+	 * 
+	 * @param activity
+	 */
 	public GeofenceRequester(Activity activity) {
 		this.activity = activity;
 
@@ -99,6 +102,14 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 		return pendingIntent;
 	}
 
+	/**
+	 * Method for adding one or more geofences.
+	 * 
+	 * @param geofences
+	 *            A list of one or more geofences to add
+	 * @throws UnsupportedOperationException
+	 *             If a request already is in progress.
+	 */
 	public void addGeofences(List<Geofence> geofences)
 			throws UnsupportedOperationException {
 		currentGeoFences = (ArrayList<Geofence>) geofences;
@@ -114,10 +125,12 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 		}
 	}
 
-	public void requestConnection() {
+	// Tries to connect to Location Services
+	private void requestConnection() {
 		getLocationClient().connect();
 	}
 
+	// Creates and returns a new Location Client (later used to add geofences)
 	private GooglePlayServicesClient getLocationClient() {
 		if (locationClient == null) {
 			locationClient = new LocationClient(activity, this, this);
@@ -129,7 +142,8 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d("Geofences", "Connected to Location Services");
+		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+				Constants.DEBUG_GEOFENCES_CONNECTED);
 
 		// Now that the location client is connected, continue with actually
 		// adding the geofences.
@@ -150,21 +164,18 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 		// attached.
 		Intent broadcast = new Intent();
 
-		String message;
-
-		// TODO fix hardcoded messages
 		if (LocationStatusCodes.SUCCESS == statusCode) {
-			message = "Geofences was successfully added";
 
-			Log.d("Geofences", message);
+			Log.d(Constants.DEBUG_GEOFENCES_TAG,
+					Constants.DEBUG_GEOFENCES_ADDED_SUCCESS);
 
-			broadcast.setAction("GEOFENCES_ADDED");
+			broadcast.setAction(Constants.ACTION_GEOFENCES_ADDED);
 		} else {
-			message = "Geofences coudln't be added, error!";
 
-			Log.d("Geofences", message);
+			Log.d(Constants.DEBUG_GEOFENCES_TAG,
+					Constants.DEBUG_GEOFENCES_ADDED_ERROR);
 
-			broadcast.setAction("GEOFENCES_ADD_ERROR");
+			broadcast.setAction(Constants.ACTION_GEOFENCES_ADD_ERROR);
 		}
 
 		LocalBroadcastManager.getInstance(activity).sendBroadcast(broadcast);
@@ -182,7 +193,8 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d("Geofences", "Disconnected from Location Services");
+		Log.d(Constants.DEBUG_GEOFENCES_TAG,
+				Constants.DEBUG_GEOFENCES_DISCONNECTED);
 
 		// Reset current location client
 		locationClient = null;
@@ -206,9 +218,13 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 				e.printStackTrace();
 			}
 		} else {
+			// Notify interested components that the connection failed. The
+			// MainActivity should bring up an error dialog.
 			Intent errorBroadcast = new Intent();
-			errorBroadcast.setAction("LOCATION_SERVICES_DISCONNECT_FAIL");
-			errorBroadcast.putExtra("ERROR_CODE", result.getErrorCode());
+			errorBroadcast
+					.setAction(Constants.ACTION_GEOFENCES_CONNECTION_FAILED);
+			errorBroadcast.putExtra(Constants.EXTRAS_TAG_GEOFENCES_ERROR_CODE,
+					result.getErrorCode());
 
 			LocalBroadcastManager.getInstance(activity).sendBroadcast(
 					errorBroadcast);

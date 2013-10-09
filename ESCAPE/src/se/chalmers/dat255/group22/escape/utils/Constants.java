@@ -28,17 +28,36 @@ public final class Constants {
 
 	private Constants() {
 	}
-	
+
 	/*
-	 * START
-	 * GEOFENCE
+	 * START GEOFENCE
 	 */
-	
+
 	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
+	// Debug constants
+	public static final String DEBUG_GEOFENCES_TAG = "Geofences";
+
+	public static final String DEBUG_GEOFENCES_CONNECTED = "Connects to Location Services";
 	
+	public static final String DEBUG_GEOFENCES_DISCONNECTED = "Disconnects from Location Services";
+
+	public static final String DEBUG_GEOFENCES_ADDED_SUCCESS = "Successfully added all geofences";
+	
+	public static final String DEBUG_GEOFENCES_ADDED_ERROR = "An error occured when adding geofences";
+
+	// Intent actions
+	public static final String ACTION_GEOFENCES_ADDED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADDED";
+
+	public static final String ACTION_GEOFENCES_ADD_ERROR = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADD_ERROR";
+	
+	public static final String ACTION_GEOFENCES_CONNECTION_FAILED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_CONNECTION_FAILED";
+	
+	// Intent extras
+	public static final String EXTRAS_TAG_GEOFENCES_ERROR_CODE = "ERROR_CODE";
+
 	/*
-	 * EMD
-	 *GEOFENCE
+	 * END GEOFENCE
 	 */
-	
+
 }
