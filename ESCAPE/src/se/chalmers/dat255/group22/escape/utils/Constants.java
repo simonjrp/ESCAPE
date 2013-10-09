@@ -28,4 +28,17 @@ public final class Constants {
 
 	private Constants() {
 	}
+	
+	/*
+	 * START
+	 * GEOFENCE
+	 */
+	
+	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	
+	/*
+	 * EMD
+	 *GEOFENCE
+	 */
+	
 }

@@ -6,8 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
@@ -36,7 +40,7 @@ import android.util.Log;
  * 
  */
 
-public class NotificationHandler {
+public class NotificationHandler implements ConnectionCallbacks, OnConnectionFailedListener, OnAddGeofencesResultListener {
 
 	/**
 	 * Constant to use when setting/getting a ListObject title from a bundle.
@@ -65,6 +69,15 @@ public class NotificationHandler {
 	public static String NOTIFICATION_ID = "ID";
 	private DBHandler dBH;
 	private Context context;
+	
+	// Location reminder specific variables
+	private LocationClient locationClient;
+	private PendingIntent locationPendingIntent;
+	public enum REQUEST_TYPE {ADD, REMOVE};
+	private REQUEST_TYPE requestType;
+	private boolean reqInProgress;
+	
+	
 
 	/**
 	 * Creates a new notification handler.
@@ -200,6 +213,10 @@ public class NotificationHandler {
 
 	}
 	
+	/**
+	 * Method for checking if Google Play services are connected on the device
+	 * @return true if connected, false otherwise
+	 */
 	protected boolean servicesConnected() {
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
 		
@@ -215,5 +232,29 @@ public class NotificationHandler {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void onAddGeofencesResult(int statusCode, String[] geofenceRequestIds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		
 	}
 }
