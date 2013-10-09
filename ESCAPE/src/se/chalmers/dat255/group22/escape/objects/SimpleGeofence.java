@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape.objects;
 
+import com.google.android.gms.location.Geofence;
+
 /**
  * A class representing a GeofenceObject, defined with coordinates and radius.
  * 
@@ -8,7 +10,7 @@ package se.chalmers.dat255.group22.escape.objects;
  */
 public class SimpleGeofence {
 
-	private final int id;
+	private final String id;
 	private final double latitude;
 	private final double longitude;
 	private final float radius;
@@ -31,7 +33,7 @@ public class SimpleGeofence {
 	 * @param transitionType
 	 *            The type of Geofence transition.
 	 */
-	public SimpleGeofence(int id, double latitude, double longitude,
+	public SimpleGeofence(String id, double latitude, double longitude,
 			float radius, long expirationDuration, int transitionType) {
 		this.id = id;
 		this.latitude = latitude;
@@ -46,7 +48,7 @@ public class SimpleGeofence {
 	 * 
 	 * @return Geofence's id.
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -93,5 +95,21 @@ public class SimpleGeofence {
 	 */
 	public int getTransitionType() {
 		return transitionType;
+	}
+
+	/**
+	 * Method for creating a Location Services Geofence object from a
+	 * SimpleGeofence object.
+	 * 
+	 * @return A Geofence object
+	 */
+	public Geofence toGeofence() {
+		Geofence.Builder builder = new Geofence.Builder();
+		builder.setRequestId(getId());
+		builder.setTransitionTypes(getTransitionType());
+		builder.setCircularRegion(getLatitude(), getLongitude(), getRadius());
+		builder.setExpirationDuration(getExpirationDuration());
+
+		return builder.build();
 	}
 }
