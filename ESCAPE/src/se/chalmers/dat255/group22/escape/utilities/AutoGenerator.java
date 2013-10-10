@@ -3,6 +3,7 @@ package se.chalmers.dat255.group22.escape.utilities;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +48,6 @@ public class AutoGenerator {
 	}
 
 	public List<ListObject> generate() {
-//		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm:ss.SSS");
 		// ** When is the user free?
 		// Find where in the week we are
 		Calendar now = new GregorianCalendar();
@@ -60,8 +60,8 @@ public class AutoGenerator {
 			end.add(Calendar.DAY_OF_WEEK, 1);
 		}
 		end.add(Calendar.HOUR_OF_DAY, 24);
-//		Log.d("Generate: TODAY", sdf.format(now.getTimeInMillis()));
-//		Log.d("Generate: SUNDAY", sdf.format(end.getTimeInMillis()));
+		// Log.d("Generate: TODAY", sdf.format(now.getTimeInMillis()));
+		// Log.d("Generate: SUNDAY", sdf.format(end.getTimeInMillis()));
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
@@ -72,7 +72,7 @@ public class AutoGenerator {
 			totalList.add(convertListObject(iterator.next()));
 		}
 
-		Collections.sort(totalList);
+		
 		fixOverlap(totalList);
 
 		// Prioritize the blocks depending on if they are constrained to working
@@ -94,36 +94,48 @@ public class AutoGenerator {
 		// Place the splits into the time slots
 		// -- Prioritize the splits that can only be
 		// placed within certain time windows
-
 		List<ListObject> lolist = new LinkedList<ListObject>();
 
 		for (ArrayList<IBlockObject> list : priolists) {
 			if (!list.isEmpty()) {
-				// First priority
-				Collections.sort(first, new Comparator<IBlockObject>() {
+				// Larger sessions get priority over smaller
+				Collections.sort(list, Collections
+						.reverseOrder(new Comparator<IBlockObject>() {
 
-					/*
-					 * Sorts on session size
-					 */
-					@Override
-					public int compare(IBlockObject first, IBlockObject second) {
-						int a = first.getSessionMinutes(), b = second
-								.getSessionMinutes();
-						if (a == b) {
-							return 0;
-						}
-						return a - b;
-					}
+							/*
+							 * Sorts on session size
+							 */
+							@Override
+							public int compare(IBlockObject first,
+									IBlockObject second) {
+								int a = first.getSessionMinutes(), b = second
+										.getSessionMinutes();
+								if (a == b) {
+									return 0;
+								}
+								return a - b;
+							}
 
-				});
-				int[][] data = new int[first.size()][3];
+						}));
+				// Data[][] is used to remember information about the different
+				// blocks, and to be able to modify it
+				int[][] data = new int[list.size()][3];
 				int i = 0;
-				for (IBlockObject block : first) {
+				for (IBlockObject block : list) {
 					data[i][0] = block.getSplitAmount();
 					data[i][1] = block.getSplitAmount();
 					data[i][2] = block.getTimeWindow().getNumVal();
+					i++;
+				}
+				if (data[0][2] == TimeWindow.ALL.getNumVal()) {
+					// If we entered the last priority (the blocks that can be
+					// placed anywhere) we remove all the supporting timeboxes
+					// for working hour begin/end we added in previous steps,
+					// since they can span these "borders"
+					removeAllNoDurationTimeBoxes(totalList);
 				}
 				ListIterator<TimeBox> it = totalList.listIterator(0);
+
 				if (it.hasNext()) {
 					TimeBox current;
 					TimeBox next = it.next();
@@ -132,7 +144,60 @@ public class AutoGenerator {
 						if (it.hasNext()) {
 							next = it.next();
 
-							Long diffLong = next.start - current.end;
+							if (data[0][2] != TimeWindow.ALL.getNumVal()) {
+								// If we are trying to insert
+								// something that isn't an
+								// "all" timeWindow we need
+								// to check if there is a
+								// split within the time
+								// duration we are checking
+								Calendar workingDayStart = Calendar
+										.getInstance();
+								workingDayStart.setTimeInMillis(current.end);
+								workingDayStart.set(Calendar.HOUR_OF_DAY, 8);
+								workingDayStart.set(Calendar.MINUTE, 0);
+								workingDayStart.set(Calendar.SECOND, 0);
+								workingDayStart.set(Calendar.MILLISECOND, 0);
+								Long workStart = workingDayStart
+										.getTimeInMillis();
+
+								Calendar workingDayEnd = (Calendar) workingDayStart
+										.clone();
+								workingDayEnd.setTimeInMillis(current.end);
+								workingDayEnd.set(Calendar.HOUR_OF_DAY, 17);
+								workingDayEnd.set(Calendar.MINUTE, 0);
+								workingDayEnd.set(Calendar.SECOND, 0);
+								workingDayEnd.set(Calendar.MILLISECOND, 0);
+								Long workEnd = workingDayEnd.getTimeInMillis();
+
+								if (current.end < workStart
+										&& next.start > workStart) {
+									// Here the split is 8
+									// We add a timebox that starts and ends at
+									// the same time and sets next to point to
+									// it so that it is considered during the
+									// rest of the algorithm
+									it.previous();
+									it.add(new TimeBox(workStart, workStart));
+									next = it.next();
+								} else if (current.end < workEnd
+										&& next.start > workEnd) {
+									// Here the split is 17
+									it.previous();
+									it.add(new TimeBox(workEnd, workEnd));
+
+									next = it.previous();
+									it.next();
+								}
+							}
+
+							Long timeSlotSize = next.start - current.end;
+
+							// We order the blocks to use by the percentage they
+							// have been used so that we don't end up with a
+							// scenario where one "block" has been used a lot
+							// more than the others in the end, if there isn't
+							// enough time to add all the blocks sessions
 							IBlockObject fittingBlock = null;
 							long blockTime = 0;
 							double[] percentageLeft = new double[data.length];
@@ -154,7 +219,9 @@ public class AutoGenerator {
 								order[max] = i;
 							}
 
-							for (i = 0; i < first.size(); i++) {
+							// Check all the blocks we have if they fit in the
+							// duration
+							for (i = 0; i < list.size(); i++) {
 								int nextOnTurn = 0;
 								for (int j = 0; j < order.length; j++) {
 									if (order[j] == i) {
@@ -162,15 +229,32 @@ public class AutoGenerator {
 										break;
 									}
 								}
-								IBlockObject currentBlock = first
+								IBlockObject currentBlock = list
 										.get(nextOnTurn);
 								if (data[nextOnTurn][1] > 0) {
+
+									if (data[nextOnTurn][2] != TimeWindow.ALL
+											.getNumVal()) {
+										// If the block is not of the same
+										// timeWindow as the current period we
+										// continue with the loop without doing
+										// anything
+										TimeWindow timeWindow = calculateTimeWindow(
+												current.end, next.start);
+										if (data[nextOnTurn][2] != timeWindow
+												.getNumVal()) {
+											continue;
+										}
+									}
+
+									// We make sure to check if it is the last
+									// session and get the proper session time
 									blockTime = (long) 60000
 											* (data[nextOnTurn][1] == 1 ? currentBlock
 													.getLastSplitMinutes()
 													: currentBlock
 															.getSessionMinutes());
-									if (diffLong >= blockTime) {
+									if (timeSlotSize >= blockTime) {
 										fittingBlock = currentBlock;
 										// Reduce the remaining block amount
 										// with 1
@@ -180,7 +264,13 @@ public class AutoGenerator {
 								}
 							}
 							if (fittingBlock != null) {
-								// INSERT
+								// Inserting a block that fits into the
+								// resulting list object list.
+								// Also adding a timebox to the schedule so that
+								// we don't place something at the same spot as
+								// it, worth noting, we place the iterator
+								// "one step behind" to recalculate with the new
+								// obstruction in mind
 								ListObject insert = new ListObject(-1,
 										fittingBlock.getName());
 								lolist.add(insert);
@@ -192,13 +282,9 @@ public class AutoGenerator {
 										+ blockTime));
 								it.previous();
 							}
-						} // else {
-							// Here we can do if there is no more timeBoxes
-							// (last
-							// space
-							// until list end
-							// }
-						// Check if we have any more blocks to place
+						}
+						// Check if we are done; that we don't have any more
+						// IBlockObjects to place
 						boolean canPlace = false;
 						for (i = 0; i < data.length; i++) {
 							if (data[i][1] > 0) {
@@ -214,48 +300,71 @@ public class AutoGenerator {
 			}
 		}
 
-		// Splits not used is stored.
-
-		// Return the list with the newly created listObjects
-
-//		StringBuilder sb = new StringBuilder();
-//		int i = 1;
-//		for (ListObject lo : lolist) {
-//			Time time = lo.getTime();
-//			sb.append("" + i + " " + sdf.format(time.getStartDate().getTime())
-//					+ " to " + sdf.format(time.getEndDate().getTime()) + "\n");
-//			i++;
-//		}
-//		Log.d("ListObjectList", sb.toString());
-		
-		
-		
-//		Log.d("ListObjectAmount", "" + lolist.size());
-//		Log.d("ListObjectFirstAndLast",
-//				""
-//						+ sdf.format(lolist.get(0).getTime().getStartDate()
-//								.getTime())
-//						+ " to "
-//						+ sdf.format(lolist.get(0).getTime().getEndDate()
-//								.getTime())
-//						+ "\n"
-//						+ sdf.format(lolist.get(lolist.size()-1).getTime().getStartDate()
-//								.getTime())
-//						+ " to "
-//						+ sdf.format(lolist.get(lolist.size()-1).getTime().getEndDate()
-//								.getTime()));
 		return lolist;
 	}
-	
-	
+
+	/*
+	 * This removes all the time boxes that have no real duration
+	 */
+	private void removeAllNoDurationTimeBoxes(LinkedList<TimeBox> totalList) {
+
+		ListIterator<TimeBox> li = totalList.listIterator(0);
+		while (li.hasNext()) {
+			TimeBox tb = li.next();
+			long duration = tb.end - tb.start;
+			if (duration == 0) {
+				li.remove();
+			}
+		}
+	}
+
+	/*
+	 * Returns the right TimeWindow that spans between the two time parameters
+	 * I.e. checks if it is working hours, leisure time or in between
+	 */
+	private TimeWindow calculateTimeWindow(Long start, Long end) {
+
+		Calendar calStart = Calendar.getInstance();
+		Calendar calEnd = (Calendar) calStart.clone();
+
+		calStart.setTimeInMillis(start);
+		calEnd.setTimeInMillis(end);
+
+		Calendar workStart = Calendar.getInstance();
+		Calendar workEnd = (Calendar) calStart.clone();
+
+		workStart.set(Calendar.HOUR_OF_DAY, 8);
+		workStart.set(Calendar.MINUTE, 0);
+		workStart.set(Calendar.SECOND, 0);
+		workStart.set(Calendar.MILLISECOND, 0);
+		workEnd.set(Calendar.HOUR_OF_DAY, 17);
+		workEnd.set(Calendar.MINUTE, 0);
+		workEnd.set(Calendar.SECOND, 0);
+		workEnd.set(Calendar.MILLISECOND, 0);
+
+		if (calStart.compareTo(workStart) < 0) {
+			if (calEnd.compareTo(workStart) <= 0) {
+				return TimeWindow.LEISURE;
+			} else {
+				return TimeWindow.ALL;
+			}
+		} else if (calStart.compareTo(workEnd) >= 0) {
+			return TimeWindow.LEISURE;
+		} else {
+			if (calEnd.compareTo(workEnd) > 0) {
+				return TimeWindow.ALL;
+			} else {
+				return TimeWindow.WORKING;
+			}
+		}
+	}
 
 	/*
 	 * Fixes overlap between TimeBoxes in a list.
-	 * 
-	 * @param an already sorted LinkedList<TimeBox>. Should be sorted such that
-	 * the TimeBox that starts first is added first to the left
 	 */
-	public void fixOverlap(LinkedList<TimeBox> fullList) {
+	private void fixOverlap(LinkedList<TimeBox> fullList) {
+		Collections.sort(fullList);
+		
 		Iterator<TimeBox> iterator = fullList.iterator();
 		if (iterator.hasNext()) {
 			TimeBox current, next = iterator.next();
@@ -282,7 +391,7 @@ public class AutoGenerator {
 		}
 	}
 
-	public LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
+	private LinkedList<TimeBox> removeNights(Calendar start, Calendar end) {
 		// If start is after or the same time as end, return null
 		if (start.compareTo(end) > -1) {
 			return null;
@@ -339,11 +448,11 @@ public class AutoGenerator {
 	// This inner class represents a "timebox", i.e. a start- and an endtime
 	// that belongs together.
 	// The start and end time is represented by milliseconds (since 1970 Jan 1)
-	public class TimeBox implements Comparable<TimeBox> {
+	protected class TimeBox implements Comparable<TimeBox> {
 		public Long start;
 		public Long end;
 
-		public TimeBox(Long start, Long end) {
+		protected TimeBox(Long start, Long end) {
 			this.start = start;
 			this.end = end;
 		}
@@ -360,6 +469,9 @@ public class AutoGenerator {
 
 	}
 
+	/*
+	 * Converts a list object with time into a TimeBox
+	 */
 	private TimeBox convertListObject(ListObject lo) {
 		Time time = lo.getTime();
 		if (time != null) {
