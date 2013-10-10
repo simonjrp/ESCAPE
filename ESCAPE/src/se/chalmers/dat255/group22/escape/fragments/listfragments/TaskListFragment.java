@@ -32,12 +32,8 @@ public class TaskListFragment extends Fragment {
 	ListView ourTaskList;
 	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
-
+    // popup where use can pick what categories to display
 	ListPopupWindow listPopupWindow;
-
-	// TODO delete this tmp crap
-	String[] products = {"A list", "containing", "meaningless", "nonsense",
-			"Just like Television!"};
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -91,20 +87,17 @@ public class TaskListFragment extends Fragment {
 	private void initPopup() {
 		View menuItemView = getActivity().findViewById(R.id.pick_category);
 		listPopupWindow = new ListPopupWindow(getActivity());
-		//listPopupWindow.setAdapter(new ArrayAdapter(getActivity(),
-		//		R.layout.popup_categories, products));
-        CategoryAdapter tmpAdapter = new CategoryAdapter(getActivity());
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity());
         List<Category> tmpList = new ArrayList<Category>();
         tmpList.add(new Category("tmp1", null, null));
         tmpList.add(new Category("tmp2", null, null));
         tmpList.add(new Category("tmp3", null, null));
-        tmpAdapter.setCategories(tmpList);
-        listPopupWindow.setAdapter(tmpAdapter);
+        categoryAdapter.setCategories(tmpList);
+        listPopupWindow.setAdapter(categoryAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
         listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
-		listPopupWindow.setHeight(400);
-		// listPopupWindow.setOnItemClickListener();
+		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 	}
 
     /**

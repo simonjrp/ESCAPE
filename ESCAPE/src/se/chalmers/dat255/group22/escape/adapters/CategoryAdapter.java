@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListAdapter;
 
 /**
@@ -98,15 +99,31 @@ public class CategoryAdapter implements ListAdapter {
 
         final Category theCategory = (Category) getItem(position);
 
+        // Create the view if it does not exist
         if (view == null) {
-            view = new CheckBox(context);
+            CheckBox tmpBox = new CheckBox(context);
+            // The buttons initial state
+            tmpBox.setChecked(theCategory.getBaseColor() != null);
+            // Set what to do when checkbox changes state
+            tmpBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if ( b == true ) {
+                        theCategory.setBaseColor("Hey");
+                        compoundButton.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
+                    } else {
+                        theCategory.setBaseColor(null);
+                        compoundButton.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
+                    }
+                }
+            });
+            view = tmpBox;
         }
         CheckBox myBox = (CheckBox)view;
-        myBox.setText(theCategory.getName());
-        myBox.setChecked(false/*see if checked*/);
+        myBox.setChecked(theCategory.getBaseColor()!=null);
+        myBox.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
         view = myBox;
 
-        // TODO Fix this so it actually works as intended!
 		return view;
 	}
 
