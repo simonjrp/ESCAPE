@@ -65,7 +65,7 @@ public class NotificationHandler {
 	}
 
 	/**
-	 * Method for adding a reminder notification for a task or event.
+	 * Method for adding a time reminder notification for a task or event.
 	 * 
 	 * @param listObject
 	 *            The ListObject describing the task or event.
@@ -73,7 +73,7 @@ public class NotificationHandler {
 	 *             If the ListObject's TimeAlarm object is null (i.e no alarm
 	 *             time specified)
 	 */
-	public void addReminderNotification(ListObject listObject)
+	public void addTimeReminder(ListObject listObject)
 			throws IllegalArgumentException {
 
 		TimeAlarm timeAlarm = dBH.getTimeAlarm(listObject);
@@ -90,7 +90,8 @@ public class NotificationHandler {
 
 		// Creates an intent holding the AlarmReceiver, and attaches the
 		// generates bundle
-		Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+		Intent alarmIntent = new Intent();
+		alarmIntent.setAction(AlarmReceiver.NEW_TIME_NOTIFICATION);
 		alarmIntent.putExtras(args);
 
 		/*

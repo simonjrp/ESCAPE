@@ -200,7 +200,7 @@ public class NewTaskActivity extends Activity {
 						dbHandler.getListObject(idLo),
 						dbHandler.getTimeAlarm(idAlarm));
 
-				nf.addReminderNotification(dbHandler.getListObject(idLo));
+				nf.addTimeReminder(dbHandler.getListObject(idLo));
 			}
 
 		} else {

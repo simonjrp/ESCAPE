@@ -125,7 +125,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		if (thisWeekEventList.size() == 0)
 			thisWeekEventList.add(emptyObject);
 
-        this.notifyDataSetChanged();
+		this.notifyDataSetChanged();
 		expLv.expandGroup(0, true);
 	}
 
@@ -290,10 +290,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		this.dataSetObservable.notifyInvalidated();
 	}
 
-    /**
-     * Call this to notify that something has changed. Makes the view update!
-     * {@inheritDoc}
-     */
+	/**
+	 * Call this to notify that something has changed. Makes the view update!
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void notifyDataSetChanged() {
 		this.dataSetObservable.notifyChanged();

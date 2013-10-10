@@ -50,7 +50,7 @@ public class TestNotificationHandler extends
 		// dbHandler.getTimeAlarm(idTimeAlarm));
 
 		try {
-			notifHandler.addReminderNotification(dbHandler.getListObject(idLo));
+			notifHandler.addTimeReminder(dbHandler.getListObject(idLo));
 			fail("Expected NullPointerException to be thrown");
 		} catch (IllegalArgumentException e) {
 			assertTrue(true);

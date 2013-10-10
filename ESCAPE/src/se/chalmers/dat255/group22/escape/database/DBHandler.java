@@ -310,6 +310,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * Saves a category to the database
 	 * 
 	 * @param category
+	 * @return -1 if some error happened, otherwise just a number
 	 */
 	public Long addCategory(Category category) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -730,6 +731,39 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return list;
 	}
+	
+	/**
+	 * Returns the Category with the name specified.
+	 * 
+	 * @param name
+	 * @return Category with the name
+	 */
+	public Category getCategory(String name) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_CATEGORIES, new String[] {
+				COLUMN_CATEGORIES_NAME, COLUMN_CATEGORIES_BASE_COLOR, COLUMN_CATEGORIES_IMPORTANT_COLOR },
+				COLUMN_CATEGORIES_NAME + "=?", new String[] { name.toString() },
+				null, null, null);
+
+		List<Category> list = new LinkedList<Category>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				Category object = new Category(cursor.getString(cursor
+						.getColumnIndex(COLUMN_CATEGORIES_NAME)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_BASE_COLOR)), 
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_CATEGORIES_IMPORTANT_COLOR)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
 
 	// TODO _Maybe_ make a method to return EVERYTHING from dBase. Is doable,
 	// but is it usable?
@@ -884,6 +918,38 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
+	
+	/**
+	 * Returns the GPSAlarm with the id specified.
+	 * 
+	 * @param id
+	 * @return GPSAlarm with the id
+	 */
+	public GPSAlarm getGPSAlarm(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LATITUDE, COLUMN_GPS_ALARMS_LONGITUDE },
+				COLUMN_GPS_ALARMS_ID + "=?", new String[] { id.toString() },
+				null, null, null);
+
+		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)), 
+						cursor.getDouble(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
 
 	/**
 	 * Returns the TimeAlarm for a ListObject
@@ -1012,6 +1078,36 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery(raw, null);
 		if (cursor.moveToFirst()) {
 			do {
+				Place object = new Place(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_PLACES_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_PLACES_NAME)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
+	
+	/**
+	 * Returns the Place with the id specified.
+	 * 
+	 * @param id
+	 * @return Place with the id
+	 */
+	public Place getPlace(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_PLACES, new String[] {
+				COLUMN_PLACES_ID, COLUMN_PLACES_NAME},
+				COLUMN_PLACES_ID + "=?", new String[] { id.toString() },
+				null, null, null);
+
+		List<Place> list = new LinkedList<Place>();
+		if (cursor.moveToFirst()) {
+			do {
+
 				Place object = new Place(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_PLACES_ID)),
 						cursor.getString(cursor
@@ -1261,6 +1357,8 @@ public class DBHandler extends SQLiteOpenHelper {
 	 * @param listObject
 	 *            to delete
 	 * @return true if anything was deleted, false otherwise
+	 * @deprecated Use purgeListObject() instead. Using this method leaves
+	 *             unwanted stuff in database
 	 */
 	public boolean deleteListObject(ListObject listObject) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -1268,6 +1366,39 @@ public class DBHandler extends SQLiteOpenHelper {
 		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
 				new String[] { "" + listObject.getId() });
 		db.close();
+		return rv > 0;
+	}
+	
+	/**
+	 * Purges a ListObject from the Database which includes deleting every
+	 * place, time, timeAlarm and GPSAlarm that was connected to it from the
+	 * database
+	 * 
+	 * @param listObject
+	 *            to purge
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean purgeListObject(ListObject listObject) {
+		Time time = getTime(listObject);
+		Place place = getPlace(listObject);
+		TimeAlarm timeAlarm = getTimeAlarm(listObject);
+		GPSAlarm gpsAlarm = getGPSAlarm(listObject);
+		
+		if (time != null)
+			deleteTime(time);
+		if (place != null)
+			deletePlace(place);
+		if (timeAlarm != null)
+			deleteTimeAlarm(timeAlarm);
+		if (gpsAlarm != null)
+			deleteGPSAlarm(gpsAlarm);
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_LIST_OBJECTS, COLUMN_LIST_OBJECTS_ID + "=?",
+				new String[] { "" + listObject.getId() });
+		db.close();
+		
 		return rv > 0;
 	}
 
