@@ -742,6 +742,11 @@ public class NewTaskActivity extends Activity {
 
 			ArrayList<String> predictionsArr = new ArrayList<String>();
 
+            String fullArgs = "";
+            for(int i = 0; i < args.length; i++) {
+                fullArgs = args[i] + " ";
+            }
+
 			try {
 				// Browser key for Google API
 
@@ -749,7 +754,7 @@ public class NewTaskActivity extends Activity {
 				String input = "";
 
 				try {
-					input = "input=" + URLEncoder.encode(args[0], "utf-8");
+					input = "input=" + URLEncoder.encode(fullArgs, "utf-8");
 				} catch (UnsupportedEncodingException e1) {
 					e1.printStackTrace();
 				}
@@ -798,17 +803,23 @@ public class NewTaskActivity extends Activity {
 
 				for (int i = 0; i < allPredictions.length(); i++) {
 
-                    // Parse the JSONArray to only get the two first values of each prediction
+                    // Parse the JSONArray to exlude the country
                     JSONObject thisPrediction = (JSONObject) allPredictions.get(i);
 
-                    JSONArray theseTerms = thisPrediction.getJSONArray("terms");
+                    JSONArray allTerms = thisPrediction.getJSONArray("terms");
 
-                    JSONObject firstTerm = theseTerms.getJSONObject(0);
-                    JSONObject secondTerm = theseTerms.getJSONObject(1);
+                    String s = "";
 
-                    String s = firstTerm.getString("value") + ", " + secondTerm.getJSONArray("value");
+                    for(int j = 0; j < allTerms.length(); j++) {
+                        String vs = allTerms.getJSONObject(j).getString("value");
+                        if(!vs.equals("Sverige")) {
+                            if(j == 0)
+                                s = vs;
+                            else
+                                s = s + ", " + vs;
+                        }
+                    }
 
-                    System.out.println(s);
 					// add each entry to our array
 					predictionsArr.add(s);
 				}
