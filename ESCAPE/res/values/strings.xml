@@ -37,5 +37,8 @@
     <string name="locationHint">Location</string>
     <string name="markAsImportant">Mark as important</string>
     <string name="convertToEvent">Convert to event</string>
+    <string name="country">Sverige</string>
+    <string name="country_short">se</string>
+    <string name="API_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
 
 </resources>
