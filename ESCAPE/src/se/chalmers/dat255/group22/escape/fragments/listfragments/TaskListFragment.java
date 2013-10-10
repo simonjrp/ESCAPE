@@ -1,10 +1,12 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 import se.chalmers.dat255.group22.escape.objects.Category;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,13 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -33,7 +30,7 @@ public class TaskListFragment extends Fragment {
 	ListView ourTaskList;
 	// The adapter used to handle data
 	CustomListAdapter ourListAdapter;
-    // popup where use can pick what categories to display
+	// popup where use can pick what categories to display
 	ListPopupWindow listPopupWindow;
 
 	@Override
@@ -88,39 +85,40 @@ public class TaskListFragment extends Fragment {
 	private void initPopup() {
 		View menuItemView = getActivity().findViewById(R.id.pick_category);
 		listPopupWindow = new ListPopupWindow(getActivity());
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity());
-        List<Category> tmpList = new ArrayList<Category>();
-        tmpList.add(new Category("tmp0", null, null));
-        tmpList.add(new Category("tmp1", null, null));
-        tmpList.add(new Category("tmp2", null, null));
-        tmpList.add(new Category("tmp3", null, null));
-        tmpList.add(new Category("tmp4", null, null));
-        tmpList.add(new Category("tmp5", null, null));
-        tmpList.add(new Category("tmp6", null, null));
-        tmpList.add(new Category("tmp7", null, null));
-        tmpList.add(new Category("tmp8", null, null));
-        tmpList.add(new Category("tmp9", null, null));
-        tmpList.add(new Category("tmp10", null, null));
-        tmpList.add(new Category("tmp11", null, null));
-        tmpList.add(new Category("tmp12", null, null));
-        tmpList.add(new Category("tmp13", null, null));
-        tmpList.add(new Category("tmp14", null, null));
-        tmpList.add(new Category("tmp15", null, null));
-        tmpList.add(new Category("tmp16", null, null));
-        tmpList.add(new Category("tmp17", null, null));
-        tmpList.add(new Category("tmp18", null, null));
-        tmpList.add(new Category("tmp19", null, null));
-        categoryAdapter.setCategories(tmpList);
-        listPopupWindow.setAdapter(categoryAdapter);
+		CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity());
+		List<Category> tmpList = new ArrayList<Category>();
+		tmpList.add(new Category("tmp0", null, null));
+		tmpList.add(new Category("tmp1", null, null));
+		tmpList.add(new Category("tmp2", null, null));
+		tmpList.add(new Category("tmp3", null, null));
+		tmpList.add(new Category("tmp4", null, null));
+		tmpList.add(new Category("tmp5", null, null));
+		tmpList.add(new Category("tmp6", null, null));
+		tmpList.add(new Category("tmp7", null, null));
+		tmpList.add(new Category("tmp8", null, null));
+		tmpList.add(new Category("tmp9", null, null));
+		tmpList.add(new Category("tmp10", null, null));
+		tmpList.add(new Category("tmp11", null, null));
+		tmpList.add(new Category("tmp12", null, null));
+		tmpList.add(new Category("tmp13", null, null));
+		tmpList.add(new Category("tmp14", null, null));
+		tmpList.add(new Category("tmp15", null, null));
+		tmpList.add(new Category("tmp16", null, null));
+		tmpList.add(new Category("tmp17", null, null));
+		tmpList.add(new Category("tmp18", null, null));
+		tmpList.add(new Category("tmp19", null, null));
+		// TODO Fix getter for real categories and make values matter
+		categoryAdapter.setCategories(tmpList);
+		listPopupWindow.setAdapter(categoryAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
-        listPopupWindow.setModal(true);
+		listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 	}
 
-    /**
-     * Called when popup should be displayed
-     */
+	/**
+	 * Called when popup should be displayed
+	 */
 	private void getPopup() {
 		listPopupWindow.show();
 	}

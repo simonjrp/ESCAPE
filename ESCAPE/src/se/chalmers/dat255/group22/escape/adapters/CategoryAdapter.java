@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 /**
- * An adapter for use in a popup where user can choose what categories to
- * display in task or event list.
+ * An adapter for displaying checkboxes with
+ * {@link se.chalmers.dat255.group22.escape.objects.Category}. Checkboxes are
+ * used to set the categories shouldBeDisplayed value.
  * 
- * @author Carl
+ * @author Carl Jansson
  */
 public class CategoryAdapter implements ListAdapter {
 
@@ -46,6 +46,7 @@ public class CategoryAdapter implements ListAdapter {
 	 */
 	public void setCategories(List<Category> categories) {
 		this.theCategories = categories;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -72,9 +73,8 @@ public class CategoryAdapter implements ListAdapter {
 	 * Call this to notify that something has changed. Makes the view update!
 	 */
 	public void notifyDataSetChanged() {
-		for (DataSetObserver observer : observers) {
+		for (DataSetObserver observer : observers)
 			observer.onChanged();
-		}
 	}
 
 	@Override
@@ -106,19 +106,13 @@ public class CategoryAdapter implements ListAdapter {
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
 			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
-            tmpBox.setText(theCategory.getName() + "  "
-                    + theCategory.getShouldBeDisplayed());
+			tmpBox.setText(theCategory.getName() + "  "
+					+ theCategory.getShouldBeDisplayed());
 			// Set what to do when checkbox changes state
 			tmpBox.setOnCheckedChangeListener(new CustomOnCheckedChangeListener(
-			//		position));
-                    theCategory));
+					position));
 			view = tmpBox;
 		}
-		//CheckBox myBox = (CheckBox) view;
-		//myBox.setText(theCategory.getName() + "  "
-		//		+ theCategory.getShouldBeDisplayed());
-		//view = myBox;
-
 		return view;
 	}
 
@@ -138,13 +132,25 @@ public class CategoryAdapter implements ListAdapter {
 	}
 
 	/**
+	 * Get the list with categories with current values for if they should be
+	 * displayed or not.
+	 * 
+	 * @return list with categories containing booleans for if they should be
+	 *         displayed
+	 */
+	public List<Category> getTheCategories() {
+		return theCategories;
+	}
+
+	/**
 	 * a listener for handling checkboxes with categories.
 	 */
 	private class CustomOnCheckedChangeListener
 			implements
 				CompoundButton.OnCheckedChangeListener {
-		//private int pos;
-        private Category theCategory;
+
+		// the listeners associated objects position
+		private int pos;
 
 		/**
 		 * Create a new custom on checked listener
@@ -152,29 +158,16 @@ public class CategoryAdapter implements ListAdapter {
 		 * @param i
 		 *            the position of the category in the list
 		 */
-		/*public CustomOnCheckedChangeListener(int i) {
+		public CustomOnCheckedChangeListener(int i) {
 			this.pos = i;
-		}*/
-        public CustomOnCheckedChangeListener(Category i) {
-            this.theCategory = i;
-        }
+		}
+
 		@Override
 		public void onCheckedChanged(CompoundButton compoundButton,
 				boolean newButtonValue) {
-			//((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
-            theCategory.setShouldBeDisplayed(newButtonValue);
-            //TODO why is pos 0 so weird?
-			//Toast.makeText(
-			//		context,
-			//		pos + ((Category) getItem(pos)).getName() + " "
-			//				+ ((Category) getItem(pos)).getShouldBeDisplayed(),
-			//		Toast.LENGTH_SHORT).show();
-            Toast.makeText(context,
-                    		theCategory.getName() + theCategory.getShouldBeDisplayed(),
-                    		Toast.LENGTH_SHORT).show();
-			//compoundButton.setText(((Category) getItem(pos)).getName() + "  "
-			//		+ ((Category) getItem(pos)).getShouldBeDisplayed());
-            compoundButton.setText(theCategory.getName() + " " + theCategory.getShouldBeDisplayed());
+			((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
+			compoundButton.setText(((Category) getItem(pos)).getName() + "  "
+					+ ((Category) getItem(pos)).getShouldBeDisplayed());
 		}
 	}
 }
