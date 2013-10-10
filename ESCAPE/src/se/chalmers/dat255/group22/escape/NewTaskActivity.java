@@ -6,18 +6,18 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
@@ -41,16 +41,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 /**
@@ -60,15 +58,14 @@ import android.widget.Spinner;
  */
 public class NewTaskActivity extends Activity {
 
+	public AutoCompleteTextView autoCompleteTextView;
+	public ArrayAdapter<String> adapter;
 	private boolean hasReminder;
 	private boolean isTimeReminder;
 	private boolean isLocationReminder;
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
-	private PlacesTask placesTask;
-	private ParserTask parserTask;
-	private AutoCompleteTextView autoCompleteTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -229,51 +226,32 @@ public class NewTaskActivity extends Activity {
 			}
 		}
 
-		autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
-		autoCompleteTextView.setThreshold(1);
+        adapter = new ArrayAdapter<String>(this, R.layout.location_item);
+        // Initiate the AutoCompleteView
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+        adapter.setNotifyOnChange(true);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
-		autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (count % 3 == 1) {
+                    adapter.clear();
+                    GetPlaces task = new GetPlaces();
+                    // now pass the argument in the textview to the task
+                    task.execute(autoCompleteTextView.getText().toString());
+                }
+            }
 
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
 
-				placesTask = new PlacesTask();
-				placesTask.execute(s.toString());
+            }
 
-			}
+            public void afterTextChanged(Editable s) {
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-			}
-		});
-
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.new_task, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		// Make home button in actionbar work like pressing on backbutton
-			case android.R.id.home :
-				onBackPressed();
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
-		}
+            }
+        });
 	}
 
 	@Override
@@ -404,6 +382,7 @@ public class NewTaskActivity extends Activity {
 	 * @param lo
 	 *            ListObject to save
 	 */
+
 	public void saveToDatabase(ListObject lo) {
 		// instantiate the database
 		DBHandler dbHandler = new DBHandler(this);
@@ -649,8 +628,8 @@ public class NewTaskActivity extends Activity {
 	/**
 	 * When the "X" button next to the event field is pressed, this method is
 	 * called and the layout is restored to its previous state.
-     *
-     *
+	 * 
+	 * 
 	 * @param v
 	 *            the view that calls this method.
 	 */
@@ -753,143 +732,127 @@ public class NewTaskActivity extends Activity {
 		return new Date(dateCalendar.getTimeInMillis());
 	}
 
-	/** A method to download json data from url */
-	private String downloadUrl(String strUrl) throws IOException {
-		String data = "";
-		InputStream iStream = null;
-		HttpURLConnection urlConnection = null;
-		try {
-			URL url = new URL(strUrl);
-
-			// Creating an http connection to communicate with url
-			urlConnection = (HttpURLConnection) url.openConnection();
-
-			// Connecting to url
-			urlConnection.connect();
-
-			// Reading data from url
-			iStream = urlConnection.getInputStream();
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					iStream));
-
-			StringBuffer sb = new StringBuffer();
-
-			String line = "";
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-			data = sb.toString();
-
-			br.close();
-
-		} catch (Exception e) {
-			Log.d("Exception while downloading url", e.toString());
-		} finally {
-			iStream.close();
-			urlConnection.disconnect();
-		}
-		return data;
-	}
-
-	// Fetches all places from GooglePlaces AutoComplete Web Service
-	private class PlacesTask extends AsyncTask<String, Void, String> {
+	class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 
 		@Override
-		protected String doInBackground(String... place) {
-			// For storing data from web service
-			String data = "";
+		// three dots is java for an array of strings
+		protected ArrayList<String> doInBackground(String... args) {
 
-			// Obtain browser key from https://code.google.com/apis/console
-			String key = "key=AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc";
+			Log.d("gottaGo", "doInBackground");
 
-			String input = "";
+			ArrayList<String> predictionsArr = new ArrayList<String>();
 
 			try {
-				input = "input=" + URLEncoder.encode(place[0], "utf-8");
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
+				// Browser key for Google API
+
+				String key = "key=AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc";
+				String input = "";
+
+				try {
+					input = "input=" + URLEncoder.encode(args[0], "utf-8");
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+
+				// place type to be searched
+				String types = "types=geocode";
+
+				// Sensor enabled
+				String sensor = "sensor=true";
+
+				// Sensor enabled
+				String language = "language=se";
+
+				// Sensor enabled
+				String country = "components=country:se";
+
+				// Building the parameters to the web service
+				String parameters = input + "&" + types + "&" + sensor + "&"
+						+ language + "&" + country + "&" + key;
+
+				// Output format
+				String output = "json";
+
+				// Building the url to the web service
+				String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"
+						+ output + "?" + parameters;
+
+				URL googlePlaces = new URL(url);
+				URLConnection tc = googlePlaces.openConnection();
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						tc.getInputStream()));
+
+				String line;
+				StringBuffer sb = new StringBuffer();
+				// take Google's legible JSON and turn it into one big string.
+				while ((line = in.readLine()) != null) {
+					sb.append(line);
+				}
+
+				// turn that string into a JSON object
+				JSONObject predictions = new JSONObject(sb.toString());
+
+				// now get the JSON array that's inside that object
+				JSONArray allPredictions = new JSONArray(
+						predictions.getString("predictions"));
+
+				for (int i = 0; i < allPredictions.length(); i++) {
+
+                    // Parse the JSONArray to only get the two first values of each prediction
+                    JSONObject thisPrediction = (JSONObject) allPredictions.get(i);
+
+                    JSONArray theseTerms = thisPrediction.getJSONArray("terms");
+
+                    JSONObject firstTerm = theseTerms.getJSONObject(0);
+                    JSONObject secondTerm = theseTerms.getJSONObject(1);
+
+                    String s = firstTerm.getString("value") + ", " + secondTerm.getJSONArray("value");
+
+                    System.out.println(s);
+					// add each entry to our array
+					predictionsArr.add(s);
+				}
+			} catch (IOException e) {
+
+				Log.e("ESCAPE", "GetPlaces : doInBackground", e);
+
+			} catch (JSONException e) {
+
+				Log.e("ESCAPE", "GetPlaces : doInBackground", e);
+
 			}
 
-			// place type to be searched
-			String types = "types=geocode";
+			return predictionsArr;
 
-			// Sensor enabled
-			String sensor = "sensor=false";
-
-			// Building the parameters to the web service
-			String parameters = input + "&" + types + "&language=se&" + sensor + "&" + key;
-
-			// Output format
-			String output = "json";
-
-			// Building the url to the web service
-			String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"
-					+ output + "?" + parameters;
-
-			try {
-				// Fetching the data from we service
-				data = downloadUrl(url);
-			} catch (Exception e) {
-				Log.d("Background Task", e.toString());
-			}
-            System.out.println(data);
-			return data;
 		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-
-			// Creating ParserTask
-			parserTask = new ParserTask();
-
-			// Starting Parsing the JSON string returned by Web Service
-			parserTask.execute(result);
-		}
-	}
-
-	/** A class to parse the Google Places in JSON format */
-	private class ParserTask
-			extends
-				AsyncTask<String, Integer, List<HashMap<String, String>>> {
-
-		JSONObject jObject;
+		// then our post
 
 		@Override
-		protected List<HashMap<String, String>> doInBackground(
-				String... jsonData) {
+		protected void onPostExecute(ArrayList<String> result) {
 
-			List<HashMap<String, String>> places = null;
-
-			PlaceJSONParser placeJsonParser = new PlaceJSONParser();
-
-			try {
-				jObject = new JSONObject(jsonData[0]);
-
-				// Getting the parsed data as a List construct
-				places = placeJsonParser.parse(jObject);
-
-			} catch (Exception e) {
-				Log.d("Exception", e.toString());
-			}
-			return places;
-		}
-
-		@Override
-		protected void onPostExecute(List<HashMap<String, String>> result) {
-
-			String[] from = new String[]{"description"};
-			int[] to = new int[]{android.R.id.text1};
-
-			// Creating a SimpleAdapter for the AutoCompleteTextView
-			SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result,
-					R.layout.location_item, from, to);
-
-			// Setting the adapter
+			Log.d("ESCAPE", "onPostExecute : " + result.size());
+			// update the adapter
+			adapter = new ArrayAdapter<String>(getBaseContext(),
+					R.layout.location_item);
+			adapter.setNotifyOnChange(true);
+			// attach the adapter to textview
 			autoCompleteTextView.setAdapter(adapter);
- }
-    }
+
+			for (String string : result) {
+
+				Log.d("ESCAPE", "onPostExecute : result = " + string);
+
+				adapter.add(string);
+				adapter.notifyDataSetChanged();
+
+			}
+
+			Log.d("ESCAPE",
+					"onPostExecute : autoCompleteAdapter" + adapter.getCount());
+
+		}
+
+	}
 
 }
