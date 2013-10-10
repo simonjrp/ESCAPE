@@ -23,35 +23,30 @@ import android.os.Bundle;
 
 public class NotificationHandler {
 
-	private DBHandler dBH;
-	private Context context;
-
 	/**
 	 * Constant to use when setting/getting a ListObject title from a bundle.
 	 */
 	public static String NOTIFICATION_TITLE = "TITLE";
-
 	/**
 	 * Constant to use when setting/getting a ListObject comment from a bundle.
 	 */
 	public static String NOTIFICATION_DESC = "DESC";
-
 	/**
 	 * Constant to use when setting/getting a ListObject start time from a
 	 * bundle.
 	 */
 	public static String NOTIFICATION_EVENT_TIME = "EVENT_TIME";
-
 	/**
 	 * Constant to use when setting/getting a boolean describing whether a
 	 * ListObject is an event or not from a bundle.
 	 */
 	public static String NOTOFICATION_IS_EVENT = "IS_EVENT";
-
 	/**
 	 * Constant to use when setting/getting a ListObject id from a bundle
 	 */
 	public static String NOTIFICATION_ID = "ID";
+	private DBHandler dBH;
+	private Context context;
 
 	/**
 	 * Creates a new notification handler.
@@ -118,14 +113,15 @@ public class NotificationHandler {
 	private Bundle generateBundle(ListObject listObject) {
 		Bundle bundle = new Bundle();
 
+		// Gets all necessary data from the ListObject
 		int id = listObject.getId();
 		String title = listObject.getName();
 		String description = listObject.getComment();
 		Time time = dBH.getTime(listObject);
 		boolean isEvent = (time != null);
 
-		// create a date/time string to show in notification
-		String timeString = null;
+		// Builds a date/time string to show in notification
+		StringBuilder timeString = new StringBuilder();
 		if (isEvent) {
 			Date startDate = time.getStartDate();
 
@@ -134,18 +130,22 @@ public class NotificationHandler {
 			SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
 			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
-			// TODO use string builder instead
-			timeString = yearFormatter.format(startDate) + "/"
-					+ monthFormatter.format(startDate) + "/"
-					+ dayFormatter.format(startDate) + " "
-					+ timeFormatter.format(startDate);
+			timeString = new StringBuilder();
+			timeString.append(yearFormatter.format(startDate));
+			timeString.append("/");
+			timeString.append(monthFormatter.format(startDate));
+			timeString.append("/");
+			timeString.append(dayFormatter.format(startDate));
+			timeString.append(" ");
+			timeString.append(timeFormatter.format(startDate));
+
 		}
 
 		bundle.putInt(NOTIFICATION_ID, id);
 		bundle.putString(NOTIFICATION_TITLE, title);
 		bundle.putString(NOTIFICATION_DESC, description);
 		bundle.putBoolean(NOTOFICATION_IS_EVENT, isEvent);
-		bundle.putString(NOTIFICATION_EVENT_TIME, timeString);
+		bundle.putString(NOTIFICATION_EVENT_TIME, timeString.toString());
 
 		return bundle;
 

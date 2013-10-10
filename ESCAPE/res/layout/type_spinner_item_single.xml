@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:padding="3dp"
-                android:background="#ffffff">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
     <ImageView
         android:id="@+id/spinnerImage"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@drawable/location_place"
-        android:minHeight="25dp"
-        android:minWidth="25dp"
-        ></ImageView>
+        android:layout_centerVertical="true">
+    </ImageView>
+
+    <!-- Ugly "hack" to make the image size correctly, an empty textView! -->
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/textsize_medium"
+        android:text="">
+    </TextView>
+
 
 </RelativeLayout>

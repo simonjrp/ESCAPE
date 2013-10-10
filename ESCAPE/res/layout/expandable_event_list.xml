@@ -4,14 +4,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#ffffff"
-    android:showDividers="end">
+    android:showDividers="end"
+    android:isScrollContainer="true"
+    android:overScrollMode="always">
 
     <ExpandableListView
         android:id="@+id/expEventList"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="#ffffff"
-
         android:choiceMode="singleChoice"/>
 
 

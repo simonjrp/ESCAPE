@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:background="#eaeaea"
     android:orientation="vertical"
-    android:padding="8dp" >
+    android:padding="@dimen/ui_element_gap" >
     
 	<FrameLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal" >
 	    
-	    <LinearLayout 
+	    <LinearLayout
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal" >
@@ -24,35 +24,37 @@
 		        android:layout_weight="5"
 		        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
 		        android:textColor="#000000"
-		        android:textSize="20dp" />
+		        android:textSize="@dimen/textsize_large" />
 		    
 		    <TextView
 		        android:id="@+id/startTimeTask"
-		        android:layout_width="0dp"
+		        android:layout_width="10dp"
 		        android:layout_height="wrap_content"
 		        android:layout_weight="2"
 		        android:layout_gravity="right"
 		        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
 		        android:textColor="#000000"
-		        android:textSize="20dp" />
-		    
+		        android:textSize="@dimen/textsize_medium"
+                android:lines="1"/>
+
 	    </LinearLayout>
-	
-	    <RelativeLayout 
+
+	    <RelativeLayout
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal" >
-		    
+
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 	        	android:layout_height="wrap_content"
-	        	android:orientation="horizontal" 
+	        	android:orientation="horizontal"
 		        android:layout_alignParentRight="true" >
-		        
+
 			    <ImageButton
 			        android:id="@+id/editButton"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+                    android:visibility="invisible"
 			        android:contentDescription="@string/editButtonDescription"
 			        android:src="@drawable/edit_icon" />
 			
@@ -60,6 +62,7 @@
 			        android:id="@+id/deleteButton"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+                    android:visibility="invisible"
 			        android:contentDescription="@string/deleteButtonDescription"
 			        android:src="@drawable/delete_icon_2" />
 		    </LinearLayout>
@@ -70,7 +73,7 @@
 	        android:id="@+id/taskData"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="17dp"
+	        android:textSize="@dimen/textsize_medium"
 	        android:background="#f1f1f1"
 	        android:textColor="#000000"
 	        />
