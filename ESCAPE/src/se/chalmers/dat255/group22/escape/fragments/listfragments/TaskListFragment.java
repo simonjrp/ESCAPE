@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
@@ -99,12 +100,22 @@ public class TaskListFragment extends Fragment {
         tmpList.add(new Category("tmp7", null, null));
         tmpList.add(new Category("tmp8", null, null));
         tmpList.add(new Category("tmp9", null, null));
+        tmpList.add(new Category("tmp10", null, null));
+        tmpList.add(new Category("tmp11", null, null));
+        tmpList.add(new Category("tmp12", null, null));
+        tmpList.add(new Category("tmp13", null, null));
+        tmpList.add(new Category("tmp14", null, null));
+        tmpList.add(new Category("tmp15", null, null));
+        tmpList.add(new Category("tmp16", null, null));
+        tmpList.add(new Category("tmp17", null, null));
+        tmpList.add(new Category("tmp18", null, null));
+        tmpList.add(new Category("tmp19", null, null));
         categoryAdapter.setCategories(tmpList);
         listPopupWindow.setAdapter(categoryAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
         listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
-		listPopupWindow.setHeight(400);
+		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 	}
 
     /**

@@ -106,28 +106,30 @@ public class CategoryAdapter implements ListAdapter {
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
 			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
+            tmpBox.setText(theCategory.getName() + "  "
+                    + theCategory.getShouldBeDisplayed());
 			// Set what to do when checkbox changes state
 			tmpBox.setOnCheckedChangeListener(new CustomOnCheckedChangeListener(
-					position));
+			//		position));
+                    theCategory));
 			view = tmpBox;
 		}
-		CheckBox myBox = (CheckBox) view;
-		myBox.setChecked(theCategory.getShouldBeDisplayed());
-		myBox.setText(theCategory.getName() + "  "
-				+ theCategory.getShouldBeDisplayed());
-		view = myBox;
+		//CheckBox myBox = (CheckBox) view;
+		//myBox.setText(theCategory.getName() + "  "
+		//		+ theCategory.getShouldBeDisplayed());
+		//view = myBox;
 
 		return view;
 	}
 
 	@Override
 	public int getItemViewType(int i) {
-		return 0;
+		return i;
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 1;
+		return theCategories.size();
 	}
 
 	@Override
@@ -141,7 +143,8 @@ public class CategoryAdapter implements ListAdapter {
 	private class CustomOnCheckedChangeListener
 			implements
 				CompoundButton.OnCheckedChangeListener {
-		private int pos;
+		//private int pos;
+        private Category theCategory;
 
 		/**
 		 * Create a new custom on checked listener
@@ -149,23 +152,29 @@ public class CategoryAdapter implements ListAdapter {
 		 * @param i
 		 *            the position of the category in the list
 		 */
-		public CustomOnCheckedChangeListener(int i) {
+		/*public CustomOnCheckedChangeListener(int i) {
 			this.pos = i;
-		}
+		}*/
+        public CustomOnCheckedChangeListener(Category i) {
+            this.theCategory = i;
+        }
 		@Override
 		public void onCheckedChanged(CompoundButton compoundButton,
 				boolean newButtonValue) {
-			((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
-
+			//((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
+            theCategory.setShouldBeDisplayed(newButtonValue);
             //TODO why is pos 0 so weird?
-			Toast.makeText(
-					context,
-					pos + ((Category) getItem(pos)).getName() + " "
-							+ ((Category) getItem(pos)).getShouldBeDisplayed(),
-					Toast.LENGTH_SHORT).show();
-
-			compoundButton.setText(((Category) getItem(pos)).getName() + "  "
-					+ ((Category) getItem(pos)).getShouldBeDisplayed());
+			//Toast.makeText(
+			//		context,
+			//		pos + ((Category) getItem(pos)).getName() + " "
+			//				+ ((Category) getItem(pos)).getShouldBeDisplayed(),
+			//		Toast.LENGTH_SHORT).show();
+            Toast.makeText(context,
+                    		theCategory.getName() + theCategory.getShouldBeDisplayed(),
+                    		Toast.LENGTH_SHORT).show();
+			//compoundButton.setText(((Category) getItem(pos)).getName() + "  "
+			//		+ ((Category) getItem(pos)).getShouldBeDisplayed());
+            compoundButton.setText(theCategory.getName() + " " + theCategory.getShouldBeDisplayed());
 		}
 	}
 }
