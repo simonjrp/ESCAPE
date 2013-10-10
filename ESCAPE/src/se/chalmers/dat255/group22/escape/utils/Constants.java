@@ -45,19 +45,18 @@ public final class Constants {
 	public static final String DEBUG_GEOFENCES_ADD_SUCCESS = "Successfully added specified geofences";
 
 	public static final String DEBUG_GEOFENCES_ADD_ERROR = "An error occured when adding specified geofences";
-	
-	public static final String DEBUG_GEOFENCES_REMOVE_SUCCESS = "Successfully removed specified geofences";
-	
-	public static final String DEBUG_GEOFENCES_REMOVE_ERROR = "An error occured when removing specified geofences";
 
+	public static final String DEBUG_GEOFENCES_REMOVE_SUCCESS = "Successfully removed specified geofences";
+
+	public static final String DEBUG_GEOFENCES_REMOVE_ERROR = "An error occured when removing specified geofences";
 
 	// Intent actions
 	public static final String ACTION_GEOFENCES_ADDED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADDED";
 
 	public static final String ACTION_GEOFENCES_ADD_ERROR = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADD_ERROR";
-	
+
 	public static final String ACTION_GEOFENCES_REMOVED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_REMOVED";
-	
+
 	public static final String ACTION_GEOFENCES_REMOVE_ERROR = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_REMOVE_ERROR";
 
 	public static final String ACTION_GEOFENCES_CONNECTION_FAILED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_CONNECTION_FAILED";

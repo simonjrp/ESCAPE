@@ -359,8 +359,8 @@ public class NewTaskActivity extends Activity {
 					dbHandler.getTimeAlarm(tmpId));
 			// creates a notification!
 			if (hasReminder) {
-				NotificationHandler nf = new NotificationHandler(this);
-				nf.addTimeReminder(dbHandler.getListObject(objId));
+				NotificationHandler.getInstance().addTimeReminder(
+						dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getTime() != null) {
@@ -386,10 +386,8 @@ public class NewTaskActivity extends Activity {
 			tmpId = dbHandler.addPlace(lo.getPlace());
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
 					dbHandler.getPlace(tmpId));
-			
-			NotificationHandler nf = new NotificationHandler(this);
-			nf.addPlaceReminder(dbHandler.getListObject(objId));
-			
+			NotificationHandler.getInstance().addPlaceReminder(
+					dbHandler.getListObject(objId));
 		}
 	}
 

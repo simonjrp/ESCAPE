@@ -222,8 +222,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 				dbH.getTimeAlarm(idTimeAlarm));
 
 		// Creates new notification reminder with the new time alarm.
-		NotificationHandler nH = new NotificationHandler(context);
-		nH.addTimeReminder(listObject);
+		NotificationHandler.getInstance().addTimeReminder(listObject);
 
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

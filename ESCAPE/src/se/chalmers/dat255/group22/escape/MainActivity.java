@@ -3,16 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +39,9 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Initializes the notification handler with this FragmentActivity
+		NotificationHandler.getInstance().init(this);
 
 		// Configure the navigation drawer
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
@@ -79,32 +74,6 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 
-	}
-
-	/**
-	 * Method for checking if Google Play services are connected on the device
-	 * 
-	 * @return true if connected, false otherwise
-	 */
-	protected boolean servicesConnected() {
-		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(this);
-
-		if (resultCode == ConnectionResult.SUCCESS) {
-			Log.d(Constants.APPTAG, "Google Play services is available.");
-			return true;
-		} else {
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-					resultCode, this,
-					Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			if (errorDialog != null) {
-				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
-				errorDialogFragment.setDialog(errorDialog);
-				errorDialogFragment.show(getSupportFragmentManager(),
-						"Geofence Detecion");
-			}
-		}
-		return false;
 	}
 
 	@Override

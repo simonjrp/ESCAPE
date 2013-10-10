@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.utils.Constants;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -144,8 +143,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.APPTAG,
-				Constants.DEBUG_GEOFENCES_CONNECTED);
+		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_CONNECTED);
 
 		// Now that the location client is connected, continue with actually
 		// adding the geofences.
@@ -168,14 +166,12 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 
 		if (LocationStatusCodes.SUCCESS == statusCode) {
 
-			Log.d(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_ADD_SUCCESS);
+			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_ADD_SUCCESS);
 
 			broadcast.setAction(Constants.ACTION_GEOFENCES_ADDED);
 		} else {
 
-			Log.e(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_ADD_ERROR);
+			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_ADD_ERROR);
 
 			broadcast.setAction(Constants.DEBUG_GEOFENCES_ADD_ERROR);
 		}
@@ -195,8 +191,7 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.APPTAG,
-				Constants.DEBUG_GEOFENCES_DISCONNECTED);
+		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_DISCONNECTED);
 
 		// Reset current location client
 		locationClient = null;

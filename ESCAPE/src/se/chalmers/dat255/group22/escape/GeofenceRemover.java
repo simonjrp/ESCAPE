@@ -3,7 +3,6 @@ package se.chalmers.dat255.group22.escape;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.utils.Constants;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -17,13 +16,14 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationStatusCodes;
 import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
+import com.google.android.gms.location.LocationStatusCodes;
 
 /**
  * Class to be used for removing old/unwanted geofences.
+ * 
  * @author Simon Persson
- *
+ * 
  */
 public class GeofenceRemover implements ConnectionCallbacks,
 		OnConnectionFailedListener, OnRemoveGeofencesResultListener {
@@ -152,8 +152,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.APPTAG,
-				Constants.DEBUG_GEOFENCES_CONNECTED);
+		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_CONNECTED);
 
 		// Now that the location client is connected, continue with actually
 		// removing the geofences.
@@ -185,13 +184,11 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
+			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
+			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
 		}
@@ -211,13 +208,11 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
+			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.APPTAG,
-					Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
+			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
 		}
@@ -241,8 +236,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.APPTAG,
-				Constants.DEBUG_GEOFENCES_DISCONNECTED);
+		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_DISCONNECTED);
 
 		// Reset current location client
 		locationClient = null;
