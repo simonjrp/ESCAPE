@@ -186,9 +186,10 @@ public class NotificationHandler {
 			throw new NullPointerException();
 		}
 
-		SimpleGeofence simpleGeofence = new SimpleGeofence(listObject.getId() + "",
-				gpsAlarm.getLatitude(), gpsAlarm.getLongitude(), 200,
-				Geofence.NEVER_EXPIRE, Geofence.GEOFENCE_TRANSITION_ENTER);
+		SimpleGeofence simpleGeofence = new SimpleGeofence(listObject.getId()
+				+ "", gpsAlarm.getLatitude(), gpsAlarm.getLongitude(),
+				Constants.GEOFENCE_DEFAULT_RADIUS, Geofence.NEVER_EXPIRE,
+				Geofence.GEOFENCE_TRANSITION_ENTER);
 
 		Bundle args = generateBundle(listObject);
 

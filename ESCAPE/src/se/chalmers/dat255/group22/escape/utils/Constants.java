@@ -6,6 +6,12 @@ package se.chalmers.dat255.group22.escape.utils;
  * @author tholene
  */
 public final class Constants {
+
+	/**
+	 * The tag of the app, to use when debugging
+	 */
+	public static final String APPTAG = "ESCAPE";
+
 	/**
 	 * The ID that should be used with an intent to indicate that you want to
 	 * edit a task
@@ -34,7 +40,7 @@ public final class Constants {
 	 */
 
 	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-	public static final String APPTAG = "ESCAPE";
+	public static final float GEOFENCE_DEFAULT_RADIUS = 100;
 
 	// Debug constants
 
@@ -74,10 +80,6 @@ public final class Constants {
 	 * END GEOFENCE
 	 */
 
-	/*
-	 * START ENUMS
-	 */
-
 	/**
 	 * Enum for different reminder types (time or gps)
 	 * 
@@ -87,9 +89,5 @@ public final class Constants {
 	public enum ReminderType {
 		TIME, GPS
 	};
-
-	/*
-	 * END ENUMS
-	 */
 
 }
