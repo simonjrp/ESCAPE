@@ -74,4 +74,22 @@ public final class Constants {
 	 * END GEOFENCE
 	 */
 
+	/*
+	 * START ENUMS
+	 */
+
+	/**
+	 * Enum for different reminder types (time or gps)
+	 * 
+	 * @author Simon Persson
+	 * 
+	 */
+	public enum ReminderType {
+		TIME, GPS
+	};
+
+	/*
+	 * END ENUMS
+	 */
+
 }

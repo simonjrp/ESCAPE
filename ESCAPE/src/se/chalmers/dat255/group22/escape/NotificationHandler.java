@@ -8,6 +8,7 @@ import java.util.List;
 
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
@@ -168,7 +169,7 @@ public class NotificationHandler {
 	 * @param listObject
 	 *            The ListObject describing the task or event.
 	 * @throws NullPointerException
-	 *             If the ListObject's Place object is null.
+	 *             If the ListObject's GPSAlarm object is null.
 	 * @throws UnsupportedOperationException
 	 *             If the notification handler hasn't been initialized.
 	 */
@@ -179,25 +180,14 @@ public class NotificationHandler {
 					"NotificationHandler hasn't been initialized yet. Run init(FragmentActivity) when starting application.");
 		}
 
-		Place place = dbH.getPlace(listObject);
+		GPSAlarm gpsAlarm = dbH.getGPSAlarm(listObject);
 
-		if (place == null) {
+		if (gpsAlarm == null) {
 			throw new NullPointerException();
 		}
-		Geocoder geocoder = new Geocoder(contextActivity);
 
-		List<Address> addresses = null;
-		try {
-			addresses = geocoder.getFromLocationName(place.getName(), 1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// Create a geofence from first item in the addresses list
-		Address address = addresses.get(0);
-		SimpleGeofence simpleGeofence = new SimpleGeofence(place.getId() + "",
-				address.getLatitude(), address.getLongitude(), 200,
+		SimpleGeofence simpleGeofence = new SimpleGeofence(listObject.getId() + "",
+				gpsAlarm.getLatitude(), gpsAlarm.getLongitude(), 200,
 				Geofence.NEVER_EXPIRE, Geofence.GEOFENCE_TRANSITION_ENTER);
 
 		Bundle args = generateBundle(listObject);
