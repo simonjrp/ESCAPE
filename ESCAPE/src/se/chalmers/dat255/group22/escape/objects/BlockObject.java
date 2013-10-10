@@ -51,5 +51,47 @@ public class BlockObject implements IBlockObject {
 	public int getLastSplitMinutes() {
 		return lastSplitMinutes;
 	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param timeWindow the timeWindow to set
+	 */
+	public void setTimeWindow(TimeWindow timeWindow) {
+		this.timeWindow = timeWindow;
+	}
+
+	/**
+	 * @param hours the hours to set
+	 */
+	public void setHours(int hours) {
+		this.hours = hours;
+	}
+
+	/**
+	 * @param sessionMinutes the sessionMinutes to set
+	 */
+	public void setSessionMinutes(int sessionMinutes) {
+		this.sessionMinutes = sessionMinutes;
+	}
+
+	/**
+	 * @param splitAmount the splitAmount to set
+	 */
+	public void setSplitAmount(int splitAmount) {
+		this.splitAmount = splitAmount;
+	}
+
+	/**
+	 * @param lastSplitMinutes the lastSplitMinutes to set
+	 */
+	public void setLastSplitMinutes(int lastSplitMinutes) {
+		this.lastSplitMinutes = lastSplitMinutes;
+	}
 	
 }

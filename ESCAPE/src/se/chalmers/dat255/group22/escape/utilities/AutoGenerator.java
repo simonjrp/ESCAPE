@@ -1,20 +1,15 @@
 package se.chalmers.dat255.group22.escape.utilities;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
-import android.util.Log;
 
 import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
