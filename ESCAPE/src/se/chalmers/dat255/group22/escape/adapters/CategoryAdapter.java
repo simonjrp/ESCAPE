@@ -3,11 +3,9 @@ package se.chalmers.dat255.group22.escape.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -29,18 +27,22 @@ public class CategoryAdapter implements ListAdapter {
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 
-    /**
-     * Create a new CategoryAdapter
-     * @param context the context this adapter is used in
-     */
+	/**
+	 * Create a new CategoryAdapter
+	 * 
+	 * @param context
+	 *            the context this adapter is used in
+	 */
 	public CategoryAdapter(Context context) {
 		this.context = context;
 	}
 
-    /**
-     * Set the categories to display in the list
-     * @param categories list with categories to display
-     */
+	/**
+	 * Set the categories to display in the list
+	 * 
+	 * @param categories
+	 *            list with categories to display
+	 */
 	public void setCategories(List<Category> categories) {
 		this.theCategories = categories;
 	}
@@ -91,38 +93,29 @@ public class CategoryAdapter implements ListAdapter {
 
 	@Override
 	public boolean hasStableIds() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public View getView(int position, View view, ViewGroup viewGroup) {
 
-        final Category theCategory = (Category) getItem(position);
+		final Category theCategory = (Category) getItem(position);
 
-        // Create the view if it does not exist
-        if (view == null) {
-            CheckBox tmpBox = new CheckBox(context);
-            // The buttons initial state
-            tmpBox.setChecked(theCategory.getBaseColor() != null);
-            // Set what to do when checkbox changes state
-            tmpBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if ( b == true ) {
-                        theCategory.setBaseColor("Hey");
-                        compoundButton.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
-                    } else {
-                        theCategory.setBaseColor(null);
-                        compoundButton.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
-                    }
-                }
-            });
-            view = tmpBox;
-        }
-        CheckBox myBox = (CheckBox)view;
-        myBox.setChecked(theCategory.getBaseColor()!=null);
-        myBox.setText(theCategory.getName() + "  " + theCategory.getBaseColor());
-        view = myBox;
+		// Create the view if it does not exist
+		if (view == null) {
+			CheckBox tmpBox = new CheckBox(context);
+			// The buttons initial state
+			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
+			// Set what to do when checkbox changes state
+			tmpBox.setOnCheckedChangeListener(new CustomOnCheckedChangeListener(
+					position));
+			view = tmpBox;
+		}
+		CheckBox myBox = (CheckBox) view;
+		myBox.setChecked(theCategory.getShouldBeDisplayed());
+		myBox.setText(theCategory.getName() + "  "
+				+ theCategory.getShouldBeDisplayed());
+		view = myBox;
 
 		return view;
 	}
@@ -140,5 +133,36 @@ public class CategoryAdapter implements ListAdapter {
 	@Override
 	public boolean isEmpty() {
 		return theCategories.isEmpty();
+	}
+
+	/**
+	 * a listener for handling checkboxes with categories.
+	 */
+	private class CustomOnCheckedChangeListener
+			implements
+				CompoundButton.OnCheckedChangeListener {
+		private int pos;
+
+		/**
+		 * Create a new custom on checked listener
+		 * 
+		 * @param i
+		 *            the position of the category in the list
+		 */
+		public CustomOnCheckedChangeListener(int i) {
+			this.pos = i;
+		}
+		@Override
+		public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+			((Category) getItem(pos)).setShouldBeDisplayed(b);
+			if ( b )
+				compoundButton.setText(((Category) getItem(pos)).getName()
+						+ "  "
+						+ ((Category) getItem(pos)).getShouldBeDisplayed());
+			else
+				compoundButton.setText(((Category) getItem(pos)).getName()
+						+ "  "
+						+ ((Category) getItem(pos)).getShouldBeDisplayed());
+		}
 	}
 }
