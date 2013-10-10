@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 /**
  * An adapter for use in a popup where user can choose what categories to
@@ -23,7 +24,7 @@ public class CategoryAdapter implements ListAdapter {
 	// The context this adapter is used in
 	private Context context;
 	// The tasks in the list
-	private List<Category> theCategories;
+	private static List<Category> theCategories;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 
@@ -98,8 +99,7 @@ public class CategoryAdapter implements ListAdapter {
 
 	@Override
 	public View getView(int position, View view, ViewGroup viewGroup) {
-
-		final Category theCategory = (Category) getItem(position);
+		Category theCategory = (Category) getItem(position);
 
 		// Create the view if it does not exist
 		if (view == null) {
@@ -153,16 +153,19 @@ public class CategoryAdapter implements ListAdapter {
 			this.pos = i;
 		}
 		@Override
-		public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-			((Category) getItem(pos)).setShouldBeDisplayed(b);
-			if ( b )
-				compoundButton.setText(((Category) getItem(pos)).getName()
-						+ "  "
-						+ ((Category) getItem(pos)).getShouldBeDisplayed());
-			else
-				compoundButton.setText(((Category) getItem(pos)).getName()
-						+ "  "
-						+ ((Category) getItem(pos)).getShouldBeDisplayed());
+		public void onCheckedChanged(CompoundButton compoundButton,
+				boolean newButtonValue) {
+			((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
+
+            //TODO why is pos 0 so weird?
+			Toast.makeText(
+					context,
+					pos + ((Category) getItem(pos)).getName() + " "
+							+ ((Category) getItem(pos)).getShouldBeDisplayed(),
+					Toast.LENGTH_SHORT).show();
+
+			compoundButton.setText(((Category) getItem(pos)).getName() + "  "
+					+ ((Category) getItem(pos)).getShouldBeDisplayed());
 		}
 	}
 }

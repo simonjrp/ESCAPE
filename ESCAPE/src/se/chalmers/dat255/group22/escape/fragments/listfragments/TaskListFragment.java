@@ -89,15 +89,22 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow = new ListPopupWindow(getActivity());
         CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity());
         List<Category> tmpList = new ArrayList<Category>();
+        tmpList.add(new Category("tmp0", null, null));
         tmpList.add(new Category("tmp1", null, null));
         tmpList.add(new Category("tmp2", null, null));
         tmpList.add(new Category("tmp3", null, null));
+        tmpList.add(new Category("tmp4", null, null));
+        tmpList.add(new Category("tmp5", null, null));
+        tmpList.add(new Category("tmp6", null, null));
+        tmpList.add(new Category("tmp7", null, null));
+        tmpList.add(new Category("tmp8", null, null));
+        tmpList.add(new Category("tmp9", null, null));
         categoryAdapter.setCategories(tmpList);
         listPopupWindow.setAdapter(categoryAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
         listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
-		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+		listPopupWindow.setHeight(400);
 	}
 
     /**
