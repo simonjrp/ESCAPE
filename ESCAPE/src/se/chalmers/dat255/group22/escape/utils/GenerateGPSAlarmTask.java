@@ -2,6 +2,7 @@ package se.chalmers.dat255.group22.escape.utils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.NotificationHandler;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
@@ -43,7 +44,7 @@ public class GenerateGPSAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 
 	@Override
 	protected GPSAlarm doInBackground(String... input) {
-		Geocoder geocoder = new Geocoder(context);
+		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 		double longitude = 0;
 		double latitude = 0;
 
