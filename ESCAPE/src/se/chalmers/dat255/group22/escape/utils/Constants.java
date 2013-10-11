@@ -1,11 +1,20 @@
 package se.chalmers.dat255.group22.escape.utils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A "bag" full of constants for readability as well as consistency.
  * 
  * @author tholene
  */
 public final class Constants {
+
+	/**
+	 * The tag of the app, to use when debugging
+	 */
+	public static final String APPTAG = "ESCAPE";
+
 	/**
 	 * The ID that should be used with an intent to indicate that you want to
 	 * edit a task
@@ -21,10 +30,96 @@ public final class Constants {
 	 * intent
 	 */
 	public static final String INTENT_GET_ID = "ID";
-    /**
-     * The string to be used for a time format as HH:MM
-     */
-    public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+	/**
+	 * The string to be used for a time format as HH:MM
+	 */
+	public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+
 	private Constants() {
 	}
+
+	/**
+	 * The key to use when getting reminder type from an intent.
+	 */
+	public static final String REMINDER_TYPE = "REMINDER_TYPE";
+
+	/*
+	 * START GEOFENCE
+	 */
+
+	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	public static final float GEOFENCE_DEFAULT_RADIUS = 100;
+
+	// Debug constants
+
+	public static final String DEBUG_GEOFENCES_CONNECTED = "Connects to Location Services";
+
+	public static final String DEBUG_GEOFENCES_DISCONNECTED = "Disconnects from Location Services";
+
+	public static final String DEBUG_GEOFENCES_ADD_SUCCESS = "Successfully added specified geofences";
+
+	public static final String DEBUG_GEOFENCES_ADD_ERROR = "An error occured when adding specified geofences";
+
+	public static final String DEBUG_GEOFENCES_REMOVE_SUCCESS = "Successfully removed specified geofences";
+
+	public static final String DEBUG_GEOFENCES_REMOVE_ERROR = "An error occured when removing specified geofences";
+
+	// Intent actions
+	public static final String ACTION_GEOFENCES_ADDED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADDED";
+
+	public static final String ACTION_GEOFENCES_ADD_ERROR = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADD_ERROR";
+
+	public static final String ACTION_GEOFENCES_REMOVED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_REMOVED";
+
+	public static final String ACTION_GEOFENCES_REMOVE_ERROR = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_REMOVE_ERROR";
+
+	public static final String ACTION_GEOFENCES_CONNECTION_FAILED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_CONNECTION_FAILED";
+
+	// Intent extras
+	public static final String EXTRAS_TAG_GEOFENCES_ERROR_CODE = "ERROR_CODE";
+
+	// Enums
+
+	public static enum REMOVE_TYPE {
+		INTENT, LIST
+	};
+
+	/*
+	 * END GEOFENCE
+	 */
+
+	/**
+	 * Enum for different reminder types (time or gps).
+	 * 
+	 * @author Simon Persson
+	 * 
+	 */
+	public enum ReminderType implements Parcelable {
+		TIME, GPS;
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(ordinal());
+		}
+
+		public static final Creator<ReminderType> CREATOR = new Creator<ReminderType>() {
+
+			@Override
+			public ReminderType createFromParcel(Parcel source) {
+				return ReminderType.values()[source.readInt()];
+			}
+
+			@Override
+			public ReminderType[] newArray(int size) {
+				return new ReminderType[size];
+			}
+
+		};
+	};
+
 }

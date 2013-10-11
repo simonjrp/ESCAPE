@@ -20,8 +20,8 @@ import android.widget.TextView;
  */
 public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
-	public static final long oneDayInMillis = 1000*60*60*24;
-	public static final long oneWeekInMillis = oneDayInMillis*7;
+	public static final long oneDayInMillis = 1000 * 60 * 60 * 24;
+	public static final long oneWeekInMillis = oneDayInMillis * 7;
 	private ArrayList<String> days;
 	private Context context;
 	private List<Date> dateData;
@@ -86,9 +86,9 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		day.setText(days.get(position));
 
-        // TODO How the **** did this do the trick???
-        parent.getLayoutParams().width = day.getLayoutParams().width-100;
-        row.getLayoutParams().width = day.getLayoutParams().width-100;
+		// TODO How the **** did this do the trick???
+		parent.getLayoutParams().width = day.getLayoutParams().width - 100;
+		row.getLayoutParams().width = day.getLayoutParams().width - 100;
 
 		return row;
 

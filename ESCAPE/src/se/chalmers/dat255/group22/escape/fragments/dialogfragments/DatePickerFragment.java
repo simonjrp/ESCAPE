@@ -19,9 +19,8 @@ import android.widget.Spinner;
  * 
  * @author Simon Persson
  */
-public class DatePickerFragment extends DialogFragment
-		implements
-			OnDateSetListener {
+public class DatePickerFragment extends DialogFragment implements
+		OnDateSetListener {
 
 	/**
 	 * Constant used to get the ID of the spinner that wants to bring up this
