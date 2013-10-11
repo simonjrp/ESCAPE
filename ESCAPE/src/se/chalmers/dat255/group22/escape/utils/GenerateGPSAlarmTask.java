@@ -21,7 +21,7 @@ import android.util.Log;
  * @author Simon Persson
  * 
  */
-public class GenerateGpsAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
+public class GenerateGPSAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 	private Context context;
 	private long listObjectId;
 	private DBHandler dbHandler;
@@ -35,7 +35,7 @@ public class GenerateGpsAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 	 *            The db ID of the ListObject that the created GPSAlarm should
 	 *            be attached to.
 	 */
-	public GenerateGpsAlarmTask(Context context, long idOfListObject) {
+	public GenerateGPSAlarmTask(Context context, long idOfListObject) {
 		this.context = context;
 		this.listObjectId = idOfListObject;
 		dbHandler = new DBHandler(this.context);

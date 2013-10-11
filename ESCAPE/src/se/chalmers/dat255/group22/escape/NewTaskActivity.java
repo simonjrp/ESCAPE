@@ -24,7 +24,7 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
-import se.chalmers.dat255.group22.escape.utils.GenerateGpsAlarmTask;
+import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -407,7 +407,7 @@ public class NewTaskActivity extends Activity {
 		 */
 		if (reminderType == Constants.ReminderType.GPS) {
 			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-			new GenerateGpsAlarmTask(this, objId)
+			new GenerateGPSAlarmTask(this, objId)
 					.execute(reminderLocationEditText.getText().toString());
 		}
 
