@@ -256,8 +256,7 @@ public class CustomListAdapter implements ListAdapter {
 
 	@Override
 	public int getItemViewType(int i) {
-		return 0;
-
+		return i;
 	}
 
 	@Override
@@ -280,6 +279,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
 			taskList.add(listObject);
+            addCategory(new Category("" + listObject.getName() + " " + Math.random(), null, null));
 			this.notifyDataSetChanged();
 		}
 	}
@@ -318,6 +318,8 @@ public class CustomListAdapter implements ListAdapter {
 	 *            the category to add
 	 */
 	public void addCategory(Category cat) {
+        if ( theCategories==null)
+            theCategories = new ArrayList<Category>();
 		if (!theCategories.contains(cat))
 			theCategories.add(cat);
 	}
@@ -340,32 +342,8 @@ public class CustomListAdapter implements ListAdapter {
 	 * @return a list with all categories
 	 */
 	public List<Category> getTheCategories() {
-		if (theCategories == null) {
-			List<Category> tmpList = new ArrayList<Category>();
-			tmpList.add(new Category("tmp0", null, null));
-			tmpList.add(new Category("tmp1", null, null));
-			tmpList.add(new Category("tmp2", null, null));
-			tmpList.add(new Category("tmp3", null, null));
-			tmpList.add(new Category("tmp4", null, null));
-			tmpList.add(new Category("tmp5", null, null));
-			tmpList.add(new Category("tmp6", null, null));
-			tmpList.add(new Category("tmp7", null, null));
-			tmpList.add(new Category("tmp8", null, null));
-			tmpList.add(new Category("tmp9", null, null));
-			tmpList.add(new Category("tmp10", null, null));
-			tmpList.add(new Category("tmp11", null, null));
-			tmpList.add(new Category("tmp12", null, null));
-			tmpList.add(new Category("tmp13", null, null));
-			tmpList.add(new Category("tmp14", null, null));
-			tmpList.add(new Category("tmp15", null, null));
-			tmpList.add(new Category("tmp16", null, null));
-			tmpList.add(new Category("tmp17", null, null));
-			tmpList.add(new Category("tmp18", null, null));
-			tmpList.add(new Category("tmp19", null, null));
-			theCategories = tmpList;
-		}
-		addCategory(new Category("Hey", null, null));
-		// theCategories.add(new Category("Hey", null, null));
+		if (theCategories == null)
+			theCategories = new ArrayList<Category>();
 		return theCategories;
 	}
 

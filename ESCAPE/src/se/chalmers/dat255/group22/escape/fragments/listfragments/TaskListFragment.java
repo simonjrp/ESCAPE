@@ -29,7 +29,7 @@ public class TaskListFragment extends Fragment {
 	// popup where use can pick what categories to display
 	private ListPopupWindow listPopupWindow;
 
-	private CategoryAdapter categoryAdapter;
+    private CategoryAdapter categoryAdapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,23 +49,23 @@ public class TaskListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.pick_category :
-				if (this.isVisible()) {
-					getPopup();
-					return true;
-				}
-				break;
+                if ( this.isVisible() ){
+				    getPopup();
+				    return true;
+                }
+                break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
-		menu.findItem(R.id.pick_category).setVisible(true);
-	}
+        menu.findItem(R.id.pick_category).setVisible(true);
+    }
 
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.task_list, container, false);
@@ -105,10 +105,10 @@ public class TaskListFragment extends Fragment {
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
-		categoryAdapter = new CategoryAdapter(getActivity());
-		categoryAdapter.setCategories(ourListAdapter.getTheCategories());
-		listPopupWindow.setAdapter(categoryAdapter);
-		categoryAdapter.notifyDataSetChanged();
+        categoryAdapter = new CategoryAdapter(getActivity());
+        categoryAdapter.setCategories(ourListAdapter.getTheCategories());
+        listPopupWindow.setAdapter(categoryAdapter);
+        categoryAdapter.notifyDataSetChanged();
 		listPopupWindow.show();
 	}
 }
