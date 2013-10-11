@@ -73,6 +73,7 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+        initialize();
 		ourListAdapter.reInit();
 	}
 

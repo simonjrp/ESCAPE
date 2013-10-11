@@ -337,11 +337,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -428,10 +428,10 @@ public class NewTaskActivity extends Activity {
 		 */
 
 		// TODO Fix Category from spinner!
-		//Category newCategory = new Category(category, "Random Color",
-		//		"Another random Color");
-        Category newCategory = new Category("Tmp default ", "Random Color",
-                "Another random Color");
+		// Category newCategory = new Category(category, "Random Color",
+		// "Another random Color");
+		Category newCategory = new Category("Tmp default ", "Random Color",
+				"Another random Color");
 		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
@@ -532,7 +532,6 @@ public class NewTaskActivity extends Activity {
 				}
 
 				// Update/add time
-
 				if (isEvent) {
 					Time originalTime = dbHandler.getTime(editedListObject);
 					if (originalTime != null) {
@@ -545,8 +544,8 @@ public class NewTaskActivity extends Activity {
 								dbHandler.getTime(tmpId));
 					}
 				} else {
-                    dbHandler.deleteTime(dbHandler.getTime(editedListObject));
-                }
+					dbHandler.deleteListObjectWithTime(editedListObject);
+				}
 				dbHandler.updateListObject(editedListObject);
 			} else {
 				saveToDatabase(newListObject);
@@ -601,8 +600,9 @@ public class NewTaskActivity extends Activity {
 			for (Category cat : lo.getCategories()) {
 				if (!cat.getName().equals(getString(R.string.custom_category)))
 					dbHandler.addCategory(cat);
-				    dbHandler.addCategoryWithListObject(dbHandler.getCategory(cat.getName()),
-                            dbHandler.getListObject(objId));
+				dbHandler.addCategoryWithListObject(
+						dbHandler.getCategory(cat.getName()),
+						dbHandler.getListObject(objId));
 			}
 		}
 
@@ -729,12 +729,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
