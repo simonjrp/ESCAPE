@@ -12,11 +12,29 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * This AsyncTask class is used to generate a GPSAlarm object from a textstring
+ * representing an address. The GPSAlarm is stored to the database and a
+ * notification is created. <b>NOTE: The ListObject has to be added to the
+ * database before using this task. </b>
+ * 
+ * @author Simon Persson
+ * 
+ */
 public class GenerateGpsAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 	private Context context;
 	private long listObjectId;
 	private DBHandler dbHandler;
 
+	/**
+	 * Creates a new GenerateGpsAlarmTask.
+	 * 
+	 * @param context
+	 *            The context to use when getting a DBHandler object.
+	 * @param idOfListObject
+	 *            The db ID of the ListObject that the created GPSAlarm should
+	 *            be attached to.
+	 */
 	public GenerateGpsAlarmTask(Context context, long idOfListObject) {
 		this.context = context;
 		this.listObjectId = idOfListObject;
@@ -52,10 +70,11 @@ public class GenerateGpsAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 	protected void onPostExecute(GPSAlarm newGPSAlarm) {
 
 		// When all operations are done, add GPS alarm and associate
-		// it with the listobject
+		// it with the ListObject
 		long tmpId = dbHandler.addGPSAlarm(newGPSAlarm);
 
-		dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(listObjectId),
+		dbHandler.addListObjectWithGPSAlarm(
+				dbHandler.getListObject(listObjectId),
 				dbHandler.getGPSAlarm(tmpId));
 
 		Log.d(Constants.APPTAG, "GPSAlarm added to db with coordinates "
