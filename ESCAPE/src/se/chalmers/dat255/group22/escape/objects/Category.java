@@ -12,11 +12,24 @@ public class Category {
 	// TODO Colors are now saved as string, change in further implementations
 	private String baseColor;
 	private String importantColor;
+	// Bool used in listviews. true if this category should be displayed. Note
+	// that this should not be saved inte database.
+	private boolean shouldBeDisplayed;
 
+	/**
+	 * Creates a new category
+	 * 
+	 * @param name
+	 *            the category name
+	 * @param baseColor
+	 *            the base color used for this category
+	 * @param importantColor
+	 */
 	public Category(String name, String baseColor, String importantColor) {
 		this.name = name;
 		this.baseColor = baseColor;
 		this.importantColor = importantColor;
+		this.shouldBeDisplayed = true;
 	}
 
 	/**
@@ -41,6 +54,16 @@ public class Category {
 	}
 
 	/**
+	 * A boolean for if this category should be displayed or not. Default value
+	 * is true. Note that this variable should not be saved into database!
+	 * 
+	 * @return true if category should be displayed
+	 */
+	public boolean getShouldBeDisplayed() {
+		return shouldBeDisplayed;
+	}
+
+	/**
 	 * @param name
 	 *            the name to set
 	 */
@@ -62,6 +85,17 @@ public class Category {
 	 */
 	public void setImportantColor(String importantColor) {
 		this.importantColor = importantColor;
+	}
+
+	/**
+	 * A boolean for if this category should be displayed or not. Default value
+	 * is true. Note that this variable should not be saved into database!
+	 * 
+	 * @param display
+	 *            true if category should be displayed
+	 */
+	public void setShouldBeDisplayed(boolean display) {
+		this.shouldBeDisplayed = display;
 	}
 
 	/*

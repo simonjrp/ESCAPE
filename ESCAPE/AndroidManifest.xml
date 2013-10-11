@@ -4,8 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-permission android:name="android.permission.VIBRATE" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -18,21 +19,26 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="se.chalmers.dat255.group22.escape.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity" >
+        <activity
+            android:name="se.chalmers.dat255.group22.escape.NewTaskActivity"
             android:label="@string/title_activity_new_task"
-            android:windowSoftInputMode="stateHidden">
+            android:parentActivityName="se.chalmers.dat255.group22.escape.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
 
-        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver" >
+        <receiver
+            android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
             android:enabled="true"
-            android:process=":remote" >
+             >
             <intent-filter>
                 <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_TIME_NOTIFICATION" />
                 <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_LOCATION_NOTIFICATION" />
@@ -41,11 +47,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name="se.chalmers.dat255.group22.escape.SnoozeDialogActivity"
-            android:label="@string/title_activity_snooze_dialog"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
         <activity
             android:name="se.chalmers.dat255.group22.escape.NewBlockActivity"
             android:label="@string/title_activity_new_block"

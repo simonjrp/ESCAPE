@@ -1,10 +1,9 @@
 package se.chalmers.dat255.group22.escape.test;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.TabsPagerAdapter;
-import se.chalmers.dat255.group22.escape.TestFragment;
-import se.chalmers.dat255.group22.escape.ListFragment.ExpandableEventListFragment;
-import se.chalmers.dat255.group22.escape.ListFragment.TaskListFragment;
+import se.chalmers.dat255.group22.escape.adapters.TabsPagerAdapter;
+import se.chalmers.dat255.group22.escape.fragments.listfragments.ExpandableEventListFragment;
+import se.chalmers.dat255.group22.escape.fragments.listfragments.TaskListFragment;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;

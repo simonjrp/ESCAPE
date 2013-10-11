@@ -1,29 +1,33 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a time are
  * presented.
  * 
- * @author tholene
+ * @author tholene, Simon Persson
  */
 public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 	private ArrayList<String> times;
-	private List<Date> timesData;
+	private List<Date> timeData;
 	private Context context;
+	private Spinner spinner;
 
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
@@ -39,12 +43,14 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 	 *            in the dropdown list.
 	 */
 	public SpinnerTimeAdapter(Context context, int textViewResourceId,
-			ArrayList<String> times) {
-		super(context, textViewResourceId, times);
+			Spinner spinner) {
+		super(context, textViewResourceId);
+		// Array containing different times for an event
 		this.context = context;
-		this.times = times;
+		this.spinner = spinner;
 
-		timesData = new ArrayList<Date>();
+		// Create data array
+		timeData = new ArrayList<Date>();
 		Calendar tempCalendar = Calendar.getInstance();
 
 		// Sets minutes and seconds of reference time to zero
@@ -54,13 +60,24 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		// Saves the standard time data relative to current day
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 9);
-		timesData.add(new Date(tempCalendar.getTimeInMillis()));
+		timeData.add(new Date(tempCalendar.getTimeInMillis()));
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 13);
-		timesData.add(new Date(tempCalendar.getTimeInMillis()));
+		timeData.add(new Date(tempCalendar.getTimeInMillis()));
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 17);
-		timesData.add(new Date(tempCalendar.getTimeInMillis()));
+		timeData.add(new Date(tempCalendar.getTimeInMillis()));
 		tempCalendar.set(Calendar.HOUR_OF_DAY, 20);
-		timesData.add(new Date(tempCalendar.getTimeInMillis()));
+		timeData.add(new Date(tempCalendar.getTimeInMillis()));
+
+		// Create labels and add to adapter.
+		times = new ArrayList<String>();
+		times.add(context.getString(R.string.morning));
+		times.add(context.getString(R.string.afternoon));
+		times.add(context.getString(R.string.evening));
+		times.add(context.getString(R.string.night));
+		times.add(context.getString(R.string.pickTimeLabel));
+
+		clear();
+		addAll(times);
 
 	}
 
@@ -78,16 +95,13 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		TextView timeAsTime = (TextView) row
 				.findViewById(R.id.spinnerTimeAsTime);
 
-		timeAsTime.setVisibility(View.VISIBLE);
+		if (position < getCount() - 1) {
+			Date date = getData(position);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			timeAsTime.setText(dateFormat.format(date));
+		}
 
-		if (timeAsText.getText().equals(context.getString(R.string.morning)))
-			timeAsTime.setText("09:00");
-		if (timeAsText.getText().equals(context.getString(R.string.afternoon)))
-			timeAsTime.setText("13:00");
-		if (timeAsText.getText().equals(context.getString(R.string.evening)))
-			timeAsTime.setText("17:00");
-		if (timeAsText.getText().equals(context.getString(R.string.night)))
-			timeAsTime.setText("20:00");
+		timeAsTime.setVisibility(View.VISIBLE);
 
 		if (position == getCount() - 1) {
 
@@ -109,15 +123,100 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		timeAsText.setText(times.get(position));
 
+		// TODO How the **** did this do the trick???
+		parent.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
+		row.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
+
 		return row;
 	}
 
-	public void addData(Date date) {
-		timesData.add(date);
+	public Date getData(int position) {
+		return timeData.get(position);
 	}
 
-	public Date getData(int position) {
-		return timesData.get(position);
+	public List<Date> getAllData() {
+		return timeData;
+	}
+
+	public void addTime(Date newTime) {
+		Calendar newTimeAsCal = dateToCalendar(newTime);
+		int timeExists = timeExists(newTimeAsCal);
+
+		if (timeExists != -1) {
+			spinner.setSelection(timeExists);
+		} else {
+			// Formats the time so that, for example, 12 o clock is shown as
+			// 12:00 instead of 12:0
+
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+			String customLabel = timeFormatter.format(newTimeAsCal.getTime());
+
+			// Finally, add the data to the adapter and select new item in
+			// spinner.
+			if (timeData.size() > Constants.NBR_OF_REL_TIMES) {
+				timeData.remove(timeData.size() - 2);
+			}
+			timeData.add(new Date(newTimeAsCal.getTimeInMillis()));
+
+			// Refresh adapter's internal list.
+			clear();
+			add(context.getString(R.string.morning));
+			add(context.getString(R.string.afternoon));
+			add(context.getString(R.string.evening));
+			add(context.getString(R.string.night));
+			add(customLabel);
+			add(context.getString(R.string.pickTimeLabel));
+
+			// Refresh local list. This
+			// is necessary because the adapters internal list of items and
+			// the local list is unsynced.
+			times.clear();
+			times.add(context.getString(R.string.morning));
+			times.add(context.getString(R.string.afternoon));
+			times.add(context.getString(R.string.evening));
+			times.add(context.getString(R.string.night));
+			times.add(customLabel);
+			times.add(context.getString(R.string.pickTimeLabel));
+			this.notifyDataSetChanged();
+			spinner.setSelection(spinner.getCount() - 2, true);
+		}
+
+	}
+
+	private int timeExists(Calendar newTimeAsCal) {
+
+		int itemPosition = -1;
+		for (Date spinnerTime : timeData) {
+			Calendar spinnerTimeAsCal = dateToCalendar(spinnerTime);
+
+			int spinnerHour = spinnerTimeAsCal.get(Calendar.HOUR_OF_DAY);
+			int spinnerMinute = spinnerTimeAsCal.get(Calendar.MINUTE);
+
+			int newHour = newTimeAsCal.get(Calendar.HOUR_OF_DAY);
+			int newMinute = newTimeAsCal.get(Calendar.MINUTE);
+
+			boolean alreadyExists = (spinnerHour == newHour && spinnerMinute == newMinute);
+			if (alreadyExists) {
+				itemPosition = timeData.indexOf(spinnerTime);
+				break;
+			}
+		}
+
+		return itemPosition;
+	}
+
+	private Calendar dateToCalendar(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+
+		// Set all irrelevant values to 0
+		calendar.set(Calendar.YEAR, 0);
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		return calendar;
 	}
 
 }

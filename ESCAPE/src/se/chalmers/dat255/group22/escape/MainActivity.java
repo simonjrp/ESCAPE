@@ -1,8 +1,11 @@
 package se.chalmers.dat255.group22.escape;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import android.widget.ListView;
 
 /**
  * The main activity, to be launched when app is started.
+ * 
+ * @author Carl, Erik, Mike, Johanna, Simon Persson
  */
 public class MainActivity extends FragmentActivity {
 
@@ -29,11 +34,15 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
+	private int fragmentPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// Initializes the notification handler with this FragmentActivity
+		NotificationHandler.getInstance().init(this);
 
 		// Configure the navigation drawer
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
@@ -65,7 +74,6 @@ public class MainActivity extends FragmentActivity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
-		// switch to the events list directly after startup
 
 	}
 
@@ -73,31 +81,9 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
-	
-//	  public void createNotification(View view) {
-//		    // Prepare intent which is triggered if the
-//		    // notification is selected
-//		    Intent intent = new Intent(this, MainActivity.class);
-//		    PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//
-//		    // Build notification
-//		    // Actions are just fake
-//		    Notification noti = new Notification.Builder(this)
-//		        .setContentTitle("New mail from " + "test@gmail.com")
-//		        .setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
-//		        .setContentIntent(pIntent)
-//		        .addAction(R.drawable.ic_launcher, "Call", pIntent)
-//		        .addAction(R.drawable.ic_launcher, "More", pIntent)
-//		        .addAction(R.drawable.ic_launcher, "And more", pIntent).build();
-//		    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//		    // Hide the notification after its selected
-//		    noti.flags |= Notification.FLAG_AUTO_CANCEL;
-//
-//		    notificationManager.notify(0, noti);
-//
-//		  }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -111,9 +97,10 @@ public class MainActivity extends FragmentActivity {
 
 		// Handle all action bar items except for the back/up button here.
 		switch (item.getItemId()) {
-		case R.id.add_task:
-			Intent intent = new Intent(this, NewTaskActivity.class);
-			startActivity(intent);
+			case R.id.add_task :
+				Intent intent = new Intent(this, NewTaskActivity.class);
+				startActivity(intent);
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -126,10 +113,13 @@ public class MainActivity extends FragmentActivity {
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// Hide all buttons in actionbar if navigation drawer is open
+		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
-		
+
+		menu.findItem(R.id.pick_category).setVisible(
+				!(drawerOpen || fragmentPosition != 0));
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -146,11 +136,19 @@ public class MainActivity extends FragmentActivity {
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	/*
+	 * Class for handling clicks in the navigation drawer.
+	 */
+	private class DrawerItemClickListener
+			implements
+				ListView.OnItemClickListener {
 
 		private List<Fragment> fragmentList;
-		
+
+		/*
+		 * Constructor for creating a new DrawerItemClickListener. Automatically
+		 * selects and shows the first fragment in the fragments list
+		 */
 		public DrawerItemClickListener() {
 			selectItem(0);
 		}
@@ -161,7 +159,15 @@ public class MainActivity extends FragmentActivity {
 			selectItem(position);
 		}
 
+		/*
+		 * Method for selecting/showing fragments when user clicks on an item in
+		 * the navigation drawer.
+		 * 
+		 * @param position The position (in the fragments list) of the fragment
+		 * to be shown.
+		 */
 		private void selectItem(int position) {
+			fragmentPosition = position;
 			if (fragmentList == null) {
 				fragmentList = new ArrayList<Fragment>();
 
@@ -182,9 +188,14 @@ public class MainActivity extends FragmentActivity {
 
 		}
 
+		/*
+		 * Method for setting the title of the app properly. Used to be able to
+		 * have a dynamic app title.
+		 * 
+		 * @param string The new title of the app.
+		 */
 		private void setTitle(String string) {
 			title = string;
-
 		}
 	}
 }

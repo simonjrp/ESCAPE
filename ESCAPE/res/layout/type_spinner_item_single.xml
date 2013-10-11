@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-    <Space
-        android:id="@+id/space"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:minHeight="2dp">
-    </Space>
 
-    <ImageView
-        android:id="@+id/spinnerImage"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/space">
-    </ImageView>
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/spinnerImage"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_centerVertical="true">
+</ImageView>
 
-</RelativeLayout>

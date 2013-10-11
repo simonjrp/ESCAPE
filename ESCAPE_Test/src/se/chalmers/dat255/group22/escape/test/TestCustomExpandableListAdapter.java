@@ -2,7 +2,7 @@ package se.chalmers.dat255.group22.escape.test;
 
 import java.sql.Date;
 
-import se.chalmers.dat255.group22.escape.ListFragment.CustomExpandableListAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
@@ -146,7 +146,7 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 		assertEquals(true, adapter.getChildrenCount(2) == 0);
 		assertEquals(true, adapter.isEmpty());
 
-		adapter.addListObjectThisWeek(db.getListObject(somedayEventID));
+		adapter.addListObjectSomeday(db.getListObject(somedayEventID));
 		assertEquals(true, adapter.getChildrenCount(0) == 0);
 		assertEquals(true, adapter.getChildrenCount(1) == 0);
 		assertEquals(true, adapter.getChildrenCount(2) == 1);
@@ -160,7 +160,7 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 	public void testRemoveListObjectToday() {
 		adapter.addListObjectToday(db.getListObject(todayEventID));
 		adapter.addListObjectTomorrow(db.getListObject(tomorrowEventID));
-		adapter.addListObjectThisWeek(db.getListObject(somedayEventID));
+		adapter.addListObjectSomeday(db.getListObject(somedayEventID));
 		assertEquals(true, adapter.getChildrenCount(0) == 1);
 		assertEquals(true, adapter.getChildrenCount(1) == 1);
 		assertEquals(true, adapter.getChildrenCount(2) == 1);
@@ -174,7 +174,7 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 	public void testRemoveListObjectTomorrow() {
 		adapter.addListObjectToday(db.getListObject(todayEventID));
 		adapter.addListObjectTomorrow(db.getListObject(tomorrowEventID));
-		adapter.addListObjectThisWeek(db.getListObject(somedayEventID));
+		adapter.addListObjectSomeday(db.getListObject(somedayEventID));
 		assertEquals(true, adapter.getChildrenCount(0) == 1);
 		assertEquals(true, adapter.getChildrenCount(1) == 1);
 		assertEquals(true, adapter.getChildrenCount(2) == 1);
@@ -187,11 +187,11 @@ public class TestCustomExpandableListAdapter extends AndroidTestCase {
 	public void testRemoveListObjectThisWeek() {
 		adapter.addListObjectToday(db.getListObject(todayEventID));
 		adapter.addListObjectTomorrow(db.getListObject(tomorrowEventID));
-		adapter.addListObjectThisWeek(db.getListObject(somedayEventID));
+		adapter.addListObjectSomeday(db.getListObject(somedayEventID));
 		assertEquals(true, adapter.getChildrenCount(0) == 1);
 		assertEquals(true, adapter.getChildrenCount(1) == 1);
 		assertEquals(true, adapter.getChildrenCount(2) == 1);
-		adapter.removeListObjectThisWeek(db.getListObject(somedayEventID));
+		adapter.removeListObjectSomeday(db.getListObject(somedayEventID));
 		assertEquals(true, adapter.getChildrenCount(0) == 1);
 		assertEquals(true, adapter.getChildrenCount(1) == 1);
 		assertEquals(true, adapter.getChildrenCount(2) == 0);
