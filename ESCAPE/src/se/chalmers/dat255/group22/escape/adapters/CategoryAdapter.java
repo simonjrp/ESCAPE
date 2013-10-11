@@ -115,11 +115,6 @@ public class CategoryAdapter implements ListAdapter {
 					// Category value after checkbox state
 					((Category) getItem(myPos))
 							.setShouldBeDisplayed(newButtonValue);
-					// TODO Changing text is not needed
-					compoundButton.setText(((Category) getItem(myPos))
-							.getName()
-							+ ((Category) getItem(myPos))
-									.getShouldBeDisplayed());
 				}
 			});
 			view = tmpBox;
