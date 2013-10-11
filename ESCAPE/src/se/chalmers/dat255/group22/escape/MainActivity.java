@@ -34,6 +34,7 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
+    private int fragmentPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,9 @@ public class MainActivity extends FragmentActivity {
 		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
-        menu.findItem(R.id.pick_category).setVisible(!drawerOpen);
+
+        menu.findItem(R.id.pick_category).setVisible(!(drawerOpen || fragmentPosition != 0));
+
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -166,6 +169,7 @@ public class MainActivity extends FragmentActivity {
 		 * to be shown.
 		 */
 		private void selectItem(int position) {
+            fragmentPosition = position;
 			if (fragmentList == null) {
 				fragmentList = new ArrayList<Fragment>();
 

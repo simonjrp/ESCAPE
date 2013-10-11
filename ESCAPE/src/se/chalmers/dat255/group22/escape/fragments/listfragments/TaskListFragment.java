@@ -110,7 +110,7 @@ public class TaskListFragment extends Fragment {
 	 */
 	private void getPopup() {
 		if (!ourListAdapter.getTheCategories().isEmpty()) {
-            if (listPopupWindow == null)
+            //if (listPopupWindow == null)
                 initPopup();
 			categoryAdapter = new CategoryAdapter(getActivity());
 			categoryAdapter.setCategories(ourListAdapter.getTheCategories());
