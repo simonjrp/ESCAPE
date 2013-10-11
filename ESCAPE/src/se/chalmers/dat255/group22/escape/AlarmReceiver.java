@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also
@@ -226,6 +227,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 */
 	private void notificationDone(Context context, Intent intent) {
 		long id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+
 		ReminderType reminderType = (ReminderType) intent
 				.getParcelableExtra(Constants.REMINDER_TYPE);
 		DBHandler dbH = new DBHandler(context);
@@ -288,9 +290,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 			// Creates new notification reminder with the new time alarm.
 			NotificationHandler.getInstance().addTimeReminder(listObject);
 
-			NotificationManager notificationManager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.cancel((int) id);
 		} else {
 			// When snoozing place reminder, do nothing... The geofence will be
 			// kept active.
