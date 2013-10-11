@@ -349,7 +349,6 @@ public class CustomListAdapter implements ListAdapter {
 			theCategories.remove(cat);
 	}
 
-	// TODO Make this work!
 	/**
 	 * Remove all categories associated with a ListObject if they are not part
 	 * of another ListObject displayed in the list

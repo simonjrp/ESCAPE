@@ -282,10 +282,10 @@ public class NewTaskActivity extends Activity {
 
 		// GPS Alarm
 
-		// TODO Fix colors here
+		// TODO Fix Category from spinner!
 		//Category newCategory = new Category(category, "Random Color",
 		//		"Another random Color");
-        Category newCategory = new Category("fugly cat ", "Random Color",
+        Category newCategory = new Category("Tmp default ", "Random Color",
                 "Another random Color");
 		Place place = new Place(1, location);
 
@@ -374,7 +374,6 @@ public class NewTaskActivity extends Activity {
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				if (!cat.getName().equals(getString(R.string.custom_category)))
-                    //TODO check if this works!
 					dbHandler.addCategory(cat);
 				    dbHandler.addCategoryWithListObject(dbHandler.getCategory(cat.getName()),
                             dbHandler.getListObject(objId));
