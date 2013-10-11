@@ -1,57 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="se.chalmers.dat255.group22.escape"
-          android:versionCode="1"
-          android:versionName="1.0">
+    package="se.chalmers.dat255.group22.escape"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-    <uses-permission
-        android:name="android.permission.VIBRATE">
-    </uses-permission>
-    <uses-permission
-    android:name="android.permission.INTERNET">
-    </uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="16"/>
+        android:targetSdkVersion="16" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="se.chalmers.dat255.group22.escape.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity">
+        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity" >
             android:label="@string/title_activity_new_task"
             android:windowSoftInputMode="stateHidden">
         </activity>
 
-        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver">
+        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver" >
             android:enabled="true"
             android:process=":remote" >
             <intent-filter>
-                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_TIME_NOTIFICATION"/>
-                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_LOCATION_NOTIFICATION"/>
-                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_DONE"/>
-                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_SNOOZE"/>
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_TIME_NOTIFICATION" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_LOCATION_NOTIFICATION" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_DONE" />
+                <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NOTIFICATION_ACTION_SNOOZE" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name="se.chalmers.dat255.group22.escape.NewBlockActivity"
             android:label="@string/title_activity_new_block"
-            android:parentActivityName="se.chalmers.dat255.group22.escape.MainActivity">
+            android:parentActivityName="se.chalmers.dat255.group22.escape.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="se.chalmers.dat255.group22.escape.MainActivity"/>
+                android:value="se.chalmers.dat255.group22.escape.MainActivity" />
         </activity>
     </application>
 
