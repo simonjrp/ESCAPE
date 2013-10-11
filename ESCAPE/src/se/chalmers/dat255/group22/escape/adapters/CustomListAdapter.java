@@ -79,7 +79,7 @@ public class CustomListAdapter implements ListAdapter {
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
-				// TODO this is a tmp category!
+				// TODO All categories should be fetched from database!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
@@ -406,13 +406,10 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public boolean getLOShouldBeVisible(ListObject lo) {
 		if (theCategories != null) {
-			// TODO fetch real categories from database
-			for (Category cat : dbHandler.getCategories(lo)) {
+			for (Category cat : lo.getCategories()) {
 				if (!getCatShouldBeVisible(cat))
 					return false;
 			}
-			Category tmp = new Category(lo.getName(), null, null);
-			return getCatShouldBeVisible(tmp);
 		}
 		return true;
 	}
