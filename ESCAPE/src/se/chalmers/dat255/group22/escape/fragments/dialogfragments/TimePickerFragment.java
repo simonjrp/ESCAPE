@@ -20,9 +20,8 @@ import android.widget.TimePicker;
  * 
  * @author Simon Persson
  */
-public class TimePickerFragment extends DialogFragment
-		implements
-			TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment implements
+		TimePickerDialog.OnTimeSetListener {
 
 	/**
 	 * Constant used to get the ID of the spinner that wants to bring up this
@@ -49,19 +48,21 @@ public class TimePickerFragment extends DialogFragment
 
 	@Override
 	public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-		Activity activity = getActivity();
 
-		// Retrieve spinner and adapter and clear item list.
+		// Retrieve spinner and adapter to be able to add new custom date
+		Activity activity = getActivity();
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerTimeAdapter adapter = (SpinnerTimeAdapter) spinner.getAdapter();
+
 		adapter.clear();
 
-        // Formats the time so that, for example, 12 o clock is shown as 12:00 instead of 12:0
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-        String formattedTime = timeFormatter.format(calendar.getTime());
+		// Formats the time so that, for example, 12 o clock is shown as 12:00
+		// instead of 12:0
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+		String formattedTime = timeFormatter.format(calendar.getTime());
 
 		// Add the standard time labels to the spinner again.
 		adapter.add(activity.getString(R.string.morning));
@@ -73,15 +74,9 @@ public class TimePickerFragment extends DialogFragment
 		spinner.setSelection(adapter.getCount() - 2, true);
 
 		Calendar tempCalendar = Calendar.getInstance();
-		tempCalendar.set(Calendar.YEAR, 0);
-		tempCalendar.set(Calendar.MONTH, 0);
-		tempCalendar.set(Calendar.DAY_OF_MONTH, 0);
 		tempCalendar.set(Calendar.HOUR_OF_DAY, hour);
 		tempCalendar.set(Calendar.MINUTE, minute);
-		tempCalendar.set(Calendar.SECOND, 0);
-		tempCalendar.set(Calendar.MILLISECOND, 0);
 
-		adapter.addData(new Date(tempCalendar.getTimeInMillis()));
-
+		adapter.addTime(new Date(tempCalendar.getTimeInMillis()));
 	}
 }

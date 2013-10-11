@@ -27,7 +27,7 @@ public class GPSAlarm {
 	public String getAdress() {
 		return adress;
 	}
-	
+
 	/**
 	 * @return the longitude
 	 */
@@ -43,14 +43,16 @@ public class GPSAlarm {
 	}
 
 	/**
-	 * @param longitude the longitude to set
+	 * @param longitude
+	 *            the longitude to set
 	 */
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
 	/**
-	 * @param latitude the latitude to set
+	 * @param latitude
+	 *            the latitude to set
 	 */
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
@@ -70,10 +72,8 @@ public class GPSAlarm {
 	 */
 	@Override
 	public String toString() {
-		return "GPSAlarm [id=" + id 
-				+ ", adress=" + adress
-				+ ", longitude=" + longitude
-				+ ", latitude=" + latitude + "]";
+		return "GPSAlarm [id=" + id + ", adress=" + adress + ", longitude="
+				+ longitude + ", latitude=" + latitude + "]";
 	}
 
 	/*
