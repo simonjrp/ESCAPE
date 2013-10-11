@@ -2,9 +2,7 @@ package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.List;
 
-import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import android.app.Activity;
 import android.app.DatePickerDialog;

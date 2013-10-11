@@ -1,15 +1,19 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +27,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * Adapter for displaying ListObjects in an ordinary list
@@ -201,14 +201,14 @@ public class CustomListAdapter implements ListAdapter {
 		editButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Intent intent = new Intent(context, NewTaskActivity.class);
+				Intent intent = new Intent(context, NewTaskActivity.class);
 
-                Bundle bundle = new Bundle();
-                intent.putExtra(EDIT_TASK_MSG, bundle);
+				Bundle bundle = new Bundle();
+				intent.putExtra(EDIT_TASK_MSG, bundle);
 
-                bundle.putInt(INTENT_GET_ID, listObject.getId());
-                intent.setFlags(EDIT_TASK_ID);
-                context.startActivity(intent);
+				bundle.putInt(INTENT_GET_ID, listObject.getId());
+				intent.setFlags(EDIT_TASK_ID);
+				context.startActivity(intent);
 			}
 		});
 		deleteButton.setOnClickListener(new OnClickListener() {

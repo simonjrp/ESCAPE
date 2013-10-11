@@ -23,6 +23,7 @@ import android.widget.ListView;
 
 /**
  * The main activity, to be launched when app is started.
+ * 
  * @author Carl, Erik, Mike, Johanna, Simon Persson
  */
 public class MainActivity extends FragmentActivity {
@@ -91,9 +92,9 @@ public class MainActivity extends FragmentActivity {
 
 		// Handle all action bar items except for the back/up button here.
 		switch (item.getItemId()) {
-			case R.id.add_task :
-				Intent intent = new Intent(this, NewTaskActivity.class);
-				startActivity(intent);
+		case R.id.add_task:
+			Intent intent = new Intent(this, NewTaskActivity.class);
+			startActivity(intent);
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -129,9 +130,8 @@ public class MainActivity extends FragmentActivity {
 	/*
 	 * Class for handling clicks in the navigation drawer.
 	 */
-	private class DrawerItemClickListener
-			implements
-				ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
 
 		private List<Fragment> fragmentList;
 

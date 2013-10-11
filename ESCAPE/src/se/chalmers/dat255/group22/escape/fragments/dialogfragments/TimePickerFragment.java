@@ -1,9 +1,7 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import android.app.Activity;
@@ -20,9 +18,8 @@ import android.widget.TimePicker;
  * 
  * @author Simon Persson
  */
-public class TimePickerFragment extends DialogFragment
-		implements
-			TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment implements
+		TimePickerDialog.OnTimeSetListener {
 
 	/**
 	 * Constant used to get the ID of the spinner that wants to bring up this
@@ -55,44 +52,10 @@ public class TimePickerFragment extends DialogFragment
 		Spinner spinner = (Spinner) activity.findViewById(spinnerId);
 		SpinnerTimeAdapter adapter = (SpinnerTimeAdapter) spinner.getAdapter();
 
-		// Stores new date in a Calendar object.
 		Calendar tempCalendar = Calendar.getInstance();
-		tempCalendar.set(Calendar.YEAR, 0);
-		tempCalendar.set(Calendar.MONTH, 0);
-		tempCalendar.set(Calendar.DAY_OF_MONTH, 0);
 		tempCalendar.set(Calendar.HOUR_OF_DAY, hour);
 		tempCalendar.set(Calendar.MINUTE, minute);
-		tempCalendar.set(Calendar.SECOND, 0);
-		tempCalendar.set(Calendar.MILLISECOND, 0);
 
-		// Check if the custom date equals to some predefined value in the
-		// spinner
-		List<Date> spinnerData = adapter.getAllData();
-		int itemPosition = -1;
-		for (Date spinnerTime : spinnerData) {
-			Calendar spinnerTimeAsCal = Calendar.getInstance();
-			spinnerTimeAsCal.setTime(spinnerTime);
-			int spinnerHour = spinnerTimeAsCal.get(Calendar.HOUR_OF_DAY);
-			int spinnerMinute = spinnerTimeAsCal.get(Calendar.MINUTE);
-			boolean alreadyExists = (spinnerHour == hour && spinnerMinute == minute);
-			if (alreadyExists) {
-				itemPosition = spinnerData.indexOf(spinnerTime);
-				break;
-			}
-		}
-
-		if (itemPosition != -1) {
-			spinner.setSelection(itemPosition);
-		} else {
-			// Formats the time so that, for example, 12 o clock is shown as
-			// 12:00 instead of 12:0
-
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-			String customLabel = timeFormatter.format(tempCalendar.getTime());
-			adapter.addCustomEntry(customLabel,
-					new Date(tempCalendar.getTimeInMillis()));
-			spinner.setSelection(spinner.getCount() - 2, true);
-		}
-
+		adapter.addTime(new Date(tempCalendar.getTimeInMillis()));
 	}
 }

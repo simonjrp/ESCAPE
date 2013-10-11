@@ -21,20 +21,23 @@ public final class Constants {
 	 * intent
 	 */
 	public static final String INTENT_GET_ID = "ID";
-    /**
-     * The string to be used for a time format as HH:MM
-     */
-    public static final String HOUR_MINUTE_FORMAT = "%H:%M";
+	/**
+	 * The string to be used for a time format as HH:MM
+	 */
+	public static final String HOUR_MINUTE_FORMAT = "%H:%M";
 
-    /**
-     * The integer describing how many relative date values there is in a date spinner.
-     */
-    public static final int NBR_OF_REL_DATES = 3;
+	/**
+	 * The integer describing how many relative date values there is in a date
+	 * spinner.
+	 */
+	public static final int NBR_OF_REL_DATES = 3;
 
-    /**
-     * The integer describing how many relative time values there is in a time spinner.
-     */
-    public static final int NBR_OF_REL_TIMES = 4;
+	/**
+	 * The integer describing how many relative time values there is in a time
+	 * spinner.
+	 */
+	public static final int NBR_OF_REL_TIMES = 4;
+
 	private Constants() {
 	}
 }

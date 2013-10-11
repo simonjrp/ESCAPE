@@ -69,13 +69,6 @@ public class NewTaskActivity extends Activity {
 					.add(R.id.container_new_task, new TaskDetailsFragment())
 					.commit();
 		}
-		// Get the current day to display as the dynamic spinner item
-		Calendar tempCalendar = Calendar.getInstance();
-		int weekday = tempCalendar.get(Calendar.DAY_OF_WEEK);
-		String[] weekDays = getResources().getStringArray(R.array.weekdays);
-		nextWeekSameDay = getResources().getString(R.string.nextweeksameday)
-				+ " " + weekDays[weekday];
-
 	}
 
 	@Override
@@ -215,27 +208,22 @@ public class NewTaskActivity extends Activity {
 					// Day from:
 					SpinnerDayAdapter fromDayAdapter = (SpinnerDayAdapter) dateFrom
 							.getAdapter();
-					fromDayAdapter.addCustomEntry("CustomStartDay", timeStart);
-					dateFrom.setSelection(2);
+					fromDayAdapter.addDate(timeStart);
 
 					// Time from:
 					SpinnerTimeAdapter fromTimeAdapter = (SpinnerTimeAdapter) timeFrom
 							.getAdapter();
-					fromTimeAdapter
-							.addCustomEntry("CustomStartTime", timeStart);
-					timeFrom.setSelection(2);
+					fromTimeAdapter.addTime(timeStart);
 
 					// Day to:
 					SpinnerDayAdapter toDayAdapter = (SpinnerDayAdapter) dateTo
 							.getAdapter();
-					toDayAdapter.addCustomEntry("CustomEndDay", timeEnd);
-					dateTo.setSelection(2);
+					toDayAdapter.addDate(timeEnd);
 
 					// Time to:
 					SpinnerTimeAdapter toTimeAdapter = (SpinnerTimeAdapter) timeTo
 							.getAdapter();
-					toTimeAdapter.addCustomEntry("CustomEndTime", timeEnd);
-					timeFrom.setSelection(2);
+					toTimeAdapter.addTime(timeEnd);
 				}
 			}
 		}
@@ -251,12 +239,12 @@ public class NewTaskActivity extends Activity {
 		locationReminderAutoComplete.setAdapter(adapter);
 		locationReminderAutoComplete
 				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (!hasFocus)
-                            locationReminderAutoComplete.setSelection(0);
-                    }
-                });
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus)
+							locationReminderAutoComplete.setSelection(0);
+					}
+				});
 		locationReminderAutoComplete.addTextChangedListener(new TextWatcher() {
 
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -301,11 +289,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-			case android.R.id.home :
-				onBackPressed();
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -519,7 +507,7 @@ public class NewTaskActivity extends Activity {
 		strDayList.add(getString(R.string.pickDayLabel));
 
 		SpinnerDayAdapter dayFromAdapter = new SpinnerDayAdapter(this,
-				R.layout.simple_spinner_item, strDayList);
+				R.layout.simple_spinner_item, dateFromSpinner);
 
 		//
 		/* From: TimeSpinner */
@@ -527,19 +515,11 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 		timeFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-                        timeFromSpinner.getId()));
-
-		// Array containing different times for an event
-		ArrayList<String> strTimeArr = new ArrayList<String>();
-		strTimeArr.add(getString(R.string.morning));
-		strTimeArr.add(getString(R.string.afternoon));
-		strTimeArr.add(getString(R.string.evening));
-		strTimeArr.add(getString(R.string.night));
-		strTimeArr.add(getString(R.string.pickTimeLabel));
+						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+						timeFromSpinner.getId()));
 
 		SpinnerTimeAdapter timeFromAdapter = new SpinnerTimeAdapter(this,
-				R.layout.time_spinner_item, strTimeArr);
+				R.layout.time_spinner_item, timeFromSpinner);
 
 		//
 		/* To: DateSpinner */
@@ -551,7 +531,7 @@ public class NewTaskActivity extends Activity {
 						dateToSpinner.getId()));
 
 		SpinnerDayAdapter dayToAdapter = new SpinnerDayAdapter(this,
-				R.layout.simple_spinner_item, strDayList);
+				R.layout.simple_spinner_item, dateToSpinner);
 
 		//
 		/* To: TimeSpinner */
@@ -563,7 +543,7 @@ public class NewTaskActivity extends Activity {
 						timeToSpinner.getId()));
 
 		SpinnerTimeAdapter timeToAdapter = new SpinnerTimeAdapter(this,
-				R.layout.time_spinner_item, strTimeArr);
+				R.layout.time_spinner_item, timeToSpinner);
 
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
@@ -599,12 +579,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = {R.drawable.device_access_alarms,
-				R.drawable.location_place};
+		int imgArr[] = { R.drawable.device_access_alarms,
+				R.drawable.location_place };
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = {getString(R.string.time_reminder),
-				getString(R.string.location_reminder)};
+		String[] strTypeArr = { getString(R.string.time_reminder),
+				getString(R.string.location_reminder) };
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
@@ -639,15 +619,16 @@ public class NewTaskActivity extends Activity {
 		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pickDayLabel));
 
-		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
-				R.layout.simple_spinner_item, strDayList);
+		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
 
-		Spinner dateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
-		dateSpinner.setAdapter(dayAdapter);
-		dateSpinner
+		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
+				R.layout.simple_spinner_item, reminderDateSpinner);
+
+		reminderDateSpinner.setAdapter(dayAdapter);
+		reminderDateSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
 						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateSpinner.getId()));
+						reminderDateSpinner.getId()));
 
 		/*
 		 * Last but not least, time of the reminder with a clarification of the
@@ -661,15 +642,16 @@ public class NewTaskActivity extends Activity {
 		strTimeArr.add(getString(R.string.night));
 		strTimeArr.add(getString(R.string.pickTimeLabel));
 
-		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
-				R.layout.time_spinner_item, strTimeArr);
+		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
 
-		Spinner timeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
-		timeSpinner.setAdapter(timeAdapter);
-		timeSpinner
+		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
+				R.layout.time_spinner_item, reminderTimeSpinner);
+
+		reminderTimeSpinner.setAdapter(timeAdapter);
+		reminderTimeSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
 						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeSpinner.getId()));
+						reminderTimeSpinner.getId()));
 		hasReminder = true;
 
 	}

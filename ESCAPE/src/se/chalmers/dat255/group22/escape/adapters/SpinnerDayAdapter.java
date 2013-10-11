@@ -1,13 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +8,13 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.IntegerToMonthConverter;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -47,15 +46,22 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 *            the spinner that gets assigned to this adapter.
 	 */
 	public SpinnerDayAdapter(Context context, int textViewResourceId,
-			ArrayList<String> days, Spinner spinner) {
-		super(context, textViewResourceId, days);
+			Spinner spinner) {
+		super(context, textViewResourceId);
 		this.context = context;
-		this.days = days;
 		this.spinner = spinner;
 
 		// Sets seconds and milliseconds of reference time
 		// to zero
+		// Get the current day to display as the dynamic spinner item
 		Calendar tempCalendar = Calendar.getInstance();
+		int weekday = tempCalendar.get(Calendar.DAY_OF_WEEK);
+		String[] weekDays = context.getResources().getStringArray(
+				R.array.weekdays);
+		String nextWeekSameDay = context.getResources().getString(
+				R.string.nextweeksameday)
+				+ " " + weekDays[weekday];
+
 		tempCalendar.set(Calendar.SECOND, 0);
 		tempCalendar.set(Calendar.MILLISECOND, 0);
 
@@ -64,6 +70,16 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		dateData.add(new Date(currentTimeInMillis));
 		dateData.add(new Date(currentTimeInMillis + 86400000));
 		dateData.add(new Date(currentTimeInMillis + ONE_WEEK_IN_MILLIS));
+
+		days = new ArrayList<String>();
+		days.add(context.getString(R.string.todayLabel));
+		days.add(context.getString(R.string.tomorrowLabel));
+		days.add(nextWeekSameDay);
+		days.add(context.getString(R.string.pickDayLabel));
+
+		clear();
+		addAll(days);
+
 	}
 
 	@Override
@@ -143,23 +159,36 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			if (dateData.size() > Constants.NBR_OF_REL_DATES) {
 				dateData.remove(dateData.size() - 2);
 			}
-			dateData.add(newDate);
+			dateData.add(new Date(newDateAsCal.getTimeInMillis()));
 
 			String nextWeekSameDayLabel = days.get(2);
-			clear();
 
+			// Refresh adapter's internal list.
+			clear();
 			add(context.getString(R.string.todayLabel));
 			add(context.getString(R.string.tomorrowLabel));
 			add(nextWeekSameDayLabel);
 			add(customLabel);
 			add(context.getString(R.string.pickDayLabel));
+			this.notifyDataSetChanged();
+
+			// Refresh local list. This
+			// is necessary because the adapters internal list of items and
+			// the local list is unsynced.
+
+			days.clear();
+			days.add(context.getString(R.string.todayLabel));
+			days.add(context.getString(R.string.tomorrowLabel));
+			days.add(nextWeekSameDayLabel);
+			days.add(customLabel);
+			days.add(context.getString(R.string.pickDayLabel));
 
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 
 	}
 
-	public int dateExists(Calendar newDateAsCal) {
+	private int dateExists(Calendar newDateAsCal) {
 		int itemPosition = -1;
 		for (Date date : dateData) {
 			Calendar spinnerDateAsCal = dateToCalendar(date);

@@ -2,7 +2,6 @@ package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,9 +18,9 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableEventListFragment extends Fragment {
 
-    // The adapter used to display out ListObjects
+	// The adapter used to display out ListObjects
 	CustomExpandableListAdapter listAdapter;
-    // the list objects are displayed in
+	// the list objects are displayed in
 	ExpandableListView expListView;
 
 	@Override
