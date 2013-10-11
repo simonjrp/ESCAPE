@@ -1,15 +1,11 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;

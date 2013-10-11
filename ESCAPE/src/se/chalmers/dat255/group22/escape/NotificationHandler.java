@@ -15,7 +15,6 @@ import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -291,7 +290,6 @@ public class NotificationHandler {
 						+ " removed.");
 	}
 
-	
 	public void removePlaceReminder(ListObject listObject) {
 		long id = listObject.getId();
 		if (servicesConnected()) {
