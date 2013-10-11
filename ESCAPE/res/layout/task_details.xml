@@ -48,7 +48,7 @@
             android:minLines="3"
             android:paddingTop="@dimen/ui_element_gap"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/task_location"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -58,7 +58,8 @@
             android:textSize="@dimen/textsize_medium"
             android:inputType="textCapSentences"
             android:paddingTop="@dimen/ui_element_gap"
-            android:paddingBottom="@dimen/ui_element_gap"/>
+            android:paddingBottom="@dimen/ui_element_gap"
+            android:textAlignment="textStart"/>
 
         <CheckBox
             android:id="@+id/task_important"

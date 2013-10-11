@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 			// Browser key for Google API
 
 			String key = "key=" + context.getString(R.string.API_key);
+
 			String input = "";
 
 			try {
@@ -66,15 +68,12 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 			// Sensor enabled
 			String sensor = "sensor=true";
 
-			// Language
-			String language = "language=" + context.getString(R.string.country_short);
-
-            // Country
-			String country = "components=country:" + context.getString(R.string.country_short);
+			// The language in which to return results
+			String language = "language=" + Locale.getDefault().getLanguage();
 
 			// Building the parameters to the web service
 			String parameters = input + "&" + types + "&" + sensor + "&"
-					+ language + "&" + country + "&" + key;
+					+ language + "&" + key;
 
 			// Output format
 			String output = "json";
@@ -110,18 +109,26 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 				JSONArray allTerms = thisPrediction.getJSONArray("terms");
 
 				String result = "";
-
-				for (int j = 0; j < allTerms.length(); j++) {
+				String unallowed = "0123456789";
+				int length = allTerms.length() > 2 ? 2 : allTerms.length();
+				for (int j = 0; j < length; j++) {
 					String thisValue = allTerms.getJSONObject(j).getString(
 							"value");
-					if (!thisValue.equals(context.getString(R.string.country))) {
-						if (j == 0)
-							result = thisValue;
-						else
-							result = result + ", " + thisValue;
+
+					// Filter out any "number places"
+					if (!(thisValue.contains(unallowed))) {
+
+						if (!thisValue.equals(Locale.getDefault()
+								.getDisplayCountry())) {
+
+							if (j == 0)
+								result = thisValue;
+							else
+								result = result + ", " + thisValue;
+
+						}
 					}
 				}
-
 				// add each entry to our array
 				predictionsArr.add(result);
 			}

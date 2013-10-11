@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -62,9 +63,6 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
 		icon.setImageResource(imgArr[position]);
 
-		if (position == (getCount() - 1)) {
-			// TODO If position == 1, rearrange layout for location input
-		}
 		return row;
 	}
 
@@ -75,9 +73,14 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.type_spinner_item_single, parent,
 				false);
 
+        Spinner currentSpinner = (Spinner) parent.findViewById(R.id.reminderTypeSpinner);
+
+
 		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
 
 		icon.setImageResource(imgArr[position]);
+        currentSpinner.getLayoutParams().width = currentSpinner.getLayoutParams().WRAP_CONTENT;
+        currentSpinner.getLayoutParams().height = currentSpinner.getLayoutParams().WRAP_CONTENT;
 		return row;
 	}
 

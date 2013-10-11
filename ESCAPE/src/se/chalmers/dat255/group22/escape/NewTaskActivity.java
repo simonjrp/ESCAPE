@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,8 +47,9 @@ import android.widget.Spinner;
  */
 public class NewTaskActivity extends Activity {
 
-	public AutoCompleteTextView autoCompleteTextView;
-	public ArrayAdapter<String> adapter;
+	private AutoCompleteTextView locationAutoComplete;
+	private AutoCompleteTextView locationReminderAutoComplete;
+	private ArrayAdapter<String> adapter;
 	private boolean hasReminder;
 	private boolean isTimeReminder;
 	private boolean isLocationReminder;
@@ -214,33 +216,72 @@ public class NewTaskActivity extends Activity {
 			}
 		}
 
-		adapter = new ArrayAdapter<String>(this, R.layout.location_item);
 		// Initiate the AutoCompleteView
-		autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		locationReminderAutoComplete = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		// Initiate the ArrayAdapter
+		adapter = new ArrayAdapter<String>(this, R.layout.location_item) {
+
+		};
 		adapter.setNotifyOnChange(true);
-		autoCompleteTextView.setAdapter(adapter);
-		autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+		locationReminderAutoComplete.setThreshold(3);
+		locationReminderAutoComplete.setAdapter(adapter);
+        locationReminderAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    locationReminderAutoComplete.setSelection(0);
+            }
+        });
+		locationReminderAutoComplete.addTextChangedListener(new TextWatcher() {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				if (count % 3 == 1) {
-					adapter.clear();
-					GetPlaces task = new GetPlaces(autoCompleteTextView,
-							adapter, getBaseContext());
-					// now pass the argument in the textview to the task
-					task.execute(autoCompleteTextView.getText().toString());
-				}
+				GetPlaces task = new GetPlaces(locationReminderAutoComplete,
+						adapter, getBaseContext());
+				// now pass the argument in the textview to the task
+				task.execute(locationReminderAutoComplete.getText().toString());
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-
 			}
 
 			public void afterTextChanged(Editable s) {
-
 			}
 		});
+
+		locationAutoComplete = (AutoCompleteTextView) findViewById(R.id.task_location);
+		locationAutoComplete.setThreshold(3);
+		locationAutoComplete.setAdapter(adapter);
+		locationAutoComplete.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				GetPlaces task = new GetPlaces(locationAutoComplete, adapter,
+						getBaseContext());
+				// now pass the argument in the textview to the task
+				task.execute(locationAutoComplete.getText().toString());
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+			}
+		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		// Make home button in actionbar work like pressing on backbutton
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
