@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 /**
  * An adapter for displaying checkboxes with
@@ -100,7 +101,7 @@ public class CategoryAdapter implements ListAdapter {
 	@Override
 	public View getView(int position, View view, ViewGroup viewGroup) {
 		Category theCategory = (Category) getItem(position);
-
+		final int myPos = position;
 		// Create the view if it does not exist
 		if (view == null) {
 			CheckBox tmpBox = new CheckBox(context);
@@ -109,8 +110,29 @@ public class CategoryAdapter implements ListAdapter {
 			tmpBox.setText(theCategory.getName() + "  "
 					+ theCategory.getShouldBeDisplayed());
 			// Set what to do when checkbox changes state
-			tmpBox.setOnCheckedChangeListener(new CustomOnCheckedChangeListener(
-					position));
+			tmpBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+				@Override
+				public void onCheckedChanged(CompoundButton compoundButton,
+						boolean newButtonValue) {
+					((Category) getItem(myPos))
+							.setShouldBeDisplayed(newButtonValue);
+					compoundButton.setText(((Category) getItem(myPos))
+							.getName()
+							+ "  "
+							+ ((Category) getItem(myPos))
+									.getShouldBeDisplayed());
+                    //TODO remove the Toast!
+					Toast.makeText(
+							context,
+							((Category) getItem(myPos)).getName()
+									+ " "
+									+ ((Category) getItem(myPos))
+											.getShouldBeDisplayed(),
+							Toast.LENGTH_SHORT).show();
+
+				}
+			});
 			view = tmpBox;
 		}
 		return view;
@@ -140,34 +162,5 @@ public class CategoryAdapter implements ListAdapter {
 	 */
 	public List<Category> getTheCategories() {
 		return theCategories;
-	}
-
-	/**
-	 * a listener for handling checkboxes with categories.
-	 */
-	private class CustomOnCheckedChangeListener
-			implements
-				CompoundButton.OnCheckedChangeListener {
-
-		// the listeners associated objects position
-		private int pos;
-
-		/**
-		 * Create a new custom on checked listener
-		 * 
-		 * @param i
-		 *            the position of the category in the list
-		 */
-		public CustomOnCheckedChangeListener(int i) {
-			this.pos = i;
-		}
-
-		@Override
-		public void onCheckedChanged(CompoundButton compoundButton,
-				boolean newButtonValue) {
-			((Category) getItem(pos)).setShouldBeDisplayed(newButtonValue);
-			compoundButton.setText(((Category) getItem(pos)).getName() + "  "
-					+ ((Category) getItem(pos)).getShouldBeDisplayed());
-		}
 	}
 }
