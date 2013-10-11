@@ -4,7 +4,6 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,21 +18,17 @@ import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
 import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
+import se.chalmers.dat255.group22.escape.utils.GenerateGpsAlarmTask;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -369,7 +364,7 @@ public class NewTaskActivity extends Activity {
 		// instantiate the database
 		DBHandler dbHandler = new DBHandler(this);
 		// Save the ListObject framework and save the database id.
-		final long objId = dbHandler.addListObject(lo);
+		long objId = dbHandler.addListObject(lo);
 		// A temporary id to use when saving associated data to connect them
 		long tmpId;
 		/*
@@ -412,56 +407,8 @@ public class NewTaskActivity extends Activity {
 		 */
 		if (reminderType == Constants.ReminderType.GPS) {
 			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-			new AsyncTask<String, Void, GPSAlarm>() {
-
-				@Override
-				protected GPSAlarm doInBackground(String... input) {
-					Geocoder geocoder = new Geocoder(NewTaskActivity.super);
-					double latitude = 0;
-					double longitude = 0;
-					try {
-						List<Address> addressList = geocoder
-								.getFromLocationName(input[0], 1);
-						Address address = addressList.get(0);
-						latitude = address.getLatitude();
-						longitude = address.getLongitude();
-					} catch (IOException e) {
-						Log.d(Constants.APPTAG, "Geocoder produced IOException");
-						e.printStackTrace();
-					} catch (NullPointerException e) {
-						Log.d(Constants.APPTAG,
-								"Couldn't find address from location text");
-						e.printStackTrace();
-					}
-
-					Log.d(Constants.APPTAG, "Coordinates for " + input[0]
-							+ " found.");
-
-					return new GPSAlarm(0, latitude, longitude);
-				}
-
-				@Override
-				protected void onPostExecute(GPSAlarm newGPSAlarm) {
-
-					// When all operations are done, add GPS alarm and associate
-					// it with the listobject
-					DBHandler dbHandler = new DBHandler(NewTaskActivity.super);
-					long tmpId = dbHandler.addGPSAlarm(newGPSAlarm);
-
-					dbHandler.addListObjectWithGPSAlarm(
-							dbHandler.getListObject(objId),
-							dbHandler.getGPSAlarm(tmpId));
-
-					Log.d(Constants.APPTAG,
-							"GPSAlarm added to db with coordinates "
-									+ newGPSAlarm.getLatitude() + ","
-									+ newGPSAlarm.getLongitude() + ".");
-
-					NotificationHandler.getInstance().addPlaceReminder(
-							dbHandler.getListObject(objId));
-				}
-
-			}.execute(reminderLocationEditText.getText().toString());
+			new GenerateGpsAlarmTask(this, objId)
+					.execute(reminderLocationEditText.getText().toString());
 		}
 
 		if (lo.getPlace() != null) {

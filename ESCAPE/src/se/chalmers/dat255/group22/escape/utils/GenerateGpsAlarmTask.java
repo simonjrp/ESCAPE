@@ -1,0 +1,68 @@
+package se.chalmers.dat255.group22.escape.utils;
+
+import java.io.IOException;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.NotificationHandler;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class GenerateGpsAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
+	private Context context;
+	private long listObjectId;
+	private DBHandler dbHandler;
+
+	public GenerateGpsAlarmTask(Context context, long idOfListObject) {
+		this.context = context;
+		this.listObjectId = idOfListObject;
+		dbHandler = new DBHandler(this.context);
+	}
+
+	@Override
+	protected GPSAlarm doInBackground(String... input) {
+		Geocoder geocoder = new Geocoder(context);
+		double longitude = 0;
+		double latitude = 0;
+
+		try {
+			List<Address> addressList = geocoder.getFromLocationName(input[0],
+					1);
+			Address address = addressList.get(0);
+			longitude = address.getLongitude();
+			latitude = address.getLatitude();
+		} catch (IOException e) {
+			Log.d(Constants.APPTAG, "Geocoder produced IOException");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			Log.d(Constants.APPTAG, "Couldn't find address from location text");
+			e.printStackTrace();
+		}
+
+		Log.d(Constants.APPTAG, "Coordinates for " + input[0] + " found.");
+
+		return new GPSAlarm(0, longitude, latitude);
+	}
+
+	@Override
+	protected void onPostExecute(GPSAlarm newGPSAlarm) {
+
+		// When all operations are done, add GPS alarm and associate
+		// it with the listobject
+		long tmpId = dbHandler.addGPSAlarm(newGPSAlarm);
+
+		dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(listObjectId),
+				dbHandler.getGPSAlarm(tmpId));
+
+		Log.d(Constants.APPTAG, "GPSAlarm added to db with coordinates "
+				+ newGPSAlarm.getLatitude() + "," + newGPSAlarm.getLongitude()
+				+ ".");
+
+		NotificationHandler.getInstance().addPlaceReminder(
+				dbHandler.getListObject(listObjectId));
+	}
+}
