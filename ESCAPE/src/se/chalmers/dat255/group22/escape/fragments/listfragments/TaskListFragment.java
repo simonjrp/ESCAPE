@@ -1,12 +1,8 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
-import se.chalmers.dat255.group22.escape.objects.Category;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,11 +23,13 @@ import android.widget.ListView;
 public class TaskListFragment extends Fragment {
 
 	// The listView to display data in
-	ListView ourTaskList;
+	private ListView ourTaskList;
 	// The adapter used to handle data
-	CustomListAdapter ourListAdapter;
+	private CustomListAdapter ourListAdapter;
 	// popup where use can pick what categories to display
-	ListPopupWindow listPopupWindow;
+	private ListPopupWindow listPopupWindow;
+
+	private CategoryAdapter categoryAdapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -51,10 +49,20 @@ public class TaskListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.pick_category :
-				getPopup();
-				return true;
+				if (this.isVisible()) {
+					getPopup();
+					return true;
+				}
+				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+
+		menu.findItem(R.id.pick_category).setVisible(true);
 	}
 
 	@Override
@@ -85,30 +93,7 @@ public class TaskListFragment extends Fragment {
 	private void initPopup() {
 		View menuItemView = getActivity().findViewById(R.id.pick_category);
 		listPopupWindow = new ListPopupWindow(getActivity());
-		CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity());
-		List<Category> tmpList = new ArrayList<Category>();
-		tmpList.add(new Category("tmp0", null, null));
-		tmpList.add(new Category("tmp1", null, null));
-		tmpList.add(new Category("tmp2", null, null));
-		tmpList.add(new Category("tmp3", null, null));
-		tmpList.add(new Category("tmp4", null, null));
-		tmpList.add(new Category("tmp5", null, null));
-		tmpList.add(new Category("tmp6", null, null));
-		tmpList.add(new Category("tmp7", null, null));
-		tmpList.add(new Category("tmp8", null, null));
-		tmpList.add(new Category("tmp9", null, null));
-		tmpList.add(new Category("tmp10", null, null));
-		tmpList.add(new Category("tmp11", null, null));
-		tmpList.add(new Category("tmp12", null, null));
-		tmpList.add(new Category("tmp13", null, null));
-		tmpList.add(new Category("tmp14", null, null));
-		tmpList.add(new Category("tmp15", null, null));
-		tmpList.add(new Category("tmp16", null, null));
-		tmpList.add(new Category("tmp17", null, null));
-		tmpList.add(new Category("tmp18", null, null));
-		tmpList.add(new Category("tmp19", null, null));
-		// TODO Fix getter for real categories and make values matter
-		categoryAdapter.setCategories(tmpList);
+		categoryAdapter = new CategoryAdapter(getActivity());
 		listPopupWindow.setAdapter(categoryAdapter);
 		listPopupWindow.setAnchorView(menuItemView);
 		listPopupWindow.setModal(true);
@@ -120,6 +105,10 @@ public class TaskListFragment extends Fragment {
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
+		categoryAdapter = new CategoryAdapter(getActivity());
+		categoryAdapter.setCategories(ourListAdapter.getTheCategories());
+		listPopupWindow.setAdapter(categoryAdapter);
+		categoryAdapter.notifyDataSetChanged();
 		listPopupWindow.show();
 	}
 }

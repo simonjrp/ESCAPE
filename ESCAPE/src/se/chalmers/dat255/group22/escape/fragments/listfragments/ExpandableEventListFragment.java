@@ -47,8 +47,10 @@ public class ExpandableEventListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.pick_category :
-                Toast.makeText(getActivity(), "event category pick", Toast.LENGTH_SHORT).show();
-                //TODO implement a way to pick what categories to display
+                if ( this.isVisible() ){
+                    Toast.makeText(getActivity(), "event category pick", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -25,7 +25,7 @@ public class CategoryAdapter implements ListAdapter {
 	// The context this adapter is used in
 	private Context context;
 	// The tasks in the list
-	private static List<Category> theCategories;
+	private List<Category> theCategories;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 
@@ -47,7 +47,6 @@ public class CategoryAdapter implements ListAdapter {
 	 */
 	public void setCategories(List<Category> categories) {
 		this.theCategories = categories;
-		notifyDataSetChanged();
 	}
 
 	@Override
@@ -95,7 +94,7 @@ public class CategoryAdapter implements ListAdapter {
 
 	@Override
 	public boolean hasStableIds() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -122,7 +121,7 @@ public class CategoryAdapter implements ListAdapter {
 							+ "  "
 							+ ((Category) getItem(myPos))
 									.getShouldBeDisplayed());
-                    //TODO remove the Toast!
+					// TODO remove the Toast!
 					Toast.makeText(
 							context,
 							((Category) getItem(myPos)).getName()

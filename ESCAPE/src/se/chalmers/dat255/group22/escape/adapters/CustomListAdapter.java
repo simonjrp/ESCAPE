@@ -26,7 +26,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 /**
- * Adapter for displaying ListObjects in an ordinary list
+ * Adapter for displaying
+ * {@link se.chalmers.dat255.group22.escape.objects.ListObject} in an ordinary
+ * list. {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
+ * to determine what ListObjects to be displayed
  * 
  * @author Carl
  */
@@ -37,7 +40,7 @@ public class CustomListAdapter implements ListAdapter {
 	// The tasks in the list
 	private List<ListObject> taskList;
 	// the categories, including bool for if they should be displayed
-	private static List<Category> theCategories;
+	private List<Category> theCategories;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
@@ -60,6 +63,7 @@ public class CustomListAdapter implements ListAdapter {
 	private void initialize() {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
+		// theCategories = new ArrayList<Category>();
 	}
 
 	/**
@@ -73,6 +77,9 @@ public class CustomListAdapter implements ListAdapter {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
 				addListObject(lo);
+				for (Category cat : dbHandler.getCategories(lo)) {
+					addCategory(cat);
+				}
 			}
 		}
 		updateEditButtons();
@@ -333,16 +340,47 @@ public class CustomListAdapter implements ListAdapter {
 	 * @return a list with all categories
 	 */
 	public List<Category> getTheCategories() {
+		if (theCategories == null) {
+			List<Category> tmpList = new ArrayList<Category>();
+			tmpList.add(new Category("tmp0", null, null));
+			tmpList.add(new Category("tmp1", null, null));
+			tmpList.add(new Category("tmp2", null, null));
+			tmpList.add(new Category("tmp3", null, null));
+			tmpList.add(new Category("tmp4", null, null));
+			tmpList.add(new Category("tmp5", null, null));
+			tmpList.add(new Category("tmp6", null, null));
+			tmpList.add(new Category("tmp7", null, null));
+			tmpList.add(new Category("tmp8", null, null));
+			tmpList.add(new Category("tmp9", null, null));
+			tmpList.add(new Category("tmp10", null, null));
+			tmpList.add(new Category("tmp11", null, null));
+			tmpList.add(new Category("tmp12", null, null));
+			tmpList.add(new Category("tmp13", null, null));
+			tmpList.add(new Category("tmp14", null, null));
+			tmpList.add(new Category("tmp15", null, null));
+			tmpList.add(new Category("tmp16", null, null));
+			tmpList.add(new Category("tmp17", null, null));
+			tmpList.add(new Category("tmp18", null, null));
+			tmpList.add(new Category("tmp19", null, null));
+			theCategories = tmpList;
+		}
+		addCategory(new Category("Hey", null, null));
+		// theCategories.add(new Category("Hey", null, null));
 		return theCategories;
 	}
 
-	public void replaceCategoryList(List<Category> newCatList) {
+	/**
+	 * Replace existing category objects with equals from this list and add new
+	 * ones
+	 * 
+	 * @param newCatList
+	 *            a Category list containing new to display values
+	 */
+	public void addReplaceCategoryList(List<Category> newCatList) {
 		for (Category cat : newCatList) {
-			// This relies on categories being equal simply by having the same
-			// name!
+			// This relies on categories being equal by having the same name!
 			removeCategory(cat);
 			addCategory(cat);
 		}
-
 	}
 }
