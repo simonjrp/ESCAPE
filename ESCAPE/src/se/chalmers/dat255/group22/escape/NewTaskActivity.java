@@ -210,9 +210,33 @@ public class NewTaskActivity extends Activity {
 				if (timeStart != null) {
 					Button remindMe = (Button) findViewById(R.id.task_convert_event);
 					onConvertEvent(remindMe);
-				}
 
-				// TODO FIX TIMES AND STUFF
+					// Set the spinners according to the current time...
+					// Day from:
+					SpinnerDayAdapter fromDayAdapter = (SpinnerDayAdapter) dateFrom
+							.getAdapter();
+					fromDayAdapter.addCustomEntry("CustomStartDay", timeStart);
+					dateFrom.setSelection(2);
+
+					// Time from:
+					SpinnerTimeAdapter fromTimeAdapter = (SpinnerTimeAdapter) timeFrom
+							.getAdapter();
+					fromTimeAdapter
+							.addCustomEntry("CustomStartTime", timeStart);
+					timeFrom.setSelection(2);
+
+					// Day to:
+					SpinnerDayAdapter toDayAdapter = (SpinnerDayAdapter) dateTo
+							.getAdapter();
+					toDayAdapter.addCustomEntry("CustomEndDay", timeEnd);
+					dateTo.setSelection(2);
+
+					// Time to:
+					SpinnerTimeAdapter toTimeAdapter = (SpinnerTimeAdapter) timeTo
+							.getAdapter();
+					toTimeAdapter.addCustomEntry("CustomEndTime", timeEnd);
+					timeFrom.setSelection(2);
+				}
 			}
 		}
 
@@ -225,13 +249,14 @@ public class NewTaskActivity extends Activity {
 		adapter.setNotifyOnChange(true);
 		locationReminderAutoComplete.setThreshold(3);
 		locationReminderAutoComplete.setAdapter(adapter);
-        locationReminderAutoComplete.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
-                    locationReminderAutoComplete.setSelection(0);
-            }
-        });
+		locationReminderAutoComplete
+				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus)
+                            locationReminderAutoComplete.setSelection(0);
+                    }
+                });
 		locationReminderAutoComplete.addTextChangedListener(new TextWatcher() {
 
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -476,26 +501,25 @@ public class NewTaskActivity extends Activity {
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
 		relativeLayout.setVisibility(View.VISIBLE);
 
+		//
+		/* From: DateSpinner */
+		//
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
+
 		dateFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
 						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
 						dateFromSpinner.getId()));
 
-		//
-		/* From: DateSpinner */
-		//
 		// Array containing different days for an event
-
 		ArrayList<String> strDayList = new ArrayList<String>();
 		strDayList.add(getString(R.string.todayLabel));
 		strDayList.add(getString(R.string.tomorrowLabel));
 		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pickDayLabel));
 
-		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
+		SpinnerDayAdapter dayFromAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, strDayList);
-		dateFromSpinner.setAdapter(dayAdapter);
 
 		//
 		/* From: TimeSpinner */
@@ -503,8 +527,8 @@ public class NewTaskActivity extends Activity {
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
 		timeFromSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeFromSpinner.getId()));
+                        this, OnItemSelectedSpinnerListener.TIME_SPINNER,
+                        timeFromSpinner.getId()));
 
 		// Array containing different times for an event
 		ArrayList<String> strTimeArr = new ArrayList<String>();
@@ -514,28 +538,39 @@ public class NewTaskActivity extends Activity {
 		strTimeArr.add(getString(R.string.night));
 		strTimeArr.add(getString(R.string.pickTimeLabel));
 
-		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
+		SpinnerTimeAdapter timeFromAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, strTimeArr);
-		timeFromSpinner.setAdapter(timeAdapter);
 
 		//
-		/* To: TimeSpinner */
+		/* To: DateSpinner */
 		//
 		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
-
-		dateToSpinner.setAdapter(dayAdapter);
 		dateToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
 						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
 						dateToSpinner.getId()));
 
+		SpinnerDayAdapter dayToAdapter = new SpinnerDayAdapter(this,
+				R.layout.simple_spinner_item, strDayList);
+
+		//
+		/* To: TimeSpinner */
+		//
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
 		timeToSpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
 						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
 						timeToSpinner.getId()));
 
-		timeToSpinner.setAdapter(timeAdapter);
+		SpinnerTimeAdapter timeToAdapter = new SpinnerTimeAdapter(this,
+				R.layout.time_spinner_item, strTimeArr);
+
+		// Set all adapters
+		dateFromSpinner.setAdapter(dayFromAdapter);
+		timeFromSpinner.setAdapter(timeFromAdapter);
+
+		dateToSpinner.setAdapter(dayToAdapter);
+		timeToSpinner.setAdapter(timeToAdapter);
 
 		isEvent = true;
 
