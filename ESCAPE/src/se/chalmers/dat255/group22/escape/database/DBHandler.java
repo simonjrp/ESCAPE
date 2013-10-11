@@ -649,7 +649,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
 		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
-				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LONGITUDE,
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS, COLUMN_GPS_ALARMS_LONGITUDE,
 				COLUMN_GPS_ALARMS_LATITUDE }, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -940,7 +940,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
-				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_LATITUDE,
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS, COLUMN_GPS_ALARMS_LATITUDE,
 				COLUMN_GPS_ALARMS_LONGITUDE }, COLUMN_GPS_ALARMS_ID + "=?",
 				new String[] { id.toString() }, null, null, null);
 
@@ -974,6 +974,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String raw = "SELECT b." + COLUMN_GPS_ALARMS_ID + ", b."
+				+ COLUMN_GPS_ALARMS_ADRESS + ", b."
 				+ COLUMN_GPS_ALARMS_LATITUDE + ", b."
 				+ COLUMN_GPS_ALARMS_LONGITUDE + " FROM "
 				+ TABLE_LIST_OBJECTS_WITH_GPS_ALARM + " a" + " INNER JOIN "
