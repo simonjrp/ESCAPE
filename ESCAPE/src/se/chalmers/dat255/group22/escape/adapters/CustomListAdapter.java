@@ -76,8 +76,13 @@ public class CustomListAdapter implements ListAdapter {
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
+				for (Category cat : dbHandler.getCategories(lo))
+					lo.addToCategory(cat);
+
+				lo.addToCategory(new Category(lo.getName(), null, null));
 				addListObject(lo);
-				addCategoryList(dbHandler.getCategories(lo));
+				addCategoryList(lo.getCategories());
+                this.notifyDataSetChanged();
 			}
 		}
 		updateEditButtons();
@@ -220,6 +225,8 @@ public class CustomListAdapter implements ListAdapter {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
 				removeListObject(listObject);
+                removeLoAssociatedCats(listObject);
+                notifyDataSetChanged();
 
 				// v.refreshDrawableState();
 			}
@@ -279,8 +286,6 @@ public class CustomListAdapter implements ListAdapter {
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
 			taskList.add(listObject);
-			addCategory(new Category("" + listObject.getName(), null, null));
-			this.notifyDataSetChanged();
 		}
 	}
 
@@ -293,8 +298,6 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeListObject(ListObject listObject) {
 		if (taskList.contains(listObject)) {
 			taskList.remove(listObject);
-			removeCategory(new Category("" + listObject.getName(), null, null));
-			this.notifyDataSetChanged();
 		}
 	}
 
@@ -346,6 +349,28 @@ public class CustomListAdapter implements ListAdapter {
 			theCategories.remove(cat);
 	}
 
+	// TODO Make this work!
+	/**
+	 * Remove all categories associated with a ListObject if they are not part
+	 * of another ListObject displayed in the list
+	 * 
+	 * @param listObject
+	 *            the ListObject to check for categories to remove
+	 */
+	public void removeLoAssociatedCats(ListObject listObject) {
+		for (Category cat : listObject.getCategories()) {
+			boolean catIsInList = false;
+			for (ListObject lo : this.taskList) {
+				if (lo.getCategories().contains(cat)) {
+					catIsInList = true;
+					break;
+				}
+			}
+			if (!catIsInList)
+				removeCategory(cat);
+		}
+	}
+
 	/**
 	 * removes a list with categories.
 	 * 
@@ -379,10 +404,10 @@ public class CustomListAdapter implements ListAdapter {
 	public boolean getLOShouldBeVisible(ListObject lo) {
 		if (theCategories != null) {
 			// TODO fetch real categories from database
-            for (Category cat: dbHandler.getCategories(lo)){
-                if (!getCatShouldBeVisible(cat))
-                    return false;
-            }
+			for (Category cat : dbHandler.getCategories(lo)) {
+				if (!getCatShouldBeVisible(cat))
+					return false;
+			}
 			Category tmp = new Category(lo.getName(), null, null);
 			return getCatShouldBeVisible(tmp);
 		}
@@ -412,7 +437,7 @@ public class CustomListAdapter implements ListAdapter {
 	 *            a Category list containing new to display values
 	 */
 	public void addReplaceCategoryList(List<Category> newCatList) {
-        //TODO is this method crap?
+		// TODO is this method crap?
 		for (Category cat : newCatList) {
 			// This relies on categories being equal by having the same name!
 			removeCategory(cat);
