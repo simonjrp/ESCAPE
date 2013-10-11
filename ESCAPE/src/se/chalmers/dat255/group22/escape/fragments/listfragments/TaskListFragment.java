@@ -6,8 +6,6 @@ import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,7 @@ import android.widget.PopupWindow;
 /**
  * A fragment displaying a list with tasks. A task is different from an event
  * such that a task does not have a set time while an event does.
- * 
+ *
  * @author tholene, Carl
  */
 public class TaskListFragment extends Fragment {
@@ -41,10 +39,10 @@ public class TaskListFragment extends Fragment {
 		initialize();
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.fragment_action, menu);
-	}
+	//@Override
+	//public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	//	inflater.inflate(R.menu.fragment_action, menu);
+	//}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,12 +57,12 @@ public class TaskListFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-
-		menu.findItem(R.id.pick_category).setVisible(true);
-	}
+	//@Override
+	//public void onPrepareOptionsMenu(Menu menu) {
+	//	super.onPrepareOptionsMenu(menu);
+    //
+	//	menu.findItem(R.id.pick_category).setVisible(true);
+	//}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +110,8 @@ public class TaskListFragment extends Fragment {
 	 */
 	private void getPopup() {
 		if (!ourListAdapter.getTheCategories().isEmpty()) {
+            if (listPopupWindow == null)
+                initPopup();
 			categoryAdapter = new CategoryAdapter(getActivity());
 			categoryAdapter.setCategories(ourListAdapter.getTheCategories());
 			listPopupWindow.setAdapter(categoryAdapter);

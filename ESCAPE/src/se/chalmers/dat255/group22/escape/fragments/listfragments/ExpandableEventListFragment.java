@@ -6,8 +6,6 @@ import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +35,11 @@ public class ExpandableEventListFragment extends Fragment {
 		initialize();
 	}
 
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_action, menu);
-    }
+    //@Override
+    //public void onCreateOptionsMenu(
+    //        Menu menu, MenuInflater inflater) {
+    //    inflater.inflate(R.menu.fragment_action, menu);
+    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

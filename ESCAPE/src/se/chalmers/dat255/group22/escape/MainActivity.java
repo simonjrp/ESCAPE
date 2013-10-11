@@ -77,6 +77,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
 
@@ -96,6 +97,11 @@ public class MainActivity extends FragmentActivity {
 				Intent intent = new Intent(this, NewTaskActivity.class);
 				startActivity(intent);
 				break;
+            case R.id.pick_category:
+
+
+
+                break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -111,6 +117,7 @@ public class MainActivity extends FragmentActivity {
 		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
+        menu.findItem(R.id.pick_category).setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
