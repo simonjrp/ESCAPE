@@ -64,7 +64,7 @@ public class GenerateGPSAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 
 		Log.d(Constants.APPTAG, "Coordinates for " + input[0] + " found.");
 
-		return new GPSAlarm(0, longitude, latitude);
+		return new GPSAlarm(0, input[0], longitude, latitude);
 	}
 
 	@Override
