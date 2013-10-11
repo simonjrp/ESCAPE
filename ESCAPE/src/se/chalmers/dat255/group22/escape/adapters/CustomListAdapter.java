@@ -84,6 +84,8 @@ public class CustomListAdapter implements ListAdapter {
 					lo.addToCategory(cat);
 
 				// TODO All categories should be fetched from database!
+				// This category with the same name as the listobject is only
+				// intended to test functionality!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
@@ -384,7 +386,6 @@ public class CustomListAdapter implements ListAdapter {
 	 * @param catList
 	 */
 	public void removeCategoryList(List<Category> catList) {
-		// TODO Is this method crap?
 		for (Category cat : catList)
 			removeCategory(cat);
 	}

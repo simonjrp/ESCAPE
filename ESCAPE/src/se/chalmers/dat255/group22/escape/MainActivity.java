@@ -6,7 +6,6 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -35,7 +34,7 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
-    private int fragmentPosition;
+	private int fragmentPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-        getMenuInflater().inflate(R.menu.fragment_action, menu);
+		getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
 
@@ -118,8 +117,8 @@ public class MainActivity extends FragmentActivity {
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
 
-        menu.findItem(R.id.pick_category).setVisible(!(drawerOpen || fragmentPosition != 0));
-
+		menu.findItem(R.id.pick_category).setVisible(
+				!(drawerOpen || fragmentPosition != 0));
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -140,8 +139,9 @@ public class MainActivity extends FragmentActivity {
 	/*
 	 * Class for handling clicks in the navigation drawer.
 	 */
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener
+			implements
+				ListView.OnItemClickListener {
 
 		private List<Fragment> fragmentList;
 
@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity {
 		 * to be shown.
 		 */
 		private void selectItem(int position) {
-            fragmentPosition = position;
+			fragmentPosition = position;
 			if (fragmentList == null) {
 				fragmentList = new ArrayList<Fragment>();
 
