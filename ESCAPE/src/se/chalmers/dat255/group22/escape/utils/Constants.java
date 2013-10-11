@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape.utils;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * A "bag" full of constants for readability as well as consistency.
  * 
@@ -34,6 +37,11 @@ public final class Constants {
 
 	private Constants() {
 	}
+
+	/**
+	 * The key to use when getting reminder type from an intent.
+	 */
+	public static final String REMINDER_TYPE = "REMINDER_TYPE";
 
 	/*
 	 * START GEOFENCE
@@ -81,13 +89,37 @@ public final class Constants {
 	 */
 
 	/**
-	 * Enum for different reminder types (time or gps)
+	 * Enum for different reminder types (time or gps).
 	 * 
 	 * @author Simon Persson
 	 * 
 	 */
-	public enum ReminderType {
-		TIME, GPS
+	public enum ReminderType implements Parcelable {
+		TIME, GPS;
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(ordinal());
+		}
+
+		public static final Creator<ReminderType> CREATOR = new Creator<ReminderType>() {
+
+			@Override
+			public ReminderType createFromParcel(Parcel source) {
+				return ReminderType.values()[source.readInt()];
+			}
+
+			@Override
+			public ReminderType[] newArray(int size) {
+				return new ReminderType[size];
+			}
+
+		};
 	};
 
 }

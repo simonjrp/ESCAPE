@@ -1,6 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,23 +9,20 @@ import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
 import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -152,7 +148,8 @@ public class NotificationHandler {
 		 * system.
 		 */
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				contextActivity, 0, alarmIntent,
+				contextActivity,
+				args.getInt(NotificationHandler.NOTIFICATION_ID), alarmIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// Gives the alarm manager a time and an operation to be performed (the
@@ -210,10 +207,6 @@ public class NotificationHandler {
 			GeofenceRequester requester = new GeofenceRequester(contextActivity);
 			requester.setPendingIntent(pendingIntent);
 			requester.addGeofences(geofenceList);
-		} else {
-			String msg = "No Google Play Services installed";
-			Log.d(Constants.APPTAG, msg);
-			Toast.makeText(contextActivity, msg, Toast.LENGTH_LONG).show();
 		}
 
 	}
@@ -264,6 +257,53 @@ public class NotificationHandler {
 	}
 
 	/**
+	 * Method for removing an existing time reminder from the system.
+	 * 
+	 * @param listObject
+	 *            The ListObject associated with the time reminder.
+	 */
+	public void removeTimeReminder(ListObject listObject) {
+		// This method created a pending intent exactly as it's done in
+		// addTimeReminder(). Then it sends this pending intent object to the
+		// AlarmManager, which in turn removes the pending intent form the queue
+		// and therefore removes the reminder notification from the system.
+
+		Bundle args = generateBundle(listObject);
+
+		AlarmManager alarmManager = (AlarmManager) contextActivity
+				.getSystemService(Context.ALARM_SERVICE);
+
+		Intent alarmIntent = new Intent();
+		alarmIntent.setAction(AlarmReceiver.NEW_TIME_NOTIFICATION);
+		alarmIntent.putExtras(args);
+
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(
+				contextActivity,
+				args.getInt(NotificationHandler.NOTIFICATION_ID), alarmIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		alarmManager.cancel(pendingIntent);
+
+		Log.d(Constants.APPTAG,
+				"Time reminder for: "
+						+ alarmIntent.getExtras().getString(
+								NotificationHandler.NOTIFICATION_TITLE)
+						+ " removed.");
+	}
+
+	
+	public void removePlaceReminder(ListObject listObject) {
+		long id = listObject.getId();
+		if (servicesConnected()) {
+			List<String> idList = new ArrayList<String>();
+			idList.add(id + "");
+
+			GeofenceRemover remover = new GeofenceRemover(contextActivity);
+			remover.removeGeoFencesById(idList);
+		}
+	}
+
+	/**
 	 * Method for checking if Google Play services are connected on the device
 	 * 
 	 * @return true if connected, false otherwise
@@ -299,4 +339,5 @@ public class NotificationHandler {
 
 		return false;
 	}
+
 }
