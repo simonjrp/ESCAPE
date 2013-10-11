@@ -4,17 +4,22 @@ import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.R;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import se.chalmers.dat255.group22.escape.NotificationHandler;
+import se.chalmers.dat255.group22.escape.R;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 
@@ -41,13 +46,6 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		// if(onBreak==false){
-		// startTime=10*1000;
-		// }
-		// else{
-		// startTime=5*1000;
-		// }
-
 		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
 
 		// Layout for the pomodoro start button
@@ -71,50 +69,15 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// Setting start time of the break timer
 		timeLeftText.setText(formatTime(breakStartTime));
 
-		// Setting up notifications
-
-		// NotificationCompat.Builder mBuilder =
-		// new NotificationCompat.Builder(this)
-		// .setSmallIcon(R.drawable.ic_launcher)
-		// .setContentTitle("My notification")
-		// .setContentText("Hello World!");
-		//
-		// Intent resultIntent = new Intent(this, ResultActivity.class);
-		//
-		// // Because clicking the notification opens a new ("special")
-		// activity, there's
-		// // no need to create an artificial back stack.
-		// PendingIntent resultPendingIntent =
-		// PendingIntent.getActivity(
-		// this,
-		// 0,
-		// resultIntent,
-		// PendingIntent.FLAG_UPDATE_CURRENT
-		// );
-		// PendingIntent resultPendingIntent;
-		// mBuilder.setContentIntent(resultPendingIntent);
-		//
-		// NotificationCompat.Builder mBuilder;
-		//
-		// // Sets an ID for the notification
-		// int mNotificationId = 001;
-		// // Gets an instance of the NotificationManager service
-		// NotificationManager mNotifyMgr =
-		// (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		// // Builds the notification and issues it.
-		// mNotifyMgr.notify(mNotificationId, mBuilder.build());
-
-		// End of notifications setup
 		return v;
 	}
 
-	// Notifications handled below
-
 	/*
-	 * When clicking on start button, either start pomodoro timer (if it hasn't
+	 * When clicking on start button, either start the timer (if it hasn't
 	 * started) and change button text to STOP, otherwise stop running timer and
 	 * change button text to RESTART.
-	 */@Override
+	 */
+	@Override
 	public void onClick(View v) {
 		if (!pomodoroTimerHasStarted && onBreak == false) {
 			// startTime=15*1000;
@@ -174,42 +137,91 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			super(startTime, interval);
 		}
 
-		// When timer has reached zero, display "Done!" instead of time.
+		// When timer has reached zero, display "Break time!" instead of time.
 		@Override
 		public void onFinish() {
-			// timeLeftText.setText("Done!");
+			
 			if (onBreak == false) {
 				onBreak = true;
-				timeLeftText.setText("Breaktime!");
-				Intent intent = new Intent(getActivity(), MainActivity.class);
-
-				Notification noti = new Notification.Builder(getActivity())
+				timeLeftText.setText("Break time!");
+				
+				// Creates a notification that informs the user it's time for a break
+				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
+						.setSmallIcon(R.drawable.ic_launcher)
 						.setContentTitle("ESCAPE")
-						.setContentText("Time for a Pomodoro break!")
-						.setSmallIcon(R.drawable.ic_launcher).build();
-				NotificationManager notificationManager = (NotificationManager) getActivity()
+						.setContentText("Time for a break");
+
+				// Enables sound and vibration for the notification
+				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+
+				// Creates an intent with the activity to launch when notification is
+				// clicked
+				Intent resultIntent = new Intent(getActivity(), MainActivity.class);
+
+				// Creates a back stack to be used by the launched activity.
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+
+				// Adds all the parent activities/views of the
+				// activity to be opened when clicking on the notification to the back
+				// stack. Might be useful later, if clicking on the notification does
+				// not take you to a parent view.
+				stackBuilder.addParentStack(MainActivity.class);
+
+				// Adds the Intent that starts the Activity to the top of the stack
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+						PendingIntent.FLAG_UPDATE_CURRENT);
+
+				// Assigns the pending intent (containing MainActivity with a proper
+				// back stack) to the notification
+				notificationBuilder.setContentIntent(resultPendingIntent);
+
+				// Sends the notification to the android system
+				NotificationManager mNotificationManager = (NotificationManager) getActivity()
 						.getSystemService(Context.NOTIFICATION_SERVICE);
-				// Hide the notification after its selected
-				noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-				notificationManager.notify(0, noti);
-
-			} else if (onBreak == true) {
+				mNotificationManager.notify(
+						0,notificationBuilder.build());
+			} 
+			else if (onBreak == true) {
 				onBreak = false;
 				timeLeftText.setText("Break over!");
 
-				Intent intent = new Intent(getActivity(), MainActivity.class);
-
-				Notification noti = new Notification.Builder(getActivity())
+				// Creates a notification that informs the user it's time for a break
+				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
+						.setSmallIcon(R.drawable.ic_launcher)
 						.setContentTitle("ESCAPE")
-						.setContentText("Pomodoro break over!")
-						.setSmallIcon(R.drawable.ic_launcher).build();
-				NotificationManager notificationManager = (NotificationManager) getActivity()
-						.getSystemService(Context.NOTIFICATION_SERVICE);
-				// Hide the notification after its selected
-				noti.flags |= Notification.FLAG_AUTO_CANCEL;
+						.setContentText("Break over");
 
-				notificationManager.notify(0, noti);
+				// Enables sound and vibration for the notification
+				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+
+				// Creates an intent with the activity to launch when notification is
+				// clicked
+				Intent resultIntent = new Intent(getActivity(), MainActivity.class);
+
+				// Creates a back stack to be used by the launched activity.
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+
+				// Adds all the parent activities/views of the
+				// activity to be opened when clicking on the notification to the back
+				// stack. Might be useful later, if clicking on the notification does
+				// not take you to a parent view.
+				stackBuilder.addParentStack(MainActivity.class);
+
+				// Adds the Intent that starts the Activity to the top of the stack
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+						PendingIntent.FLAG_UPDATE_CURRENT);
+
+				// Assigns the pending intent (containing MainActivity with a proper
+				// back stack) to the notification
+				notificationBuilder.setContentIntent(resultPendingIntent);
+
+				// Sends the notification to the android system
+				NotificationManager mNotificationManager = (NotificationManager) getActivity()
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(
+						0,notificationBuilder.build());
 			}
 		}
 
