@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.sql.Date;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.IntegerToMonthConverter;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -27,6 +29,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	private ArrayList<String> days;
 	private Context context;
 	private List<Date> dateData;
+	private Spinner spinner;
 
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
@@ -40,12 +43,15 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 * @param days
 	 *            a stringarray that contains the string to be set for each item
 	 *            in the dropdown list.
+	 * @param spinner
+	 *            the spinner that gets assigned to this adapter.
 	 */
 	public SpinnerDayAdapter(Context context, int textViewResourceId,
-			ArrayList<String> days) {
+			ArrayList<String> days, Spinner spinner) {
 		super(context, textViewResourceId, days);
 		this.context = context;
 		this.days = days;
+		this.spinner = spinner;
 
 		// Sets seconds and milliseconds of reference time
 		// to zero
@@ -104,25 +110,89 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		return dateData;
 	}
 
-	public void addCustomEntry(String customDateLabel, Date customDate) {
+	public void addDate(Date newDate) {
+		Calendar todayCalendar = Calendar.getInstance();
+		Calendar newDateAsCal = dateToCalendar(newDate);
+		int dateExists = dateExists(newDateAsCal);
 
-		// Makes sure that only one extra custom date is stored in the dateData
-		// list.
-		if (dateData.size() > Constants.NBR_OF_REL_DATES) {
-			dateData.remove(dateData.size() - 2);
+		/*
+		 * If the new date equals to a predefined existing date, select the
+		 * predefined in the spinner. If not, add a new one.
+		 */
+		if (dateExists != -1) {
+			spinner.setSelection(dateExists);
+		} else {
+
+			// Creates a custom day label for the spinner
+			String customLabel = null;
+			IntegerToMonthConverter converter = new IntegerToMonthConverter();
+
+			int newYear = newDateAsCal.get(Calendar.YEAR);
+			String newMonth = converter.getMonthLabel(context,
+					newDateAsCal.get(Calendar.MONTH));
+			int newDay = newDateAsCal.get(Calendar.DAY_OF_MONTH);
+
+			if (newYear == todayCalendar.get(Calendar.YEAR)) {
+				customLabel = newMonth + " " + newDate;
+			} else {
+				customLabel = newMonth + " " + newDay + ", " + newYear;
+			}
+
+			// Finally, add the data to the adapter and select new item in
+			// spinner.
+			if (dateData.size() > Constants.NBR_OF_REL_DATES) {
+				dateData.remove(dateData.size() - 2);
+			}
+			dateData.add(newDate);
+
+			String nextWeekSameDayLabel = days.get(2);
+			clear();
+
+			add(context.getString(R.string.todayLabel));
+			add(context.getString(R.string.tomorrowLabel));
+			add(nextWeekSameDayLabel);
+			add(customLabel);
+			add(context.getString(R.string.pickDayLabel));
+
+			spinner.setSelection(spinner.getCount() - 2, true);
 		}
-		dateData.add(customDate);
 
-		String nextWeekSameDayLabel = days.get(2);
+	}
 
-		clear();
+	public int dateExists(Calendar newDateAsCal) {
+		int itemPosition = -1;
+		for (Date date : dateData) {
+			Calendar spinnerDateAsCal = dateToCalendar(date);
+			int spinnerYear = spinnerDateAsCal.get(Calendar.YEAR);
+			int spinnerMonth = spinnerDateAsCal.get(Calendar.MONTH);
+			int spinnerDay = spinnerDateAsCal.get(Calendar.DAY_OF_MONTH);
 
-		add(context.getString(R.string.todayLabel));
-		add(context.getString(R.string.tomorrowLabel));
-		add(nextWeekSameDayLabel);
-		add(customDateLabel);
-		add(context.getString(R.string.pickDayLabel));
+			int newYear = newDateAsCal.get(Calendar.YEAR);
+			int newMonth = newDateAsCal.get(Calendar.MONTH);
+			int newDay = newDateAsCal.get(Calendar.DAY_OF_MONTH);
+			boolean alreadyExists = (spinnerYear == newYear
+					&& spinnerMonth == newMonth && spinnerDay == newDay);
+			if (alreadyExists) {
+				itemPosition = dateData.indexOf(date);
+				break;
+			}
+		}
 
+		return itemPosition;
+
+	}
+
+	private Calendar dateToCalendar(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+
+		// Set all irrelevant values to 0
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		return calendar;
 	}
 
 }
