@@ -125,15 +125,17 @@ public class NewTaskActivity extends Activity {
 				// ...and get data from the listObject that "called" the
 				// activity
 
-				String nameString = listObject.getName();
-
 				// Avoid NullPointerException
+                String nameString = "";
 				String descriptionString = "";
 				String locationString = "";
 				TimeAlarm timeAlarm = null;
 				GPSAlarm gpsAlarm = null;
 				Date timeStart = null;
 				Date timeEnd = null;
+
+                if (listObject.getName() != null)
+                    nameString = listObject.getName();
 
 				if (listObject.getComment() != null)
 					descriptionString = listObject.getComment();
@@ -289,11 +291,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -579,12 +581,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
