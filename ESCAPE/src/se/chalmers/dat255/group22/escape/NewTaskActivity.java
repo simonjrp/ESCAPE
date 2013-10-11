@@ -427,10 +427,12 @@ public class NewTaskActivity extends Activity {
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
 
-		// TODO Fix colors here
-		Category newCategory = new Category(category, "Random Color",
-				"Another random Color");
-		Place place = new Place(0, location);
+		// TODO Fix Category from spinner!
+		//Category newCategory = new Category(category, "Random Color",
+		//		"Another random Color");
+        Category newCategory = new Category("Tmp default ", "Random Color",
+                "Another random Color");
+		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
 		if (name.trim().length() != 0) {
@@ -598,10 +600,9 @@ public class NewTaskActivity extends Activity {
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				if (!cat.getName().equals(getString(R.string.custom_category)))
-					tmpId = dbHandler.addCategory(cat);
-				// TODO implement methods for setting category!
-				// dbHandler.addCategoryWithListObject(cat,
-				// dbHandler.getListObject(objId));
+					dbHandler.addCategory(cat);
+				    dbHandler.addCategoryWithListObject(dbHandler.getCategory(cat.getName()),
+                            dbHandler.getListObject(objId));
 			}
 		}
 

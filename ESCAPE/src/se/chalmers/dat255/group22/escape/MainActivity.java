@@ -6,6 +6,7 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
+    private int fragmentPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
 
@@ -95,9 +98,10 @@ public class MainActivity extends FragmentActivity {
 
 		// Handle all action bar items except for the back/up button here.
 		switch (item.getItemId()) {
-		case R.id.add_task:
-			Intent intent = new Intent(this, NewTaskActivity.class);
-			startActivity(intent);
+			case R.id.add_task :
+				Intent intent = new Intent(this, NewTaskActivity.class);
+				startActivity(intent);
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -113,6 +117,9 @@ public class MainActivity extends FragmentActivity {
 		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
+
+        menu.findItem(R.id.pick_category).setVisible(!(drawerOpen || fragmentPosition != 0));
+
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -160,6 +167,7 @@ public class MainActivity extends FragmentActivity {
 		 * to be shown.
 		 */
 		private void selectItem(int position) {
+            fragmentPosition = position;
 			if (fragmentList == null) {
 				fragmentList = new ArrayList<Fragment>();
 
