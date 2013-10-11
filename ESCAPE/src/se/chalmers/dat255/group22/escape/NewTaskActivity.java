@@ -283,8 +283,10 @@ public class NewTaskActivity extends Activity {
 		// GPS Alarm
 
 		// TODO Fix colors here
-		Category newCategory = new Category(category, "Random Color",
-				"Another random Color");
+		//Category newCategory = new Category(category, "Random Color",
+		//		"Another random Color");
+        Category newCategory = new Category("fugly cat ", "Random Color",
+                "Another random Color");
 		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
@@ -372,10 +374,10 @@ public class NewTaskActivity extends Activity {
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				if (!cat.getName().equals(getString(R.string.custom_category)))
-					tmpId = dbHandler.addCategory(cat);
-				// TODO implement methods for setting category!
-				// dbHandler.addCategoryWithListObject(cat,
-				// dbHandler.getListObject(objId));
+                    //TODO check if this works!
+					dbHandler.addCategory(cat);
+				    dbHandler.addCategoryWithListObject(dbHandler.getCategory(cat.getName()),
+                            dbHandler.getListObject(objId));
 			}
 		}
 		if (lo.getGpsAlarm() != null) {

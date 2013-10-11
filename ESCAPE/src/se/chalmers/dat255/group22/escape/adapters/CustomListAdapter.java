@@ -77,9 +77,7 @@ public class CustomListAdapter implements ListAdapter {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
 				addListObject(lo);
-				for (Category cat : dbHandler.getCategories(lo)) {
-					addCategory(cat);
-				}
+				addCategoryList(dbHandler.getCategories(lo));
 			}
 		}
 		updateEditButtons();
@@ -326,6 +324,18 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
+	 * add a list with categories. If a category from input list is already in
+	 * the list it will not be added again.
+	 * 
+	 * @param catList
+	 *            a list with new categories to add into the list
+	 */
+	public void addCategoryList(List<Category> catList) {
+		for (Category cat : catList)
+			addCategory(cat);
+	}
+
+	/**
 	 * remove a category from the category list of categories to be displayed
 	 * 
 	 * @param cat
@@ -334,6 +344,17 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeCategory(Category cat) {
 		if (theCategories.contains(cat))
 			theCategories.remove(cat);
+	}
+
+	/**
+	 * removes a list with categories.
+	 * 
+	 * @param catList
+	 */
+	public void removeCategoryList(List<Category> catList) {
+		// TODO Is this method crap?
+		for (Category cat : catList)
+			removeCategory(cat);
 	}
 
 	/**
@@ -358,6 +379,10 @@ public class CustomListAdapter implements ListAdapter {
 	public boolean getLOShouldBeVisible(ListObject lo) {
 		if (theCategories != null) {
 			// TODO fetch real categories from database
+            for (Category cat: dbHandler.getCategories(lo)){
+                if (!getCatShouldBeVisible(cat))
+                    return false;
+            }
 			Category tmp = new Category(lo.getName(), null, null);
 			return getCatShouldBeVisible(tmp);
 		}
@@ -387,6 +412,7 @@ public class CustomListAdapter implements ListAdapter {
 	 *            a Category list containing new to display values
 	 */
 	public void addReplaceCategoryList(List<Category> newCatList) {
+        //TODO is this method crap?
 		for (Category cat : newCatList) {
 			// This relies on categories being equal by having the same name!
 			removeCategory(cat);

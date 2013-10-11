@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 /**
  * An adapter for displaying checkboxes with
@@ -106,30 +105,21 @@ public class CategoryAdapter implements ListAdapter {
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
 			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
-			tmpBox.setText(theCategory.getName() + "  "
+			tmpBox.setText(theCategory.getName()
 					+ theCategory.getShouldBeDisplayed());
 			// Set what to do when checkbox changes state
 			tmpBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
 				@Override
 				public void onCheckedChanged(CompoundButton compoundButton,
 						boolean newButtonValue) {
+					// Category value after checkbox state
 					((Category) getItem(myPos))
 							.setShouldBeDisplayed(newButtonValue);
+					// TODO Changing text is not needed
 					compoundButton.setText(((Category) getItem(myPos))
 							.getName()
-							+ "  "
 							+ ((Category) getItem(myPos))
 									.getShouldBeDisplayed());
-					// TODO remove the Toast!
-					Toast.makeText(
-							context,
-							((Category) getItem(myPos)).getName()
-									+ " "
-									+ ((Category) getItem(myPos))
-											.getShouldBeDisplayed(),
-							Toast.LENGTH_SHORT).show();
-
 				}
 			});
 			view = tmpBox;
