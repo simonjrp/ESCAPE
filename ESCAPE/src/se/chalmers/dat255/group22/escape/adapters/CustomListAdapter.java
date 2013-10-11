@@ -4,12 +4,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,8 @@ public class CustomListAdapter implements ListAdapter {
 	private Context context;
 	// The tasks in the list
 	private List<ListObject> taskList;
+	// the categories, including bool for if they should be displayed
+	private static List<Category> theCategories;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
@@ -127,9 +130,8 @@ public class CustomListAdapter implements ListAdapter {
 	 * Call this to notify that something has changed. Makes the view update!
 	 */
 	public void notifyDataSetChanged() {
-		for (DataSetObserver observer : observers) {
+		for (DataSetObserver observer : observers)
 			observer.onChanged();
-		}
 	}
 
 	@Override
@@ -300,5 +302,47 @@ public class CustomListAdapter implements ListAdapter {
 			return taskList.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Add a category to the category list of categories to be displyed
+	 * 
+	 * @param cat
+	 *            the category to add
+	 */
+	public void addCategory(Category cat) {
+		if (!theCategories.contains(cat))
+			theCategories.add(cat);
+	}
+
+	/**
+	 * remove a category from the category list of categories to be displayed
+	 * 
+	 * @param cat
+	 *            the category to remove
+	 */
+	public void removeCategory(Category cat) {
+		if (theCategories.contains(cat))
+			theCategories.remove(cat);
+	}
+
+	/**
+	 * Get a category list with all categories possible to display in this
+	 * adapter
+	 * 
+	 * @return a list with all categories
+	 */
+	public List<Category> getTheCategories() {
+		return theCategories;
+	}
+
+	public void replaceCategoryList(List<Category> newCatList) {
+		for (Category cat : newCatList) {
+			// This relies on categories being equal simply by having the same
+			// name!
+			removeCategory(cat);
+			addCategory(cat);
+		}
+
 	}
 }
