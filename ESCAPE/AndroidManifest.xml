@@ -25,12 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity" >
+        <activity android:name="se.chalmers.dat255.group22.escape.NewTaskActivity"
             android:label="@string/title_activity_new_task"
             android:windowSoftInputMode="stateHidden">
         </activity>
 
-        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver" >
+        <receiver android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
             android:enabled="true"
             android:process=":remote" >
             <intent-filter>
