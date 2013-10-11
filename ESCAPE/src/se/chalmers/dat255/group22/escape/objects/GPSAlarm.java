@@ -3,11 +3,13 @@ package se.chalmers.dat255.group22.escape.objects;
 public class GPSAlarm {
 
 	private final int id;
+	private String adress;
 	private double longitude;
 	private double latitude;
 
-	public GPSAlarm(int id, double longitude, double latitude) {
+	public GPSAlarm(int id, String adress, double longitude, double latitude) {
 		this.id = id;
+		this.adress = adress;
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
@@ -19,6 +21,13 @@ public class GPSAlarm {
 		return id;
 	}
 
+	/**
+	 * @return the adress
+	 */
+	public String getAdress() {
+		return adress;
+	}
+	
 	/**
 	 * @return the longitude
 	 */
@@ -34,19 +43,24 @@ public class GPSAlarm {
 	}
 
 	/**
-	 * @param longitude
-	 *            the longitude to set
+	 * @param longitude the longitude to set
 	 */
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
 	/**
-	 * @param latitude
-	 *            the latitude to set
+	 * @param latitude the latitude to set
 	 */
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
+	}
+
+	/**
+	 * 
+	 */
+	public void setAdress(String adress) {
+		this.adress = adress;
 	}
 
 	/*
@@ -56,7 +70,9 @@ public class GPSAlarm {
 	 */
 	@Override
 	public String toString() {
-		return "GPSAlarm [id=" + id + ", longitude=" + longitude
+		return "GPSAlarm [id=" + id 
+				+ ", adress=" + adress
+				+ ", longitude=" + longitude
 				+ ", latitude=" + latitude + "]";
 	}
 

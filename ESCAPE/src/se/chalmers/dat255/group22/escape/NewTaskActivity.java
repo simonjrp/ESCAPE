@@ -23,6 +23,9 @@ import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
 import se.chalmers.dat255.group22.escape.utils.GetPlaces;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
+import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -34,6 +37,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -56,6 +63,7 @@ public class NewTaskActivity extends Activity {
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
+	private ReminderType reminderType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -333,11 +341,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-			case android.R.id.home :
-				onBackPressed();
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -381,9 +389,19 @@ public class NewTaskActivity extends Activity {
 
 		}
 
+		// Reminder type
+		Spinner reminderTypeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
+		if (reminderTypeSpinner.getSelectedItemPosition() == 0) {
+			reminderType = Constants.ReminderType.TIME;
+		} else {
+			reminderType = Constants.ReminderType.GPS;
+		}
+
 		// Time Alarm
+
 		TimeAlarm timeAlarm = null;
-		if (hasReminder) {
+
+		if (hasReminder && reminderType == Constants.ReminderType.TIME) {
 			// Gets the spinners and their adapters.
 
 			Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
@@ -403,9 +421,14 @@ public class NewTaskActivity extends Activity {
 			tempCalendar.setTime(finalDate);
 
 			timeAlarm = new TimeAlarm(0, finalDate);
+
 		}
 
 		// GPS Alarm
+		/*
+		 * NOTE: GPS Alarm is added in an AsyncTask, because the process of
+		 * getting coordinates from a textfields would freeze the UI otherwise
+		 */
 
 		// TODO Fix colors here
 		Category newCategory = new Category(category, "Random Color",
@@ -507,22 +530,25 @@ public class NewTaskActivity extends Activity {
 		 * If an associated data is not null it will be saved and the tmp id
 		 * will be connected to the list object
 		 */
+
 		if (lo.getTimeAlarm() != null) {
 			tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
 			dbHandler.addListObjectWithTimeAlarm(
 					dbHandler.getListObject(objId),
 					dbHandler.getTimeAlarm(tmpId));
-			// creates a notification!
-			if (hasReminder) {
-				NotificationHandler nf = new NotificationHandler(this);
-				nf.addTimeReminder(dbHandler.getListObject(objId));
-			}
+
+			// creates a time notification
+			NotificationHandler.getInstance().addTimeReminder(
+					dbHandler.getListObject(objId));
+
 		}
+
 		if (lo.getTime() != null) {
 			tmpId = dbHandler.addTime(lo.getTime());
 			dbHandler.addListObjectsWithTime(dbHandler.getListObject(objId),
 					dbHandler.getTime(tmpId));
 		}
+
 		if (lo.getCategories() != null) {
 			for (Category cat : lo.getCategories()) {
 				if (!cat.getName().equals(getString(R.string.custom_category)))
@@ -532,11 +558,18 @@ public class NewTaskActivity extends Activity {
 				// dbHandler.getListObject(objId));
 			}
 		}
-		if (lo.getGpsAlarm() != null) {
-			tmpId = dbHandler.addGPSAlarm(lo.getGpsAlarm());
-			dbHandler.addListObjectWithGPSAlarm(dbHandler.getListObject(objId),
-					dbHandler.getGPSAlarm(tmpId));
+
+		/*
+		 * Adds a GPS reminder. This is done in another thread to avoid that UI
+		 * freezes when trying to find coordinates matching the text string in
+		 * the reminder location text field.
+		 */
+		if (reminderType == Constants.ReminderType.GPS) {
+			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+			new GenerateGPSAlarmTask(this, objId)
+					.execute(reminderLocationEditText.getText().toString());
 		}
+
 		if (lo.getPlace() != null) {
 			tmpId = dbHandler.addPlace(lo.getPlace());
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
@@ -649,12 +682,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = {R.drawable.device_access_alarms,
-				R.drawable.location_place};
+		int imgArr[] = { R.drawable.device_access_alarms,
+				R.drawable.location_place };
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = {getString(R.string.time_reminder),
-				getString(R.string.location_reminder)};
+		String[] strTypeArr = { getString(R.string.time_reminder),
+				getString(R.string.location_reminder) };
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);

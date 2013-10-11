@@ -18,7 +18,8 @@
     <string name="location_reminder">Location reminder</string>
     <string name="title_activity_snooze_dialog">SnoozeDialogActivity</string>
     <string name="notification_done">Done</string>
-    <string name="notification_snooze">In an hour</string>
+    <string name="notification_snooze_time">In an hour</string>
+    <string name="notification_snooze_place">Next time</string>
     <string name="pickTimeLabel">Pick a time&#8230;</string>
     <string name="pickDayLabel">Pick a day&#8230;</string>
     <string name="fromLabel">From</string>

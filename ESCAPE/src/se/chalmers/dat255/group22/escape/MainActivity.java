@@ -40,6 +40,9 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Initializes the notification handler with this FragmentActivity
+		NotificationHandler.getInstance().init(this);
+
 		// Configure the navigation drawer
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -141,7 +141,7 @@ public class TestDatabase extends AndroidTestCase {
 
 	// GPS alarm
 	public void testAddGPSAlarm() {
-		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
+		GPSAlarm gps = new GPSAlarm(1, "Johogatan, Göteborg", 1223.2222, 1333.333);
 		db.addGPSAlarm(gps);
 
 		List<GPSAlarm> list = db.getAllGPSAlarms();
@@ -150,7 +150,7 @@ public class TestDatabase extends AndroidTestCase {
 	}
 
 	public void testEditGPSAlarm() {
-		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
+		GPSAlarm gps = new GPSAlarm(1, "Johogatan, Göteborg", 1223.2222, 1333.333);
 		db.addGPSAlarm(gps);
 
 		gps.setLatitude(113);
@@ -161,8 +161,8 @@ public class TestDatabase extends AndroidTestCase {
 	}
 
 	public void testRemoveGPSAlarm() {
-		GPSAlarm gps = new GPSAlarm(1, 1223.2222, 1333.333);
-		GPSAlarm gps2 = new GPSAlarm(2, 33, 22);
+		GPSAlarm gps = new GPSAlarm(1, "Johogatan, Göteborg", 1223.2222, 1333.333);
+		GPSAlarm gps2 = new GPSAlarm(2, "Johogatan, Göteborg", 33, 22);
 		db.addGPSAlarm(gps);
 		db.addGPSAlarm(gps2);
 
@@ -283,7 +283,7 @@ public class TestDatabase extends AndroidTestCase {
 	public void testAddListObjectWithGPSAlarm() {
 		double longitude = 1d;
 		double latitude = 2d;
-		GPSAlarm gpsAlarm = new GPSAlarm(1, longitude, latitude);
+		GPSAlarm gpsAlarm = new GPSAlarm(1, "Johogatan, Göteborg", longitude, latitude);
 		ListObject lo = new ListObject(1, "listobject");
 		db.addGPSAlarm(gpsAlarm);
 		db.addListObject(lo);
@@ -298,8 +298,8 @@ public class TestDatabase extends AndroidTestCase {
 		double longitude2 = 2d;
 		double latitude1 = 3d;
 		double latitude2 = 4d;
-		GPSAlarm gpsAlarm1 = new GPSAlarm(1, longitude1, latitude1);
-		GPSAlarm gpsAlarm2 = new GPSAlarm(1, longitude2, latitude2);
+		GPSAlarm gpsAlarm1 = new GPSAlarm(1, "Johogatan, Göteborg", longitude1, latitude1);
+		GPSAlarm gpsAlarm2 = new GPSAlarm(1, "Johogatan, Göteborg", longitude2, latitude2);
 		ListObject lo = new ListObject(1, "listobject");
 
 		db.addGPSAlarm(gpsAlarm1);
@@ -316,7 +316,7 @@ public class TestDatabase extends AndroidTestCase {
 	public void testDeleteListObjectWithGPSAlarm() {
 		double longitude = 1d;
 		double latitude = 2d;
-		GPSAlarm gpsAlarm = new GPSAlarm(1, longitude, latitude);
+		GPSAlarm gpsAlarm = new GPSAlarm(1, "Johogatan, Göteborg", longitude, latitude);
 		ListObject lo = new ListObject(1, "listobject");
 		db.addGPSAlarm(gpsAlarm);
 		db.addListObject(lo);
