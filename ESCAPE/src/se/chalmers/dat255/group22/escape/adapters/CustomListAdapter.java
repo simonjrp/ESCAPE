@@ -250,10 +250,12 @@ public class CustomListAdapter implements ListAdapter {
 				convertView));
 		// convertView.setOnTouchListener(new OptionTouchListener(context,
 		// convertView));
-
+		if (!getLOShouldBeVisible(listObject))
+			convertView.setVisibility(View.INVISIBLE);
+		else
+			convertView.setVisibility(View.VISIBLE);
 		return convertView;
 	}
-
 	@Override
 	public int getItemViewType(int i) {
 		return i;
@@ -278,10 +280,8 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
-            Category tmp = new Category("" + listObject.getName(), null, null);
-            listObject.addToCategory(tmp);
 			taskList.add(listObject);
-            addCategory(tmp);
+			addCategory(new Category("" + listObject.getName(), null, null));
 			this.notifyDataSetChanged();
 		}
 	}
@@ -295,7 +295,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeListObject(ListObject listObject) {
 		if (taskList.contains(listObject)) {
 			taskList.remove(listObject);
-            removeCategory(listObject.getCategories().get(0));
+			removeCategory(new Category("" + listObject.getName(), null, null));
 			this.notifyDataSetChanged();
 		}
 	}
@@ -346,6 +346,37 @@ public class CustomListAdapter implements ListAdapter {
 		if (theCategories == null)
 			theCategories = new ArrayList<Category>();
 		return theCategories;
+	}
+
+	/**
+	 * Get if a ListObject should be displayed.
+	 * 
+	 * @param lo
+	 *            the list object to check if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getLOShouldBeVisible(ListObject lo) {
+		if (theCategories != null) {
+			// TODO fetch real categories from database
+			Category tmp = new Category(lo.getName(), null, null);
+			return getCatShouldBeVisible(tmp);
+		}
+		return true;
+	}
+
+	/**
+	 * Check if a specific category should be displayed.
+	 * 
+	 * @param cat
+	 *            the category to find out if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getCatShouldBeVisible(Category cat) {
+		for (Category cat2 : theCategories) {
+			if (cat2.equals(cat))
+				return cat2.getShouldBeDisplayed();
+		}
+		return true;
 	}
 
 	/**

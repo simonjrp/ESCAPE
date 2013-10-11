@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -97,6 +98,13 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+        listPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                if (ourListAdapter != null)
+                    ourListAdapter.notifyDataSetChanged();
+            }
+        });
 	}
 
 	/**

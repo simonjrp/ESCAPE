@@ -16,7 +16,7 @@ import android.widget.Toast;
 /**
  * An adapter for displaying checkboxes with
  * {@link se.chalmers.dat255.group22.escape.objects.Category}. Checkboxes are
- * used to set the categories shouldBeDisplayed value.
+ * used to set the categories shouldBeDisplayed boolean value.
  * 
  * @author Carl Jansson
  */
