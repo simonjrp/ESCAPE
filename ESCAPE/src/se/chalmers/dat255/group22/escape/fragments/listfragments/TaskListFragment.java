@@ -103,11 +103,13 @@ public class TaskListFragment extends Fragment {
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
-		categoryAdapter = new CategoryAdapter(getActivity());
-		categoryAdapter.setCategories(ourListAdapter.getTheCategories());
-		listPopupWindow.setAdapter(categoryAdapter);
-		categoryAdapter.notifyDataSetChanged();
-		if (!categoryAdapter.isEmpty())
-			listPopupWindow.show();
+		if (!ourListAdapter.getTheCategories().isEmpty()) {
+			categoryAdapter = new CategoryAdapter(getActivity());
+			categoryAdapter.setCategories(ourListAdapter.getTheCategories());
+			listPopupWindow.setAdapter(categoryAdapter);
+			categoryAdapter.notifyDataSetChanged();
+			if (!categoryAdapter.isEmpty())
+				listPopupWindow.show();
+		}
 	}
 }

@@ -63,7 +63,7 @@ public class CustomListAdapter implements ListAdapter {
 	private void initialize() {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
-		// theCategories = new ArrayList<Category>();
+		theCategories = new ArrayList<Category>();
 	}
 
 	/**
@@ -278,8 +278,10 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
+            Category tmp = new Category("" + listObject.getName(), null, null);
+            listObject.addToCategory(tmp);
 			taskList.add(listObject);
-            addCategory(new Category("" + listObject.getName() + " " + Math.random(), null, null));
+            addCategory(tmp);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -293,6 +295,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeListObject(ListObject listObject) {
 		if (taskList.contains(listObject)) {
 			taskList.remove(listObject);
+            removeCategory(listObject.getCategories().get(0));
 			this.notifyDataSetChanged();
 		}
 	}
@@ -318,8 +321,6 @@ public class CustomListAdapter implements ListAdapter {
 	 *            the category to add
 	 */
 	public void addCategory(Category cat) {
-        if ( theCategories==null)
-            theCategories = new ArrayList<Category>();
 		if (!theCategories.contains(cat))
 			theCategories.add(cat);
 	}
