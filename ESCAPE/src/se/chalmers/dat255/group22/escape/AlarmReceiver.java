@@ -231,8 +231,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		DBHandler dbH = new DBHandler(context);
 
 		if (reminderType == Constants.ReminderType.TIME) {
-			NotificationHandler.getInstance().removeTimeReminder(
-					dbH.getListObject(id));
+			// Do nothing, TimeAlarm already fired and gone.
 		} else {
 			NotificationHandler.getInstance().removePlaceReminder(
 					dbH.getListObject(id));
@@ -240,6 +239,23 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		dbH.purgeListObject(dbH.getListObject(id));
 		dismissNotification(context, id);
+
+		// // Updates the GUI
+		// FragmentActivity activity = (FragmentActivity) context;
+		//
+		// ListView expListViewTask = (ListView) activity
+		// .findViewById(R.id.expandedTask);
+		// ExpandableListView expListViewEvent = (ExpandableListView) activity
+		// .findViewById(R.id.expEventList);
+		//
+		// CustomListAdapter expListViewTaskAdapter = (CustomListAdapter)
+		// expListViewTask
+		// .getAdapter();
+		// CustomExpandableListAdapter expListViewEventAdapter =
+		// (CustomExpandableListAdapter) expListViewEvent
+		// .getAdapter();
+		// expListViewTaskAdapter.notifyDataSetChanged();
+		// expListViewEventAdapter.notifyDataSetChanged();
 	}
 
 	/*

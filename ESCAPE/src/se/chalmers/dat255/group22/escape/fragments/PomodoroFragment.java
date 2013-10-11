@@ -18,8 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import se.chalmers.dat255.group22.escape.NotificationHandler;
-import se.chalmers.dat255.group22.escape.R;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 
@@ -140,88 +138,100 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// When timer has reached zero, display "Break time!" instead of time.
 		@Override
 		public void onFinish() {
-			
+
 			if (onBreak == false) {
 				onBreak = true;
 				timeLeftText.setText("Break time!");
-				
-				// Creates a notification that informs the user it's time for a break
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
-						.setSmallIcon(R.drawable.ic_launcher)
+
+				// Creates a notification that informs the user it's time for a
+				// break
+				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+						getActivity()).setSmallIcon(R.drawable.ic_launcher)
 						.setContentTitle("ESCAPE")
 						.setContentText("Time for a break");
 
 				// Enables sound and vibration for the notification
 				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
 
-				// Creates an intent with the activity to launch when notification is
+				// Creates an intent with the activity to launch when
+				// notification is
 				// clicked
-				Intent resultIntent = new Intent(getActivity(), MainActivity.class);
+				Intent resultIntent = new Intent(getActivity(),
+						MainActivity.class);
 
 				// Creates a back stack to be used by the launched activity.
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+				TaskStackBuilder stackBuilder = TaskStackBuilder
+						.create(getActivity());
 
 				// Adds all the parent activities/views of the
-				// activity to be opened when clicking on the notification to the back
-				// stack. Might be useful later, if clicking on the notification does
+				// activity to be opened when clicking on the notification to
+				// the back
+				// stack. Might be useful later, if clicking on the notification
+				// does
 				// not take you to a parent view.
 				stackBuilder.addParentStack(MainActivity.class);
 
-				// Adds the Intent that starts the Activity to the top of the stack
+				// Adds the Intent that starts the Activity to the top of the
+				// stack
 				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-						PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent resultPendingIntent = stackBuilder
+						.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-				// Assigns the pending intent (containing MainActivity with a proper
+				// Assigns the pending intent (containing MainActivity with a
+				// proper
 				// back stack) to the notification
 				notificationBuilder.setContentIntent(resultPendingIntent);
 
 				// Sends the notification to the android system
 				NotificationManager mNotificationManager = (NotificationManager) getActivity()
 						.getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(
-						0,notificationBuilder.build());
-			} 
-			else if (onBreak == true) {
+				mNotificationManager.notify(0, notificationBuilder.build());
+			} else if (onBreak == true) {
 				onBreak = false;
 				timeLeftText.setText("Break over!");
 
-				// Creates a notification that informs the user it's time for a break
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getActivity())
-						.setSmallIcon(R.drawable.ic_launcher)
-						.setContentTitle("ESCAPE")
-						.setContentText("Break over");
+				// Creates a notification that informs the user it's time for a
+				// break
+				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+						getActivity()).setSmallIcon(R.drawable.ic_launcher)
+						.setContentTitle("ESCAPE").setContentText("Break over");
 
 				// Enables sound and vibration for the notification
 				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
 
-				// Creates an intent with the activity to launch when notification is
+				// Creates an intent with the activity to launch when
+				// notification is
 				// clicked
-				Intent resultIntent = new Intent(getActivity(), MainActivity.class);
+				Intent resultIntent = new Intent(getActivity(),
+						MainActivity.class);
 
 				// Creates a back stack to be used by the launched activity.
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+				TaskStackBuilder stackBuilder = TaskStackBuilder
+						.create(getActivity());
 
 				// Adds all the parent activities/views of the
-				// activity to be opened when clicking on the notification to the back
-				// stack. Might be useful later, if clicking on the notification does
+				// activity to be opened when clicking on the notification to
+				// the back
+				// stack. Might be useful later, if clicking on the notification
+				// does
 				// not take you to a parent view.
 				stackBuilder.addParentStack(MainActivity.class);
 
-				// Adds the Intent that starts the Activity to the top of the stack
+				// Adds the Intent that starts the Activity to the top of the
+				// stack
 				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-						PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent resultPendingIntent = stackBuilder
+						.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-				// Assigns the pending intent (containing MainActivity with a proper
+				// Assigns the pending intent (containing MainActivity with a
+				// proper
 				// back stack) to the notification
 				notificationBuilder.setContentIntent(resultPendingIntent);
 
 				// Sends the notification to the android system
 				NotificationManager mNotificationManager = (NotificationManager) getActivity()
 						.getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(
-						0,notificationBuilder.build());
+				mNotificationManager.notify(0, notificationBuilder.build());
 			}
 		}
 

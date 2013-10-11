@@ -120,11 +120,10 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ " INTEGER NOT NULL" + ")";
 	private static final String CREATE_GPS_ALARMS_TABLE = "CREATE TABLE "
 			+ TABLE_GPS_ALARMS + "(" + COLUMN_GPS_ALARMS_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ COLUMN_GPS_ALARMS_ADRESS + " TEXT NOT NULL,"
-			+ COLUMN_GPS_ALARMS_LATITUDE + " NUMERIC NOT NULL,"
-			+ COLUMN_GPS_ALARMS_LONGITUDE + " NUMERIC NOT NULL" 
-			+ ")";
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_GPS_ALARMS_ADRESS
+			+ " TEXT NOT NULL," + COLUMN_GPS_ALARMS_LATITUDE
+			+ " NUMERIC NOT NULL," + COLUMN_GPS_ALARMS_LONGITUDE
+			+ " NUMERIC NOT NULL" + ")";
 	private static final String CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE = "CREATE TABLE "
 			+ TABLE_CATEGORIES_WITH_LISTOBJECTS
 			+ "("
@@ -262,26 +261,26 @@ public class DBHandler extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE " + TABLE_GPS_ALARMS);
 			db.execSQL(CREATE_GPS_ALARMS_TABLE);
 		}
-		
-//		// Drop older tables if existed
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS "
-//				+ CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS "
-//				+ CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS "
-//				+ CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS "
-//				+ CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
-//		db.execSQL("DROP TABLE IF EXISTS "
-//				+ CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
-//		// Create tables again
-//		onCreate(db);
+
+		// // Drop older tables if existed
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS "
+		// + CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS "
+		// + CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS "
+		// + CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS "
+		// + CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
+		// db.execSQL("DROP TABLE IF EXISTS "
+		// + CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
+		// // Create tables again
+		// onCreate(db);
 	}
 
 	// This enables foreign_keys such that "ON DELETE CASCADE" works.
@@ -649,8 +648,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
 		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
-				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS, COLUMN_GPS_ALARMS_LONGITUDE,
-				COLUMN_GPS_ALARMS_LATITUDE }, null, null, null, null, null);
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS,
+				COLUMN_GPS_ALARMS_LONGITUDE, COLUMN_GPS_ALARMS_LATITUDE },
+				null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
@@ -940,9 +940,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_GPS_ALARMS, new String[] {
-				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS, COLUMN_GPS_ALARMS_LATITUDE,
-				COLUMN_GPS_ALARMS_LONGITUDE }, COLUMN_GPS_ALARMS_ID + "=?",
-				new String[] { id.toString() }, null, null, null);
+				COLUMN_GPS_ALARMS_ID, COLUMN_GPS_ALARMS_ADRESS,
+				COLUMN_GPS_ALARMS_LATITUDE, COLUMN_GPS_ALARMS_LONGITUDE },
+				COLUMN_GPS_ALARMS_ID + "=?", new String[] { id.toString() },
+				null, null, null);
 
 		List<GPSAlarm> list = new LinkedList<GPSAlarm>();
 		if (cursor.moveToFirst()) {
