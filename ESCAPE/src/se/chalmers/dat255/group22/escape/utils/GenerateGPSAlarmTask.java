@@ -51,14 +51,18 @@ public class GenerateGPSAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 		try {
 			List<Address> addressList = geocoder.getFromLocationName(input[0],
 					1);
+			try {
+
+			} catch (IndexOutOfBoundsException e) {
+				Log.d(Constants.APPTAG,
+						"Couldn't find address from location text");
+				e.printStackTrace();
+			}
 			Address address = addressList.get(0);
 			longitude = address.getLongitude();
 			latitude = address.getLatitude();
 		} catch (IOException e) {
 			Log.d(Constants.APPTAG, "Geocoder produced IOException");
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			Log.d(Constants.APPTAG, "Couldn't find address from location text");
 			e.printStackTrace();
 		}
 
