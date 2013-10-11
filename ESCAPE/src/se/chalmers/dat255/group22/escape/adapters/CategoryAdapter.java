@@ -105,8 +105,7 @@ public class CategoryAdapter implements ListAdapter {
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
 			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
-			tmpBox.setText(theCategory.getName()
-					+ theCategory.getShouldBeDisplayed());
+			tmpBox.setText(theCategory.getName());
 			// Set what to do when checkbox changes state
 			tmpBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
