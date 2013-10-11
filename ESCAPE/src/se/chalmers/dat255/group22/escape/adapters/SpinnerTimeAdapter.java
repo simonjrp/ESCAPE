@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,12 +117,30 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		return row;
 	}
 
-	public void addData(Date date) {
-		timesData.add(date);
-	}
-
 	public Date getData(int position) {
 		return timesData.get(position);
 	}
+
+    public List<Date> getAllData() {
+        return timesData;
+    }
+
+    public void addCustomEntry(String customTimeLabel, Date customTime) {
+        // Makes sure that only one extra custom date is stored in the dateData
+        // list.
+        if (timesData.size() > Constants.NBR_OF_REL_TIMES) {
+            timesData.remove(timesData.size() - 2);
+        }
+        timesData.add(customTime);
+
+        clear();
+
+        add(context.getString(R.string.morning));
+        add(context.getString(R.string.afternoon));
+        add(context.getString(R.string.evening));
+        add(context.getString(R.string.night));
+        add(customTimeLabel);
+        add(context.getString(R.string.pickTimeLabel));
+    }
 
 }
