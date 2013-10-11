@@ -26,7 +26,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	// Database Name
 	private static final String DATABASE_NAME = "escapeDatabase";
@@ -70,6 +70,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	// GPSAlarms table column names
 	private static final String COLUMN_GPS_ALARMS_ID = "_id";
+	private static final String COLUMN_GPS_ALARMS_ADRESS = "adress";
 	private static final String COLUMN_GPS_ALARMS_LONGITUDE = "longitude";
 	private static final String COLUMN_GPS_ALARMS_LATITUDE = "latitude";
 
@@ -120,8 +121,10 @@ public class DBHandler extends SQLiteOpenHelper {
 	private static final String CREATE_GPS_ALARMS_TABLE = "CREATE TABLE "
 			+ TABLE_GPS_ALARMS + "(" + COLUMN_GPS_ALARMS_ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+			+ COLUMN_GPS_ALARMS_ADRESS + " TEXT NOT NULL,"
 			+ COLUMN_GPS_ALARMS_LATITUDE + " NUMERIC NOT NULL,"
-			+ COLUMN_GPS_ALARMS_LONGITUDE + " NUMERIC NOT NULL" + ")";
+			+ COLUMN_GPS_ALARMS_LONGITUDE + " NUMERIC NOT NULL" 
+			+ ")";
 	private static final String CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE = "CREATE TABLE "
 			+ TABLE_CATEGORIES_WITH_LISTOBJECTS
 			+ "("
@@ -255,25 +258,30 @@ public class DBHandler extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Write onUpgrade such that it reuses old data.
 
-		// Drop older tables if existed
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS "
-				+ CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS "
-				+ CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS "
-				+ CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS "
-				+ CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
-		db.execSQL("DROP TABLE IF EXISTS "
-				+ CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
-		// Create tables again
-		onCreate(db);
+		if (oldVersion < 2) {
+			db.execSQL("DROP TABLE " + TABLE_GPS_ALARMS);
+			db.execSQL(CREATE_GPS_ALARMS_TABLE);
+		}
+		
+//		// Drop older tables if existed
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS "
+//				+ CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS "
+//				+ CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS "
+//				+ CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS "
+//				+ CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
+//		db.execSQL("DROP TABLE IF EXISTS "
+//				+ CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
+//		// Create tables again
+//		onCreate(db);
 	}
 
 	// This enables foreign_keys such that "ON DELETE CASCADE" works.
@@ -384,6 +392,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(COLUMN_GPS_ALARMS_ADRESS, gpsAlarm.getAdress());
 		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
 
@@ -646,6 +655,8 @@ public class DBHandler extends SQLiteOpenHelper {
 			do {
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_ADRESS)),
 						cursor.getDouble(cursor
 								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
 						cursor.getDouble(cursor
@@ -939,6 +950,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_ADRESS)),
 						cursor.getDouble(cursor
 								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
 						cursor.getDouble(cursor
@@ -976,6 +989,8 @@ public class DBHandler extends SQLiteOpenHelper {
 			do {
 				GPSAlarm object = new GPSAlarm(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_GPS_ALARMS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_GPS_ALARMS_ADRESS)),
 						cursor.getDouble(cursor
 								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
 						cursor.getDouble(cursor
@@ -1244,6 +1259,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
+		values.put(COLUMN_GPS_ALARMS_ADRESS, gpsAlarm.getAdress());
 		values.put(COLUMN_GPS_ALARMS_LATITUDE, gpsAlarm.getLatitude());
 		values.put(COLUMN_GPS_ALARMS_LONGITUDE, gpsAlarm.getLongitude());
 
