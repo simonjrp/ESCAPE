@@ -22,10 +22,10 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.GetPlaces;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
+import se.chalmers.dat255.group22.escape.utils.GetPlaces;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -37,10 +37,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -341,11 +337,11 @@ public class NewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		// Make home button in actionbar work like pressing on backbutton
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home :
+				onBackPressed();
+				return true;
+			default :
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -438,25 +434,25 @@ public class NewTaskActivity extends Activity {
 		// If a name is set, create ListObject...
 		if (name.trim().length() != 0) {
 			DBHandler db = new DBHandler(this);
-			ListObject lo = new ListObject(1, name);
+			ListObject newListObject = new ListObject(1, name);
 
 			if (comment.trim().length() != 0)
-				lo.setComment(comment);
+				newListObject.setComment(comment);
 			else
 				// A comment MUST be set even if only null!
-				lo.setComment(null);
+				newListObject.setComment(null);
 
-			lo.setImportant(importantTask);
-			lo.addToCategory(newCategory);
-			lo.setPlace(place);
+			newListObject.setImportant(importantTask);
+			newListObject.addToCategory(newCategory);
+			newListObject.setPlace(place);
 			if (isTimeReminder) {
-				lo.setTimeAlarm(timeAlarm);
+				newListObject.setTimeAlarm(timeAlarm);
 			} else if (isLocationReminder) {
 				// lo.setGpsAlarm(...);
 			}
 			if (isEvent) {
 				Time time = getTimeFromSpinners(dateFromString, dateToString);
-				lo.setTime(time);
+				newListObject.setTime(time);
 			}
 
 			/*
@@ -467,41 +463,72 @@ public class NewTaskActivity extends Activity {
 				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
 				DBHandler dbHandler = new DBHandler(this);
 				long id = bundle.getInt(INTENT_GET_ID);
-				ListObject listObject = dbHandler.getListObject(id);
+				ListObject editedListobject = dbHandler.getListObject(id);
+				long tmpId;
 
 				// Update the database
-				if (lo.getName() != null)
-					listObject.setName(lo.getName());
+				if (newListObject.getName() != null)
+					editedListobject.setName(newListObject.getName());
 
 				// listObject.addToCategory(category);
-				if (lo.getComment() != null)
-					listObject.setComment(lo.getComment());
+				if (newListObject.getComment() != null)
+					editedListobject.setComment(newListObject.getComment());
 
-				if (lo.getPlace() != null) {
-					listObject.setPlace(lo.getPlace());
-					db.updatePlaces(listObject.getPlace());
+				if (newListObject.getPlace() != null) {
+					editedListobject.setPlace(newListObject.getPlace());
+					db.updatePlaces(editedListobject.getPlace());
+				}
+				System.out.println("Time reminder is " + isTimeReminder);
+				System.out
+						.println("Location reminder is " + isLocationReminder);
+
+				editedListobject.setImportant(newListObject.isImportant());
+
+				if (hasReminder) {
+					if (isTimeReminder) {
+						editedListobject.setTimeAlarm(newListObject
+								.getTimeAlarm());
+						if (db.getTimeAlarm(newListObject) != null) {
+							tmpId = db.updateTimeAlarm(editedListobject
+									.getTimeAlarm());
+							db.updateListObjectWithTimeAlarm(editedListobject,
+									dbHandler.getTimeAlarm(tmpId));
+						} else {
+							tmpId = db.addTimeAlarm(editedListobject
+									.getTimeAlarm());
+							db.addListObjectWithTimeAlarm(editedListobject,
+									dbHandler.getTimeAlarm(tmpId));
+						}
+
+					} else if (isLocationReminder) {
+						editedListobject.setGpsAlarm(newListObject
+								.getGpsAlarm());
+						if (db.getGPSAlarm(newListObject) != null) {
+							tmpId = db.updateGPSAlarm(editedListobject
+									.getGpsAlarm());
+							db.updateListObjectWithGPSAlarm(editedListobject,
+									dbHandler.getGPSAlarm(tmpId));
+
+						} else {
+							tmpId = db.addGPSAlarm(editedListobject
+									.getGpsAlarm());
+							db.addListObjectWithGPSAlarm(editedListobject,
+									dbHandler.getGPSAlarm(tmpId));
+						}
+						editedListobject.setGpsAlarm(newListObject
+								.getGpsAlarm());
+						db.updateGPSAlarm(editedListobject.getGpsAlarm());
+					}
+				}
+				if (newListObject.getTime() != null) {
+					editedListobject.setTime(newListObject.getTime());
+					db.updateTimes(editedListobject.getTime());
 				}
 
-				listObject.setImportant(lo.isImportant());
-
-				if (isTimeReminder && lo.getTimeAlarm() != null) {
-					listObject.setTimeAlarm(lo.getTimeAlarm());
-					db.addTimeAlarm(listObject.getTimeAlarm());
-					db.updateTimeAlarm(listObject.getTimeAlarm());
-				} else if (isLocationReminder && lo.getGpsAlarm() != null) {
-					listObject.setGpsAlarm(lo.getGpsAlarm());
-					db.addGPSAlarm(listObject.getGpsAlarm());
-					db.updateGPSAlarm(listObject.getGpsAlarm());
-				}
-				if (lo.getTime() != null) {
-					listObject.setTime(lo.getTime());
-					db.updateTimes(listObject.getTime());
-				}
-
-				db.updateListObject(listObject);
+				db.updateListObject(editedListobject);
 
 			} else {
-				saveToDatabase(lo);
+				saveToDatabase(newListObject);
 
 			}
 
@@ -682,12 +709,12 @@ public class NewTaskActivity extends Activity {
 		 * Begin with the "TYPE" of reminder
 		 */
 		// An array containing the images for a time and location reminder
-		int imgArr[] = { R.drawable.device_access_alarms,
-				R.drawable.location_place };
+		int imgArr[] = {R.drawable.device_access_alarms,
+				R.drawable.location_place};
 
 		// An array containing strings to be associated with each image
-		String[] strTypeArr = { getString(R.string.time_reminder),
-				getString(R.string.location_reminder) };
+		String[] strTypeArr = {getString(R.string.time_reminder),
+				getString(R.string.location_reminder)};
 
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
