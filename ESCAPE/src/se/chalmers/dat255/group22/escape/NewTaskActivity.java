@@ -542,7 +542,9 @@ public class NewTaskActivity extends Activity {
 						dbHandler.addListObjectsWithTime(editedListObject,
 								dbHandler.getTime(tmpId));
 					}
-				}
+				} else {
+                    dbHandler.deleteTime(dbHandler.getTime(editedListObject));
+                }
 				dbHandler.updateListObject(editedListObject);
 			} else {
 				saveToDatabase(newListObject);
