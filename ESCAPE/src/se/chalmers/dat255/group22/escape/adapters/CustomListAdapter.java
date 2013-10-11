@@ -29,9 +29,9 @@ import android.widget.TextView;
  * Adapter for displaying
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject} in an ordinary
  * list. {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
- * to determine what ListObjects to be displayed
+ * to determine what ListObjects should be displayed
  * 
- * @author Carl
+ * @author Carl Jansson
  */
 public class CustomListAdapter implements ListAdapter {
 
@@ -58,7 +58,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Initialize the database and list
+	 * Initialize the database and lists
 	 */
 	private void initialize() {
 		dbHandler = new DBHandler(context);
@@ -79,10 +79,10 @@ public class CustomListAdapter implements ListAdapter {
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
+				// TODO this is a tmp category!
 				lo.addToCategory(new Category(lo.getName(), null, null));
+
 				addListObject(lo);
-				addCategoryList(lo.getCategories());
-                this.notifyDataSetChanged();
 			}
 		}
 		updateEditButtons();
@@ -225,8 +225,6 @@ public class CustomListAdapter implements ListAdapter {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
 				removeListObject(listObject);
-                removeLoAssociatedCats(listObject);
-                notifyDataSetChanged();
 
 				// v.refreshDrawableState();
 			}
@@ -278,7 +276,8 @@ public class CustomListAdapter implements ListAdapter {
 
 	/**
 	 * Add a new task for the displayed list if the task is not already in the
-	 * list
+	 * list. All categories associated the the ListObject are added to the
+	 * active categories
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -286,11 +285,14 @@ public class CustomListAdapter implements ListAdapter {
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
 			taskList.add(listObject);
+			addCategoryList(listObject.getCategories());
+			this.notifyDataSetChanged();
 		}
 	}
 
 	/**
-	 * Remove a task from the displayed list
+	 * Remove a task from the displayed list. Also removes all associated
+	 * Categories not associated with another listObject
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
@@ -298,6 +300,8 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeListObject(ListObject listObject) {
 		if (taskList.contains(listObject)) {
 			taskList.remove(listObject);
+			removeLoAssociatedCats(listObject);
+			this.notifyDataSetChanged();
 		}
 	}
 
