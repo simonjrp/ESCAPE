@@ -326,7 +326,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Add a category to the category list of categories to be displyed
+	 * Add a category to the list with categories displayed by this adapter.
 	 * 
 	 * @param cat
 	 *            the category to add
@@ -337,8 +337,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * add a list with categories. If a category from input list is already in
-	 * the list it will not be added again.
+	 * add a list with categories to the category list. If a category from input
+	 * list is already in the list it will not be added again.
 	 * 
 	 * @param catList
 	 *            a list with new categories to add into the list
@@ -349,7 +349,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * remove a category from the category list of categories to be displayed
+	 * remove a category from the list with categories displayed by this
+	 * adapter.
 	 * 
 	 * @param cat
 	 *            the category to remove
@@ -381,9 +382,11 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * removes a list with categories.
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
 	 * 
 	 * @param catList
+	 *            List with categories that will be removed
 	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)

@@ -27,7 +27,7 @@ public class TaskListFragment extends Fragment {
 	private CustomListAdapter ourListAdapter;
 	// popup where use can pick what categories to display
 	private ListPopupWindow listPopupWindow;
-
+    // The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
 
 	@Override
@@ -38,11 +38,6 @@ public class TaskListFragment extends Fragment {
 		setHasOptionsMenu(true);
 		initialize();
 	}
-
-	//@Override
-	//public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	//	inflater.inflate(R.menu.fragment_action, menu);
-	//}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,13 +51,6 @@ public class TaskListFragment extends Fragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	//@Override
-	//public void onPrepareOptionsMenu(Menu menu) {
-	//	super.onPrepareOptionsMenu(menu);
-    //
-	//	menu.findItem(R.id.pick_category).setVisible(true);
-	//}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,6 +98,7 @@ public class TaskListFragment extends Fragment {
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
+        //TODO Find way to use popup without creating it every time!
 		if (!ourListAdapter.getTheCategories().isEmpty()) {
             //if (listPopupWindow == null)
                 initPopup();
