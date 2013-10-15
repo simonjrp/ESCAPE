@@ -53,6 +53,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	// The lists
 	List<ListObject> todayEventList;
 	List<ListObject> tomorrowEventList;
+	List<ListObject> thisWeekEventList;
 	List<ListObject> somedayEventList;
 	// The context this is used in
 	private Context context;
@@ -89,6 +90,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap = new HashMap<String, List<ListObject>>();
 		todayEventList = new ArrayList<ListObject>();
 		tomorrowEventList = new ArrayList<ListObject>();
+		thisWeekEventList = new ArrayList<ListObject>();
 		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
@@ -96,6 +98,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList
 				.add(context.getResources().getString(R.string.tomorrowLabel));
 		headerList.add(context.getResources().getString(R.string.somedayLabel));
+		headerList
+				.add(context.getResources().getString(R.string.thisWeekLabel));
 
 		objectDataMap.put(
 				context.getResources().getString(R.string.todayLabel),
@@ -103,6 +107,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap.put(
 				context.getResources().getString(R.string.tomorrowLabel),
 				tomorrowEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.thisWeekLabel),
+				thisWeekEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.somedayLabel),
 				somedayEventList);
@@ -254,16 +261,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			});
 			deleteButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DBHandler dbh = new DBHandler(context);
-                    dbh.purgeListObject(listObject);
-                    removeListObjectToday(listObject);
-                    removeListObjectTomorrow(listObject);
-                    removeListObjectSomeday(listObject);
-                }
+				@Override
+				public void onClick(View v) {
+					DBHandler dbh = new DBHandler(context);
+					dbh.purgeListObject(listObject);
+					removeListObject(listObject);
+				}
 
-            });
+			});
 
 			childLabel.setText(childText);
 			childTimeView.setText(childTimeText.equals("")
@@ -355,7 +360,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isEmpty() {
 		return todayEventList.isEmpty() && tomorrowEventList.isEmpty()
-				&& somedayEventList.isEmpty();
+				&& thisWeekEventList.isEmpty() && somedayEventList.isEmpty();
 	}
 
 	@Override
@@ -401,6 +406,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				addListObjectToday(listObject);
 			} else if (isTomorrow(theDate)) {
 				addListObjectTomorrow(listObject);
+			} else if (isThisWeek(theDate)) {
+				addListObjectThisWeek(listObject);
 			} else {
 				addListObjectSomeday(listObject);
 			}
@@ -436,6 +443,22 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
+	 * Add a new event for this week. Not that this is the current week and not
+	 * 7 days ahead!
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObjectThisWeek(ListObject listObject) {
+		if (!thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.add(listObject);
+			addCategoryList(listObject.getCategories());
+			this.notifyDataSetChanged();
+		}
+
+	}
+
+	/**
 	 * Add a new event for someday if the task is not already in the list
 	 * 
 	 * @param listObject
@@ -447,6 +470,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
+	}
+
+	/**
+	 * Removes a listobject from the event list
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObject(ListObject listObject) {
+		removeListObjectToday(listObject);
+		removeListObjectTomorrow(listObject);
+		removeListObjectThisWeek(listObject);
+		removeListObjectSomeday(listObject);
 	}
 
 	/**
@@ -475,6 +511,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
+	}
+
+	public void removeListObjectThisWeek(ListObject listObject) {
+		if (thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.remove(listObject);
+			removeLoAssociatedCats(listObject);
+			this.notifyDataSetChanged();
+		}
+
 	}
 
 	/**
@@ -517,6 +562,21 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			return tomorrowEventList.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Get a list object from the this week list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObjectThisWeek(int i) {
+		if (0 <= i && i < thisWeekEventList.size()) {
+			return thisWeekEventList.get(i);
+		}
+		return null;
+
 	}
 
 	/**
@@ -595,6 +655,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					}
 				}
 			}
+            if (!catIsInList) {
+                for (ListObject lo : this.thisWeekEventList) {
+                    if (lo.getCategories().contains(cat)) {
+                        catIsInList = true;
+                        break;
+                    }
+                }
+            }
 			if (!catIsInList) {
 				for (ListObject lo : this.somedayEventList) {
 					if (lo.getCategories().contains(cat)) {
@@ -721,5 +789,25 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
 				&& tmpDate.get(Calendar.DAY_OF_YEAR) == theCalendar
 						.get(Calendar.DAY_OF_YEAR);
+	}
+
+	/**
+	 * Method to check if a date is this week. Note that it checks if it is this
+	 * week and not 7 days ahead!
+	 * 
+	 * @param theDate
+	 *            the date to see if it is this week
+	 * @return true if it is this week
+	 */
+	public boolean isThisWeek(Date theDate) {
+		// Get a calendar with the events start time
+		GregorianCalendar theCalendar = new GregorianCalendar();
+		theCalendar.setTime(theDate);
+		// Get a calendar with current system time
+		Calendar tmpDate = Calendar.getInstance();
+
+		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
+				&& tmpDate.get(Calendar.WEEK_OF_YEAR) == theCalendar
+						.get(Calendar.WEEK_OF_YEAR);
 	}
 }
