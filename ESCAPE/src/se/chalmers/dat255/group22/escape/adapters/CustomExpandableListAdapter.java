@@ -64,8 +64,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
-    // A temporary task that is displayed if list is empty
-    ListObject emptyListDefaultTask;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
 	 * Create a new custom list adapter.
@@ -109,8 +109,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		theCategories = new ArrayList<Category>();
 
-        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
-        emptyListDefaultTask.setComment("In this list you can add specific things that you need to do!");
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add events, tasks with a set time!");
+		emptyListDefaultTask.setTime(new Time(1, new Date(System
+				.currentTimeMillis()), new Date(
+				System.currentTimeMillis() + 1000 * 60 * 60)));
 	}
 
 	/**
@@ -119,7 +124,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-        boolean noEvents = true;
+		boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
@@ -133,13 +138,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-                noEvents = false;
+				noEvents = false;
 			}
 		}
-        if (noEvents)
-            addListObjectToday(emptyListDefaultTask);
-        else
-            removeListObjectToday(emptyListDefaultTask);
+		if (noEvents)
+			addListObjectToday(emptyListDefaultTask);
+		else
+			removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -194,6 +199,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
+
+		// TODO Should this make use of the database?
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
 		// Get the name of the task to display for each task entry
@@ -594,12 +601,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-     * removes a list with categories from the list with categories displayed in
-     * by this adapter.
-     *
-     * @param catList
-     *            List with categories that will be removed
-     */
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
+	 * 
+	 * @param catList
+	 *            List with categories that will be removed
+	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)
 			removeCategory(cat);
