@@ -144,6 +144,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				// intended to test functionality!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
+                lo.setTime(dbHandler.getTime(lo));
 				addListObject(lo);
 				noEvents = false;
 			}
@@ -397,7 +398,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void addListObject(ListObject listObject) {
 		// Get a calendar with current system time
-		Time theTime = dbHandler.getTime(listObject);
+		Time theTime = listObject.getTime();
 		if (theTime != null) {
 			// Get start date
 			Date theDate = theTime.getStartDate();
