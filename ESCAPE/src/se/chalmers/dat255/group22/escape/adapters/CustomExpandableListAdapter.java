@@ -97,8 +97,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList.add(context.getResources().getString(R.string.todayLabel));
 		headerList
 				.add(context.getResources().getString(R.string.tomorrowLabel));
-        headerList
-                .add(context.getResources().getString(R.string.thisWeekLabel));
+		headerList
+				.add(context.getResources().getString(R.string.thisWeekLabel));
 		headerList.add(context.getResources().getString(R.string.somedayLabel));
 
 		objectDataMap.put(
@@ -144,7 +144,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				// intended to test functionality!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
-                lo.setTime(dbHandler.getTime(lo));
+				lo.setTime(dbHandler.getTime(lo));
 				addListObject(lo);
 				noEvents = false;
 			}
@@ -390,8 +390,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	/**
 	 * Add a list object to the expandable list. Object should automatically be
-	 * placed where it should be. Atleast a start date must be defined in the
-	 * database!
+	 * placed where it should be. If the list object does not contain a start
+	 * date it will not be added into the list.
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -656,14 +656,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					}
 				}
 			}
-            if (!catIsInList) {
-                for (ListObject lo : this.thisWeekEventList) {
-                    if (lo.getCategories().contains(cat)) {
-                        catIsInList = true;
-                        break;
-                    }
-                }
-            }
+			if (!catIsInList) {
+				for (ListObject lo : this.thisWeekEventList) {
+					if (lo.getCategories().contains(cat)) {
+						catIsInList = true;
+						break;
+					}
+				}
+			}
 			if (!catIsInList) {
 				for (ListObject lo : this.somedayEventList) {
 					if (lo.getCategories().contains(cat)) {
