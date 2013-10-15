@@ -1,14 +1,18 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
 import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ListPopupWindow;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 /**
  * A fragment displaying an expandable list with events.<br>
@@ -19,16 +23,36 @@ import android.widget.ExpandableListView;
  */
 public class ExpandableEventListFragment extends Fragment {
 
-    // The adapter used to display out ListObjects
+	// The adapter used to display out ListObjects
 	CustomExpandableListAdapter listAdapter;
-    // the list objects are displayed in
+	// the list objects are displayed in
 	ExpandableListView expListView;
+    // popup where use can pick what categories to display
+    private ListPopupWindow listPopupWindow;
+    // The adapter used to display the category popup
+    private CategoryAdapter categoryAdapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+        // Make fragment aware it has an action bar object!
+        setHasOptionsMenu(true);
 		initialize();
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.pick_category :
+                if ( this.isVisible() ){
+                    getPopup();
+                    return true;
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,8 +64,7 @@ public class ExpandableEventListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// TODO temp fix, maybe better way to read from DB again?
-		initialize();
+        initialize();
 		listAdapter.reInit();
 	}
 
@@ -56,5 +79,42 @@ public class ExpandableEventListFragment extends Fragment {
 				R.id.expEventList);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
+        initPopup();
 	}
+
+    /**
+     * Create the popup used to pick what categories to display
+     */
+    private void initPopup() {
+        View menuItemView = getActivity().findViewById(R.id.pick_category);
+        listPopupWindow = new ListPopupWindow(getActivity());
+        listPopupWindow.setAnchorView(menuItemView);
+        listPopupWindow.setModal(true);
+        listPopupWindow.setWidth(300);
+        listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+        listPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss() {
+                if (listAdapter != null)
+                    listAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**
+     * Called when popup should be displayed
+     */
+    private void getPopup() {
+        //TODO Find way to use popup without creating it every time!
+        if (!listAdapter.getTheCategories().isEmpty()) {
+            //if (listPopupWindow == null)
+            initPopup();
+            categoryAdapter = new CategoryAdapter(getActivity());
+            categoryAdapter.setCategories(listAdapter.getTheCategories());
+            listPopupWindow.setAdapter(categoryAdapter);
+            categoryAdapter.notifyDataSetChanged();
+            if (!categoryAdapter.isEmpty())
+                listPopupWindow.show();
+        }
+    }
 }

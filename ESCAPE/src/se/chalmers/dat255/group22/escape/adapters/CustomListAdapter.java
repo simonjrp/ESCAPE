@@ -1,15 +1,20 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
@@ -25,9 +30,12 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 /**
- * Adapter for displaying ListObjects in an ordinary list
+ * Adapter for displaying
+ * {@link se.chalmers.dat255.group22.escape.objects.ListObject} in an ordinary
+ * list. {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
+ * to determine what ListObjects should be displayed
  * 
- * @author Carl
+ * @author Carl Jansson
  */
 public class CustomListAdapter implements ListAdapter {
 
@@ -35,6 +43,8 @@ public class CustomListAdapter implements ListAdapter {
 	private Context context;
 	// The tasks in the list
 	private List<ListObject> taskList;
+	// the categories, including bool for if they should be displayed
+	private List<Category> theCategories;
 	// Array keeping track of changes in the list
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
@@ -52,11 +62,12 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Initialize the database and list
+	 * Initialize the database and lists
 	 */
 	private void initialize() {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
+		theCategories = new ArrayList<Category>();
 	}
 
 	/**
@@ -69,6 +80,14 @@ public class CustomListAdapter implements ListAdapter {
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
+				for (Category cat : dbHandler.getCategories(lo))
+					lo.addToCategory(cat);
+
+				// TODO All categories should be fetched from database!
+				// This category with the same name as the listobject is only
+				// intended to test functionality!
+				lo.addToCategory(new Category(lo.getName(), null, null));
+
 				addListObject(lo);
 			}
 		}
@@ -127,9 +146,8 @@ public class CustomListAdapter implements ListAdapter {
 	 * Call this to notify that something has changed. Makes the view update!
 	 */
 	public void notifyDataSetChanged() {
-		for (DataSetObserver observer : observers) {
+		for (DataSetObserver observer : observers)
 			observer.onChanged();
-		}
 	}
 
 	@Override
@@ -200,10 +218,10 @@ public class CustomListAdapter implements ListAdapter {
 				Intent intent = new Intent(context, NewTaskActivity.class);
 
 				Bundle bundle = new Bundle();
-				intent.putExtra("Edit Task", bundle);
+				intent.putExtra(EDIT_TASK_MSG, bundle);
 
-				bundle.putInt("ID", listObject.getId());
-				intent.setFlags(1);
+				bundle.putInt(INTENT_GET_ID, listObject.getId());
+				intent.setFlags(EDIT_TASK_ID);
 				context.startActivity(intent);
 			}
 		});
@@ -241,14 +259,15 @@ public class CustomListAdapter implements ListAdapter {
 				convertView));
 		// convertView.setOnTouchListener(new OptionTouchListener(context,
 		// convertView));
-
+		if (!getLOShouldBeVisible(listObject))
+			convertView.setVisibility(View.INVISIBLE);
+		else
+			convertView.setVisibility(View.VISIBLE);
 		return convertView;
 	}
-
 	@Override
 	public int getItemViewType(int i) {
-		return 0;
-
+		return i;
 	}
 
 	@Override
@@ -263,7 +282,8 @@ public class CustomListAdapter implements ListAdapter {
 
 	/**
 	 * Add a new task for the displayed list if the task is not already in the
-	 * list
+	 * list. All categories associated the the ListObject are added to the
+	 * active categories
 	 * 
 	 * @param listObject
 	 *            the listObject to add
@@ -271,12 +291,14 @@ public class CustomListAdapter implements ListAdapter {
 	public void addListObject(ListObject listObject) {
 		if (!taskList.contains(listObject)) {
 			taskList.add(listObject);
+			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
 	}
 
 	/**
-	 * Remove a task from the displayed list
+	 * Remove a task from the displayed list. Also removes all associated
+	 * Categories not associated with another listObject
 	 * 
 	 * @param listObject
 	 *            the listObject to remove
@@ -284,6 +306,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void removeListObject(ListObject listObject) {
 		if (taskList.contains(listObject)) {
 			taskList.remove(listObject);
+			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -300,5 +323,133 @@ public class CustomListAdapter implements ListAdapter {
 			return taskList.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Add a category to the list with categories displayed by this adapter.
+	 * 
+	 * @param cat
+	 *            the category to add
+	 */
+	public void addCategory(Category cat) {
+		if (!theCategories.contains(cat))
+			theCategories.add(cat);
+	}
+
+	/**
+	 * add a list with categories to the category list. If a category from input
+	 * list is already in the list it will not be added again.
+	 * 
+	 * @param catList
+	 *            a list with new categories to add into the list
+	 */
+	public void addCategoryList(List<Category> catList) {
+		for (Category cat : catList)
+			addCategory(cat);
+	}
+
+	/**
+	 * remove a category from the list with categories displayed by this
+	 * adapter.
+	 * 
+	 * @param cat
+	 *            the category to remove
+	 */
+	public void removeCategory(Category cat) {
+		if (theCategories.contains(cat))
+			theCategories.remove(cat);
+	}
+
+	/**
+	 * Remove all categories associated with a ListObject if they are not part
+	 * of another ListObject displayed in the list
+	 * 
+	 * @param listObject
+	 *            the ListObject to check for categories to remove
+	 */
+	public void removeLoAssociatedCats(ListObject listObject) {
+		for (Category cat : listObject.getCategories()) {
+			boolean catIsInList = false;
+			for (ListObject lo : this.taskList) {
+				if (lo.getCategories().contains(cat)) {
+					catIsInList = true;
+					break;
+				}
+			}
+			if (!catIsInList)
+				removeCategory(cat);
+		}
+	}
+
+	/**
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
+	 * 
+	 * @param catList
+	 *            List with categories that will be removed
+	 */
+	public void removeCategoryList(List<Category> catList) {
+		for (Category cat : catList)
+			removeCategory(cat);
+	}
+
+	/**
+	 * Get a category list with all categories possible to display in this
+	 * adapter
+	 * 
+	 * @return a list with all categories
+	 */
+	public List<Category> getTheCategories() {
+		if (theCategories == null)
+			theCategories = new ArrayList<Category>();
+		return theCategories;
+	}
+
+	/**
+	 * Get if a ListObject should be displayed.
+	 * 
+	 * @param lo
+	 *            the list object to check if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getLOShouldBeVisible(ListObject lo) {
+		if (theCategories != null) {
+			for (Category cat : lo.getCategories()) {
+				if (!getCatShouldBeVisible(cat))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Check if a specific category should be displayed.
+	 * 
+	 * @param cat
+	 *            the category to find out if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getCatShouldBeVisible(Category cat) {
+		for (Category cat2 : theCategories) {
+			if (cat2.equals(cat))
+				return cat2.getShouldBeDisplayed();
+		}
+		return true;
+	}
+
+	/**
+	 * Replace existing category objects with equals from this list and add new
+	 * ones
+	 * 
+	 * @param newCatList
+	 *            a Category list containing new to display values
+	 */
+	public void addReplaceCategoryList(List<Category> newCatList) {
+		// TODO is this method crap?
+		for (Category cat : newCatList) {
+			// This relies on categories being equal by having the same name!
+			removeCategory(cat);
+			addCategory(cat);
+		}
 	}
 }
