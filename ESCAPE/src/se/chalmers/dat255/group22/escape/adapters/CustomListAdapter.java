@@ -49,6 +49,8 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
+    // A temporary task that is displayed if list is empty
+    ListObject emptyListDefaultTask;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -68,6 +70,9 @@ public class CustomListAdapter implements ListAdapter {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
+
+        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
+        emptyListDefaultTask.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -77,6 +82,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
+        boolean noTasks = true;
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
@@ -89,8 +95,13 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
+                noTasks = false;
 			}
 		}
+		if (noTasks)
+            addListObject(emptyListDefaultTask);
+        else
+            removeListObject(emptyListDefaultTask);
 		updateEditButtons();
 	}
 
@@ -229,7 +240,7 @@ public class CustomListAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
-				dbh.deleteListObject(listObject);
+				dbh.purgeListObject(listObject);
 				removeListObject(listObject);
 
 				// v.refreshDrawableState();
