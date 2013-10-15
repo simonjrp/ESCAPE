@@ -8,6 +8,7 @@
     <string name="title_activity_new_task">Add new task</string>
     <string name="todayLabel">Today</string>
     <string name="tomorrowLabel">Tomorrow</string>
+    <string name="thisWeekLabel">This week</string>
     <string name="somedayLabel">Someday</string>
     <string name="editButtonDescription">Edit</string>
     <string name="deleteButtonDescription">Delete</string>

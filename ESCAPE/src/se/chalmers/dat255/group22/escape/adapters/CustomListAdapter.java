@@ -49,8 +49,8 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
-    // A temporary task that is displayed if list is empty
-    ListObject emptyListDefaultTask;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -71,8 +71,10 @@ public class CustomListAdapter implements ListAdapter {
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
 
-        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
-        emptyListDefaultTask.setComment("In this list you can add general things that you need to do!");
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-        boolean noTasks = true;
+		boolean noTasks = true;
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
@@ -95,13 +97,13 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-                noTasks = false;
+				noTasks = false;
 			}
 		}
 		if (noTasks)
-            addListObject(emptyListDefaultTask);
-        else
-            removeListObject(emptyListDefaultTask);
+			addListObject(emptyListDefaultTask);
+		else
+			removeListObject(emptyListDefaultTask);
 		updateEditButtons();
 	}
 
@@ -187,95 +189,104 @@ public class CustomListAdapter implements ListAdapter {
 		updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
 
-		final String childText = listObject.getName();
+		if (getLOShouldBeVisible(listObject)) {
 
-		// final Time childTime = listObject.getTime();
-		String childTimeText = "";
-		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject)
-					.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate)
-					.toString();
-		}
+			final String childText = listObject.getName();
 
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_task, null);
-		}
-
-		// Get a textview for the object
-		final TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
-
-		final TextView childTimeView = (TextView) convertView
-				.findViewById(R.id.startTimeTask);
-
-		final ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
-
-		final ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
-
-		editButton.setVisibility(View.INVISIBLE);
-		deleteButton.setVisibility(View.INVISIBLE);
-
-		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
-		// 300);
-		// deleteButton.setX(convertView.getRight() + 300);
-		editButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
-
-				Bundle bundle = new Bundle();
-				intent.putExtra(EDIT_TASK_MSG, bundle);
-
-				bundle.putInt(INTENT_GET_ID, listObject.getId());
-				intent.setFlags(EDIT_TASK_ID);
-				context.startActivity(intent);
-			}
-		});
-		deleteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				DBHandler dbh = new DBHandler(context);
-				dbh.purgeListObject(listObject);
-				removeListObject(listObject);
-
-				// v.refreshDrawableState();
+			// final Time childTime = listObject.getTime();
+			String childTimeText = "";
+			if (dbHandler.getTime(listObject) != null) {
+				final Date childStartDate = dbHandler.getTime(listObject)
+						.getStartDate();
+				childTimeText = DateFormat.format("HH:mm", childStartDate)
+						.toString();
 			}
 
-		});
+			if (convertView == null || !convertView.isShown()) {
+				LayoutInflater infalInflater = (LayoutInflater) this.context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = infalInflater.inflate(R.layout.list_task, null);
+			}
 
-		// TODO tasks don't have time!
-		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
-		// Get a textview for the object's data
-		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+			// Get a textview for the object
+			final TextView childLabel = (TextView) convertView
+					.findViewById(R.id.listTask);
 
-		// We don't want the data to show yet...
-		childData.setVisibility(View.INVISIBLE);
-		childData.setHeight(0);
+			final TextView childTimeView = (TextView) convertView
+					.findViewById(R.id.startTimeTask);
 
-		childLabel.setText(childText);
+			final ImageButton editButton = (ImageButton) convertView
+					.findViewById(R.id.editButton);
 
-		CustomOnClickListener clickListener = new CustomOnClickListener(
-				listObject, childLabel, childData);
-		convertView.setOnClickListener(clickListener);
-		// TODO We add two listeners since it wont work on one if the other is
-		// added to
-		// Adding touchlisteners
-		convertView.setOnTouchListener(new OptionTouchListener(context,
-				convertView));
-		// convertView.setOnTouchListener(new OptionTouchListener(context,
-		// convertView));
-		if (!getLOShouldBeVisible(listObject))
-			convertView.setVisibility(View.INVISIBLE);
-		else
+			final ImageButton deleteButton = (ImageButton) convertView
+					.findViewById(R.id.deleteButton);
+
+			editButton.setVisibility(View.INVISIBLE);
+			deleteButton.setVisibility(View.INVISIBLE);
+
+			// editButton.setX(convertView.getRight() + deleteButton.getWidth()
+			// +
+			// 300);
+			// deleteButton.setX(convertView.getRight() + 300);
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, NewTaskActivity.class);
+
+					Bundle bundle = new Bundle();
+					intent.putExtra(EDIT_TASK_MSG, bundle);
+
+					bundle.putInt(INTENT_GET_ID, listObject.getId());
+					intent.setFlags(EDIT_TASK_ID);
+					context.startActivity(intent);
+				}
+			});
+			deleteButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					DBHandler dbh = new DBHandler(context);
+					dbh.purgeListObject(listObject);
+					removeListObject(listObject);
+
+					// v.refreshDrawableState();
+				}
+
+			});
+
+			// TODO tasks don't have time!
+			childLabel.setText(childText);
+			childTimeView
+					.setText(childTimeText.equals("") ? "" : childTimeText);
+			// Get a textview for the object's data
+			TextView childData = (TextView) convertView
+					.findViewById(R.id.taskData);
+
+			// We don't want the data to show yet...
+			childData.setVisibility(View.INVISIBLE);
+			childData.setHeight(0);
+
+			childLabel.setText(childText);
+
+			CustomOnClickListener clickListener = new CustomOnClickListener(
+					listObject, childLabel, childData);
+			convertView.setOnClickListener(clickListener);
+			// TODO We add two listeners since it wont work on one if the other
+			// is
+			// added to
+			// Adding touchlisteners
+			convertView.setOnTouchListener(new OptionTouchListener(context,
+					convertView));
+			// convertView.setOnTouchListener(new OptionTouchListener(context,
+			// convertView))
 			convertView.setVisibility(View.VISIBLE);
+		} else {
+			// TODO is there a way to fix visibility without this?
+			convertView = new View(context);
+			convertView.setVisibility(View.INVISIBLE);
+		}
 		return convertView;
 	}
+
 	@Override
 	public int getItemViewType(int i) {
 		return i;
