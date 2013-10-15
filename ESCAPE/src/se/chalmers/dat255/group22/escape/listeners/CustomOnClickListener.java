@@ -80,8 +80,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 		// This happens when the view is clicked...
 		if (isExpanded) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"EEE, dd MMM\nHH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
+					"EEE, dd MMM HH:mm", Locale.getDefault());
+            SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
+                    "EEE, dd MMM\nHH:mm", Locale.getDefault());
 			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
 					Locale.getDefault());
             SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy\nEEE, dd MMM\nHH:mm",
@@ -129,8 +131,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 					// Is the date this year?
 					int year = Calendar.getInstance().get(Calendar.YEAR);
 					if (Integer.parseInt(yearFormat.format(start)) == year) {
-						startTime.setText(dateFormat.format(start));
-						endTime.setText(dateFormat.format(end));
+						startTime.setText(dateFormatMultiLine.format(start));
+						endTime.setText(dateFormatMultiLine.format(end));
 					} else {
                         // If not, add the year in the string
                         startTime.setText(yearWithDateFormat.format(start));
@@ -162,8 +164,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 						taskReminderType
 								.setImageResource(R.drawable.device_access_alarms);
 						taskReminderType.setVisibility(View.VISIBLE);
-						stringBuilder.append(dateFormat.format(dbHandler
-								.getTimeAlarm(listObject).getDate()));
+						stringBuilder.append(dateFormatSingleLine.format(dbHandler
+                                .getTimeAlarm(listObject).getDate()));
 					}
 					taskReminder.setVisibility(View.VISIBLE);
 					taskReminder.setText(stringBuilder.toString());
