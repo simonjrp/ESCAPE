@@ -49,6 +49,8 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
+    // A temporary task that is displayed if list is empty
+    ListObject emptyListDefaultTask;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -68,6 +70,9 @@ public class CustomListAdapter implements ListAdapter {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
+
+        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
+        emptyListDefaultTask.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -77,6 +82,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
+        boolean noTasks = true;
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
@@ -89,8 +95,13 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
+                noTasks = false;
 			}
 		}
+		if (noTasks)
+            addListObject(emptyListDefaultTask);
+        else
+            removeListObject(emptyListDefaultTask);
 		updateEditButtons();
 	}
 
@@ -229,7 +240,7 @@ public class CustomListAdapter implements ListAdapter {
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
-				dbh.deleteListObject(listObject);
+				dbh.purgeListObject(listObject);
 				removeListObject(listObject);
 
 				// v.refreshDrawableState();
@@ -326,7 +337,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Add a category to the category list of categories to be displyed
+	 * Add a category to the list with categories displayed by this adapter.
 	 * 
 	 * @param cat
 	 *            the category to add
@@ -337,8 +348,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * add a list with categories. If a category from input list is already in
-	 * the list it will not be added again.
+	 * add a list with categories to the category list. If a category from input
+	 * list is already in the list it will not be added again.
 	 * 
 	 * @param catList
 	 *            a list with new categories to add into the list
@@ -349,7 +360,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * remove a category from the category list of categories to be displayed
+	 * remove a category from the list with categories displayed by this
+	 * adapter.
 	 * 
 	 * @param cat
 	 *            the category to remove
@@ -381,9 +393,11 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * removes a list with categories.
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
 	 * 
 	 * @param catList
+	 *            List with categories that will be removed
 	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)

@@ -17,6 +17,7 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import android.content.Context;
@@ -59,8 +60,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<String> headerList;
 	// child data in format of header title, data container (ListObject)
 	private HashMap<String, List<ListObject>> objectDataMap;
+	// the categories, including bool for if they should be displayed
+	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
+    // A temporary task that is displayed if list is empty
+    ListObject emptyListDefaultTask;
 
 	/**
 	 * Create a new custom list adapter.
@@ -102,6 +107,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				context.getResources().getString(R.string.somedayLabel),
 				somedayEventList);
 
+		theCategories = new ArrayList<Category>();
+
+        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
+        emptyListDefaultTask.setComment("In this list you can add specific things that you need to do!");
 	}
 
 	/**
@@ -110,13 +119,27 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
+        boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
 			if (dbHandler.getTime(lo) != null) {
+				for (Category cat : dbHandler.getCategories(lo))
+					lo.addToCategory(cat);
+
+				// TODO All categories should be fetched from database!
+				// This category with the same name as the listobject is only
+				// intended to test functionality!
+				lo.addToCategory(new Category(lo.getName(), null, null));
+
 				addListObject(lo);
+                noEvents = false;
 			}
 		}
+        if (noEvents)
+            addListObjectToday(emptyListDefaultTask);
+        else
+            removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -232,7 +255,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		});
 
 		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "no start time"
+		childTimeView.setText(childTimeText.equals("")
+				? "no start time"
 				: childTimeText);
 		// Get a textview for the object's data
 		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
@@ -255,6 +279,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		convertView.setOnTouchListener(new OptionTouchListener(context,
 				convertView));
 
+		if (!getLOShouldBeVisible(listObject))
+			convertView.setVisibility(View.INVISIBLE);
+		else
+			convertView.setVisibility(View.VISIBLE);
 		return convertView;
 	}
 
@@ -373,6 +401,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void addListObjectToday(ListObject listObject) {
 		if (!todayEventList.contains(listObject)) {
 			todayEventList.add(listObject);
+			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
 	}
@@ -386,6 +415,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void addListObjectTomorrow(ListObject listObject) {
 		if (!tomorrowEventList.contains(listObject)) {
 			tomorrowEventList.add(listObject);
+			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
 	}
@@ -399,6 +429,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void addListObjectSomeday(ListObject listObject) {
 		if (!somedayEventList.contains(listObject)) {
 			somedayEventList.add(listObject);
+			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
 	}
@@ -412,6 +443,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void removeListObjectToday(ListObject listObject) {
 		if (todayEventList.contains(listObject)) {
 			todayEventList.remove(listObject);
+			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -425,6 +457,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void removeListObjectTomorrow(ListObject listObject) {
 		if (tomorrowEventList.contains(listObject)) {
 			tomorrowEventList.remove(listObject);
+			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -438,6 +471,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public void removeListObjectSomeday(ListObject listObject) {
 		if (somedayEventList.contains(listObject)) {
 			somedayEventList.remove(listObject);
+			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
 	}
@@ -482,6 +516,153 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			return somedayEventList.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Add a category to the list with categories displayed by this adapter.
+	 * 
+	 * @param cat
+	 *            the category to add
+	 */
+	public void addCategory(Category cat) {
+		if (!theCategories.contains(cat))
+			theCategories.add(cat);
+	}
+
+	/**
+	 * add a list with categories to the category list. If a category from input
+	 * list is already in the list it will not be added again.
+	 * 
+	 * @param catList
+	 *            a list with new categories to add into the list
+	 */
+	public void addCategoryList(List<Category> catList) {
+		for (Category cat : catList)
+			addCategory(cat);
+	}
+
+	/**
+	 * remove a category from the list with categories displayed by this
+	 * adapter.
+	 * 
+	 * @param cat
+	 *            the category to remove
+	 */
+	public void removeCategory(Category cat) {
+		if (theCategories.contains(cat))
+			theCategories.remove(cat);
+	}
+
+	/**
+	 * Remove all categories associated with a ListObject from the list with
+	 * categories displayed by this adapter if they are not part of another
+	 * ListObject displayed in the list
+	 * 
+	 * @param listObject
+	 *            the ListObject to check for categories to remove
+	 */
+	public void removeLoAssociatedCats(ListObject listObject) {
+		for (Category cat : listObject.getCategories()) {
+
+			boolean catIsInList = false;
+
+			for (ListObject lo : this.todayEventList) {
+				if (lo.getCategories().contains(cat)) {
+					catIsInList = true;
+					break;
+				}
+			}
+			if (!catIsInList) {
+				for (ListObject lo : this.tomorrowEventList) {
+					if (lo.getCategories().contains(cat)) {
+						catIsInList = true;
+						break;
+					}
+				}
+			}
+			if (!catIsInList) {
+				for (ListObject lo : this.somedayEventList) {
+					if (lo.getCategories().contains(cat)) {
+						catIsInList = true;
+						break;
+					}
+				}
+			}
+			if (!catIsInList)
+				removeCategory(cat);
+		}
+	}
+
+	/**
+     * removes a list with categories from the list with categories displayed in
+     * by this adapter.
+     *
+     * @param catList
+     *            List with categories that will be removed
+     */
+	public void removeCategoryList(List<Category> catList) {
+		for (Category cat : catList)
+			removeCategory(cat);
+	}
+
+	/**
+	 * Get a category list with all categories possible to display in this
+	 * adapter
+	 * 
+	 * @return a list with all categories
+	 */
+	public List<Category> getTheCategories() {
+		if (theCategories == null)
+			theCategories = new ArrayList<Category>();
+		return theCategories;
+	}
+
+	/**
+	 * Get if a ListObject should be displayed.
+	 * 
+	 * @param lo
+	 *            the list object to check if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getLOShouldBeVisible(ListObject lo) {
+		if (theCategories != null) {
+			for (Category cat : lo.getCategories()) {
+				if (!getCatShouldBeVisible(cat))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Check if a specific category should be displayed.
+	 * 
+	 * @param cat
+	 *            the category to find out if it should be displayed
+	 * @return true if it should be displayed
+	 */
+	public boolean getCatShouldBeVisible(Category cat) {
+		for (Category cat2 : theCategories) {
+			if (cat2.equals(cat))
+				return cat2.getShouldBeDisplayed();
+		}
+		return true;
+	}
+
+	/**
+	 * Replace existing category objects with equals from this list and add new
+	 * ones
+	 * 
+	 * @param newCatList
+	 *            a Category list containing new to display values
+	 */
+	public void addReplaceCategoryList(List<Category> newCatList) {
+		// TODO is this method crap?
+		for (Category cat : newCatList) {
+			// This relies on categories being equal by having the same name!
+			removeCategory(cat);
+			addCategory(cat);
+		}
 	}
 
 	/**
