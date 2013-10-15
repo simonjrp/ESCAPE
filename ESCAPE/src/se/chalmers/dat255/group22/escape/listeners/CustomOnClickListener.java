@@ -3,20 +3,19 @@ package se.chalmers.dat255.group22.escape.listeners;
 import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.text.format.Time;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,14 +62,16 @@ public class CustomOnClickListener implements View.OnClickListener {
 		taskComment = (TextView) taskDataLayout
 				.findViewById(R.id.taskDataComment);
 		taskPlace = (TextView) taskDataLayout.findViewById(R.id.taskDataPlace);
-		taskTimeLayout = (RelativeLayout) taskDataLayout.findViewById(R.id.taskDataTimeLayout);
+		taskTimeLayout = (RelativeLayout) taskDataLayout
+				.findViewById(R.id.taskDataTimeLayout);
 		taskReminder = (TextView) taskDataLayout
 				.findViewById(R.id.taskDataReminder);
 		taskReminderType = (ImageView) taskDataLayout
 				.findViewById(R.id.taskDataReminderType);
 		isExpanded = false;
 		dbHandler = new DBHandler(parent.getContext());
-		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":" + NEW_ROW;
+		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":"
+				+ NEW_ROW;
 	}
 
 	@Override
@@ -79,33 +80,24 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 		// This happens when the view is clicked...
 		if (isExpanded) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"EEE, dd MMM\nHH:mm", Locale.getDefault());
+			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
+					Locale.getDefault());
+            SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy\nEEE, dd MMM\nHH:mm",
+                    Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
 			if (!v.findViewById(R.id.editButton).isShown()) {
-				Time start = new Time();
-				Time end = new Time();
-
-				// If the listObject has a time (AKA is an event)...
-				if (dbHandler.getTime(listObject) != null) {
-					// ... get the start and end time...
-					long startTime = dbHandler.getTime(listObject)
-							.getStartDate().getTime();
-					long endTime = dbHandler.getTime(listObject).getEndDate()
-							.getTime();
-					// ... and set them to the local variables.
-					start.set(startTime);
-					end.set(endTime);
-				} else {
-					start = null;
-					end = null;
-				}
+				Date start = null;
+				Date end = null;
 
 				if (listObject.getComment() != null) {
 					taskComment.setText(listObject.getComment());
 					taskComment.setVisibility(View.VISIBLE);
-                    if(start!=null)
-                        taskComment.setMinLines(4);
-                    else
-                        taskComment.setMinLines(0);
+					if (start != null)
+						taskComment.setMinLines(4);
+					else
+						taskComment.setMinLines(0);
 				} else {
 					taskComment.setVisibility(View.GONE);
 				}
@@ -117,13 +109,33 @@ public class CustomOnClickListener implements View.OnClickListener {
 					taskPlace.setVisibility(View.GONE);
 				}
 
-                // If we have a time...
+				// If the listObject has a time (AKA is an event)...
+				if (dbHandler.getTime(listObject) != null) {
+					// ... get the start and end dates...
+					start = dbHandler.getTime(listObject).getStartDate();
+					end = dbHandler.getTime(listObject).getEndDate();
+
+				} else {
+					start = null;
+					end = null;
+				}
+
+				// If we have a time...
 				if (start != null) {
-                    TextView startTime = (TextView)v.findViewById(R.id.taskDataStartTime);
-                    TextView endTime = (TextView)v.findViewById(R.id.taskDataEndTime);
-                    // TODO Format and fix
-					startTime.setText("10/5-15:30");
-                    endTime.setText("10/12-17:30");
+					TextView startTime = (TextView) v
+							.findViewById(R.id.taskDataStartTime);
+					TextView endTime = (TextView) v
+							.findViewById(R.id.taskDataEndTime);
+					// Is the date this year?
+					int year = Calendar.getInstance().get(Calendar.YEAR);
+					if (Integer.parseInt(yearFormat.format(start)) == year) {
+						startTime.setText(dateFormat.format(start));
+						endTime.setText(dateFormat.format(end));
+					} else {
+                        // If not, add the year in the string
+                        startTime.setText(yearWithDateFormat.format(start));
+                        endTime.setText(yearWithDateFormat.format(end));
+                    }
 					taskTimeLayout.setVisibility(View.VISIBLE);
 				} else {
 					taskTimeLayout.setVisibility(View.GONE);
@@ -132,34 +144,34 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// Does the listObject have a reminder?
 				if (dbHandler.getTimeAlarm(listObject) != null
 						|| dbHandler.getGPSAlarm(listObject) != null) {
-                    View separator = v.findViewById(R.id.taskDataSeparator);
-                    separator.setVisibility(View.VISIBLE);
+					View separator = v.findViewById(R.id.taskDataSeparator);
+					separator.setVisibility(View.VISIBLE);
 					StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append(REMIND_ME_AT);
-					// TODO TimeAlarm needs to be removed, change to if == null
+					stringBuilder.append(REMIND_ME_AT);
 					// when it is removable
 					// If it is a GPSAlarm...
-					if (dbHandler.getTimeAlarm(listObject) != null
+					if (dbHandler.getTimeAlarm(listObject) == null
 							&& dbHandler.getGPSAlarm(listObject) != null) {
 						taskReminderType
 								.setImageResource(R.drawable.location_place);
-                        stringBuilder.append(dbHandler.getGPSAlarm(listObject).getAdress());
-                        // If it is a TimeAlarm...
+						stringBuilder.append(dbHandler.getGPSAlarm(listObject)
+								.getAdress());
+						// If it is a TimeAlarm...
 					} else if (dbHandler.getTimeAlarm(listObject) != null
 							&& dbHandler.getGPSAlarm(listObject) == null) {
 						taskReminderType
 								.setImageResource(R.drawable.device_access_alarms);
 						taskReminderType.setVisibility(View.VISIBLE);
-                        // TODO Format time
-                        stringBuilder.append(dbHandler.getTimeAlarm(listObject).getDate().toString());
+						stringBuilder.append(dateFormat.format(dbHandler
+								.getTimeAlarm(listObject).getDate()));
 					}
-                    taskReminder.setVisibility(View.VISIBLE);
-                    taskReminder.setText(stringBuilder.toString());
+					taskReminder.setVisibility(View.VISIBLE);
+					taskReminder.setText(stringBuilder.toString());
 				} else {
 					taskReminderType.setVisibility(View.GONE);
-                    taskReminder.setVisibility(View.GONE);
-                    View separator = v.findViewById(R.id.taskDataSeparator);
-                    separator.setVisibility(View.GONE);
+					taskReminder.setVisibility(View.GONE);
+					View separator = v.findViewById(R.id.taskDataSeparator);
+					separator.setVisibility(View.GONE);
 				}
 
 				taskDataLayout.setVisibility(View.VISIBLE);
@@ -167,14 +179,15 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// "this is the selected item"
 				parent.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-				TranslateAnimation slide = new TranslateAnimation(0, 0, -70, 0);
-				slide.setDuration(100);
+				TranslateAnimation slide = new TranslateAnimation(0, 0, -50, 0);
+				slide.setDuration(150);
 				slide.setFillAfter(true);
-                slide.setFillEnabled(true);
+				slide.setFillEnabled(true);
 				taskDataLayout.setAnimation(slide);
 				slide.start();
-                TextView timeView = (TextView)v.findViewById(R.id.startTimeTask);
-                timeView.setVisibility(View.INVISIBLE);
+				TextView timeView = (TextView) v
+						.findViewById(R.id.startTimeTask);
+				timeView.setVisibility(View.INVISIBLE);
 
 			}
 
@@ -184,15 +197,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 			dismissButtons(v);
 		} else {
 			// If the view is only expanded, hide it again
-			dismissDetails();
-            TranslateAnimation slide = new TranslateAnimation(0, 0, 0, -70);
-            slide.setDuration(100);
-            slide.setFillBefore(true);
-            slide.setFillEnabled(true);
-            taskDataLayout.setAnimation(slide);
-            slide.start();
-            TextView timeView = (TextView)v.findViewById(R.id.startTimeTask);
-            timeView.setVisibility(View.VISIBLE);
+			dismissDetails(v);
 		}
 
 	}
@@ -215,9 +220,12 @@ public class CustomOnClickListener implements View.OnClickListener {
 		deleteButton.clearAnimation();
 	}
 
-	private void dismissDetails() {
+	private void dismissDetails(View v) {
+		taskDataLayout.clearAnimation();
 		taskDataLayout.setVisibility(View.GONE);
 		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
+		TextView timeView = (TextView) v.findViewById(R.id.startTimeTask);
+		timeView.setVisibility(View.VISIBLE);
 
 	}
 }

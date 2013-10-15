@@ -5,8 +5,10 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
@@ -184,8 +186,8 @@ public class CustomListAdapter implements ListAdapter {
 		if (dbHandler.getTime(listObject) != null) {
 			final Date childStartDate = dbHandler.getTime(listObject)
 					.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate)
-					.toString();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			childTimeText = dateFormat.format(childStartDate);
 		}
 
 		if (convertView == null) {

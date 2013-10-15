@@ -23,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:textColor="#000000"
-                android:textSize="@dimen/textsize_large"/>
+                android:textSize="@dimen/textsize_medium"
+                android:lines="1"/>
 
             <TextView
                 android:id="@+id/startTimeTask"
@@ -47,21 +48,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageButton
                     android:id="@+id/editButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:visibility="invisible"
                     style="@android:style/Widget.ActionButton"
                     android:contentDescription="@string/editButtonDescription"
-                    android:src="@android:drawable/ic_menu_edit"/>
+                    android:src="@android:drawable/ic_menu_edit"
+                    android:layout_marginRight="@dimen/ui_element_gap"/>
 
                 <ImageButton
                     android:id="@+id/deleteButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:visibility="invisible"
                     style="@android:style/Widget.ActionButton"
                     android:contentDescription="@string/deleteButtonDescription"
@@ -82,14 +85,14 @@
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/ui_element_gap"
             android:orientation="horizontal"
-            android:weightSum="11"
+            android:weightSum="12"
             >
 
             <LinearLayout
                 android:id="@+id/taskDataTopLeftLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="8"
+                android:layout_weight="9"
                 android:weightSum="10"
                 android:orientation="vertical"
                 >
