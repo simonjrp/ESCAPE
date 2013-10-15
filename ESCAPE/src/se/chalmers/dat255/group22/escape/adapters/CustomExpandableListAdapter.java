@@ -200,96 +200,104 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 
-		// TODO Should this make use of the database?
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
-		// Get the name of the task to display for each task entry
-		final String childText = listObject.getName();
 
-		// Get the time if it exists
-		String childTimeText = "";
-		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject)
-					.getStartDate();
-			childTimeText = DateFormat.format("hh:mm", childStartDate)
-					.toString();
-		}
+		if (getLOShouldBeVisible(listObject)) {
 
-		LayoutInflater infalInflater = (LayoutInflater) this.context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		convertView = infalInflater.inflate(R.layout.list_task, null);
+			// Get the name of the task to display for each task entry
+			final String childText = listObject.getName();
 
-		// Get a textview for the object
-		TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
-
-		TextView childTimeView = (TextView) convertView
-				.findViewById(R.id.startTimeTask);
-
-		ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
-
-		ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
-
-		resetEditButtons();
-
-		// OnClickListener for sending an intent with the ID of the listObject
-		// that was clicked
-		editButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
-
-				Bundle bundle = new Bundle();
-				intent.putExtra(EDIT_TASK_MSG, bundle);
-
-				bundle.putInt(INTENT_GET_ID, listObject.getId());
-				intent.setFlags(EDIT_TASK_ID);
-				context.startActivity(intent);
-			}
-		});
-		deleteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				DBHandler dbh = new DBHandler(context);
-				dbh.deleteListObject(listObject);
-				removeListObjectToday(listObject);
-				removeListObjectTomorrow(listObject);
-				removeListObjectSomeday(listObject);
+			// Get the time if it exists
+			String childTimeText = "";
+			if (dbHandler.getTime(listObject) != null) {
+				final Date childStartDate = dbHandler.getTime(listObject)
+						.getStartDate();
+				childTimeText = DateFormat.format("hh:mm", childStartDate)
+						.toString();
 			}
 
-		});
+			if (convertView == null || !convertView.isShown()) {
+				LayoutInflater infalInflater = (LayoutInflater) this.context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = infalInflater.inflate(R.layout.list_task, null);
+			}
+			// Get a textview for the object
+			TextView childLabel = (TextView) convertView
+					.findViewById(R.id.listTask);
 
-		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("")
-				? "no start time"
-				: childTimeText);
-		// Get a textview for the object's data
-		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+			TextView childTimeView = (TextView) convertView
+					.findViewById(R.id.startTimeTask);
 
-		// We don't want the data to show yet...
-		childData.setVisibility(View.INVISIBLE);
-		childData.setHeight(0);
+			ImageButton editButton = (ImageButton) convertView
+					.findViewById(R.id.editButton);
 
-		childLabel.setText(childText);
+			ImageButton deleteButton = (ImageButton) convertView
+					.findViewById(R.id.deleteButton);
 
-		// Custom listener for showing/hiding data relevant to the listObject
-		CustomOnClickListener clickListener = new CustomOnClickListener(
-				listObject, childLabel, childData);
-		convertView.setOnClickListener(clickListener);
+			resetEditButtons();
 
-		// We add two listeners since it wont work on one if the other is added
-		// too
+			// OnClickListener for sending an intent with the ID of the
+			// listObject
+			// that was clicked
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, NewTaskActivity.class);
 
-		// Adding touchlisteners
-		convertView.setOnTouchListener(new OptionTouchListener(context,
-				convertView));
+					Bundle bundle = new Bundle();
+					intent.putExtra(EDIT_TASK_MSG, bundle);
 
-		if (!getLOShouldBeVisible(listObject))
-			convertView.setVisibility(View.INVISIBLE);
-		else
+					bundle.putInt(INTENT_GET_ID, listObject.getId());
+					intent.setFlags(EDIT_TASK_ID);
+					context.startActivity(intent);
+				}
+			});
+			deleteButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DBHandler dbh = new DBHandler(context);
+                    dbh.purgeListObject(listObject);
+                    removeListObjectToday(listObject);
+                    removeListObjectTomorrow(listObject);
+                    removeListObjectSomeday(listObject);
+                }
+
+            });
+
+			childLabel.setText(childText);
+			childTimeView.setText(childTimeText.equals("")
+					? "no start time"
+					: childTimeText);
+			// Get a textview for the object's data
+			TextView childData = (TextView) convertView
+					.findViewById(R.id.taskData);
+
+			// We don't want the data to show yet...
+			childData.setVisibility(View.INVISIBLE);
+			childData.setHeight(0);
+
+			childLabel.setText(childText);
+
+			// Custom listener for showing/hiding data relevant to the
+			// listObject
+			CustomOnClickListener clickListener = new CustomOnClickListener(
+					listObject, childLabel, childData);
+			convertView.setOnClickListener(clickListener);
+
+			// We add two listeners since it wont work on one if the other is
+			// added
+			// too
+
+			// Adding touchlisteners
+			convertView.setOnTouchListener(new OptionTouchListener(context,
+					convertView));
 			convertView.setVisibility(View.VISIBLE);
+		} else {
+			// TODO is there a way to fix visibility without this?
+			convertView = new View(context);
+			convertView.setVisibility(View.INVISIBLE);
+		}
 		return convertView;
 	}
 
