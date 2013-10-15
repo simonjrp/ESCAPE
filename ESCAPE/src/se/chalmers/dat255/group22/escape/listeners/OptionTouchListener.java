@@ -52,7 +52,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 	public void onLongTouchAction(View v) {
 
 		// If the view is not expanded...
-		if (!v.findViewById(R.id.taskData).isShown()) {
+		if (!v.findViewById(R.id.taskDataLayout).isShown()) {
 			// ...remove the time text and make the buttons visible...
 			timeText.setVisibility(View.INVISIBLE);
 			editButton.setVisibility(View.VISIBLE);
@@ -63,7 +63,6 @@ public class OptionTouchListener extends LongTouchActionListener {
 			slide.setDuration(250);
 			slide.setFillAfter(true);
 			slide.setFillEnabled(true);
-
 
 			// ...and if the animation for this button is null (AKA previously
 			// cleared or first time initiated), we set the animation once again

@@ -247,12 +247,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		childTimeView.setText(childTimeText.equals("")
 				? "no start time"
 				: childTimeText);
-		// Get a textview for the object's data
-		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+		// Get the layout for the object's data
+		RelativeLayout childData = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
 
 		// We don't want the data to show yet...
-		childData.setVisibility(View.INVISIBLE);
-		childData.setHeight(0);
+		childData.setVisibility(View.GONE);
 
 		childLabel.setText(childText);
 

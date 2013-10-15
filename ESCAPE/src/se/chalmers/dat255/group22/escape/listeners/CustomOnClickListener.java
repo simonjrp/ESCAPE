@@ -1,168 +1,223 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
 import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EMPTY;
-import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
 import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
-import static se.chalmers.dat255.group22.escape.utils.Constants.NO_HEIGHT;
-import static se.chalmers.dat255.group22.escape.utils.Constants.TEXTVIEW_HEIGHT_OFFSET;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.text.format.Time;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
  * information about the object when it is clicked. Ideal for a
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.
- *
+ * 
  * @author tholene
  */
 public class CustomOnClickListener implements View.OnClickListener {
 
-    private static String REMIND_ME_AT;
-    private TextView childLabel;
-    private TextView taskData;
-    private ListObject listObject;
-    private boolean isExpanded;
-    private DBHandler dbHandler;
+	private static String REMIND_ME_AT;
+	private TextView parent;
+	private RelativeLayout taskDataLayout;
+	private ListObject listObject;
+	private boolean isExpanded;
+	private DBHandler dbHandler;
+	private TextView taskComment;
+	private TextView taskPlace;
+	private RelativeLayout taskTimeLayout;
+	private TextView taskReminder;
+	private ImageView taskReminderType;
+	/**
+	 * Create a new CustomOnClickListener.
+	 * 
+	 * @param listObject
+	 *            the
+	 *            {@link se.chalmers.dat255.group22.escape.objects.ListObject}
+	 *            that contains the data to be viewed.
+	 * @param parent
+	 *            the TextView that the listener will be added to.
+	 * @param taskDataLayout
+	 *            the TextView containing the data that is associated with this
+	 *            particular listObject
+	 */
+	public CustomOnClickListener(ListObject listObject, TextView parent,
+			RelativeLayout taskDataLayout) {
+		this.listObject = listObject;
+		this.parent = parent;
 
-    /**
-     * Create a new CustomOnClickListener.
-     *
-     * @param listObject
-     *            the
-     *            {@link se.chalmers.dat255.group22.escape.objects.ListObject}
-     *            that contains the data to be viewed.
-     * @param childLabel
-     *            the TextView that the listener will be added to.
-     * @param taskData
-     *            the TextView containing the data that is associated with this
-     *            particular listObject
-     */
-    public CustomOnClickListener(ListObject listObject, TextView childLabel,
-                                 TextView taskData) {
-        this.listObject = listObject;
-        this.childLabel = childLabel;
-        this.taskData = taskData;
-        isExpanded = false;
-        dbHandler = new DBHandler(childLabel.getContext());
-        REMIND_ME_AT = childLabel.getContext().getString(R.string.remind_me)
-                + " ";
-    }
+		this.taskDataLayout = taskDataLayout;
 
-    @Override
-    public void onClick(View v) {
-        isExpanded = !isExpanded;
+		taskComment = (TextView) taskDataLayout
+				.findViewById(R.id.taskDataComment);
+		taskPlace = (TextView) taskDataLayout.findViewById(R.id.taskDataPlace);
+		taskTimeLayout = (RelativeLayout) taskDataLayout.findViewById(R.id.taskDataTimeLayout);
+		taskReminder = (TextView) taskDataLayout
+				.findViewById(R.id.taskDataReminder);
+		taskReminderType = (ImageView) taskDataLayout
+				.findViewById(R.id.taskDataReminderType);
+		isExpanded = false;
+		dbHandler = new DBHandler(parent.getContext());
+		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":" + NEW_ROW;
+	}
 
-        // This happens when the view is clicked...
-        if (isExpanded) {
-            // ... and the edit/remove buttons are not showing.
-            if (!v.findViewById(R.id.editButton).isShown()) {
-                Time start = new Time();
-                Time end = new Time();
+	@Override
+	public void onClick(View v) {
+		isExpanded = !isExpanded;
 
-                // If the listObject has a time (AKA is an event)...
-                if (dbHandler.getTime(listObject) != null) {
-                    // ... get the start and end time...
-                    long startTime = dbHandler.getTime(listObject)
-                            .getStartDate().getTime();
-                    long endTime = dbHandler.getTime(listObject).getEndDate()
-                            .getTime();
-                    // ... and set them to the local variables.
-                    start.set(startTime);
-                    end.set(endTime);
-                } else {
-                    start = null;
-                    end = null;
-                }
+		// This happens when the view is clicked...
+		if (isExpanded) {
+			// ... and the edit/remove buttons are not showing.
+			if (!v.findViewById(R.id.editButton).isShown()) {
+				Time start = new Time();
+				Time end = new Time();
 
-                // Start building the string that will contain the various data
-                // associated with this particular listObject.
-                StringBuilder builder = new StringBuilder();
+				// If the listObject has a time (AKA is an event)...
+				if (dbHandler.getTime(listObject) != null) {
+					// ... get the start and end time...
+					long startTime = dbHandler.getTime(listObject)
+							.getStartDate().getTime();
+					long endTime = dbHandler.getTime(listObject).getEndDate()
+							.getTime();
+					// ... and set them to the local variables.
+					start.set(startTime);
+					end.set(endTime);
+				} else {
+					start = null;
+					end = null;
+				}
 
-                if (listObject.getComment() != null)
-                    builder.append(listObject.getComment());
-                if (dbHandler.getPlace(listObject) != null)
-                    // No "    " or places as such are allowed.
-                    if (dbHandler.getPlace(listObject).getName().trim()
-                            .length() != EMPTY)
-                        if (listObject.getComment() == null)
-                            builder.append(dbHandler.getPlace(listObject)
-                                    .getName());
-                        else
-                            builder.append(NEW_ROW).append(
-                                    dbHandler.getPlace(listObject).getName());
-                if (start != null)
-                    // Format the start time to HH:MM...
-                    builder.append(NEW_ROW).append(
-                            start.format(HOUR_MINUTE_FORMAT));
-                if (end != null)
-                    // ...and format the end time to HH:MM
-                    builder.append("-").append(end.format(HOUR_MINUTE_FORMAT));
-                if (dbHandler.getTimeAlarm(listObject) != null)
-                    // If this listObject has a reminder, present is aswell
-                    builder.append(NEW_ROW + REMIND_ME_AT).append(
-                            dbHandler.getTimeAlarm(listObject).getDate()
-                                    .toString());
+				if (listObject.getComment() != null) {
+					taskComment.setText(listObject.getComment());
+					taskComment.setVisibility(View.VISIBLE);
+                    if(start!=null)
+                        taskComment.setMinLines(4);
+                    else
+                        taskComment.setMinLines(0);
+				} else {
+					taskComment.setVisibility(View.GONE);
+				}
 
-                // Set the string to textView
-                taskData.setText(builder.toString());
+				if (dbHandler.getPlace(listObject) != null) {
+					taskPlace.setText(dbHandler.getPlace(listObject).getName());
+					taskPlace.setVisibility(View.VISIBLE);
+				} else {
+					taskPlace.setVisibility(View.GONE);
+				}
 
-                // If the string was built and contained something...
-                if (taskData.getText() != null) {
-                    // Make the textView visible and set the height relative to
-                    // the amount of lines
-                    taskData.setVisibility(View.VISIBLE);
+                // If we have a time...
+				if (start != null) {
+                    TextView startTime = (TextView)v.findViewById(R.id.taskDataStartTime);
+                    TextView endTime = (TextView)v.findViewById(R.id.taskDataEndTime);
+                    // TODO Format and fix
+					startTime.setText("10/5-15:30");
+                    endTime.setText("10/12-17:30");
+					taskTimeLayout.setVisibility(View.VISIBLE);
+				} else {
+					taskTimeLayout.setVisibility(View.GONE);
+				}
 
-                    taskData.setHeight(taskData.getLineCount()
-                            * taskData.getLineHeight() + TEXTVIEW_HEIGHT_OFFSET);
+				// Does the listObject have a reminder?
+				if (dbHandler.getTimeAlarm(listObject) != null
+						|| dbHandler.getGPSAlarm(listObject) != null) {
+                    View separator = v.findViewById(R.id.taskDataSeparator);
+                    separator.setVisibility(View.VISIBLE);
+					StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(REMIND_ME_AT);
+					// TODO TimeAlarm needs to be removed, change to if == null
+					// when it is removable
+					// If it is a GPSAlarm...
+					if (dbHandler.getTimeAlarm(listObject) != null
+							&& dbHandler.getGPSAlarm(listObject) != null) {
+						taskReminderType
+								.setImageResource(R.drawable.location_place);
+                        stringBuilder.append(dbHandler.getGPSAlarm(listObject).getAdress());
+                        // If it is a TimeAlarm...
+					} else if (dbHandler.getTimeAlarm(listObject) != null
+							&& dbHandler.getGPSAlarm(listObject) == null) {
+						taskReminderType
+								.setImageResource(R.drawable.device_access_alarms);
+						taskReminderType.setVisibility(View.VISIBLE);
+                        // TODO Format time
+                        stringBuilder.append(dbHandler.getTimeAlarm(listObject).getDate().toString());
+					}
+                    taskReminder.setVisibility(View.VISIBLE);
+                    taskReminder.setText(stringBuilder.toString());
+				} else {
+					taskReminderType.setVisibility(View.GONE);
+                    taskReminder.setVisibility(View.GONE);
+                    View separator = v.findViewById(R.id.taskDataSeparator);
+                    separator.setVisibility(View.GONE);
+				}
 
-                    // Make the header label underlined to indicate that
-                    // "this is the selected item"
-                    // Also "style" the text of the details somewhat
-                    taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
-                    childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-                }
-            }
-            // If the edit/remove buttons are shown and you click the
-            // listObject...
-        } else if (v.findViewById(R.id.editButton).isShown()) {
-            dismissButtons(v);
-        } else {
-            // If the view is only expanded, hide it again
-            dismissDetails();
-        }
+				taskDataLayout.setVisibility(View.VISIBLE);
+				// Make the header label underlined to indicate that
+				// "this is the selected item"
+				parent.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-    }
+				TranslateAnimation slide = new TranslateAnimation(0, 0, -70, 0);
+				slide.setDuration(100);
+				slide.setFillAfter(true);
+                slide.setFillEnabled(true);
+				taskDataLayout.setAnimation(slide);
+				slide.start();
+                TextView timeView = (TextView)v.findViewById(R.id.startTimeTask);
+                timeView.setVisibility(View.INVISIBLE);
 
-    private void dismissButtons(View v) {
-        // ...we basically hide the buttons and reset the view to it's
-        // "Original State"
-        // We also clear the animations to make sure they can run again if
-        // invoked
-        TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
-        timeText.setVisibility(View.VISIBLE);
+			}
 
-        ImageButton editButton = (ImageButton) v.findViewById(R.id.editButton);
-        editButton.setVisibility(View.INVISIBLE);
-        editButton.clearAnimation();
+			// If the edit/remove buttons are shown and you click the
+			// listObject...
+		} else if (v.findViewById(R.id.editButton).isShown()) {
+			dismissButtons(v);
+		} else {
+			// If the view is only expanded, hide it again
+			dismissDetails();
+            TranslateAnimation slide = new TranslateAnimation(0, 0, 0, -70);
+            slide.setDuration(100);
+            slide.setFillBefore(true);
+            slide.setFillEnabled(true);
+            taskDataLayout.setAnimation(slide);
+            slide.start();
+            TextView timeView = (TextView)v.findViewById(R.id.startTimeTask);
+            timeView.setVisibility(View.VISIBLE);
+		}
 
-        ImageButton deleteButton = (ImageButton) v
-                .findViewById(R.id.deleteButton);
-        deleteButton.setVisibility(View.INVISIBLE);
-        deleteButton.clearAnimation();
-    }
+	}
 
-    private void dismissDetails() {
-        taskData.setVisibility(View.INVISIBLE);
-        taskData.setHeight(NO_HEIGHT);
-        childLabel.setPaintFlags(DEFAULT_PAINT_FLAG);
+	private void dismissButtons(View v) {
+		// ...we basically hide the buttons and reset the view to it's
+		// "Original State"
+		// We also clear the animations to make sure they can run again if
+		// invoked
+		TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
+		timeText.setVisibility(View.VISIBLE);
 
-    }
+		ImageButton editButton = (ImageButton) v.findViewById(R.id.editButton);
+		editButton.setVisibility(View.INVISIBLE);
+		editButton.clearAnimation();
+
+		ImageButton deleteButton = (ImageButton) v
+				.findViewById(R.id.deleteButton);
+		deleteButton.setVisibility(View.INVISIBLE);
+		deleteButton.clearAnimation();
+	}
+
+	private void dismissDetails() {
+		taskDataLayout.setVisibility(View.GONE);
+		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
+
+	}
 }

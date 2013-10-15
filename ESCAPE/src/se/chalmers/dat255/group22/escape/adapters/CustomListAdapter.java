@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -240,12 +241,11 @@ public class CustomListAdapter implements ListAdapter {
 		// TODO tasks don't have time!
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
-		// Get a textview for the object's data
-		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+		// Get the layout for the object's data
+		RelativeLayout childData = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
 
 		// We don't want the data to show yet...
-		childData.setVisibility(View.INVISIBLE);
-		childData.setHeight(0);
+		childData.setVisibility(View.GONE);
 
 		childLabel.setText(childText);
 
