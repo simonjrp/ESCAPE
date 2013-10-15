@@ -34,6 +34,7 @@ import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -135,16 +136,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		totalList.addAll(databaseList);
 		// TODO Add removal of old events
 
-		// TODO Add sorting
 		List<IBlockObject> blocks = dbHandler.getAllBlocks();
-		blocks.clear();
-		IBlockObject block1 = new BlockObject("working", TimeWindow.WORKING, 10, 44);
-		IBlockObject block2 = new BlockObject("working2", TimeWindow.WORKING, 10, 60);
-		IBlockObject block3 = new BlockObject("all", TimeWindow.ALL, 30, 60);
-		blocks.add(block1);
-		blocks.add(block2);
-		blocks.add(block3);
-		// TODO Add autogenerator calling
+		Log.d("BLOCK", "" + blocks.size());
 
 		if (blocks != null && !blocks.isEmpty()) {
 			// If there hasn't been an autogeneration we check to see if the old

@@ -19,7 +19,7 @@ import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 /**
  * A utility for autogenerating splittable blocks into a schedule
  * 
- * @author anno
+ * @author Mike
  * 
  */
 public class AutoGenerator {
