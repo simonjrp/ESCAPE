@@ -14,8 +14,11 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.BlockObject;
 import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.utilities.AutoGenerator;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -76,8 +79,9 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public void reInit() {
 		// Fetch tasks from database
-		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		for (ListObject lo : listObjects) {
+		List<ListObject> databaseList = dbHandler.getAllListObjects();
+		
+		for (ListObject lo : databaseList) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
 				for (Category cat : dbHandler.getCategories(lo))

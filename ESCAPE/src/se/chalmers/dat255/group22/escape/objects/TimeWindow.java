@@ -12,4 +12,12 @@ public enum TimeWindow {
 	public int getNumVal() {
 		return numVal;
 	}
+	
+	public static TimeWindow parseNumVal(int value) {
+		switch (value) {
+		case 1: return WORKING;
+		case 2: return LEISURE;
+		default: return ALL;
+		}
+	}
 }

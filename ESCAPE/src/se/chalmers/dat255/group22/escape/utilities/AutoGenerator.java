@@ -31,15 +31,31 @@ public class AutoGenerator {
 	private List<IBlockObject> blocks;
 
 	/**
-	 * Lists are mutated inside this class.
+	 * Lists are not mutated inside this class.
 	 * 
 	 * @param currentSchedule
 	 * @param blocks
 	 */
 	public AutoGenerator(List<ListObject> currentSchedule,
 			List<IBlockObject> blocks) {
-		this.schedule = currentSchedule;
-		this.blocks = blocks;
+		this.schedule = currentSchedule == null ? new ArrayList<ListObject>()
+				: new ArrayList<ListObject>(currentSchedule);
+		this.blocks = blocks == null ? new ArrayList<IBlockObject>()
+				: new LinkedList<IBlockObject>(blocks);
+	}
+
+	/**
+	 * @return the schedule
+	 */
+	public List<ListObject> getSchedule() {
+		return schedule;
+	}
+
+	/**
+	 * @return the blocks
+	 */
+	public List<IBlockObject> getBlocks() {
+		return blocks;
 	}
 
 	public List<ListObject> generate() {
@@ -55,8 +71,6 @@ public class AutoGenerator {
 			end.add(Calendar.DAY_OF_WEEK, 1);
 		}
 		end.add(Calendar.HOUR_OF_DAY, 24);
-		// Log.d("Generate: TODAY", sdf.format(now.getTimeInMillis()));
-		// Log.d("Generate: SUNDAY", sdf.format(end.getTimeInMillis()));
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
@@ -64,7 +78,10 @@ public class AutoGenerator {
 		// Place the nights sorted together with the original schedule
 		Iterator<ListObject> iterator = schedule.iterator();
 		while (iterator.hasNext()) {
-			totalList.add(convertListObject(iterator.next()));
+			TimeBox timeBox = convertListObject(iterator.next());
+			if (timeBox != null) {
+				totalList.add(timeBox);
+			}
 		}
 
 		
@@ -479,7 +496,7 @@ public class AutoGenerator {
 
 	public boolean validate(List<ListObject> newSchedule,
 			List<ListObject> generatedSchedule) {
-		List<ListObject> list = newSchedule;
+		List<ListObject> list = new ArrayList<ListObject>(newSchedule);
 		list.addAll(generatedSchedule);
 		Collections.sort(list, new Comparator<ListObject>() {
 			/*

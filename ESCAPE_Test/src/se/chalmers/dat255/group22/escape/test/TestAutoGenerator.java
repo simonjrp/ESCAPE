@@ -78,6 +78,37 @@ public class TestAutoGenerator extends AndroidTestCase {
 		}
 		Log.d("ListObjects", sb.toString());
 	}
+	
+public void testWithoutSchedule() {
+		
+		List<ListObject> schedule = new LinkedList<ListObject>();
+			
+
+		List<IBlockObject> blocks = new LinkedList<IBlockObject>();
+		IBlockObject block1 = new BlockObject("working", TimeWindow.WORKING, 10,
+				44);
+		IBlockObject block2 = new BlockObject("working2", TimeWindow.WORKING, 10, 60);
+		IBlockObject block3 = new BlockObject("all", TimeWindow.ALL, 30, 60);
+		blocks.add(block1);
+		blocks.add(block2);
+		blocks.add(block3);
+
+		AutoGenerator auto = new AutoGenerator(schedule, blocks);
+		List<ListObject> test = auto.generate();
+
+		assertTrue(test != null);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm:ss.SSS");
+		StringBuilder sb = new StringBuilder();
+		sb.append("Count: " + test.size() + "\n");
+		for (ListObject lo : test) {
+			Time time = lo.getTime();
+			sb.append("" + lo.getName() + ": "
+					+ sdf.format(time.getStartDate()) + " to "
+					+ sdf.format(time.getEndDate()) + "\n");
+		}
+		Log.d("ListObjects", sb.toString());
+	}
 
 //	public void testAddNights() {
 //		AutoGenerator auto = new AutoGenerator(null, null);

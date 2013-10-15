@@ -6,20 +6,27 @@ public class BlockObject implements IBlockObject {
 	private TimeWindow timeWindow;
 	private int hours;
 	private int sessionMinutes;
-	private int splitAmount;
-	private int lastSplitMinutes;
+	private int id;
 	
 	public BlockObject(String name, TimeWindow timeWindow, int hours,
 			int sessionMinutes) {
+		this.id = -1;
 		this.name = name;
 		this.timeWindow = timeWindow;
 		this.hours = hours;
 		this.sessionMinutes = sessionMinutes;
-		this.splitAmount = (hours * 60 % sessionMinutes > 0 ? (hours * 60 / sessionMinutes) + 1
-				: hours * 60 / sessionMinutes);
-		this.lastSplitMinutes = (hours * 60 % sessionMinutes > 0 ? hours * 60
-				% sessionMinutes : sessionMinutes);
 
+	}
+	public BlockObject(int id, String name, TimeWindow timeWindow, int hours,
+			int sessionMinutes) {
+		this(name, timeWindow, hours, sessionMinutes);
+		this.id = id;
+
+	}
+	
+	@Override
+	public int getId() {
+		return id;
 	}
 
 	@Override
@@ -44,12 +51,14 @@ public class BlockObject implements IBlockObject {
 
 	@Override
 	public int getSplitAmount() {
-		return splitAmount;
+		return (hours * 60 % sessionMinutes > 0 ? (hours * 60 / sessionMinutes) + 1
+				: hours * 60 / sessionMinutes);
 	}
 
 	@Override
 	public int getLastSplitMinutes() {
-		return lastSplitMinutes;
+		return (hours * 60 % sessionMinutes > 0 ? hours * 60
+				% sessionMinutes : sessionMinutes);
 	}
 
 	/**
@@ -78,20 +87,6 @@ public class BlockObject implements IBlockObject {
 	 */
 	public void setSessionMinutes(int sessionMinutes) {
 		this.sessionMinutes = sessionMinutes;
-	}
-
-	/**
-	 * @param splitAmount the splitAmount to set
-	 */
-	public void setSplitAmount(int splitAmount) {
-		this.splitAmount = splitAmount;
-	}
-
-	/**
-	 * @param lastSplitMinutes the lastSplitMinutes to set
-	 */
-	public void setLastSplitMinutes(int lastSplitMinutes) {
-		this.lastSplitMinutes = lastSplitMinutes;
 	}
 	
 }

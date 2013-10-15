@@ -4,12 +4,15 @@ import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.objects.BlockObject;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -26,7 +29,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	// All Static variables
 	// Database Version
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	// Database Name
 	private static final String DATABASE_NAME = "escapeDatabase";
@@ -43,6 +46,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	private static final String TABLE_LIST_OBJECTS_WITH_GPS_ALARM = "listObjectsWithGPSAlarm";
 	private static final String TABLE_LIST_OBJECTS_WITH_TIME = "listObjectsWithTime";
 	private static final String TABLE_LIST_OBJECTS_WITH_PLACE = "listObjectsWithPlace";
+	private static final String TABLE_BLOCKS = "blocks";
 
 	// ListObject table column names
 	private static final String COLUMN_LIST_OBJECTS_ID = "_id";
@@ -93,6 +97,13 @@ public class DBHandler extends SQLiteOpenHelper {
 	// "List objects with place" table column names
 	private static final String COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT = "_listObject";
 	private static final String COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE = "place";
+	
+	// Blocks table column names
+	private static final String COLUMN_BLOCKS_ID = "_id";
+	private static final String COLUMN_BLOCKS_NAME = "name";
+	private static final String COLUMN_BLOCKS_TIMEWINDOW = "timeWindow";
+	private static final String COLUMN_BLOCKS_HOURS = "hours";
+	private static final String COLUMN_BLOCKS_SESSION_MINUTES = "sessionMinutes";
 
 	// "Create table"-strings
 	private static final String CREATE_LIST_OBJECTS_TABLE = "CREATE TABLE "
@@ -232,6 +243,19 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ COLUMN_PLACES_ID
 			+ ") ON DELETE CASCADE"
 			+ ")";
+	private static final String CREATE_BLOCKS_TABLE = "CREATE TABLE " +
+			TABLE_BLOCKS + "(" +
+			COLUMN_BLOCKS_ID +
+			" INTEGER PRIMARY KEY AUTOINCREMENT," +
+			COLUMN_BLOCKS_NAME +
+			" TEXT NOT NULL," +
+			COLUMN_BLOCKS_HOURS +
+			" INTEGER NOT NULL," +
+			COLUMN_BLOCKS_SESSION_MINUTES +
+			" INTEGER NOT NULL," +
+			COLUMN_BLOCKS_TIMEWINDOW +
+			" INTEGER NOT NULL" +
+			")";
 
 	public DBHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -251,36 +275,20 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
 		db.execSQL(CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
+		db.execSQL(CREATE_BLOCKS_TABLE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Write onUpgrade such that it reuses old data.
 
 		if (oldVersion < 2) {
 			db.execSQL("DROP TABLE " + TABLE_GPS_ALARMS);
 			db.execSQL(CREATE_GPS_ALARMS_TABLE);
 		}
-
-		// // Drop older tables if existed
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_LIST_OBJECTS_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_CATEGORIES_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_PLACES_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIMES_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_TIME_ALARMS_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS " + CREATE_GPS_ALARMS_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS "
-		// + CREATE_CATEGORIES_WITH_LIST_OBJECTS_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS "
-		// + CREATE_LIST_OBJECTS_WITH_TIME_ALARM_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS "
-		// + CREATE_LIST_OBJECTS_WITH_GPS_ALARM_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS "
-		// + CREATE_LIST_OBJECTS_WITH_TIME_TABLE);
-		// db.execSQL("DROP TABLE IF EXISTS "
-		// + CREATE_LIST_OBJECTS_WITH_PLACE_TABLE);
-		// // Create tables again
-		// onCreate(db);
+		if (oldVersion < 3) {
+			db.execSQL(CREATE_BLOCKS_TABLE);
+		}
+		
 	}
 
 	// This enables foreign_keys such that "ON DELETE CASCADE" works.
@@ -502,6 +510,27 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.close();
 		return id;
 	}
+	
+	/**
+	 * Saves a block to the database
+	 * 
+	 * @param block the IBlockObject to be added
+	 * @return the generated id of the saved object
+	 */
+	public Long addBlock(IBlockObject block) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_BLOCKS_ID, block.getId());
+		values.put(COLUMN_BLOCKS_NAME, block.getName());
+		values.put(COLUMN_BLOCKS_HOURS, block.getHours());
+		values.put(COLUMN_BLOCKS_SESSION_MINUTES, block.getSessionMinutes());
+		values.put(COLUMN_BLOCKS_TIMEWINDOW, block.getTimeWindow().getNumVal());
+		
+		Long id = db.insert(TABLE_BLOCKS, null, values);
+		db.close();
+		return id;
+	}
 
 	/**
 	 * Returns a list with all the ListObjects in the database
@@ -661,6 +690,80 @@ public class DBHandler extends SQLiteOpenHelper {
 								.getColumnIndex(COLUMN_GPS_ALARMS_LONGITUDE)),
 						cursor.getDouble(cursor
 								.getColumnIndex(COLUMN_GPS_ALARMS_LATITUDE)));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+	
+	/**
+	 * @return All the list objects that have a time
+	 */
+	public List<ListObject> getAllListObjectsThatHaveTime() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<ListObject> list = new LinkedList<ListObject>();
+		
+		String raw = "SELECT b." + COLUMN_LIST_OBJECTS_ID + " AS loid, b."
+				+ COLUMN_LIST_OBJECTS_NAME + ", b."
+				+ COLUMN_LIST_OBJECTS_COMMENT + ", b."
+				+ COLUMN_LIST_OBJECTS_IMPORTANT + ", c." 
+				+ COLUMN_TIMES_ID + " AS timeid, c." 
+				+ COLUMN_TIMES_START_DATE + ", c." 
+				+ COLUMN_TIMES_END_DATE + " FROM "
+				+ TABLE_LIST_OBJECTS_WITH_TIME + " a" + " INNER JOIN "
+				+ TABLE_LIST_OBJECTS + " b" + " ON a."
+				+ COLUMN_LIST_OBJECTS_WITH_TIME_LIST_OBJECT + " = b."
+				+ COLUMN_LIST_OBJECTS_ID + " INNER JOIN " + TABLE_TIMES
+				+ " c ON a." + COLUMN_LIST_OBJECTS_WITH_TIME_TIME + " = c."
+				+ COLUMN_TIMES_ID;
+		
+		Cursor cursor = db.rawQuery(raw, null);
+		if (cursor.moveToFirst()) {
+			do {
+				ListObject object = new ListObject(cursor.getInt(cursor
+						.getColumnIndex("loid")),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
+				object.setComment(cursor.getString(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
+				object.setImportant((cursor.getInt(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
+						: false));
+				object.setTime(new Time(cursor.getInt(cursor.getColumnIndex("timeid")),
+						new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMES_START_DATE))),
+						new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMES_END_DATE)))));
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
+	
+	/**
+	 * @return a list of all the BlockObjects in the database
+	 */
+	public List<IBlockObject> getAllBlocks() {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		List<IBlockObject> list = new LinkedList<IBlockObject>();
+		Cursor cursor = db.query(TABLE_BLOCKS, new String[] {
+				COLUMN_BLOCKS_ID, COLUMN_BLOCKS_NAME,
+				COLUMN_BLOCKS_HOURS, COLUMN_BLOCKS_SESSION_MINUTES,
+				COLUMN_BLOCKS_TIMEWINDOW},
+				null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				IBlockObject object = new BlockObject(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_BLOCKS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_BLOCKS_NAME)),
+						TimeWindow.parseNumVal(
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_TIMEWINDOW))),
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_HOURS)),
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_SESSION_MINUTES)));
 				list.add(object);
 			} while (cursor.moveToNext());
 		}
@@ -1135,6 +1238,43 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
+	
+	/**
+	 * Returns the block with the id specified
+	 * @param id
+	 * @return IBlockObject with the id
+	 */
+	public IBlockObject getBlock(Long id) {
+		SQLiteDatabase db = this.getReadableDatabase();
+
+		Cursor cursor = db.query(TABLE_BLOCKS, new String[] { COLUMN_BLOCKS_ID,
+				COLUMN_BLOCKS_NAME, COLUMN_BLOCKS_HOURS,
+				COLUMN_BLOCKS_SESSION_MINUTES, COLUMN_BLOCKS_TIMEWINDOW },
+				COLUMN_BLOCKS_ID + "=?", new String[] { id.toString() }, null,
+				null, null);
+
+		List<IBlockObject> list = new LinkedList<IBlockObject>();
+		if (cursor.moveToFirst()) {
+			do {
+
+				IBlockObject object = new BlockObject(cursor.getInt(cursor
+						.getColumnIndex(COLUMN_BLOCKS_ID)),
+						cursor.getString(cursor
+								.getColumnIndex(COLUMN_BLOCKS_NAME)),
+						TimeWindow.parseNumVal(
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_TIMEWINDOW))),
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_HOURS)),
+						cursor.getInt(cursor
+								.getColumnIndex(COLUMN_BLOCKS_SESSION_MINUTES)));
+
+				list.add(object);
+			} while (cursor.moveToNext());
+		}
+
+		return list.isEmpty() ? null : list.get(0);
+	}
 
 	/**
 	 * Updates a listObject in the database
@@ -1367,6 +1507,30 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return rv;
 	}
+	
+	
+	/**
+	 * Updates a block, if it exists in the database.
+	 * 
+	 * @param IBlockObject
+	 *            to update
+	 * @return number of affected rows
+	 */
+	public int updateBlock(IBlockObject block) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_BLOCKS_NAME, block.getName());
+		values.put(COLUMN_BLOCKS_HOURS, block.getHours());
+		values.put(COLUMN_BLOCKS_SESSION_MINUTES, block.getSessionMinutes());
+		values.put(COLUMN_BLOCKS_TIMEWINDOW, block.getTimeWindow().getNumVal());
+
+		int rv = db.update(TABLE_BLOCKS, values, COLUMN_BLOCKS_ID + "=?",
+				new String[] { "" + block.getId() });
+		db.close();
+
+		return rv;
+	}
 
 	/**
 	 * Deletes a ListObject from the Database
@@ -1584,6 +1748,22 @@ public class DBHandler extends SQLiteOpenHelper {
 		int rv = db.delete(TABLE_LIST_OBJECTS_WITH_PLACE,
 				COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT + "=?",
 				new String[] { "" + listObject.getId() });
+		db.close();
+		return rv > 0;
+	}
+	
+	/**
+	 * Deletes the block from the database
+	 * 
+	 * @param block to delete
+	 * @return true if anything was deleted, false otherwise
+	 */
+	public boolean deleteBlock(IBlockObject block) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		int rv = db.delete(TABLE_BLOCKS,
+				COLUMN_BLOCKS_ID + "=?",
+				new String[] { "" + block.getId() });
 		db.close();
 		return rv > 0;
 	}
