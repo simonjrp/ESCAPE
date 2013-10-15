@@ -1,6 +1,11 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EMPTY;
 import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NO_HEIGHT;
+import static se.chalmers.dat255.group22.escape.utils.Constants.TEXTVIEW_HEIGHT_OFFSET;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
@@ -19,8 +24,8 @@ import android.widget.TextView;
  * @author tholene
  */
 public class CustomOnClickListener implements View.OnClickListener {
-    private final static String NEW_ROW = "\n";
-    private final String REMIND_ME_AT;
+
+    private static String REMIND_ME_AT;
     private TextView childLabel;
     private TextView taskData;
     private ListObject listObject;
@@ -86,7 +91,7 @@ public class CustomOnClickListener implements View.OnClickListener {
                 if (dbHandler.getPlace(listObject) != null)
                     // No "    " or places as such are allowed.
                     if (dbHandler.getPlace(listObject).getName().trim()
-                            .length() != 0)
+                            .length() != EMPTY)
                         if (listObject.getComment() == null)
                             builder.append(dbHandler.getPlace(listObject)
                                     .getName());
@@ -116,7 +121,7 @@ public class CustomOnClickListener implements View.OnClickListener {
                     taskData.setVisibility(View.VISIBLE);
 
                     taskData.setHeight(taskData.getLineCount()
-                            * taskData.getLineHeight() + 5);
+                            * taskData.getLineHeight() + TEXTVIEW_HEIGHT_OFFSET);
 
                     // Make the header label underlined to indicate that
                     // "this is the selected item"
@@ -131,7 +136,7 @@ public class CustomOnClickListener implements View.OnClickListener {
             dismissButtons(v);
         } else {
             // If the view is only expanded, hide it again
-            collapseDetails();
+            dismissDetails();
         }
 
     }
@@ -154,9 +159,10 @@ public class CustomOnClickListener implements View.OnClickListener {
         deleteButton.clearAnimation();
     }
 
-    private void collapseDetails() {
+    private void dismissDetails() {
         taskData.setVisibility(View.INVISIBLE);
-        taskData.setHeight(0);
-        childLabel.setPaintFlags(1);
+        taskData.setHeight(NO_HEIGHT);
+        childLabel.setPaintFlags(DEFAULT_PAINT_FLAG);
+
     }
 }

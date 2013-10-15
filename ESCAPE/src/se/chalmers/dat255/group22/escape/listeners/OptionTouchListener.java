@@ -64,6 +64,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 			slide.setFillAfter(true);
 			slide.setFillEnabled(true);
 
+
 			// ...and if the animation for this button is null (AKA previously
 			// cleared or first time initiated), we set the animation once again
 			// and start it.
