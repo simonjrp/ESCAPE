@@ -1,11 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
-import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,6 +14,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 
 /**
  * The main activity, to be launched when app is started.
@@ -41,7 +42,7 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// Initializes the notification handler with this FragmentActivity
+		// Initializes the notification handler with this context
 		NotificationHandler.getInstance().init(this);
 
 		// Configure the navigation drawer
@@ -102,7 +103,6 @@ public class MainActivity extends FragmentActivity {
 				startActivity(intent);
 				break;
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 

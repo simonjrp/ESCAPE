@@ -1,5 +1,13 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,13 +16,6 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.IntegerToMonthConverter;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -72,10 +73,10 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		dateData.add(new Date(currentTimeInMillis + ONE_WEEK_IN_MILLIS));
 
 		days = new ArrayList<String>();
-		days.add(context.getString(R.string.todayLabel));
-		days.add(context.getString(R.string.tomorrowLabel));
+		days.add(context.getString(R.string.today_label));
+		days.add(context.getString(R.string.tomorrow_label));
 		days.add(nextWeekSameDay);
-		days.add(context.getString(R.string.pickDayLabel));
+		days.add(context.getString(R.string.pick_day_label));
 
 		clear();
 		addAll(days);
@@ -165,11 +166,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 			// Refresh adapter's internal list.
 			clear();
-			add(context.getString(R.string.todayLabel));
-			add(context.getString(R.string.tomorrowLabel));
+			add(context.getString(R.string.today_label));
+			add(context.getString(R.string.tomorrow_label));
 			add(nextWeekSameDayLabel);
 			add(customLabel);
-			add(context.getString(R.string.pickDayLabel));
+			add(context.getString(R.string.pick_day_label));
 			this.notifyDataSetChanged();
 
 			// Refresh local list. This
@@ -177,11 +178,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			// the local list is unsynced.
 
 			days.clear();
-			days.add(context.getString(R.string.todayLabel));
-			days.add(context.getString(R.string.tomorrowLabel));
+			days.add(context.getString(R.string.today_label));
+			days.add(context.getString(R.string.tomorrow_label));
 			days.add(nextWeekSameDayLabel);
 			days.add(customLabel);
-			days.add(context.getString(R.string.pickDayLabel));
+			days.add(context.getString(R.string.pick_day_label));
 
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}

@@ -4,11 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * A "bag" full of constants for readability as well as consistency.
+ * A container for constants used in the application.
  * 
- * @author tholene
+ * @author tholene, Simon Persson
  */
 public final class Constants {
+
+	private Constants() {
+	}
 
 	/**
 	 * The tag of the app, to use when debugging
@@ -47,34 +50,44 @@ public final class Constants {
 	 */
 	public static final int NBR_OF_REL_TIMES = 4;
 
-	private Constants() {
-	}
-
 	/**
 	 * The key to use when getting reminder type from an intent.
 	 */
 	public static final String REMINDER_TYPE = "REMINDER_TYPE";
 
 	/*
-	 * START GEOFENCE
+	 * ******** NOTIFICATION HANDLER ******** *
+	 */
+
+	/**
+	 * Constant to use when setting/getting a ListObject title from a bundle.
+	 */
+	public static String NOTIFICATION_TITLE = "TITLE";
+	/**
+	 * Constant to use when setting/getting a ListObject comment from a bundle.
+	 */
+	public static String NOTIFICATION_DESC = "DESC";
+	/**
+	 * Constant to use when setting/getting a ListObject start time from a
+	 * bundle.
+	 */
+	public static String NOTIFICATION_EVENT_TIME = "EVENT_TIME";
+	/**
+	 * Constant to use when setting/getting a boolean describing whether a
+	 * ListObject is an event or not from a bundle.
+	 */
+	public static String NOTOFICATION_IS_EVENT = "IS_EVENT";
+	/**
+	 * Constant to use when setting/getting a ListObject id from a bundle
+	 */
+	public static String NOTIFICATION_ID = "ID";
+
+	/*
+	 * ******** GEOFENCE ******** *
 	 */
 
 	public static final int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	public static final float GEOFENCE_DEFAULT_RADIUS = 100;
-
-	// Debug constants
-
-	public static final String DEBUG_GEOFENCES_CONNECTED = "Connects to Location Services";
-
-	public static final String DEBUG_GEOFENCES_DISCONNECTED = "Disconnects from Location Services";
-
-	public static final String DEBUG_GEOFENCES_ADD_SUCCESS = "Successfully added specified geofences";
-
-	public static final String DEBUG_GEOFENCES_ADD_ERROR = "An error occured when adding specified geofences";
-
-	public static final String DEBUG_GEOFENCES_REMOVE_SUCCESS = "Successfully removed specified geofences";
-
-	public static final String DEBUG_GEOFENCES_REMOVE_ERROR = "An error occured when removing specified geofences";
 
 	// Intent actions
 	public static final String ACTION_GEOFENCES_ADDED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_ADDED";
@@ -95,10 +108,6 @@ public final class Constants {
 	public static enum REMOVE_TYPE {
 		INTENT, LIST
 	};
-
-	/*
-	 * END GEOFENCE
-	 */
 
 	/**
 	 * Enum for different reminder types (time or gps).

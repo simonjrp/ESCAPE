@@ -1,7 +1,5 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -12,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
 
 /**
  * Class representing an OnItemSelectedListener for spinners. Used mainly to
@@ -75,7 +76,8 @@ public class OnItemSelectedSpinnerListener implements OnItemSelectedListener {
 
 			// Start the fragment corresponding to the spinner type (date or
 			// time)
-			DialogFragment dialogFragment = spinnerType.equals(DATE_SPINNER) ? new DatePickerFragment()
+			DialogFragment dialogFragment = spinnerType.equals(DATE_SPINNER)
+					? new DatePickerFragment()
 					: new TimePickerFragment();
 			Bundle args = new Bundle();
 			args.putInt(DatePickerFragment.SPINNER_ID, spinnerId);

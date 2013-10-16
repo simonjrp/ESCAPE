@@ -6,12 +6,11 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_new_task">Add new task</string>
-    <string name="todayLabel">Today</string>
-    <string name="tomorrowLabel">Tomorrow</string>
-    <string name="thisWeekLabel">This week</string>
-    <string name="somedayLabel">Someday</string>
-    <string name="editButtonDescription">Edit</string>
-    <string name="deleteButtonDescription">Delete</string>
+    <string name="today_label">Today</string>
+    <string name="tomorrow_label">Tomorrow</string>
+    <string name="someday_label">Someday</string>
+    <string name="edit_button_description">Edit</string>
+    <string name="delete_button_description">Delete</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
@@ -21,10 +20,10 @@
     <string name="notification_done">Done</string>
     <string name="notification_snooze_time">In an hour</string>
     <string name="notification_snooze_place">Next time</string>
-    <string name="pickTimeLabel">Pick a time&#8230;</string>
-    <string name="pickDayLabel">Pick a day&#8230;</string>
-    <string name="fromLabel">From</string>
-    <string name="toLabel">To</string>
+    <string name="pick_time_label">Pick a time&#8230;</string>
+    <string name="pick_day_label">Pick a day&#8230;</string>
+    <string name="from_label">From</string>
+    <string name="to_label">To</string>
     <string name="morning">Morning</string>
     <string name="afternoon">Afternoon</string>
     <string name="evening">Evening</string>
@@ -34,11 +33,24 @@
     <string name="new_task">New Task</string>
     <string name="new_block">New Block</string>
     <string name="title_activity_new_block">New Block</string>
-    <string name="titleHint">Title</string>
-    <string name="descriptionHint">Description</string>
-    <string name="locationHint">Location</string>
-    <string name="markAsImportant">Mark as important</string>
-    <string name="convertToEvent">Convert to event</string>
-    <string name="API_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
+    <string name="title_hint">Title</string>
+    <string name="description_hint">Description</string>
+    <string name="location_hint">Location</string>
+    <string name="mark_as_important">Mark as important</string>
+    <string name="convert_to_event">Convert to event</string>
+    <string name="api_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
+    <string name="nh_init">NotificationHandler initialized.</string>
+    <string name="nh_not_init">NotificationHandler hasn\'t been initialized yet. Run init(FragmentActivity) when starting application.</string>
+    <string name="nh_location_reminder_not_added">Couldn\'t add location reminder.</string>
+    <string name="nh_location_reminder_not_removed">Couldn\'t remove location reminder.</string>
+    <string name="gplay_services_available">Google Play services is available.</string>
+    <string name="gplay_services_unavailable">Google Play services is unavailable.</string>
+    <string name="geofence_connected">Connected to Location Services</string>
+    <string name="geofence_disconnected">Disconnected from Location Services</string>
+    <string name="geofence_add_success">Successfully added specified geofences</string>
+    <string name="geofence_add_error">An error occured when adding specified geofences</string>
+    <string name="geofence_remove_success">Successfully removed specified geofences</string>
+    <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
+
 
 </resources>

@@ -1,11 +1,5 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -15,13 +9,21 @@ import android.text.format.DateFormat;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
+
 /**
  * Class representing a time picker fragment.
  * 
  * @author Simon Persson
  */
-public class TimePickerFragment extends DialogFragment implements
-		TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment
+		implements
+			TimePickerDialog.OnTimeSetListener {
 
 	/**
 	 * Constant used to get the ID of the spinner that wants to bring up this
@@ -70,7 +72,7 @@ public class TimePickerFragment extends DialogFragment implements
 		adapter.add(activity.getString(R.string.evening));
 		adapter.add(activity.getString(R.string.night));
 		adapter.add(formattedTime);
-		adapter.add(activity.getString(R.string.pickTimeLabel));
+		adapter.add(activity.getString(R.string.pick_time_label));
 		spinner.setSelection(adapter.getCount() - 2, true);
 
 		Calendar tempCalendar = Calendar.getInstance();

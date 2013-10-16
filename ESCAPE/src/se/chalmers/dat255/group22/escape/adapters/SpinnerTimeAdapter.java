@@ -1,5 +1,13 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,13 +16,6 @@ import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a time are
@@ -74,7 +75,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		times.add(context.getString(R.string.afternoon));
 		times.add(context.getString(R.string.evening));
 		times.add(context.getString(R.string.night));
-		times.add(context.getString(R.string.pickTimeLabel));
+		times.add(context.getString(R.string.pick_time_label));
 
 		clear();
 		addAll(times);
@@ -165,7 +166,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			add(context.getString(R.string.evening));
 			add(context.getString(R.string.night));
 			add(customLabel);
-			add(context.getString(R.string.pickTimeLabel));
+			add(context.getString(R.string.pick_time_label));
 
 			// Refresh local list. This
 			// is necessary because the adapters internal list of items and
@@ -176,7 +177,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			times.add(context.getString(R.string.evening));
 			times.add(context.getString(R.string.night));
 			times.add(customLabel);
-			times.add(context.getString(R.string.pickTimeLabel));
+			times.add(context.getString(R.string.pick_time_label));
 			this.notifyDataSetChanged();
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}

@@ -94,24 +94,21 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
-		headerList.add(context.getResources().getString(R.string.todayLabel));
+		headerList.add(context.getResources().getString(R.string.today_label));
+		headerList.add(context.getResources()
+				.getString(R.string.tomorrow_label));
+
 		headerList
-				.add(context.getResources().getString(R.string.tomorrowLabel));
-		headerList
-				.add(context.getResources().getString(R.string.thisWeekLabel));
-		headerList.add(context.getResources().getString(R.string.somedayLabel));
+				.add(context.getResources().getString(R.string.someday_label));
+
+		objectDataMap.put(context.getResources()
+				.getString(R.string.today_label), todayEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.tomorrow_label),
+				tomorrowEventList);
 
 		objectDataMap.put(
-				context.getResources().getString(R.string.todayLabel),
-				todayEventList);
-		objectDataMap.put(
-				context.getResources().getString(R.string.tomorrowLabel),
-				tomorrowEventList);
-		objectDataMap.put(
-				context.getResources().getString(R.string.thisWeekLabel),
-				thisWeekEventList);
-		objectDataMap.put(
-				context.getResources().getString(R.string.somedayLabel),
+				context.getResources().getString(R.string.someday_label),
 				somedayEventList);
 
 		theCategories = new ArrayList<Category>();

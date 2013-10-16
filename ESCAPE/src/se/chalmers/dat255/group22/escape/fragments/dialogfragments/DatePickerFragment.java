@@ -1,9 +1,5 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
-import java.sql.Date;
-import java.util.Calendar;
-
-import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -13,13 +9,19 @@ import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 
+import java.sql.Date;
+import java.util.Calendar;
+
+import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+
 /**
  * Class representing a date picker fragment.
  * 
  * @author Simon Persson
  */
-public class DatePickerFragment extends DialogFragment implements
-		OnDateSetListener {
+public class DatePickerFragment extends DialogFragment
+		implements
+			OnDateSetListener {
 
 	/**
 	 * Constant used to get the ID of the spinner that wants to bring up this
