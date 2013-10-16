@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Send item selected event to the drawer toggle (to handle click on the
 		// back/up button in the actionbar). If back/up button was pressed, the
-		// drawer toggle will return true, and false otherwised (i.e some other
+		// drawer toggle will return true, and false otherwise (i.e some other
 		// button in action bar was pressed)
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
