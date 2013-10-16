@@ -1,5 +1,11 @@
 package se.chalmers.dat255.group22.escape.utils;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -7,11 +13,6 @@ import java.util.Locale;
 import se.chalmers.dat255.group22.escape.NotificationHandler;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * This AsyncTask class is used to generate a GPSAlarm object from a textstring

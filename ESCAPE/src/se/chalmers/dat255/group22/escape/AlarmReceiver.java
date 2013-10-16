@@ -1,12 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,7 +10,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
+
+import java.sql.Date;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also
@@ -58,19 +58,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		// Creates the description text for the notification. Includes date and
 		// time if the source for the notification is an event, otherwise not.
-		String description = args
-				.getBoolean(NotificationHandler.NOTOFICATION_IS_EVENT) ? args
-				.getString(NotificationHandler.NOTIFICATION_EVENT_TIME)
-				+ ", "
-				+ args.getString(NotificationHandler.NOTIFICATION_DESC) : args
-				.getString(NotificationHandler.NOTIFICATION_DESC);
+		String description = args.getBoolean(Constants.NOTOFICATION_IS_EVENT)
+				? args.getString(Constants.NOTIFICATION_EVENT_TIME) + ", "
+						+ args.getString(Constants.NOTIFICATION_DESC)
+				: args.getString(Constants.NOTIFICATION_DESC);
 
 		// Creates the intents containing the actions to be performed when
 		// clicking on notification action buttons
 		Intent doneIntent = new Intent();
 		doneIntent.setAction(NOTIFICATION_DONE);
-		doneIntent.putExtra(NotificationHandler.NOTIFICATION_ID,
-				args.getInt(NotificationHandler.NOTIFICATION_ID));
+		doneIntent.putExtra(Constants.NOTIFICATION_ID,
+				args.getInt(Constants.NOTIFICATION_ID));
 		doneIntent.putExtra(Constants.REMINDER_TYPE,
 				(Parcelable) ReminderType.GPS);
 		PendingIntent donePendingIntent = PendingIntent.getBroadcast(context,
@@ -78,8 +76,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		Intent snoozeIntent = new Intent();
 		snoozeIntent.setAction(NOTIFICATION_SNOOZE);
-		snoozeIntent.putExtra(NotificationHandler.NOTIFICATION_ID,
-				args.getInt(NotificationHandler.NOTIFICATION_ID));
+		snoozeIntent.putExtra(Constants.NOTIFICATION_ID,
+				args.getInt(Constants.NOTIFICATION_ID));
 		snoozeIntent.putExtra(Constants.REMINDER_TYPE,
 				(Parcelable) ReminderType.GPS);
 		PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context,
@@ -90,8 +88,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				context)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(
-						args.getString(NotificationHandler.NOTIFICATION_TITLE))
+				.setContentTitle(args.getString(Constants.NOTIFICATION_TITLE))
 				.setContentText(description)
 				.setStyle(
 						new NotificationCompat.BigTextStyle()
@@ -131,8 +128,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// Sends the notification to the android system
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(
-				args.getInt(NotificationHandler.NOTIFICATION_ID),
+		mNotificationManager.notify(args.getInt(Constants.NOTIFICATION_ID),
 				notificationBuilder.build());
 	}
 
@@ -144,19 +140,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		// Creates the description text for the notification. Includes date and
 		// time if the source for the notification is an event, otherwise not.
-		String description = args
-				.getBoolean(NotificationHandler.NOTOFICATION_IS_EVENT) ? args
-				.getString(NotificationHandler.NOTIFICATION_EVENT_TIME)
-				+ ", "
-				+ args.getString(NotificationHandler.NOTIFICATION_DESC) : args
-				.getString(NotificationHandler.NOTIFICATION_DESC);
+		String description = args.getBoolean(Constants.NOTOFICATION_IS_EVENT)
+				? args.getString(Constants.NOTIFICATION_EVENT_TIME) + ", "
+						+ args.getString(Constants.NOTIFICATION_DESC)
+				: args.getString(Constants.NOTIFICATION_DESC);
 
 		// Creates the intents containing the actions to be performed when
 		// clicking on notification action buttons
 		Intent doneIntent = new Intent();
 		doneIntent.setAction(NOTIFICATION_DONE);
-		doneIntent.putExtra(NotificationHandler.NOTIFICATION_ID,
-				args.getInt(NotificationHandler.NOTIFICATION_ID));
+		doneIntent.putExtra(Constants.NOTIFICATION_ID,
+				args.getInt(Constants.NOTIFICATION_ID));
 		doneIntent.putExtra(Constants.REMINDER_TYPE,
 				(Parcelable) ReminderType.TIME);
 		PendingIntent donePendingIntent = PendingIntent.getBroadcast(context,
@@ -164,8 +158,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		Intent snoozeIntent = new Intent();
 		snoozeIntent.setAction(NOTIFICATION_SNOOZE);
-		snoozeIntent.putExtra(NotificationHandler.NOTIFICATION_ID,
-				args.getInt(NotificationHandler.NOTIFICATION_ID));
+		snoozeIntent.putExtra(Constants.NOTIFICATION_ID,
+				args.getInt(Constants.NOTIFICATION_ID));
 		snoozeIntent.putExtra(Constants.REMINDER_TYPE,
 				(Parcelable) ReminderType.TIME);
 		PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context,
@@ -176,8 +170,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				context)
 				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(
-						args.getString(NotificationHandler.NOTIFICATION_TITLE))
+				.setContentTitle(args.getString(Constants.NOTIFICATION_TITLE))
 				.setContentText(description)
 				.setStyle(
 						new NotificationCompat.BigTextStyle()
@@ -217,8 +210,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// Sends the notification to the android system
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(
-				args.getInt(NotificationHandler.NOTIFICATION_ID),
+		mNotificationManager.notify(args.getInt(Constants.NOTIFICATION_ID),
 				notificationBuilder.build());
 	}
 
@@ -226,7 +218,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 * Method called when a task should be marked as done.
 	 */
 	private void notificationDone(Context context, Intent intent) {
-		long id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+		long id = intent.getIntExtra(Constants.NOTIFICATION_ID, 0);
 
 		ReminderType reminderType = (ReminderType) intent
 				.getParcelableExtra(Constants.REMINDER_TYPE);
@@ -235,7 +227,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 		if (reminderType == Constants.ReminderType.TIME) {
 			// Do nothing, TimeAlarm already fired and gone.
 		} else {
-			NotificationHandler.getInstance().removePlaceReminder(
+			//
+			NotificationHandler.getInstance().init(
+					context.getApplicationContext());
+			NotificationHandler.getInstance().removeLocationReminder(
 					dbH.getListObject(id));
 		}
 
@@ -265,7 +260,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	 * reminder until next time the device enters the geofence.
 	 */
 	private void notificationSnooze(Context context, Intent intent) {
-		long id = intent.getIntExtra(NotificationHandler.NOTIFICATION_ID, 0);
+		long id = intent.getIntExtra(Constants.NOTIFICATION_ID, 0);
 		ReminderType reminderType = intent
 				.getParcelableExtra(Constants.REMINDER_TYPE);
 

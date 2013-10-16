@@ -1,14 +1,16 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.graphics.Paint;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional

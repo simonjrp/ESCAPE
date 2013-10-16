@@ -1,8 +1,21 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObservable;
+import android.database.DataSetObserver;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -20,22 +33,10 @@ import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -64,8 +65,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
-    // A temporary task that is displayed if list is empty
-    ListObject emptyListDefaultTask;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
 	 * Create a new custom list adapter.
@@ -92,25 +93,27 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
-		headerList.add(context.getResources().getString(R.string.todayLabel));
+		headerList.add(context.getResources().getString(R.string.today_label));
+		headerList.add(context.getResources()
+                .getString(R.string.tomorrow_label));
 		headerList
-				.add(context.getResources().getString(R.string.tomorrowLabel));
-		headerList.add(context.getResources().getString(R.string.somedayLabel));
+				.add(context.getResources().getString(R.string.someday_label));
 
+		objectDataMap.put(context.getResources()
+				.getString(R.string.today_label), todayEventList);
 		objectDataMap.put(
-				context.getResources().getString(R.string.todayLabel),
-				todayEventList);
-		objectDataMap.put(
-				context.getResources().getString(R.string.tomorrowLabel),
+				context.getResources().getString(R.string.tomorrow_label),
 				tomorrowEventList);
 		objectDataMap.put(
-				context.getResources().getString(R.string.somedayLabel),
+				context.getResources().getString(R.string.someday_label),
 				somedayEventList);
 
 		theCategories = new ArrayList<Category>();
 
-        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
-        emptyListDefaultTask.setComment("In this list you can add specific things that you need to do!");
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add specific things that you need to do!");
 	}
 
 	/**
@@ -119,7 +122,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-        boolean noEvents = true;
+		boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
@@ -133,13 +136,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-                noEvents = false;
+				noEvents = false;
 			}
 		}
-        if (noEvents)
-            addListObjectToday(emptyListDefaultTask);
-        else
-            removeListObjectToday(emptyListDefaultTask);
+		if (noEvents)
+			addListObjectToday(emptyListDefaultTask);
+		else
+			removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -594,12 +597,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-     * removes a list with categories from the list with categories displayed in
-     * by this adapter.
-     *
-     * @param catList
-     *            List with categories that will be removed
-     */
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
+	 * 
+	 * @param catList
+	 *            List with categories that will be removed
+	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)
 			removeCategory(cat);

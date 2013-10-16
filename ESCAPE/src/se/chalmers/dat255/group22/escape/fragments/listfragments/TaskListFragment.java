@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,10 +10,14 @@ import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
+
 /**
  * A fragment displaying a list with tasks. A task is different from an event
  * such that a task does not have a set time while an event does.
- *
+ * 
  * @author tholene, Carl
  */
 public class TaskListFragment extends Fragment {
@@ -27,7 +28,7 @@ public class TaskListFragment extends Fragment {
 	private CustomListAdapter ourListAdapter;
 	// popup where use can pick what categories to display
 	private ListPopupWindow listPopupWindow;
-    // The adapter used to display the category popup
+	// The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
 
 	@Override
@@ -61,7 +62,7 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        initialize();
+		initialize();
 		ourListAdapter.reInit();
 	}
 
@@ -85,23 +86,24 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow.setModal(true);
 		listPopupWindow.setWidth(300);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
-        listPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                if (ourListAdapter != null)
-                    ourListAdapter.notifyDataSetChanged();
-            }
-        });
+		listPopupWindow
+				.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        if (ourListAdapter != null)
+                            ourListAdapter.notifyDataSetChanged();
+                    }
+                });
 	}
 
 	/**
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
-        //TODO Find way to use popup without creating it every time!
+		// TODO Find way to use popup without creating it every time!
 		if (!ourListAdapter.getTheCategories().isEmpty()) {
-            //if (listPopupWindow == null)
-                initPopup();
+			// if (listPopupWindow == null)
+			initPopup();
 			categoryAdapter = new CategoryAdapter(getActivity());
 			categoryAdapter.setCategories(ourListAdapter.getTheCategories());
 			listPopupWindow.setAdapter(categoryAdapter);

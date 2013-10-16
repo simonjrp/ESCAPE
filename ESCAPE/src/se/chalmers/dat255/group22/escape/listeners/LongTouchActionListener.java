@@ -98,53 +98,54 @@ public abstract class LongTouchActionListener implements OnTouchListener {
 
 		switch (action) {
 
-		case MotionEvent.ACTION_DOWN:
-			// down event
-			mIsLongTouch = false;
-			mIsClick = true;
+			case MotionEvent.ACTION_DOWN :
+				// down event
+				mIsLongTouch = false;
+				mIsClick = true;
 
-			mTouchDownX = event.getX();
-			mTouchDownY = event.getY();
-			mTouchDownTime = event.getEventTime();
+				mTouchDownX = event.getX();
+				mTouchDownY = event.getY();
+				mTouchDownTime = event.getEventTime();
 
-			mLongTouchView = v;
+				mLongTouchView = v;
 
-			// post a runnable
-			mHandler.sendEmptyMessageDelayed(
-					LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT, LONG_TOUCH_TIME);
-			break;
+				// post a runnable
+				mHandler.sendEmptyMessageDelayed(
+						LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT,
+						LONG_TOUCH_TIME);
+				break;
 
-		case MotionEvent.ACTION_MOVE:
-			// check to see if the user has moved their
-			// finger too far
-			if (mIsClick || mIsLongTouch) {
-				final float xDist = (event.getX() - mTouchDownX);
-				final float yDist = (event.getY() - mTouchDownY);
-				final float distanceSq = (xDist * xDist) + (yDist * yDist);
+			case MotionEvent.ACTION_MOVE :
+				// check to see if the user has moved their
+				// finger too far
+				if (mIsClick || mIsLongTouch) {
+					final float xDist = (event.getX() - mTouchDownX);
+					final float yDist = (event.getY() - mTouchDownY);
+					final float distanceSq = (xDist * xDist) + (yDist * yDist);
 
-				if (distanceSq > mTouchMoveLimitPxSq) {
-					// cancel the current operation
-					mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT);
-					mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_ACTION);
+					if (distanceSq > mTouchMoveLimitPxSq) {
+						// cancel the current operation
+						mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT);
+						mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_ACTION);
 
-					mIsClick = false;
-					mIsLongTouch = false;
+						mIsClick = false;
+						mIsLongTouch = false;
+					}
 				}
-			}
-			break;
+				break;
 
-		case MotionEvent.ACTION_CANCEL:
-			mIsClick = false;
-		case MotionEvent.ACTION_UP:
-			// cancel any message
-			mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT);
-			mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_ACTION);
+			case MotionEvent.ACTION_CANCEL :
+				mIsClick = false;
+			case MotionEvent.ACTION_UP :
+				// cancel any message
+				mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_WAIT);
+				mHandler.removeMessages(LongTouchHandler.MESSAGE_LONG_TOUCH_ACTION);
 
-			long elapsedTime = event.getEventTime() - mTouchDownTime;
-			if (mIsClick && elapsedTime < LONG_TOUCH_TIME) {
-				onClick(v);
-			}
-			break;
+				long elapsedTime = event.getEventTime() - mTouchDownTime;
+				if (mIsClick && elapsedTime < LONG_TOUCH_TIME) {
+					onClick(v);
+				}
+				break;
 
 		}
 
@@ -163,21 +164,21 @@ public abstract class LongTouchActionListener implements OnTouchListener {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case MESSAGE_LONG_TOUCH_WAIT:
-				mIsLongTouch = true;
-				mIsClick = false;
+				case MESSAGE_LONG_TOUCH_WAIT :
+					mIsLongTouch = true;
+					mIsClick = false;
 
-				// flow into next case
-			case MESSAGE_LONG_TOUCH_ACTION:
-				if (!mIsLongTouch)
-					return;
+					// flow into next case
+				case MESSAGE_LONG_TOUCH_ACTION :
+					if (!mIsLongTouch)
+						return;
 
-				onLongTouchAction(mLongTouchView); // call users function
+					onLongTouchAction(mLongTouchView); // call users function
 
-				// wait for a bit then update
-				takeNapThenUpdate();
+					// wait for a bit then update
+					takeNapThenUpdate();
 
-				break;
+					break;
 			}
 		}
 

@@ -1,12 +1,12 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class PlaceJSONParser {
 

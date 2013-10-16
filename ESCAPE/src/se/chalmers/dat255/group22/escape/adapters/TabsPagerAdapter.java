@@ -1,15 +1,16 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.fragments.listfragments.ExpandableEventListFragment;
 import se.chalmers.dat255.group22.escape.fragments.listfragments.TaskListFragment;
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 
 /**
  * A pager adapter to use with a viewpager.

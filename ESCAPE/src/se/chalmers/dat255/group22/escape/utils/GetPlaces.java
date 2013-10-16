@@ -1,5 +1,15 @@
 package se.chalmers.dat255.group22.escape.utils;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,16 +20,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import se.chalmers.dat255.group22.escape.R;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 
 /**
  * @author tholene
@@ -52,7 +53,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 		try {
 			// Browser key for Google API
 
-			String key = "key=" + context.getString(R.string.API_key);
+			String key = "key=" + context.getString(R.string.api_key);
 
 			String input = "";
 

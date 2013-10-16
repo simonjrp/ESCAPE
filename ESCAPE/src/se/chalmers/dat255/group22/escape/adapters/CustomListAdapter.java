@@ -1,8 +1,17 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -16,18 +25,10 @@ import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * Adapter for displaying
@@ -49,8 +50,8 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
-    // A temporary task that is displayed if list is empty
-    ListObject emptyListDefaultTask;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
 	 * Creates a new CustomListAdapter
@@ -71,8 +72,10 @@ public class CustomListAdapter implements ListAdapter {
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
 
-        emptyListDefaultTask = new ListObject(97569754, "Anything you need to do?");
-        emptyListDefaultTask.setComment("In this list you can add general things that you need to do!");
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-        boolean noTasks = true;
+		boolean noTasks = true;
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
@@ -95,13 +98,13 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-                noTasks = false;
+				noTasks = false;
 			}
 		}
 		if (noTasks)
-            addListObject(emptyListDefaultTask);
-        else
-            removeListObject(emptyListDefaultTask);
+			addListObject(emptyListDefaultTask);
+		else
+			removeListObject(emptyListDefaultTask);
 		updateEditButtons();
 	}
 

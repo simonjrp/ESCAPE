@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none">
@@ -19,10 +18,10 @@
             android:id="@+id/task_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/titleHint"
+            android:hint="@string/title_hint"
             android:textSize="@dimen/textsize_large"
             android:inputType="textCapSentences"
-            android:paddingTop="@dimen/ui_element_gap"/>
+            android:paddingTop="@dimen/ui_element_gap" />
 
         <Spinner
             android:id="@+id/task_categories"
@@ -32,7 +31,7 @@
             android:layout_below="@id/task_title"
             android:textSize="@dimen/textsize_medium"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/ui_element_gap"/>
+            android:paddingTop="@dimen/ui_element_gap" />
 
         <EditText
             android:id="@+id/task_description"
@@ -41,12 +40,12 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_categories"
             android:gravity="top|left"
-            android:hint="@string/descriptionHint"
+            android:hint="@string/description_hint"
             android:textSize="@dimen/textsize_medium"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="10"
             android:minLines="3"
-            android:paddingTop="@dimen/ui_element_gap"/>
+            android:paddingTop="@dimen/ui_element_gap" />
 
         <AutoCompleteTextView
             android:id="@+id/task_location"
@@ -54,12 +53,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_description"
-            android:hint="@string/locationHint"
+            android:hint="@string/location_hint"
             android:textSize="@dimen/textsize_medium"
             android:inputType="textCapSentences"
             android:paddingTop="@dimen/ui_element_gap"
             android:paddingBottom="@dimen/ui_element_gap"
-            android:textAlignment="textStart"/>
+            android:textAlignment="textStart" />
 
         <CheckBox
             android:id="@+id/task_important"
@@ -68,7 +67,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_location"
             android:textSize="@dimen/textsize_small"
-            android:text="@string/markAsImportant"/>
+            android:text="@string/mark_as_important" />
 
         <!-- Remind me UNCLICKED -->
 
@@ -91,7 +90,7 @@
                 android:minWidth="32dp"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/ui_element_gap"
-                android:layout_marginRight="@dimen/ui_element_gap"/>
+                android:layout_marginRight="@dimen/ui_element_gap" />
 
             <TextView
                 android:id="@+id/remindMeString"
@@ -101,7 +100,7 @@
                 android:hint="@string/remind_me"
                 android:layout_centerVertical="true"
                 android:textSize="@dimen/textsize_medium"
-                android:layout_marginTop="@dimen/ui_element_gap"/>
+                android:layout_marginTop="@dimen/ui_element_gap" />
 
         </RelativeLayout>
 
@@ -113,8 +112,7 @@
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:layout_below="@id/task_important"
-            android:clickable="true"
-            >
+            android:clickable="true">
 
             <Spinner
                 android:id="@+id/reminderTypeSpinner"
@@ -123,7 +121,7 @@
                 android:paddingTop="@dimen/ui_element_gap"
                 android:layout_marginLeft="@dimen/ui_element_gap"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <!-- Location reminder field, hidden by default -->
             <AutoCompleteTextView
@@ -131,13 +129,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPostalAddress"
-                android:hint="@string/locationHint"
+                android:hint="@string/location_hint"
                 android:visibility="invisible"
                 android:textSize="@dimen/textsize_medium"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:layout_toRightOf="@id/reminderTypeSpinner"
                 android:ems="11"
-                android:textAlignment="textStart"/>
+                android:textAlignment="textStart" />
 
             <Spinner
                 android:id="@+id/reminderDateSpinner"
@@ -147,7 +145,7 @@
                 android:paddingTop="@dimen/ui_element_gap"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:clickable="true"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <Spinner
                 android:id="@+id/reminderTimeSpinner"
@@ -156,7 +154,7 @@
                 android:layout_toRightOf="@id/reminderDateSpinner"
                 android:paddingTop="@dimen/ui_element_gap"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <ImageButton
                 android:id="@+id/reminderCancelButton"
@@ -172,7 +170,7 @@
                 android:minWidth="3dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/navigation_cancel"
-                style="@android:style/Widget.ActionButton"/>
+                style="@android:style/Widget.ActionButton" />
 
         </RelativeLayout>
 
@@ -184,7 +182,7 @@
             android:layout_below="@id/remindMeField"
             android:layout_marginTop="@dimen/ui_element_gap"
             android:layout_marginBottom="@dimen/ui_element_gap"
-            android:background="@android:color/holo_blue_dark"/>
+            android:background="@android:color/holo_blue_dark" />
 
         <!-- Event specific fields -->
 
@@ -194,10 +192,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/separator1"
-            android:text="@string/convertToEvent"
+            android:text="@string/convert_to_event"
             android:onClick="onConvertEvent"
             style="@android:style/Widget.ActionButton"
-            android:clickable="true"/>
+            android:clickable="true" />
 
         <RelativeLayout
             android:id="@+id/eventSpinners"
@@ -218,16 +216,14 @@
                 android:minHeight="3dp"
                 android:minWidth="3dp"
                 android:src="@drawable/navigation_cancel"
-                style="@android:style/Widget.ActionButton"/>
+                style="@android:style/Widget.ActionButton" />
 
             <TextView
                 android:id="@+id/fromString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="@string/fromLabel"
-                android:textSize="@dimen/textsize_small"
-                >
-            </TextView>
+                android:hint="@string/from_label"
+                android:textSize="@dimen/textsize_small"></TextView>
 
             <Spinner
                 android:id="@+id/date_from"
@@ -235,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fromString"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <Spinner
                 android:id="@+id/time_from"
@@ -243,16 +239,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fromString"
                 android:layout_toRightOf="@id/date_from"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <TextView
                 android:id="@+id/toString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="@string/toLabel"
+                android:hint="@string/to_label"
                 android:textSize="@dimen/textsize_small"
-                android:layout_below="@id/date_from">
-            </TextView>
+                android:layout_below="@id/date_from"></TextView>
 
             <Spinner
                 android:id="@+id/date_to"
@@ -260,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toString"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
             <Spinner
                 android:id="@+id/time_to"
@@ -268,7 +263,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/date_to"
                 android:layout_below="@id/toString"
-                android:background="@drawable/styled_spinner"/>
+                android:background="@drawable/styled_spinner" />
 
         </RelativeLayout>
 
