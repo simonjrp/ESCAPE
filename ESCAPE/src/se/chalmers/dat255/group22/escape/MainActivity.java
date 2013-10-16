@@ -1,8 +1,15 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,13 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
-import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+import android.widget.Toast;
 
 /**
  * The main activity, to be launched when app is started.
@@ -36,6 +37,7 @@ public class MainActivity extends FragmentActivity {
 	private CharSequence title;
 	private CharSequence drawerTitle;
 	private int fragmentPosition;
+	private boolean backPressedOnce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -197,5 +199,29 @@ public class MainActivity extends FragmentActivity {
 		private void setTitle(String string) {
 			title = string;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		/*
+		 * Displays a toast about exiting the app if the user clicks on the back
+		 * button one time. If the user clicks one more time in the next 2
+		 * seconds, the application exits.
+		 */
+		if (backPressedOnce) {
+			super.onBackPressed();
+		} else {
+			backPressedOnce = true;
+			Toast.makeText(this, getString(R.string.back_button_hint),
+					Toast.LENGTH_SHORT).show();
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					backPressedOnce = false;
+				}
+			}, 2000);
+		}
+
 	}
 }
