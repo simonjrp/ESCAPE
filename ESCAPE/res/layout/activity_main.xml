@@ -11,14 +11,56 @@
         android:layout_height="match_parent" />
     <!-- The navigation drawer -->
 
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+    <RelativeLayout
+        android:id="@+id/left_drawer_layout"
+        android:layout_width="@dimen/navigation_drawer_size"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#111"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:layout_gravity="start">
+
+        <ListView
+            android:id="@+id/left_drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#111"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <View
+                android:id="@+id/drawer_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/ui_element_gap"
+                android:layout_marginBottom="@dimen/ui_element_gap"
+                android:background="@android:color/darker_gray"
+                />
+
+            <TextView
+                android:id="@+id/about_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/drawer_separator"
+                android:text="@string/about"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textColor="#fff"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

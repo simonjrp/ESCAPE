@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
@@ -33,6 +34,7 @@ public class MainActivity extends FragmentActivity {
 	private String[] drawerTitles;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+    private RelativeLayout drawerListLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
@@ -50,7 +52,8 @@ public class MainActivity extends FragmentActivity {
 		// Configure the navigation drawer
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.left_drawer_list);
+        drawerListLayout = (RelativeLayout) findViewById(R.id.left_drawer_layout);
 
 		drawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, drawerTitles));
@@ -116,7 +119,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// Hides the "New task" button in actionbar if navigation drawer is open
-		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListLayout);
 		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
 
 		menu.findItem(R.id.pick_category).setVisible(
@@ -186,7 +189,7 @@ public class MainActivity extends FragmentActivity {
 
 			drawerList.setItemChecked(position, true);
 			setTitle(drawerTitles[position]);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerListLayout);
 
 		}
 
