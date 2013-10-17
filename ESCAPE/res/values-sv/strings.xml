@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ESCAPE</string>
+    <string name="drawer_open">Öppna sidpanelenr</string>
+    <string name="drawer_close">Stäng sidpanelen</string>
+    <string name="title_activity_new_task">Nytt objekt</string>
+    <string name="today_label">Idag</string>
+    <string name="tomorrow_label">Imorgon</string>
+    <string name="someday_label">Framöver</string>
+    <string name="edit_button_description">Ändra</string>
+    <string name="delete_button_description">Ta bort</string>
+    <string name="pomodoro_start">Starta pomodoroklockan</string>
+    <string name="pomodoro_stop">Stopp</string>
+    <string name="remind_me">Påminn mig vid</string>
+    <string name="time_reminder">Tidspåminnelse</string>
+    <string name="location_reminder">Platspåminnelse</string>
+    <string name="notification_done">Färdig</string>
+    <string name="notification_snooze_time">Igen om en timme</string>
+    <string name="notification_snooze_place">Nästa gång</string>
+    <string name="pick_time_label">Välj en tid&#8230;</string>
+    <string name="pick_day_label">Välj en dag&#8230;</string>
+    <string name="from_label">Från</string>
+    <string name="to_label">Till</string>
+    <string name="morning">Morgon</string>
+    <string name="afternoon">Eftermiddag</string>
+    <string name="evening">Kväll</string>
+    <string name="night">Natt</string>
+    <string name="custom_category">Skapa ny kategoriy&#8230;</string>
+    <string name="nextweeksameday">Nästa</string>
+    <string name="new_task">Ny arbetsuppgift</string>
+    <string name="new_block">Nytt block</string>
+    <string name="title_activity_new_block">Nytt block</string>
+    <string name="title_hint">Titel</string>
+    <string name="description_hint">Beskrivning</string>
+    <string name="location_hint">Plats</string>
+    <string name="mark_as_important">Markera som viktig</string>
+    <string name="convert_to_event">Konvertera till event</string>
+    <string name="api_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
+    <string name="nh_init">NotificationHandler initialized.</string>
+    <string name="nh_not_init">NotificationHandler hasn\'t been initialized yet. Run init(FragmentActivity) when starting application.</string>
+    <string name="nh_location_reminder_not_added">Couldn\'t add location reminder.</string>
+    <string name="nh_location_reminder_not_removed">Couldn\'t remove location reminder.</string>
+    <string name="gplay_services_available">Google Play services is available.</string>
+    <string name="gplay_services_unavailable">Google Play services is unavailable.</string>
+    <string name="geofence_connected">Connected to Location Services</string>
+    <string name="geofence_disconnected">Disconnected from Location Services</string>
+    <string name="geofence_add_success">Successfully added specified geofences</string>
+    <string name="geofence_add_error">An error occured when adding specified geofences</string>
+    <string name="geofence_remove_success">Successfully removed specified geofences</string>
+    <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
+    <string name="back_button_hint">Tryck BAKÅT en gång till för att avsluta</string>
+    <string name="about_menu_item">Om</string>
+    <string name="about_dialog_title">ESCAPE (v0.5)</string>
+    <string name="about_dialog_header">Organisera din vardag</string>
+    <string name="about_dialog_desc">Enkelt men kraftfullt verktyg för att skapa att-göra-lista, events, påminnelser och veckovis autogenererade scheman.</string>
+    <string name="about_dialog_repo">Github: <a href="https://github.com/simonjrp/ESCAPE">ESCAPE</a></string>
+    <string name="about_dialog_license">Licens: <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></string>
+    <string name="about_dialog_copyright">Copyright &#169; 2013</string>
+
+</resources>

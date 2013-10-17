@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">ESCAPE</string>
-    <string name="action_settings">Settings</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_new_task">Add new task</string>
@@ -17,7 +16,6 @@
     <string name="remind_me">Remind me at</string>
     <string name="time_reminder">Time reminder</string>
     <string name="location_reminder">Location reminder</string>
-    <string name="title_activity_snooze_dialog">SnoozeDialogActivity</string>
     <string name="notification_done">Done</string>
     <string name="notification_snooze_time">In an hour</string>
     <string name="notification_snooze_place">Next time</string>
@@ -54,9 +52,18 @@
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Press BACK one more time to exit</string>
     <string name="enter_custom_category">Enter a new category</string>
-<string name="white_hex_color">"#ffFFFFFF"</string>
+    <string name="white_hex_color">"#ffFFFFFF"</string>
     <string name="grey_hex_color">"#ffbebebe"</string>
-<string name="default_category_school">School</string>
+    <string name="default_category_school">School</string>
     <string name="default_category_work">Work</string>
     <string name="default_category_life">Life</string>
+    <string name="about_menu_item">About</string>
+    <string name="about_dialog_title">ESCAPE (v0.5)</string>
+    <string name="about_dialog_header">Get organized</string>
+    <string name="about_dialog_desc">Simple yet powerful planner tool to use for creating events, tasks, reminders and auto generated weekly schedules.</string>
+    <string name="about_dialog_repo">Github: <a href="https://github.com/simonjrp/ESCAPE">ESCAPE</a></string>
+    <string name="about_dialog_license">Licensed under: <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></string>
+    <string name="about_dialog_copyright">Copyright &#169; 2013</string>
+
+
 </resources>
