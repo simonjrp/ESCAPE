@@ -54,7 +54,7 @@ public class CustomListAdapter implements ListAdapter {
 	ListObject emptyListDefaultTask;
 
 	/**
-	 * Creates a new CustomListAdapter
+	 * Creates a new CustomListAdapter used to display tasks
 	 * 
 	 * @param context
 	 *            The context (activity) this adapter is used in
@@ -89,6 +89,9 @@ public class CustomListAdapter implements ListAdapter {
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
+
+                // These variables must be set on the object since they are used
+                // when sorting the list objects and choosing what to display.
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
@@ -101,6 +104,7 @@ public class CustomListAdapter implements ListAdapter {
 				noTasks = false;
 			}
 		}
+        // If list is empty add a default task
 		if (noTasks)
 			addListObject(emptyListDefaultTask);
 		else
@@ -109,7 +113,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * update the edit/remove button
+     * If edit and delete buttons initialized this method will make them
+     * invisible
 	 */
 	protected void updateEditButtons() {
 		try {

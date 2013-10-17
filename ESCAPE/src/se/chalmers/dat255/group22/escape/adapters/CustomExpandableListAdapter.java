@@ -19,7 +19,6 @@ import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
@@ -42,7 +41,8 @@ import android.widget.TextView;
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
- * 
+ * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
+ * to determine what ListObjects should be displayed
  * 
  * @author tholene, Carl
  */
@@ -69,7 +69,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	ListObject emptyListDefaultTask;
 
 	/**
-	 * Create a new custom list adapter.
+	 * Create a new custom expandable list adapter used to display events
 	 * 
 	 * @param context
 	 *            The context to make use of
@@ -97,7 +97,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList.add(context.getResources().getString(R.string.today_label));
 		headerList.add(context.getResources()
 				.getString(R.string.tomorrow_label));
-        headerList.add(context.getResources().getString(R.string.thisweek_label));
+		headerList.add(context.getResources()
+				.getString(R.string.thisweek_label));
 
 		headerList
 				.add(context.getResources().getString(R.string.someday_label));
@@ -107,9 +108,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap.put(
 				context.getResources().getString(R.string.tomorrow_label),
 				tomorrowEventList);
-        objectDataMap.put(
-                context.getResources().getString(R.string.thisweek_label),
-                thisWeekEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.thisweek_label),
+				thisWeekEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.someday_label),
 				somedayEventList);
@@ -136,6 +137,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
 			if (dbHandler.getTime(lo) != null) {
+
+				// These variables must be set on the object since they are used
+				// when sorting the list objects and choosing what to display.
+				lo.setTime(dbHandler.getTime(lo));
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
@@ -144,12 +149,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				// intended to test functionality!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
-                // Time needs to be set since used when sorting objects
-				lo.setTime(dbHandler.getTime(lo));
 				addListObject(lo);
 				noEvents = false;
 			}
 		}
+		// If list is empty add a default event
 		if (noEvents)
 			addListObjectToday(emptyListDefaultTask);
 		else
@@ -164,7 +168,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 *
+	 * If edit and delete buttons initialized this method will make them
+	 * invisible
 	 */
 	protected void resetEditButtons() {
 		try {
@@ -679,8 +684,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * removes a list with categories from the list with categories displayed in
-	 * by this adapter.
+	 * removes a list with categories from the list with categories displayed by
+	 * this adapter.
 	 * 
 	 * @param catList
 	 *            List with categories that will be removed
