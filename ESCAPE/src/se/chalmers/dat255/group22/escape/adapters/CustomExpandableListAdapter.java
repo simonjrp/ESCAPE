@@ -23,8 +23,6 @@ import android.widget.TextView;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,13 +40,16 @@ import se.chalmers.dat255.group22.escape.objects.Time;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
+import android.text.format.DateFormat;
 
 /**
  * An ExpandableListAdapter that makes use of a
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
- * 
+ * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
+ * to determine what ListObjects should be displayed
  * 
  * @author tholene, Carl
  */
@@ -59,6 +60,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	// The lists
 	List<ListObject> todayEventList;
 	List<ListObject> tomorrowEventList;
+	List<ListObject> thisWeekEventList;
 	List<ListObject> somedayEventList;
 	// The context this is used in
 	private Context context;
@@ -70,9 +72,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
-	 * Create a new custom list adapter.
+	 * Create a new custom expandable list adapter used to display events
 	 * 
 	 * @param context
 	 *            The context to make use of
@@ -93,25 +97,40 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap = new HashMap<String, List<ListObject>>();
 		todayEventList = new ArrayList<ListObject>();
 		tomorrowEventList = new ArrayList<ListObject>();
+		thisWeekEventList = new ArrayList<ListObject>();
 		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
 		headerList.add(context.getResources().getString(R.string.todayLabel));
-		headerList
-				.add(context.getResources().getString(R.string.tomorrowLabel));
-		headerList.add(context.getResources().getString(R.string.somedayLabel));
+		headerList.add(context.getResources()
+				.getString(R.string.tomorrowLabel));
+		headerList.add(context.getResources()
+				.getString(R.string.thisweek_label));
 
-		objectDataMap.put(
-				context.getResources().getString(R.string.todayLabel),
-				todayEventList);
+		headerList
+				.add(context.getResources().getString(R.string.somedayLabel));
+
+		objectDataMap.put(context.getResources()
+				.getString(R.string.todayLabel), todayEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.tomorrowLabel),
 				tomorrowEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.thisweek_label),
+				thisWeekEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.somedayLabel),
 				somedayEventList);
 
 		theCategories = new ArrayList<Category>();
+
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add events, tasks with a set time!");
+		emptyListDefaultTask.setTime(new Time(1, new Date(System
+				.currentTimeMillis()), new Date(
+				System.currentTimeMillis() + 1000 * 60 * 60)));
 	}
 
 	/**
@@ -120,10 +139,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
+		boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
 			if (dbHandler.getTime(lo) != null) {
+
+				// These variables must be set on the object since they are used
+				// when sorting the list objects and choosing what to display.
+				lo.setTime(dbHandler.getTime(lo));
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
@@ -133,8 +157,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
+				noEvents = false;
 			}
 		}
+		// If list is empty add a default event
+		if (noEvents)
+			addListObjectToday(emptyListDefaultTask);
+		else
+			removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -142,10 +172,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// First expandable group is always expanded when adapter reinits
 		expLv.expandGroup(0, true);
+        resetEditButtons();
 	}
 
 	/**
-	 *
+	 * If edit and delete buttons initialized this method will make them
+	 * invisible
 	 */
 	protected void resetEditButtons() {
 		try {
@@ -189,6 +221,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, final int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
+
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
 		final int thisGroup = groupPosition;
@@ -196,82 +229,84 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		final boolean lastChild = isLastChild;
 		final View thisView = convertView;
 		final ViewGroup thisViewGroup = parent;
-		// Get the name of the task to display for each task entry
-		final String childText = listObject.getName();
 
-		// Get the time if it exists
-		String childTimeText = "";
-		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject)
-					.getStartDate();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
-					Locale.getDefault());
-			childTimeText = dateFormat.format(childStartDate);
-		}
+		if (getLOShouldBeVisible(listObject)) {
 
-		LayoutInflater infalInflater = (LayoutInflater) this.context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		convertView = infalInflater.inflate(R.layout.list_task, null);
+			// Get the name of the task to display for each task entry
+			final String childText = listObject.getName();
 
-		// Get a textview for the object
-		TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
-
-		TextView childTimeView = (TextView) convertView
-				.findViewById(R.id.startTimeTask);
-
-		ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
-
-		ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
-
-		resetEditButtons();
-
-		// OnClickListener for sending an intent with the ID of the listObject
-		// that was clicked
-		editButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
-
-				Bundle bundle = new Bundle();
-				intent.putExtra(EDIT_TASK_MSG, bundle);
-
-				bundle.putInt(INTENT_GET_ID, listObject.getId());
-				intent.setFlags(EDIT_TASK_ID);
-				context.startActivity(intent);
+			// Get the time if it exists
+			String childTimeText = "";
+			if (dbHandler.getTime(listObject) != null) {
+				final Date childStartDate = dbHandler.getTime(listObject)
+						.getStartDate();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+                        Locale.getDefault());
+                childTimeText = dateFormat.format(childStartDate);
 			}
-		});
-		deleteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				DBHandler dbh = new DBHandler(context);
-				dbh.deleteListObject(listObject);
-				removeListObjectToday(listObject);
-				removeListObjectTomorrow(listObject);
-				removeListObjectSomeday(listObject);
 
-				LinearLayout nextObject = null;
-				try {
-					nextObject = (LinearLayout) getChildView(thisGroup,
-							nextChild, lastChild, thisView, thisViewGroup);
+			if (convertView == null || !convertView.isShown()) {
+				LayoutInflater infalInflater = (LayoutInflater) this.context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = infalInflater.inflate(R.layout.list_task, null);
+			}
+			// Get a textview for the object
+			TextView childLabel = (TextView) convertView
+					.findViewById(R.id.listTask);
 
-					nextObject.refreshDrawableState();
-					nextObject.postInvalidate();
+			TextView childTimeView = (TextView) convertView
+					.findViewById(R.id.startTimeTask);
 
-				} catch (NullPointerException e) {
-					// Do nothing
-				} catch (IndexOutOfBoundsException e) {
-					// Do nothing
+			ImageButton editButton = (ImageButton) convertView
+					.findViewById(R.id.editButton);
+
+			ImageButton deleteButton = (ImageButton) convertView
+					.findViewById(R.id.deleteButton);
+
+			resetEditButtons();
+			// OnClickListener for sending an intent with the ID of the
+			// listObject
+			// that was clicked
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, NewTaskActivity.class);
+
+					Bundle bundle = new Bundle();
+					intent.putExtra(EDIT_TASK_MSG, bundle);
+					bundle.putInt(INTENT_GET_ID, listObject.getId());
+					intent.setFlags(EDIT_TASK_ID);
+					context.startActivity(intent);
 				}
-			}
+			});
+			deleteButton.setOnClickListener(new OnClickListener() {
+				@Override
+                public void onClick(View v) {
+                    DBHandler dbh = new DBHandler(context);
+                    dbh.deleteListObject(listObject);
+                    removeListObjectToday(listObject);
+                    removeListObjectTomorrow(listObject);
+                    removeListObjectSomeday(listObject);
 
-		});
+                    LinearLayout nextObject = null;
+                    try {
+                        nextObject = (LinearLayout) getChildView(thisGroup,
+                                nextChild, lastChild, thisView, thisViewGroup);
+
+                        nextObject.refreshDrawableState();
+                        nextObject.postInvalidate();
+
+                    } catch (NullPointerException e) {
+                        // Do nothing
+                    } catch (IndexOutOfBoundsException e) {
+                        // Do nothing
+                    }
+                }
+            });
 
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("")
-				? "no start time"
+				? ""
 				: childTimeText);
 		// Get the layout for the object's data
 		RelativeLayout childData = (RelativeLayout) convertView
@@ -280,7 +315,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		// We don't want the data to show yet...
 		childData.setVisibility(View.GONE);
 
-		childLabel.setText(childText);
+			childLabel.setText(childText);
+			childTimeView.setText(childTimeText.equals("")
+					? ""
+					: childTimeText);
 
 		// Custom listener for showing/hiding data relevant to the listObject
 		CustomOnClickListener clickListener = new CustomOnClickListener(
@@ -302,17 +340,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		convertView.setBackground(states);
 
-		// We add two listeners since it wont work on one if the other is added
-		// too
+			// We add two listeners since it wont work on one if the other is
+			// added
+			// too
 
-		// Adding touchlisteners
-		convertView.setOnTouchListener(new OptionTouchListener(context,
-				convertView));
-
-		if (!getLOShouldBeVisible(listObject))
-			convertView.setVisibility(View.INVISIBLE);
-		else
+			// Adding touchlisteners
+			convertView.setOnTouchListener(new OptionTouchListener(context,
+					convertView));
 			convertView.setVisibility(View.VISIBLE);
+		} else {
+			// TODO is there a way to fix visibility without this?
+			convertView = new View(context);
+			convertView.setVisibility(View.INVISIBLE);
+		}
 		return convertView;
 	}
 
@@ -370,7 +410,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isEmpty() {
 		return todayEventList.isEmpty() && tomorrowEventList.isEmpty()
-				&& somedayEventList.isEmpty();
+				&& thisWeekEventList.isEmpty() && somedayEventList.isEmpty();
 	}
 
 	@Override
@@ -399,23 +439,25 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 	/**
 	 * Add a list object to the expandable list. Object should automatically be
-	 * placed where it should be. Atleast a start date must be defined in the
-	 * database!
+	 * placed where it should be. If the list object does not contain a start
+	 * date it will not be added into the list.
 	 * 
 	 * @param listObject
 	 *            the listObject to add
 	 */
 	public void addListObject(ListObject listObject) {
 		// Get a calendar with current system time
-		Time theTime = dbHandler.getTime(listObject);
+		Time theTime = listObject.getTime();
 		if (theTime != null) {
 			// Get start date
 			Date theDate = theTime.getStartDate();
 			// Add into the relevant list
-			if (isToday(theDate)) {
+			if (CheckDateUtils.isToday(theDate)) {
 				addListObjectToday(listObject);
-			} else if (isTomorrow(theDate)) {
+			} else if (CheckDateUtils.isTomorrow(theDate)) {
 				addListObjectTomorrow(listObject);
+			} else if (CheckDateUtils.isThisWeek(theDate)) {
+				addListObjectThisWeek(listObject);
 			} else {
 				addListObjectSomeday(listObject);
 			}
@@ -451,6 +493,22 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
+	 * Add a new event for this week. Not that this is the current week and not
+	 * 7 days ahead!
+	 * 
+	 * @param listObject
+	 *            the listObject to add
+	 */
+	public void addListObjectThisWeek(ListObject listObject) {
+		if (!thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.add(listObject);
+			addCategoryList(listObject.getCategories());
+			this.notifyDataSetChanged();
+		}
+
+	}
+
+	/**
 	 * Add a new event for someday if the task is not already in the list
 	 * 
 	 * @param listObject
@@ -462,6 +520,19 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			addCategoryList(listObject.getCategories());
 			this.notifyDataSetChanged();
 		}
+	}
+
+	/**
+	 * Removes a listobject from the event list
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
+	public void removeListObject(ListObject listObject) {
+		removeListObjectToday(listObject);
+		removeListObjectTomorrow(listObject);
+		removeListObjectThisWeek(listObject);
+		removeListObjectSomeday(listObject);
 	}
 
 	/**
@@ -490,6 +561,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			removeLoAssociatedCats(listObject);
 			this.notifyDataSetChanged();
 		}
+	}
+
+	public void removeListObjectThisWeek(ListObject listObject) {
+		if (thisWeekEventList.contains(listObject)) {
+			thisWeekEventList.remove(listObject);
+			removeLoAssociatedCats(listObject);
+			this.notifyDataSetChanged();
+		}
+
 	}
 
 	/**
@@ -532,6 +612,21 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			return tomorrowEventList.get(i);
 		}
 		return null;
+	}
+
+	/**
+	 * Get a list object from the this week list
+	 * 
+	 * @param i
+	 *            number of object to return
+	 * @return the specified list object
+	 */
+	public ListObject getListObjectThisWeek(int i) {
+		if (0 <= i && i < thisWeekEventList.size()) {
+			return thisWeekEventList.get(i);
+		}
+		return null;
+
 	}
 
 	/**
@@ -611,6 +706,14 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				}
 			}
 			if (!catIsInList) {
+				for (ListObject lo : this.thisWeekEventList) {
+					if (lo.getCategories().contains(cat)) {
+						catIsInList = true;
+						break;
+					}
+				}
+			}
+			if (!catIsInList) {
 				for (ListObject lo : this.somedayEventList) {
 					if (lo.getCategories().contains(cat)) {
 						catIsInList = true;
@@ -624,8 +727,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * removes a list with categories from the list with categories displayed in
 	 * by this adapter.
+=======
+	 * removes a list with categories from the list with categories displayed by
+	 * this adapter.
+>>>>>>> dev
 	 * 
 	 * @param catList
 	 *            List with categories that will be removed
@@ -693,48 +801,5 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			removeCategory(cat);
 			addCategory(cat);
 		}
-	}
-
-	/**
-	 * Method to check if a date is today. Also returns true if the date is
-	 * earlier than today
-	 * 
-	 * @param theDate
-	 *            the date to see if it is today
-	 * @return true if theDate is today or earlier
-	 */
-	public boolean isToday(Date theDate) {
-		// Get a calendar with the events start time
-		GregorianCalendar theCalendar = new GregorianCalendar();
-		theCalendar.setTime(theDate);
-		// Get a calendar with current system time to compare with
-		Calendar systemCalendar = Calendar.getInstance();
-		// If it should return true only if today and not before use == instead
-		// of >=
-		return systemCalendar.get(Calendar.YEAR) >= theCalendar
-				.get(Calendar.YEAR)
-				&& systemCalendar.get(Calendar.DAY_OF_YEAR) >= theCalendar
-						.get(Calendar.DAY_OF_YEAR);
-	}
-
-	/**
-	 * Method to check if a date is tomorrow
-	 * 
-	 * @param theDate
-	 *            the date to see if it is tomorrow
-	 * @return true of it is tomorrow
-	 */
-	public boolean isTomorrow(Date theDate) {
-		// Get a calendar with the events start time
-		GregorianCalendar theCalendar = new GregorianCalendar();
-		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and change its value so it
-		// can be used in comparison with the given date.
-		Calendar tmpDate = Calendar.getInstance();
-		tmpDate.roll(Calendar.DAY_OF_YEAR, true);
-
-		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
-				&& tmpDate.get(Calendar.DAY_OF_YEAR) == theCalendar
-						.get(Calendar.DAY_OF_YEAR);
 	}
 }

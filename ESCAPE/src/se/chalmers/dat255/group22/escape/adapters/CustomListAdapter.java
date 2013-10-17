@@ -56,9 +56,11 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 
 	/**
-	 * Creates a new CustomListAdapter
+	 * Creates a new CustomListAdapter used to display tasks
 	 * 
 	 * @param context
 	 *            The context (activity) this adapter is used in
@@ -75,6 +77,11 @@ public class CustomListAdapter implements ListAdapter {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
+
+		emptyListDefaultTask = new ListObject(97569754,
+				"Anything you need to do?");
+		emptyListDefaultTask
+				.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -84,9 +91,13 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
+		boolean noTasks = true;
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
+
+                // These variables must be set on the object since they are used
+                // when sorting the list objects and choosing what to display.
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
@@ -96,15 +107,22 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
+				noTasks = false;
 			}
 		}
-		updateEditButtons();
+        // If list is empty add a default task
+		if (noTasks)
+			addListObject(emptyListDefaultTask);
+		else
+			removeListObject(emptyListDefaultTask);
+		resetEditButtons();
 	}
 
 	/**
-	 * update the edit/remove button
+     * If edit and delete buttons initialized this method will make them
+     * invisible
 	 */
-	protected void updateEditButtons() {
+	protected void resetEditButtons() {
 		try {
 			TextView timeText = (TextView) ((MainActivity) context)
 					.findViewById(R.id.startTimeTask);
@@ -180,58 +198,63 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-		updateEditButtons();
+		resetEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
 		final int nextChild = childPosition;
 		final String childText = listObject.getName();
 		final View thisView = convertView;
 		final ViewGroup thisViewGroup = parent;
-		// final Time childTime = listObject.getTime();
-		String childTimeText = "";
-		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject)
-					.getStartDate();
-			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
-					Locale.getDefault());
-			childTimeText = dateFormat.format(childStartDate);
-		}
 
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_task, null);
-		}
 
-		// Get a textview for the object
-		final TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
 
-		final TextView childTimeView = (TextView) convertView
-				.findViewById(R.id.startTimeTask);
+		if (getLOShouldBeVisible(listObject)) {
 
-		final ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
 
-		final ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
+            String childTimeText = "";
+            if (dbHandler.getTime(listObject) != null) {
+                final Date childStartDate = dbHandler.getTime(listObject)
+                        .getStartDate();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+                        Locale.getDefault());
+                childTimeText = dateFormat.format(childStartDate);
+            }
 
-		editButton.setVisibility(View.INVISIBLE);
-		deleteButton.setVisibility(View.INVISIBLE);
+			if (convertView == null || !convertView.isShown()) {
+				LayoutInflater infalInflater = (LayoutInflater) this.context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = infalInflater.inflate(R.layout.list_task, null);
+			}
 
-		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
-		// 300);
-		// deleteButton.setX(convertView.getRight() + 300);
-		editButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
+			// Get a textview for the object
+			final TextView childLabel = (TextView) convertView
+					.findViewById(R.id.listTask);
 
-				Bundle bundle = new Bundle();
-				intent.putExtra(EDIT_TASK_MSG, bundle);
+			final TextView childTimeView = (TextView) convertView
+					.findViewById(R.id.startTimeTask);
 
-				bundle.putInt(INTENT_GET_ID, listObject.getId());
-				intent.setFlags(EDIT_TASK_ID);
-				context.startActivity(intent);
+			final ImageButton editButton = (ImageButton) convertView
+					.findViewById(R.id.editButton);
+
+			final ImageButton deleteButton = (ImageButton) convertView
+					.findViewById(R.id.deleteButton);
+
+			editButton.setVisibility(View.INVISIBLE);
+			deleteButton.setVisibility(View.INVISIBLE);
+
+			// editButton.setX(convertView.getRight() + deleteButton.getWidth()
+			// +
+			// 300);
+			// deleteButton.setX(convertView.getRight() + 300);
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+                    Intent intent = new Intent(context, NewTaskActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    intent.putExtra(EDIT_TASK_MSG, bundle);
+                    bundle.putInt(INTENT_GET_ID, listObject.getId());
+                    intent.setFlags(EDIT_TASK_ID);
+                    context.startActivity(intent);
 			}
 		});
 
@@ -299,9 +322,12 @@ public class CustomListAdapter implements ListAdapter {
 		convertView.setBackground(states);
 
 		if (!getLOShouldBeVisible(listObject))
-			convertView.setVisibility(View.INVISIBLE);
-		else
 			convertView.setVisibility(View.VISIBLE);
+		} else {
+			// TODO is there a way to fix visibility without this?
+			convertView = new View(context);
+			convertView.setVisibility(View.INVISIBLE);
+		}
 		return convertView;
 	}
 

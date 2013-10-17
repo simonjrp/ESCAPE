@@ -1,6 +1,8 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
+
 import android.content.Context;
+
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -12,17 +14,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 
+
 import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
+import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
+
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional

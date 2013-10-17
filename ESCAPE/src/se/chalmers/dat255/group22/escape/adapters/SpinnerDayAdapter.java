@@ -76,7 +76,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		days.add(context.getString(R.string.todayLabel));
 		days.add(context.getString(R.string.tomorrowLabel));
 		days.add(nextWeekSameDay);
-		days.add(context.getString(R.string.pickDayLabel));
+		days.add(context.getString(R.string.pick_day_label));
 
 		clear();
 		addAll(days);
@@ -170,7 +170,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			add(context.getString(R.string.tomorrowLabel));
 			add(nextWeekSameDayLabel);
 			add(customLabel);
-			add(context.getString(R.string.pickDayLabel));
+			add(context.getString(R.string.pick_day_label));
 			this.notifyDataSetChanged();
 
 			// Refresh local list. This
@@ -182,7 +182,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			days.add(context.getString(R.string.tomorrowLabel));
 			days.add(nextWeekSameDayLabel);
 			days.add(customLabel);
-			days.add(context.getString(R.string.pickDayLabel));
+			days.add(context.getString(R.string.pick_day_label));
 
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}

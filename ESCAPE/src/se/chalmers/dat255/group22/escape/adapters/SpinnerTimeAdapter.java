@@ -76,7 +76,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		times.add(context.getString(R.string.afternoon));
 		times.add(context.getString(R.string.evening));
 		times.add(context.getString(R.string.night));
-		times.add(context.getString(R.string.pickTimeLabel));
+		times.add(context.getString(R.string.pick_time_label));
 
 		clear();
 		addAll(times);
@@ -168,7 +168,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			add(context.getString(R.string.evening));
 			add(context.getString(R.string.night));
 			add(customLabel);
-			add(context.getString(R.string.pickTimeLabel));
+			add(context.getString(R.string.pick_time_label));
 
 			// Refresh local list. This
 			// is necessary because the adapters internal list of items and
@@ -179,7 +179,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			times.add(context.getString(R.string.evening));
 			times.add(context.getString(R.string.night));
 			times.add(customLabel);
-			times.add(context.getString(R.string.pickTimeLabel));
+			times.add(context.getString(R.string.pick_time_label));
 			this.notifyDataSetChanged();
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}

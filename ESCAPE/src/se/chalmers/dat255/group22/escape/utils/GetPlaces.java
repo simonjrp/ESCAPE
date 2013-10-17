@@ -24,6 +24,7 @@ import se.chalmers.dat255.group22.escape.R;
 
 import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
 
+
 /**
  * @author tholene
  */
@@ -55,7 +56,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 		try {
 			// Browser key for Google API
 
-			String key = "key=" + context.getString(R.string.API_key);
+			String key = "key=" + context.getString(R.string.api_key);
 
 			String input = "";
 

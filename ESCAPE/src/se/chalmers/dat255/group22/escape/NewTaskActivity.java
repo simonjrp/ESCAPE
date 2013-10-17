@@ -1,5 +1,32 @@
 package se.chalmers.dat255.group22.escape;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.CategoryCreatorFragment;
+import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Place;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
+import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
+import se.chalmers.dat255.group22.escape.utils.GetPlaces;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -18,39 +45,14 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
-import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
-import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Place;
-import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
-import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
-import se.chalmers.dat255.group22.escape.utils.GetPlaces;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
-
 /**
  * An activity used for creating a new task
  * 
  * @author Erik, Carl, Simon Persson
  */
-public class NewTaskActivity extends Activity {
+public class NewTaskActivity extends Activity
+		implements
+			CategoryCreatorFragment.EditCategoryDialogListener {
 
 	private AutoCompleteTextView locationAutoComplete;
 	private AutoCompleteTextView locationReminderAutoComplete;
@@ -83,34 +85,8 @@ public class NewTaskActivity extends Activity {
 		super.onResume();
 		userIsSure = false;
 
-		DBHandler dbHandler = new DBHandler(this);
 		// Set up the spinner for different categories
-		Spinner categorySpinner = (Spinner) this
-				.findViewById(R.id.task_categories);
-
-		ArrayList<String> categories = new ArrayList<String>();
-		// Grab all the categories from the DB...
-		List<Category> categoriesFromDB = dbHandler.getAllCategories();
-
-		// ...and add them to the array used in the spinner
-		// TODO Catch eventual NullPointerException?
-		for (Category c : categoriesFromDB) {
-			if (!c.getName().equals(getString(R.string.custom_category)))
-				categories.add(c.getName());
-
-		}
-		// Add the last item that will act as a button for adding a new category
-		categories.add(getString(R.string.custom_category));
-
-		// The DayAdapter only makes use of simple strings and presents its
-		// items the way we want the categories to be presented. It would be
-		// unnecessary to create an identical adapter just for the categories,
-		// so we just use this one instead
-
-		SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
-				this, R.layout.simple_spinner_item, categories);
-
-		categorySpinner.setAdapter(categoryAdapter);
+		initCategoryAdapter();
 
 		/*
 		 * Check if the activity was called from an already created listObject
@@ -135,6 +111,7 @@ public class NewTaskActivity extends Activity {
 		// Set up the AutoCompleteTextViews
 		setupAutoCompleteTextView(locationReminderAutoComplete);
 		setupAutoCompleteTextView(locationAutoComplete);
+
 	}
 
 	@Override
@@ -231,11 +208,10 @@ public class NewTaskActivity extends Activity {
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
 
-		// TODO Fix Category from spinner!
-		// Category newCategory = new Category(category, "Random Color",
-		// "Another random Color");
-		Category newCategory = new Category("Tmp default ", "Random Color",
-				"Another random Color");
+		Category newCategory = new Category(category,
+				getString(R.string.white_hex_color),
+				getString(R.string.grey_hex_color));
+
 		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
@@ -288,6 +264,14 @@ public class NewTaskActivity extends Activity {
 							dbHandler.getPlace(tmpId));
 				}
 
+				Category originalCategory = dbHandler.getCategories(
+						editedListObject).get(0);
+				if (originalCategory != null) {
+					originalCategory.setName(newCategory.getName());
+					db.updateCategory(originalCategory, null);
+                    db.addCategoryWithListObject(originalCategory, editedListObject);
+				}
+
 				// No matter what¸ remove all old time/place reminders.
 				TimeAlarm originalTimeAlarm = dbHandler
 						.getTimeAlarm(editedListObject);
@@ -300,9 +284,9 @@ public class NewTaskActivity extends Activity {
 				GPSAlarm originalGPSAlarm = dbHandler
 						.getGPSAlarm(editedListObject);
 				if (originalGPSAlarm != null) {
-					dbHandler.deleteGPSAlarm(originalGPSAlarm);
-					NotificationHandler.getInstance().removePlaceReminder(
+					NotificationHandler.getInstance().removeLocationReminder(
 							editedListObject);
+					dbHandler.deleteGPSAlarm(originalGPSAlarm);
 				}
 
 				// Update/add new reminder
@@ -474,7 +458,7 @@ public class NewTaskActivity extends Activity {
 		strDayList.add(getString(R.string.todayLabel));
 		strDayList.add(getString(R.string.tomorrowLabel));
 		strDayList.add(nextWeekSameDay);
-		strDayList.add(getString(R.string.pickDayLabel));
+		strDayList.add(getString(R.string.pick_day_label));
 
 		SpinnerDayAdapter dayFromAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, dateFromSpinner);
@@ -761,14 +745,12 @@ public class NewTaskActivity extends Activity {
 			if (listObject.getName() != null)
 				nameString = listObject.getName();
 
-			// TODO This needs to be fixed
-			/*
-			 * if (listObject.getCategories() != null) categoryString =
-			 * listObject.getCategories().get(0) .getName();
-			 */
-
 			if (listObject.getComment() != null)
 				descriptionString = listObject.getComment();
+
+			if (listObject.getCategories() != null)
+				categoryString = dbHandler.getCategories(listObject).get(0)
+						.getName();
 
 			if (dbHandler.getPlace(listObject) != null)
 				locationString = dbHandler.getPlace(listObject).getName();
@@ -812,11 +794,19 @@ public class NewTaskActivity extends Activity {
 			title.setText(nameString);
 
 			// TODO This needs to be worked out
-			/*
-			 * if(categoryString != null &&
-			 * !categoryString.equals(getString(R.string.custom_category)))
-			 * category.setSelection(0);
-			 */
+
+			if (categoryString != null
+					&& !categoryString
+							.equals(getString(R.string.custom_category))) {
+				for (int i = 0; i < category.getAdapter().getCount(); i++) {
+					String c = (String) category.getAdapter().getItem(i);
+					if (c.equals(categoryString)) {
+						category.setSelection(i);
+						break;
+					}
+				}
+
+			}
 
 			if (descriptionString != null) {
 				if (descriptionString.trim().length() != 0)
@@ -856,8 +846,6 @@ public class NewTaskActivity extends Activity {
 				showLocationReminderInput();
 
 				// Set the text of the location field
-				// TODO Need latest DB to get Location as string from
-				// TODO GPSAlarm
 				remindLocation.setText(gpsAlarm.getAdress());
 
 				isLocationReminder = true;
@@ -911,7 +899,6 @@ public class NewTaskActivity extends Activity {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				adapter.clear();
 				GetPlaces task = new GetPlaces(autoCompleteTextView, adapter,
 						getBaseContext());
 				// now pass the argument in the textview to the task
@@ -920,13 +907,67 @@ public class NewTaskActivity extends Activity {
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				adapter.clear();
 			}
 
 			public void afterTextChanged(Editable s) {
-				adapter.clear();
 			}
 		});
 	}
 
+	private void initCategoryAdapter() {
+		DBHandler dbHandler = new DBHandler(this);
+		Spinner categorySpinner = (Spinner) this
+				.findViewById(R.id.task_categories);
+
+		ArrayList<String> categories = new ArrayList<String>();
+		// Grab all the categories from the DB...
+		dbHandler.addCategory(new Category(
+				getString(R.string.default_category_school),
+				getString(R.string.white_hex_color),
+				getString(R.string.grey_hex_color)));
+		dbHandler.addCategory(new Category(
+				getString(R.string.default_category_work),
+				getString(R.string.white_hex_color),
+				getString(R.string.grey_hex_color)));
+		dbHandler.addCategory(new Category(
+				getString(R.string.default_category_life),
+				getString(R.string.white_hex_color),
+				getString(R.string.grey_hex_color)));
+		List<Category> categoriesFromDB = dbHandler.getAllCategories();
+
+		// ...and add them to the array used in the spinner
+		// TODO Catch eventual NullPointerException?
+		for (Category c : categoriesFromDB) {
+			if (!c.getName().equals(getString(R.string.custom_category)))
+				categories.add(c.getName());
+		}
+		// Add the last item that will act as a button for adding a new category
+		categories.add(getString(R.string.custom_category));
+
+		// The DayAdapter only makes use of simple strings and presents its
+		// items the way we want the categories to be presented. It would be
+		// unnecessary to create an identical adapter just for the categories,
+		// so we just use this one instead
+
+		SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
+				this, R.layout.simple_spinner_item, categories);
+
+		categorySpinner.setAdapter(categoryAdapter);
+		categorySpinner
+				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
+						this, OnItemSelectedSpinnerListener.CATEGORY_SPINNER,
+						categorySpinner.getId()));
+	}
+
+	@Override
+	public void onFinishEditDialog(String inputText) {
+		DBHandler dbHandler = new DBHandler(this);
+		if (!inputText.equals(getString(R.string.custom_category))) {
+			Category newCategory = new Category(inputText,
+					getString(R.string.white_hex_color),
+					getString(R.string.grey_hex_color));
+			dbHandler.addCategory(newCategory);
+			initCategoryAdapter();
+		}
+	}
 }

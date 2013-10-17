@@ -3,6 +3,7 @@ package se.chalmers.dat255.group22.escape;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +38,14 @@ public class MainActivity extends FragmentActivity {
 	private CharSequence title;
 	private CharSequence drawerTitle;
 	private int fragmentPosition;
+	private boolean backPressedOnce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// Initializes the notification handler with this FragmentActivity
+		// Initializes the notification handler with this context
 		NotificationHandler.getInstance().init(this);
 
 		// Configure the navigation drawer
@@ -90,7 +93,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Send item selected event to the drawer toggle (to handle click on the
 		// back/up button in the actionbar). If back/up button was pressed, the
-		// drawer toggle will return true, and false otherwised (i.e some other
+		// drawer toggle will return true, and false otherwise (i.e some other
 		// button in action bar was pressed)
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
@@ -103,7 +106,6 @@ public class MainActivity extends FragmentActivity {
 				startActivity(intent);
 				break;
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -198,5 +200,29 @@ public class MainActivity extends FragmentActivity {
 		private void setTitle(String string) {
 			title = string;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		/*
+		 * Displays a toast about exiting the app if the user clicks on the back
+		 * button one time. If the user clicks one more time in the next 2
+		 * seconds, the application exits.
+		 */
+		if (backPressedOnce) {
+			super.onBackPressed();
+		} else {
+			backPressedOnce = true;
+			Toast.makeText(this, getString(R.string.back_button_hint),
+					Toast.LENGTH_SHORT).show();
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					backPressedOnce = false;
+				}
+			}, 2000);
+		}
+
 	}
 }

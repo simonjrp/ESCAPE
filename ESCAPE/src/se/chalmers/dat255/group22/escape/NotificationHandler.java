@@ -9,10 +9,26 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.Geofence;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,31 +54,8 @@ import se.chalmers.dat255.group22.escape.utils.Constants;
 
 public class NotificationHandler {
 
-	/**
-	 * Constant to use when setting/getting a ListObject title from a bundle.
-	 */
-	public static String NOTIFICATION_TITLE = "TITLE";
-	/**
-	 * Constant to use when setting/getting a ListObject comment from a bundle.
-	 */
-	public static String NOTIFICATION_DESC = "DESC";
-	/**
-	 * Constant to use when setting/getting a ListObject start time from a
-	 * bundle.
-	 */
-	public static String NOTIFICATION_EVENT_TIME = "EVENT_TIME";
-	/**
-	 * Constant to use when setting/getting a boolean describing whether a
-	 * ListObject is an event or not from a bundle.
-	 */
-	public static String NOTOFICATION_IS_EVENT = "IS_EVENT";
-	/**
-	 * Constant to use when setting/getting a ListObject id from a bundle
-	 */
-	public static String NOTIFICATION_ID = "ID";
-
 	private static DBHandler dbH;
-	private static FragmentActivity contextActivity;
+	private static Context context;
 	private static NotificationHandler instance;
 
 	/**
@@ -90,17 +83,17 @@ public class NotificationHandler {
 	 * Initializes the notification handler with a fragment activity. Has to be
 	 * called one time before using some of the methods for adding reminders.
 	 * 
-	 * @param fragmentActivity
+	 * @param context
 	 *            The fragment activity to use when bringing up error dialogs.
 	 */
-	public void init(FragmentActivity fragmentActivity) {
-		contextActivity = fragmentActivity;
-		dbH = new DBHandler(contextActivity);
-		Log.d(Constants.APPTAG, "NotificationHandler initialized");
+	public void init(Context context) {
+		this.context = context.getApplicationContext();
+		dbH = new DBHandler(context);
+		Log.d(Constants.APPTAG, context.getString(R.string.nh_init));
 	}
 
-	public boolean isInitialized() {
-		return contextActivity != null;
+	private boolean isInitialized() {
+		return context != null;
 	}
 
 	/**
@@ -118,7 +111,7 @@ public class NotificationHandler {
 
 		if (!isInitialized()) {
 			throw new UnsupportedOperationException(
-					"NotificationHandler hasn't been initialized yet. Run init(FragmentActivity) when starting application.");
+					context.getString(R.string.nh_not_init));
 		}
 
 		TimeAlarm timeAlarm = dbH.getTimeAlarm(listObject);
@@ -130,7 +123,7 @@ public class NotificationHandler {
 
 		Bundle args = generateBundle(listObject);
 
-		AlarmManager alarmManager = (AlarmManager) contextActivity
+		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 
 		// Creates an intent holding the AlarmReceiver, and attaches the
@@ -147,9 +140,8 @@ public class NotificationHandler {
 		 * the broadcast, it generates and sends a custom notification to the
 		 * system.
 		 */
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				contextActivity,
-				args.getInt(NotificationHandler.NOTIFICATION_ID), alarmIntent,
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+				args.getInt(Constants.NOTIFICATION_ID), alarmIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// Gives the alarm manager a time and an operation to be performed (the
@@ -159,7 +151,6 @@ public class NotificationHandler {
 				.set(AlarmManager.RTC_WAKEUP, date.getTime(), pendingIntent);
 
 	}
-
 	/**
 	 * Method for adding a place reminder notification for a task or event.
 	 * 
@@ -196,24 +187,34 @@ public class NotificationHandler {
 		alarmIntent.setAction(AlarmReceiver.NEW_LOCATION_NOTIFICATION);
 		alarmIntent.putExtras(args);
 
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				contextActivity, 0, alarmIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+				alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		List<Geofence> geofenceList = new ArrayList<Geofence>();
 		geofenceList.add(simpleGeofence.toGeofence());
 
 		if (servicesConnected()) {
-			GeofenceRequester requester = new GeofenceRequester(contextActivity);
+			GeofenceRequester requester = new GeofenceRequester(
+					context.getApplicationContext());
 			requester.setPendingIntent(pendingIntent);
 			requester.addGeofences(geofenceList);
+		} else {
+			Toast.makeText(context,
+					context.getString(R.string.nh_location_reminder_not_added),
+					Toast.LENGTH_LONG).show();
+
 		}
 
 	}
 
-	/*
+	/**
 	 * Method for generating a bundle object that contains all the important
 	 * data from the ListObject
+	 * 
+	 * @param listObject
+	 *            The ListObject from which to get all data to put in bundle
+	 *            from.
+	 * @return A Bundle containing data extracted from the list object.
 	 */
 	private Bundle generateBundle(ListObject listObject) {
 		Bundle bundle = new Bundle();
@@ -246,11 +247,12 @@ public class NotificationHandler {
 
 		}
 
-		bundle.putInt(NOTIFICATION_ID, id);
-		bundle.putString(NOTIFICATION_TITLE, title);
-		bundle.putString(NOTIFICATION_DESC, description);
-		bundle.putBoolean(NOTOFICATION_IS_EVENT, isEvent);
-		bundle.putString(NOTIFICATION_EVENT_TIME, timeString.toString());
+		bundle.putInt(Constants.NOTIFICATION_ID, id);
+		bundle.putString(Constants.NOTIFICATION_TITLE, title);
+		bundle.putString(Constants.NOTIFICATION_DESC, description);
+		bundle.putBoolean(Constants.NOTOFICATION_IS_EVENT, isEvent);
+		bundle.putString(Constants.NOTIFICATION_EVENT_TIME,
+				timeString.toString());
 
 		return bundle;
 
@@ -270,16 +272,15 @@ public class NotificationHandler {
 
 		Bundle args = generateBundle(listObject);
 
-		AlarmManager alarmManager = (AlarmManager) contextActivity
+		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 
 		Intent alarmIntent = new Intent();
 		alarmIntent.setAction(AlarmReceiver.NEW_TIME_NOTIFICATION);
 		alarmIntent.putExtras(args);
 
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				contextActivity,
-				args.getInt(NotificationHandler.NOTIFICATION_ID), alarmIntent,
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+				args.getInt(Constants.NOTIFICATION_ID), alarmIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		alarmManager.cancel(pendingIntent);
@@ -287,18 +288,29 @@ public class NotificationHandler {
 		Log.d(Constants.APPTAG,
 				"Time reminder for: "
 						+ alarmIntent.getExtras().getString(
-								NotificationHandler.NOTIFICATION_TITLE)
-						+ " removed.");
+								Constants.NOTIFICATION_TITLE) + " removed.");
 	}
 
-	public void removePlaceReminder(ListObject listObject) {
+	/**
+	 * Method for removing an existing location reminder (geofence) from the
+	 * system.
+	 * 
+	 * @param listObject
+	 *            The ListObject associated with the location reminder.
+	 */
+	public void removeLocationReminder(ListObject listObject) {
 		long id = listObject.getId();
 		if (servicesConnected()) {
 			List<String> idList = new ArrayList<String>();
 			idList.add(id + "");
 
-			GeofenceRemover remover = new GeofenceRemover(contextActivity);
+			GeofenceRemover remover = new GeofenceRemover(context);
 			remover.removeGeoFencesById(idList);
+		} else {
+			Toast.makeText(
+					context,
+					context.getString(R.string.nh_location_reminder_not_removed),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -309,30 +321,38 @@ public class NotificationHandler {
 	 */
 	private boolean servicesConnected() {
 		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(contextActivity);
+				.isGooglePlayServicesAvailable(context);
 
 		if (resultCode == ConnectionResult.SUCCESS) {
-			Log.d(Constants.APPTAG, "Google Play services is available.");
+			Log.d(Constants.APPTAG,
+					context.getString(R.string.gplay_services_available));
 
 			Intent broadcastIntent = new Intent();
 
 			broadcastIntent.putExtra("RESULT_CODE", resultCode);
 
-			LocalBroadcastManager.getInstance(contextActivity).sendBroadcast(
+			LocalBroadcastManager.getInstance(context).sendBroadcast(
 					broadcastIntent);
 			return true;
 		} else {
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-					resultCode, contextActivity,
-					Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			// Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+			// resultCode, contextActivity,
+			// Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			//
+			// if (errorDialog != null) {
+			// ErrorGPlayFragment errorDialogFragment = new
+			// ErrorGPlayFragment();
+			// errorDialogFragment.setDialog(errorDialog);
+			// errorDialogFragment.show(
+			// contextActivity.getSupportFragmentManager(),
+			// "Geofence Detecion");
+			// }
 
-			if (errorDialog != null) {
-				ErrorGPlayFragment errorDialogFragment = new ErrorGPlayFragment();
-				errorDialogFragment.setDialog(errorDialog);
-				errorDialogFragment.show(
-						contextActivity.getSupportFragmentManager(),
-						"Geofence Detecion");
-			}
+			Log.d(Constants.APPTAG,
+					context.getString(R.string.gplay_services_unavailable));
+			Toast.makeText(context,
+					context.getString(R.string.gplay_services_unavailable),
+					Toast.LENGTH_SHORT).show();
 
 		}
 

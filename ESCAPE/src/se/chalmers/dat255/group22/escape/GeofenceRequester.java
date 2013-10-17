@@ -1,9 +1,10 @@
 package se.chalmers.dat255.group22.escape;
 
 import android.app.Activity;
+
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class GeofenceRequester
 			OnConnectionFailedListener {
 
 	// The calling activity
-	private final Activity activity;
+	private final Context context;
 
 	// The pending intent containing actions to be taken when a transition has
 	// taken place
@@ -54,12 +55,12 @@ public class GeofenceRequester
 	/**
 	 * Constructor for creating a new GeofenceRequester.
 	 * 
-	 * @param activity
+	 * @param context
 	 *            The activity context. Used to create a location client, make
 	 *            broadcasts etc.
 	 */
-	public GeofenceRequester(Activity activity) {
-		this.activity = activity;
+	public GeofenceRequester(Context context) {
+		this.context = context;
 
 		// Initializes the instance variables
 		pendingIntent = null;
@@ -138,7 +139,7 @@ public class GeofenceRequester
 	// Creates and returns a new Location Client (later used to add geofences)
 	private GooglePlayServicesClient getLocationClient() {
 		if (locationClient == null) {
-			locationClient = new LocationClient(activity, this, this);
+			locationClient = new LocationClient(context, this, this);
 		}
 
 		return locationClient;
@@ -147,7 +148,7 @@ public class GeofenceRequester
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_CONNECTED);
+		Log.d(Constants.APPTAG, context.getString(R.string.geofence_connected));
 
 		// Now that the location client is connected, continue with actually
 		// adding the geofences.
@@ -170,17 +171,19 @@ public class GeofenceRequester
 
 		if (LocationStatusCodes.SUCCESS == statusCode) {
 
-			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_ADD_SUCCESS);
+			Log.d(Constants.APPTAG,
+					context.getString(R.string.geofence_add_success));
 
 			broadcast.setAction(Constants.ACTION_GEOFENCES_ADDED);
 		} else {
 
-			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_ADD_ERROR);
+			Log.e(Constants.APPTAG,
+					context.getString(R.string.geofence_add_error));
 
-			broadcast.setAction(Constants.DEBUG_GEOFENCES_ADD_ERROR);
+			broadcast.setAction(Constants.ACTION_GEOFENCES_ADD_ERROR);
 		}
 
-		LocalBroadcastManager.getInstance(activity).sendBroadcast(broadcast);
+		LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast);
 
 		requestDisconnection();
 
@@ -195,7 +198,8 @@ public class GeofenceRequester
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_DISCONNECTED);
+		Log.d(Constants.APPTAG,
+				context.getString(R.string.geofence_disconnected));
 
 		// Reset current location client
 		locationClient = null;
@@ -206,30 +210,29 @@ public class GeofenceRequester
 	public void onConnectionFailed(ConnectionResult result) {
 		inProgress = false;
 
-		if (result.hasResolution()) {
-			// If Google Play services have a solution to the failed connection,
-			// try to start a Google Play services activity that resolves it.
-			try {
-				// The requestcode is the one received by the activity when the
-				// started resolution returns some results.
-				result.startResolutionForResult(activity,
-						Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			} catch (SendIntentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			// Notify interested components that the connection failed. The
-			// MainActivity should bring up an error dialog.
-			Intent errorBroadcast = new Intent();
-			errorBroadcast
-					.setAction(Constants.ACTION_GEOFENCES_CONNECTION_FAILED);
-			errorBroadcast.putExtra(Constants.EXTRAS_TAG_GEOFENCES_ERROR_CODE,
-					result.getErrorCode());
+		// if (result.hasResolution()) {
+		// // If Google Play services have a solution to the failed connection,
+		// // try to start a Google Play services activity that resolves it.
+		// try {
+		// // The requestcode is the one received by the activity when the
+		// // started resolution returns some results.
+		// result.startResolutionForResult(context,
+		// Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+		// } catch (SendIntentException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// } else {
+		// Notify interested components that the connection failed. The
+		// MainActivity should bring up an error dialog.
+		Intent errorBroadcast = new Intent();
+		errorBroadcast.setAction(Constants.ACTION_GEOFENCES_CONNECTION_FAILED);
+		errorBroadcast.putExtra(Constants.EXTRAS_TAG_GEOFENCES_ERROR_CODE,
+				result.getErrorCode());
 
-			LocalBroadcastManager.getInstance(activity).sendBroadcast(
-					errorBroadcast);
-		}
+		LocalBroadcastManager.getInstance(context)
+				.sendBroadcast(errorBroadcast);
+		// }
 
 	}
 

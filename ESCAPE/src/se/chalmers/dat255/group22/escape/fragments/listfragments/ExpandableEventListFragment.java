@@ -14,6 +14,7 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 
+
 /**
  * A fragment displaying an expandable list with events.<br>
  * An event is different from a task such that an event has a set time while a
@@ -102,9 +103,6 @@ public class ExpandableEventListFragment extends Fragment {
                 });
 	}
 
-	/**
-	 * Called when popup should be displayed
-	 */
 	private void getPopup() {
 		// TODO Find way to use popup without creating it every time!
 		if (!listAdapter.getTheCategories().isEmpty()) {

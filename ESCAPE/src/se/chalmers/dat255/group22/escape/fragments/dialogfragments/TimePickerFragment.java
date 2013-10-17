@@ -72,7 +72,7 @@ public class TimePickerFragment extends DialogFragment
 		adapter.add(activity.getString(R.string.evening));
 		adapter.add(activity.getString(R.string.night));
 		adapter.add(formattedTime);
-		adapter.add(activity.getString(R.string.pickTimeLabel));
+		adapter.add(activity.getString(R.string.pick_time_label));
 		spinner.setSelection(adapter.getCount() - 2, true);
 
 		Calendar tempCalendar = Calendar.getInstance();

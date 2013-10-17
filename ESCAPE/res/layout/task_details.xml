@@ -18,10 +18,11 @@
             android:id="@+id/task_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/titleHint"
+            android:hint="@string/title_hint"
             android:textSize="@dimen/textsize_large"
             android:inputType="textCapSentences"
-            android:paddingTop="@dimen/ui_element_gap" />
+            android:paddingTop="@dimen/ui_element_gap"
+            android:imeOptions="actionDone"/>
 
         <Spinner
             android:id="@+id/task_categories"
@@ -40,7 +41,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_categories"
             android:gravity="top|left"
-            android:hint="@string/descriptionHint"
+            android:hint="@string/description_hint"
             android:textSize="@dimen/textsize_medium"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="10"
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_description"
-            android:hint="@string/locationHint"
+            android:hint="@string/location_hint"
             android:textSize="@dimen/textsize_medium"
             android:inputType="textCapSentences"
             android:paddingTop="@dimen/ui_element_gap"
@@ -67,7 +68,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/task_location"
             android:textSize="@dimen/textsize_small"
-            android:text="@string/markAsImportant" />
+            android:text="@string/mark_as_important" />
 
         <!-- Remind me UNCLICKED -->
 
@@ -129,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPostalAddress"
-                android:hint="@string/locationHint"
+                android:hint="@string/location_hint"
                 android:visibility="invisible"
                 android:textSize="@dimen/textsize_medium"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -192,7 +193,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/separator1"
-            android:text="@string/convertToEvent"
+            android:text="@string/convert_to_event"
             android:onClick="onConvertEvent"
             style="@android:style/Widget.ActionButton"
             android:clickable="true" />
@@ -222,7 +223,7 @@
                 android:id="@+id/fromString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="@string/fromLabel"
+                android:hint="@string/from_label"
                 android:textSize="@dimen/textsize_small"></TextView>
 
             <Spinner
@@ -245,7 +246,7 @@
                 android:id="@+id/toString"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:hint="@string/toLabel"
+                android:hint="@string/to_label"
                 android:textSize="@dimen/textsize_small"
                 android:layout_below="@id/date_from"></TextView>
 
