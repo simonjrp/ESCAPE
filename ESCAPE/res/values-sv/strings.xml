@@ -51,6 +51,11 @@
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Tryck BAKÅT en gång till för att avsluta</string>
     <string name="about_menu_item">Om</string>
-
+    <string name="about_dialog_title">ESCAPE (v0.5)</string>
+    <string name="about_dialog_header">Organisera din vardag</string>
+    <string name="about_dialog_desc">Enkelt men kraftfullt verktyg för att skapa att-göra-lista, events, påminnelser och veckovis autogenererade scheman.</string>
+    <string name="about_dialog_repo">Github: <a href="https://github.com/simonjrp/ESCAPE">ESCAPE</a></string>
+    <string name="about_dialog_license">Licens: <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></string>
+    <string name="about_dialog_copyright">Copyright &#169; 2013</string>
 
 </resources>
