@@ -30,6 +30,8 @@ public class ExpandableEventListFragment extends Fragment {
 	private ListPopupWindow listPopupWindow;
 	// The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
+    // the width used for the category popup
+    private int categoryListWidth;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -78,7 +80,10 @@ public class ExpandableEventListFragment extends Fragment {
 				R.id.expEventList);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
-		initPopup();
+
+        categoryListWidth = getActivity().getResources().getDimensionPixelSize(
+                R.dimen.category_list_width);
+        initPopup();
 	}
 
 	/**
@@ -89,7 +94,7 @@ public class ExpandableEventListFragment extends Fragment {
 		listPopupWindow = new ListPopupWindow(getActivity());
 		listPopupWindow.setAnchorView(menuItemView);
 		listPopupWindow.setModal(true);
-		listPopupWindow.setWidth(300);
+		listPopupWindow.setWidth(categoryListWidth);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 		listPopupWindow
 				.setOnDismissListener(new PopupWindow.OnDismissListener() {

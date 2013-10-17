@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,10 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.CustomListAdapter;
 
 /**
  * A fragment displaying a list with tasks. A task is different from an event
@@ -30,6 +29,8 @@ public class TaskListFragment extends Fragment {
 	private ListPopupWindow listPopupWindow;
 	// The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
+	// the width used for the category popup
+	private int categoryListWidth;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -73,6 +74,8 @@ public class TaskListFragment extends Fragment {
 		ourListAdapter = new CustomListAdapter(getActivity());
 		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
 		ourTaskList.setAdapter(ourListAdapter);
+		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
+				R.dimen.category_list_width);
 		initPopup();
 	}
 
@@ -84,16 +87,16 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow = new ListPopupWindow(getActivity());
 		listPopupWindow.setAnchorView(menuItemView);
 		listPopupWindow.setModal(true);
-		listPopupWindow.setWidth(300);
+		listPopupWindow.setWidth(categoryListWidth);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 		listPopupWindow
 				.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        if (ourListAdapter != null)
-                            ourListAdapter.notifyDataSetChanged();
-                    }
-                });
+					@Override
+					public void onDismiss() {
+						if (ourListAdapter != null)
+							ourListAdapter.notifyDataSetChanged();
+					}
+				});
 	}
 
 	/**
