@@ -102,12 +102,11 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 			// now get the JSON array that's inside that object
 			JSONArray allPredictions = new JSONArray(
 					predictions.getString("predictions"));
-
 			for (int i = 0; i < allPredictions.length(); i++) {
 
 				// Parse the JSONArray to exlude the country
 				JSONObject thisPrediction = (JSONObject) allPredictions.get(i);
-
+				System.out.println(thisPrediction.toString());
 				JSONArray allTerms = thisPrediction.getJSONArray("terms");
 
 				String result = "";
@@ -135,6 +134,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 					}
 				}
 				// add each entry to our array
+
 				predictionsArr.add(result);
 			}
 		} catch (IOException e) {
@@ -158,7 +158,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 
 		Log.d(APPTAG, "onPostExecute : " + result.size());
 		// update the adapter
-		adapter = new ArrayAdapter<String>(context, R.layout.location_item);
+        adapter = new ArrayAdapter<String>(context, R.layout.location_item);
 		adapter.setNotifyOnChange(true);
 		// attach the adapter to textview
 		autoCompleteTextView.setAdapter(adapter);

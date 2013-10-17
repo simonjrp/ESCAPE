@@ -910,6 +910,7 @@ public class NewTaskActivity extends Activity {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+                adapter.clear();
 				GetPlaces task = new GetPlaces(autoCompleteTextView, adapter,
 						getBaseContext());
 				// now pass the argument in the textview to the task
@@ -918,9 +919,11 @@ public class NewTaskActivity extends Activity {
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
+                adapter.clear();
 			}
 
 			public void afterTextChanged(Editable s) {
+                adapter.clear();
 			}
 		});
 	}

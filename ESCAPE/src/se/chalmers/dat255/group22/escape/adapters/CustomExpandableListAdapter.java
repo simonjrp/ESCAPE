@@ -28,7 +28,6 @@ import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -187,6 +187,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
+		final int thisGroup = groupPosition;
+		final int nextChild = childPosition;
+		final boolean lastChild = isLastChild;
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 		// Get the name of the task to display for each task entry
 		final String childText = listObject.getName();
 
@@ -195,8 +200,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		if (dbHandler.getTime(listObject) != null) {
 			final Date childStartDate = dbHandler.getTime(listObject)
 					.getStartDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            childTimeText = dateFormat.format(childStartDate);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
+			childTimeText = dateFormat.format(childStartDate);
 		}
 
 		LayoutInflater infalInflater = (LayoutInflater) this.context
@@ -241,6 +247,37 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				removeListObjectToday(listObject);
 				removeListObjectTomorrow(listObject);
 				removeListObjectSomeday(listObject);
+
+				LinearLayout nextObject = null;
+				try {
+					nextObject = (LinearLayout) getChildView(thisGroup,
+							nextChild, lastChild, thisView, thisViewGroup);
+
+					TextView timeText = (TextView) nextObject
+							.findViewById(R.id.startTimeTask);
+					timeText.setVisibility(View.VISIBLE);
+
+					ImageButton editButton = (ImageButton) nextObject
+							.findViewById(R.id.editButton);
+					editButton.setVisibility(View.INVISIBLE);
+					editButton.getAnimation().setFillEnabled(false);
+					editButton.getAnimation().setFillAfter(false);
+					editButton.clearAnimation();
+					nextObject.refreshDrawableState();
+					nextObject.postInvalidate();
+
+					ImageButton deleteButton = (ImageButton) nextObject
+							.findViewById(R.id.deleteButton);
+					deleteButton.setVisibility(View.INVISIBLE);
+					deleteButton.getAnimation().setFillEnabled(false);
+					deleteButton.getAnimation().setFillAfter(false);
+					deleteButton.clearAnimation();
+
+				} catch (NullPointerException e) {
+					// Do nothing
+				} catch (IndexOutOfBoundsException e) {
+					// Do nothing
+				}
 			}
 
 		});
@@ -250,7 +287,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				? "no start time"
 				: childTimeText);
 		// Get the layout for the object's data
-		RelativeLayout childData = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
+		RelativeLayout childData = (RelativeLayout) convertView
+				.findViewById(R.id.taskDataLayout);
 
 		// We don't want the data to show yet...
 		childData.setVisibility(View.GONE);
@@ -584,12 +622,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-     * removes a list with categories from the list with categories displayed in
-     * by this adapter.
-     *
-     * @param catList
-     *            List with categories that will be removed
-     */
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
+	 * 
+	 * @param catList
+	 *            List with categories that will be removed
+	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)
 			removeCategory(cat);

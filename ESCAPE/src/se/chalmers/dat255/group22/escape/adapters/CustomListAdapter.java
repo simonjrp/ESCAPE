@@ -22,12 +22,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -178,15 +178,17 @@ public class CustomListAdapter implements ListAdapter {
 		// Get the name of the task to display for each task entry
 		updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
-
+		final int nextChild = childPosition;
 		final String childText = listObject.getName();
-
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 		// final Time childTime = listObject.getTime();
 		String childTimeText = "";
 		if (dbHandler.getTime(listObject) != null) {
 			final Date childStartDate = dbHandler.getTime(listObject)
 					.getStartDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
 			childTimeText = dateFormat.format(childStartDate);
 		}
 
@@ -228,12 +230,43 @@ public class CustomListAdapter implements ListAdapter {
 				context.startActivity(intent);
 			}
 		});
+
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
 				removeListObject(listObject);
+				LinearLayout nextObject = null;
+				try {
+						nextObject = (LinearLayout) getView(nextChild,
+								thisView, thisViewGroup);
+
+						TextView timeText = (TextView) nextObject
+								.findViewById(R.id.startTimeTask);
+						timeText.setVisibility(View.VISIBLE);
+
+						ImageButton editButton = (ImageButton) nextObject
+								.findViewById(R.id.editButton);
+						editButton.setVisibility(View.INVISIBLE);
+						editButton.getAnimation().setFillEnabled(false);
+						editButton.getAnimation().setFillAfter(false);
+						editButton.clearAnimation();
+						nextObject.refreshDrawableState();
+                        nextObject.postInvalidate();
+
+						ImageButton deleteButton = (ImageButton) nextObject
+								.findViewById(R.id.deleteButton);
+						deleteButton.setVisibility(View.INVISIBLE);
+						deleteButton.getAnimation().setFillEnabled(false);
+						deleteButton.getAnimation().setFillAfter(false);
+						deleteButton.clearAnimation();
+
+                } catch (NullPointerException e) {
+                    // Do nothing
+				} catch (IndexOutOfBoundsException e) {
+					// Do nothing
+				}
 
 				// v.refreshDrawableState();
 			}
@@ -244,7 +277,8 @@ public class CustomListAdapter implements ListAdapter {
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
 		// Get the layout for the object's data
-		RelativeLayout childData = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
+		RelativeLayout childData = (RelativeLayout) convertView
+				.findViewById(R.id.taskDataLayout);
 
 		// We don't want the data to show yet...
 		childData.setVisibility(View.GONE);
@@ -254,6 +288,7 @@ public class CustomListAdapter implements ListAdapter {
 		CustomOnClickListener clickListener = new CustomOnClickListener(
 				listObject, childLabel, childData);
 		convertView.setOnClickListener(clickListener);
+
 		// TODO We add two listeners since it wont work on one if the other is
 		// added to
 		// Adding touchlisteners
@@ -267,6 +302,7 @@ public class CustomListAdapter implements ListAdapter {
 			convertView.setVisibility(View.VISIBLE);
 		return convertView;
 	}
+
 	@Override
 	public int getItemViewType(int i) {
 		return i;
