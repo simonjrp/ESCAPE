@@ -21,7 +21,8 @@
             android:hint="@string/title_hint"
             android:textSize="@dimen/textsize_large"
             android:inputType="textCapSentences"
-            android:paddingTop="@dimen/ui_element_gap" />
+            android:paddingTop="@dimen/ui_element_gap"
+            android:imeOptions="actionDone"/>
 
         <Spinner
             android:id="@+id/task_categories"

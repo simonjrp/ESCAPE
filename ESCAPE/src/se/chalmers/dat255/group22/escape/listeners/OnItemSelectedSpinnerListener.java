@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.CategoryCreatorFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -11,9 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
-
 /**
  * Class representing an OnItemSelectedListener for spinners. Used mainly to
  * bring up date or time dialog pickers when clicking on a specific item in some
@@ -24,15 +24,22 @@ import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFra
 public class OnItemSelectedSpinnerListener implements OnItemSelectedListener {
 
 	/**
-	 * Constant used to determine whether to bring up a time or date picker.
+	 * Constant used to determine whether to bring up a time, date or category
+	 * picker.
 	 */
-	public static final String DATE_SPINNER = "DATE";
+	public static final int DATE_SPINNER = 419;
 	/**
-	 * Constant used to determine whether to bring up a time or date picker.
+	 * * Constant used to determine whether to bring up a time, date or category
+	 * picker.
 	 */
-	public static final String TIME_SPINNER = "TIME";
+	public static final int TIME_SPINNER = 2019;
+	/**
+	 * Constant used to determine whether to bring up a time, date or category
+	 * picker.
+	 */
+	public static final int CATEGORY_SPINNER = 319;
 	private Activity activity;
-	private String spinnerType;
+	private int spinnerType;
 	private int spinnerId;
 
 	/**
@@ -46,7 +53,7 @@ public class OnItemSelectedSpinnerListener implements OnItemSelectedListener {
 	 * @param spinnerId
 	 *            The ID of the spinner assigned to this listener.
 	 */
-	public OnItemSelectedSpinnerListener(Activity activity, String spinnerType,
+	public OnItemSelectedSpinnerListener(Activity activity, int spinnerType,
 			int spinnerId) {
 		this.activity = activity;
 		this.spinnerType = spinnerType;
@@ -76,12 +83,24 @@ public class OnItemSelectedSpinnerListener implements OnItemSelectedListener {
 
 			// Start the fragment corresponding to the spinner type (date or
 			// time)
-			DialogFragment dialogFragment = spinnerType.equals(DATE_SPINNER)
-					? new DatePickerFragment()
-					: new TimePickerFragment();
+			DialogFragment dialogFragment = null;
+			switch (spinnerType) {
+				case DATE_SPINNER :
+					dialogFragment = new DatePickerFragment();
+					break;
+				case TIME_SPINNER :
+					dialogFragment = new TimePickerFragment();
+					break;
+				case CATEGORY_SPINNER :
+					dialogFragment = new CategoryCreatorFragment();
+					break;
+				default :
+					break;
+			}
 			Bundle args = new Bundle();
 			args.putInt(DatePickerFragment.SPINNER_ID, spinnerId);
-			dialogFragment.setArguments(args);
+			if (dialogFragment != null)
+				dialogFragment.setArguments(args);
 			dialogFragment.show(fragmentManager, "dialog");
 		}
 

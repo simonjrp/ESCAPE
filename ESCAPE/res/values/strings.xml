@@ -53,6 +53,10 @@
     <string name="geofence_remove_success">Successfully removed specified geofences</string>
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Press BACK one more time to exit</string>
-
-
+    <string name="enter_custom_category">Enter a new category</string>
+<string name="white_hex_color">"#ffFFFFFF"</string>
+    <string name="grey_hex_color">"#ffbebebe"</string>
+<string name="default_category_school">School</string>
+    <string name="default_category_work">Work</string>
+    <string name="default_category_life">Life</string>
 </resources>
