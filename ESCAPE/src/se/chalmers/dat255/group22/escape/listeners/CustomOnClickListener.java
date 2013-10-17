@@ -12,10 +12,14 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
+import android.util.StateSet;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
@@ -33,6 +37,7 @@ import android.widget.TextView;
 public class CustomOnClickListener implements View.OnClickListener {
 
 	private static String REMIND_ME_AT;
+    private Context context;
 	private TextView parent;
 	private RelativeLayout taskDataLayout;
 	private ListObject listObject;
@@ -57,9 +62,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 *            the TextView containing the data that is associated with this
 	 *            particular listObject
 	 */
-	public CustomOnClickListener(ListObject listObject, TextView parent,
+	public CustomOnClickListener(Context context, ListObject listObject, TextView parent,
 			RelativeLayout taskDataLayout) {
-		this.listObject = listObject;
+		this.context = context;
+        this.listObject = listObject;
 		this.parent = parent;
 
 		this.taskDataLayout = taskDataLayout;
@@ -96,6 +102,19 @@ public class CustomOnClickListener implements View.OnClickListener {
 			if (!v.findViewById(    R.id.editButton).isShown()) {
 				Date start = null;
 				Date end = null;
+
+                // Set the state colors of the view
+                ColorDrawable baseColor = new ColorDrawable();
+                baseColor.setColor(context.getResources().getColor(R.color.light_gray));
+
+                ColorDrawable colorPressed = new ColorDrawable();
+                colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+
+                StateListDrawable states = new StateListDrawable();
+                states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
+                states.addState(StateSet.WILD_CARD, baseColor);
+
+                v.setBackgroundDrawable(states);
 
 				if (listObject.getComment() != null) {
 					taskComment.setText(listObject.getComment());
@@ -204,7 +223,21 @@ public class CustomOnClickListener implements View.OnClickListener {
 		} else {
 			// If the view is only expanded, hide it again
 			dismissDetails(v);
-		}
+
+            // Set the state colors of the view
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(android.R.color.transparent));
+
+            ColorDrawable colorPressed = new ColorDrawable();
+            colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+
+            StateListDrawable states = new StateListDrawable();
+            states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
+            states.addState(StateSet.WILD_CARD, baseColor);
+
+            v.setBackgroundDrawable(states);
+
+        }
 
 	}
 
@@ -232,6 +265,5 @@ public class CustomOnClickListener implements View.OnClickListener {
 		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
 		TextView timeView = (TextView) v.findViewById(R.id.startTimeTask);
 		timeView.setVisibility(View.VISIBLE);
-
 	}
 }

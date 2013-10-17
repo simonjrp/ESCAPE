@@ -3,7 +3,6 @@
               android:id="@+id/expandedTask"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              style="@android:style/Widget.ActionButton"
               android:orientation="vertical"
               android:paddingTop="@dimen/ui_element_gap"
               android:paddingRight="@dimen/ui_element_gap"

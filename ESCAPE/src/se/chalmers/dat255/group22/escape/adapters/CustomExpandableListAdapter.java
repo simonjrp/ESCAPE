@@ -27,8 +27,11 @@ import android.content.Intent;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.StateSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -258,9 +261,22 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		childLabel.setText(childText);
 
 		// Custom listener for showing/hiding data relevant to the listObject
-		CustomOnClickListener clickListener = new CustomOnClickListener(
+		CustomOnClickListener clickListener = new CustomOnClickListener(context,
 				listObject, childLabel, childData);
 		convertView.setOnClickListener(clickListener);
+
+        // Set the state colors of the view
+        ColorDrawable baseColor = new ColorDrawable();
+        baseColor.setColor(context.getResources().getColor(android.R.color.transparent));
+
+        ColorDrawable colorPressed = new ColorDrawable();
+        colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
+        states.addState(StateSet.WILD_CARD, baseColor);
+
+        convertView.setBackground(states);
 
 		// We add two listeners since it wont work on one if the other is added
 		// too
