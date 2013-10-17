@@ -1,5 +1,26 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.NewTaskActivity;
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
@@ -19,37 +40,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.Time;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
-import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
-import android.text.format.DateFormat;
+import android.widget.Toast;
 
 /**
  * An ExpandableListAdapter that makes use of a
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
- * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
- * to determine what ListObjects should be displayed
+ * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used to
+ * determine what ListObjects should be displayed
  * 
  * @author tholene, Carl
  */
@@ -62,6 +61,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	List<ListObject> tomorrowEventList;
 	List<ListObject> thisWeekEventList;
 	List<ListObject> somedayEventList;
+	// A temporary task that is displayed if list is empty
+	ListObject emptyListDefaultTask;
 	// The context this is used in
 	private Context context;
 	// header titles
@@ -72,8 +73,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
-	// A temporary task that is displayed if list is empty
-	ListObject emptyListDefaultTask;
 
 	/**
 	 * Create a new custom expandable list adapter used to display events
@@ -102,16 +101,16 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList = new ArrayList<String>();
 
 		headerList.add(context.getResources().getString(R.string.todayLabel));
-		headerList.add(context.getResources()
-				.getString(R.string.tomorrowLabel));
+		headerList
+				.add(context.getResources().getString(R.string.tomorrowLabel));
 		headerList.add(context.getResources()
 				.getString(R.string.thisweek_label));
 
-		headerList
-				.add(context.getResources().getString(R.string.somedayLabel));
+		headerList.add(context.getResources().getString(R.string.somedayLabel));
 
-		objectDataMap.put(context.getResources()
-				.getString(R.string.todayLabel), todayEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.todayLabel),
+				todayEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.tomorrowLabel),
 				tomorrowEventList);
@@ -172,7 +171,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// First expandable group is always expanded when adapter reinits
 		expLv.expandGroup(0, true);
-        resetEditButtons();
+		resetEditButtons();
 	}
 
 	/**
@@ -240,9 +239,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			if (dbHandler.getTime(listObject) != null) {
 				final Date childStartDate = dbHandler.getTime(listObject)
 						.getStartDate();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
-                        Locale.getDefault());
-                childTimeText = dateFormat.format(childStartDate);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+						Locale.getDefault());
+				childTimeText = dateFormat.format(childStartDate);
 			}
 
 			if (convertView == null || !convertView.isShown()) {
@@ -276,69 +275,74 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					intent.putExtra(EDIT_TASK_MSG, bundle);
 					bundle.putInt(INTENT_GET_ID, listObject.getId());
 					intent.setFlags(EDIT_TASK_ID);
-					context.startActivity(intent);
+					if (listObject.getName().equals("Anything you need to do?"))
+						Toast.makeText(context,
+								"This default event can't be edited!",
+								Toast.LENGTH_SHORT).show();
+					else
+						context.startActivity(intent);
 				}
 			});
 			deleteButton.setOnClickListener(new OnClickListener() {
 				@Override
-                public void onClick(View v) {
-                    DBHandler dbh = new DBHandler(context);
-                    dbh.deleteListObject(listObject);
-                    removeListObjectToday(listObject);
-                    removeListObjectTomorrow(listObject);
-                    removeListObjectSomeday(listObject);
+				public void onClick(View v) {
+					DBHandler dbh = new DBHandler(context);
+					dbh.deleteListObject(listObject);
+					removeListObjectToday(listObject);
+					removeListObjectTomorrow(listObject);
+					removeListObjectSomeday(listObject);
 
-                    LinearLayout nextObject = null;
-                    try {
-                        nextObject = (LinearLayout) getChildView(thisGroup,
-                                nextChild, lastChild, thisView, thisViewGroup);
+					LinearLayout nextObject = null;
+					try {
+						nextObject = (LinearLayout) getChildView(thisGroup,
+								nextChild, lastChild, thisView, thisViewGroup);
 
-                        nextObject.refreshDrawableState();
-                        nextObject.postInvalidate();
+						nextObject.refreshDrawableState();
+						nextObject.postInvalidate();
 
-                    } catch (NullPointerException e) {
-                        // Do nothing
-                    } catch (IndexOutOfBoundsException e) {
-                        // Do nothing
-                    }
-                }
-            });
-
-		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("")
-				? ""
-				: childTimeText);
-		// Get the layout for the object's data
-		RelativeLayout childData = (RelativeLayout) convertView
-				.findViewById(R.id.taskDataLayout);
-
-		// We don't want the data to show yet...
-		childData.setVisibility(View.GONE);
+					} catch (NullPointerException e) {
+						// Do nothing
+					} catch (IndexOutOfBoundsException e) {
+						// Do nothing
+					}
+				}
+			});
 
 			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("")
-					? ""
-					: childTimeText);
+			childTimeView
+					.setText(childTimeText.equals("") ? "" : childTimeText);
+			// Get the layout for the object's data
+			RelativeLayout childData = (RelativeLayout) convertView
+					.findViewById(R.id.taskDataLayout);
 
-		// Custom listener for showing/hiding data relevant to the listObject
-		CustomOnClickListener clickListener = new CustomOnClickListener(
-				context, listObject, childLabel, childData);
-		convertView.setOnClickListener(clickListener);
+			// We don't want the data to show yet...
+			childData.setVisibility(View.GONE);
 
-		// Set the state colors of the view
-		ColorDrawable baseColor = new ColorDrawable();
-		baseColor.setColor(context.getResources().getColor(
-				android.R.color.transparent));
+			childLabel.setText(childText);
+			childTimeView
+					.setText(childTimeText.equals("") ? "" : childTimeText);
 
-		ColorDrawable colorPressed = new ColorDrawable();
-		colorPressed.setColor(context.getResources().getColor(
-				R.color.light_blue_transparent));
+			// Custom listener for showing/hiding data relevant to the
+			// listObject
+			CustomOnClickListener clickListener = new CustomOnClickListener(
+					context, listObject, childLabel, childData);
+			convertView.setOnClickListener(clickListener);
 
-		StateListDrawable states = new StateListDrawable();
-		states.addState(new int[]{android.R.attr.state_pressed}, colorPressed);
-		states.addState(StateSet.WILD_CARD, baseColor);
+			// Set the state colors of the view
+			ColorDrawable baseColor = new ColorDrawable();
+			baseColor.setColor(context.getResources().getColor(
+					android.R.color.transparent));
 
-		convertView.setBackground(states);
+			ColorDrawable colorPressed = new ColorDrawable();
+			colorPressed.setColor(context.getResources().getColor(
+					R.color.light_blue_transparent));
+
+			StateListDrawable states = new StateListDrawable();
+			states.addState(new int[]{android.R.attr.state_pressed},
+					colorPressed);
+			states.addState(StateSet.WILD_CARD, baseColor);
+
+			convertView.setBackground(states);
 
 			// We add two listeners since it wont work on one if the other is
 			// added
@@ -727,13 +731,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * removes a list with categories from the list with categories displayed in
-	 * by this adapter.
-=======
-	 * removes a list with categories from the list with categories displayed by
-	 * this adapter.
->>>>>>> dev
+	 * <<<<<<< HEAD removes a list with categories from the list with categories
+	 * displayed in by this adapter. ======= removes a list with categories from
+	 * the list with categories displayed by this adapter. >>>>>>> dev
 	 * 
 	 * @param catList
 	 *            List with categories that will be removed
