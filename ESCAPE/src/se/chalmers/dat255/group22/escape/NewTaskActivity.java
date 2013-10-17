@@ -42,6 +42,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * An activity used for creating a new task
@@ -60,6 +61,7 @@ public class NewTaskActivity extends Activity {
 	private boolean editing;
 	private String nextWeekSameDay;
 	private ReminderType reminderType;
+	private boolean userIsSure;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ public class NewTaskActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		userIsSure = false;
 
 		DBHandler dbHandler = new DBHandler(this);
 		// Set up the spinner for different categories
@@ -356,12 +359,23 @@ public class NewTaskActivity extends Activity {
 				saveToDatabase(newListObject);
 
 			}
-
+			super.onBackPressed();
 		} else {
-			// ... do nothing
+			if (userIsSure) {
+				if (isEvent)
+					Toast.makeText(this, getText(R.string.event_not_saved),
+							Toast.LENGTH_LONG).show();
+				else
+					Toast.makeText(this, getText(R.string.task_not_saved),
+							Toast.LENGTH_LONG).show();
+				super.onBackPressed();
+			} else {
+				Toast.makeText(this, getText(R.string.no_save),
+						Toast.LENGTH_SHORT).show();
+				userIsSure = true;
+			}
 		}
 
-		super.onBackPressed();
 	}
 
 	/**
