@@ -521,7 +521,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_BLOCKS_ID, block.getId());
 		values.put(COLUMN_BLOCKS_NAME, block.getName());
 		values.put(COLUMN_BLOCKS_HOURS, block.getHours());
 		values.put(COLUMN_BLOCKS_SESSION_MINUTES, block.getSessionMinutes());

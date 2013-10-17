@@ -18,7 +18,7 @@ import se.chalmers.dat255.group22.escape.objects.BlockObject;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.utilities.AutoGenerator;
+import se.chalmers.dat255.group22.escape.utils.AutoGenerator;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;

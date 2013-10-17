@@ -7,8 +7,7 @@
     <ListView
         android:id="@+id/blocks_list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/temp_block_titles" />
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/new_block_button"

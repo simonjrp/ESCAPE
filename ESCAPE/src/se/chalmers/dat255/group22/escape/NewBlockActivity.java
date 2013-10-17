@@ -91,6 +91,7 @@ public class NewBlockActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onBackPressed() {
 
@@ -130,7 +131,7 @@ public class NewBlockActivity extends Activity {
 				.getItem(hourSpinner.getSelectedItemPosition());
 		int sessionMinutes;
 		if (!sessionString.equals("Custom")) {
-			sessionMinutes = Integer.parseInt(hoursString);
+			sessionMinutes = Integer.parseInt(sessionString);
 		} else {
 			sessionMinutes = 200;
 		}

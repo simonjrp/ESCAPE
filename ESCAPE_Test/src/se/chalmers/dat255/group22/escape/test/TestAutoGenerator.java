@@ -11,7 +11,7 @@ import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeWindow;
-import se.chalmers.dat255.group22.escape.utilities.AutoGenerator;
+import se.chalmers.dat255.group22.escape.utils.AutoGenerator;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
