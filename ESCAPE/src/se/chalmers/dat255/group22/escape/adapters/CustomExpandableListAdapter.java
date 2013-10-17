@@ -6,8 +6,6 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +18,8 @@ import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
@@ -97,6 +97,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		headerList.add(context.getResources().getString(R.string.today_label));
 		headerList.add(context.getResources()
 				.getString(R.string.tomorrow_label));
+        headerList.add(context.getResources().getString(R.string.thisweek_label));
 
 		headerList
 				.add(context.getResources().getString(R.string.someday_label));
@@ -106,7 +107,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		objectDataMap.put(
 				context.getResources().getString(R.string.tomorrow_label),
 				tomorrowEventList);
-
+        objectDataMap.put(
+                context.getResources().getString(R.string.thisweek_label),
+                thisWeekEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.someday_label),
 				somedayEventList);
@@ -141,6 +144,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				// intended to test functionality!
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
+                // Time needs to be set since used when sorting objects
 				lo.setTime(dbHandler.getTime(lo));
 				addListObject(lo);
 				noEvents = false;
@@ -400,11 +404,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			// Get start date
 			Date theDate = theTime.getStartDate();
 			// Add into the relevant list
-			if (isToday(theDate)) {
+			if (CheckDateUtils.isToday(theDate)) {
 				addListObjectToday(listObject);
-			} else if (isTomorrow(theDate)) {
+			} else if (CheckDateUtils.isTomorrow(theDate)) {
 				addListObjectTomorrow(listObject);
-			} else if (isThisWeek(theDate)) {
+			} else if (CheckDateUtils.isThisWeek(theDate)) {
 				addListObjectThisWeek(listObject);
 			} else {
 				addListObjectSomeday(listObject);
@@ -744,68 +748,5 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			removeCategory(cat);
 			addCategory(cat);
 		}
-	}
-
-	/**
-	 * Method to check if a date is today. Also returns true if the date is
-	 * earlier than today
-	 * 
-	 * @param theDate
-	 *            the date to see if it is today
-	 * @return true if theDate is today or earlier
-	 */
-	public boolean isToday(Date theDate) {
-		// Get a calendar with the events start time
-		GregorianCalendar theCalendar = new GregorianCalendar();
-		theCalendar.setTime(theDate);
-		// Get a calendar with current system time to compare with
-		Calendar systemCalendar = Calendar.getInstance();
-		// If it should return true only if today and not before use == instead
-		// of >=
-		return systemCalendar.get(Calendar.YEAR) >= theCalendar
-				.get(Calendar.YEAR)
-				&& systemCalendar.get(Calendar.DAY_OF_YEAR) >= theCalendar
-						.get(Calendar.DAY_OF_YEAR);
-	}
-
-	/**
-	 * Method to check if a date is tomorrow
-	 * 
-	 * @param theDate
-	 *            the date to see if it is tomorrow
-	 * @return true of it is tomorrow
-	 */
-	public boolean isTomorrow(Date theDate) {
-		// Get a calendar with the events start time
-		GregorianCalendar theCalendar = new GregorianCalendar();
-		theCalendar.setTime(theDate);
-		// Get a calendar with current system time and change its value so it
-		// can be used in comparison with the given date.
-		Calendar tmpDate = Calendar.getInstance();
-		tmpDate.roll(Calendar.DAY_OF_YEAR, true);
-
-		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
-				&& tmpDate.get(Calendar.DAY_OF_YEAR) == theCalendar
-						.get(Calendar.DAY_OF_YEAR);
-	}
-
-	/**
-	 * Method to check if a date is this week. Note that it checks if it is this
-	 * week and not 7 days ahead!
-	 * 
-	 * @param theDate
-	 *            the date to see if it is this week
-	 * @return true if it is this week
-	 */
-	public boolean isThisWeek(Date theDate) {
-		// Get a calendar with the events start time
-		GregorianCalendar theCalendar = new GregorianCalendar();
-		theCalendar.setTime(theDate);
-		// Get a calendar with current system time
-		Calendar tmpDate = Calendar.getInstance();
-
-		return tmpDate.get(Calendar.YEAR) == theCalendar.get(Calendar.YEAR)
-				&& tmpDate.get(Calendar.WEEK_OF_YEAR) == theCalendar
-						.get(Calendar.WEEK_OF_YEAR);
 	}
 }
