@@ -1,8 +1,21 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
+import android.util.StateSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -18,22 +31,10 @@ import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.util.StateSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * Adapter for displaying
@@ -181,15 +182,17 @@ public class CustomListAdapter implements ListAdapter {
 		// Get the name of the task to display for each task entry
 		updateEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
-
+		final int nextChild = childPosition;
 		final String childText = listObject.getName();
-
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 		// final Time childTime = listObject.getTime();
 		String childTimeText = "";
 		if (dbHandler.getTime(listObject) != null) {
 			final Date childStartDate = dbHandler.getTime(listObject)
 					.getStartDate();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
 			childTimeText = dateFormat.format(childStartDate);
 		}
 
@@ -231,12 +234,25 @@ public class CustomListAdapter implements ListAdapter {
 				context.startActivity(intent);
 			}
 		});
+
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DBHandler dbh = new DBHandler(context);
 				dbh.deleteListObject(listObject);
 				removeListObject(listObject);
+				LinearLayout nextObject = null;
+				try {
+					nextObject = (LinearLayout) getView(nextChild, thisView,
+							thisViewGroup);
+					nextObject.refreshDrawableState();
+					nextObject.postInvalidate();
+
+				} catch (NullPointerException e) {
+					// Do nothing
+				} catch (IndexOutOfBoundsException e) {
+					// Do nothing
+				}
 
 				// v.refreshDrawableState();
 			}
@@ -247,16 +263,18 @@ public class CustomListAdapter implements ListAdapter {
 		childLabel.setText(childText);
 		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
 		// Get the layout for the object's data
-		RelativeLayout childData = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
+		RelativeLayout childData = (RelativeLayout) convertView
+				.findViewById(R.id.taskDataLayout);
 
 		// We don't want the data to show yet...
 		childData.setVisibility(View.GONE);
 
 		childLabel.setText(childText);
 
-		CustomOnClickListener clickListener = new CustomOnClickListener(context,
-				listObject, childLabel, childData);
+		CustomOnClickListener clickListener = new CustomOnClickListener(
+				context, listObject, childLabel, childData);
 		convertView.setOnClickListener(clickListener);
+
 		// TODO We add two listeners since it wont work on one if the other is
 		// added to
 		// Adding touchlisteners
@@ -265,18 +283,20 @@ public class CustomListAdapter implements ListAdapter {
 		// convertView.setOnTouchListener(new OptionTouchListener(context,
 		// convertView));
 
-        // Set the state colors of the view
-        ColorDrawable baseColor = new ColorDrawable();
-        baseColor.setColor(context.getResources().getColor(android.R.color.transparent));
+		// Set the state colors of the view
+		ColorDrawable baseColor = new ColorDrawable();
+		baseColor.setColor(context.getResources().getColor(
+				android.R.color.transparent));
 
-        ColorDrawable colorPressed = new ColorDrawable();
-        colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+		ColorDrawable colorPressed = new ColorDrawable();
+		colorPressed.setColor(context.getResources().getColor(
+				R.color.light_blue_transparent));
 
-        StateListDrawable states = new StateListDrawable();
-        states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
-        states.addState(StateSet.WILD_CARD, baseColor);
+		StateListDrawable states = new StateListDrawable();
+		states.addState(new int[]{android.R.attr.state_pressed}, colorPressed);
+		states.addState(StateSet.WILD_CARD, baseColor);
 
-        convertView.setBackground(states);
+		convertView.setBackground(states);
 
 		if (!getLOShouldBeVisible(listObject))
 			convertView.setVisibility(View.INVISIBLE);
@@ -284,6 +304,7 @@ public class CustomListAdapter implements ListAdapter {
 			convertView.setVisibility(View.VISIBLE);
 		return convertView;
 	}
+
 	@Override
 	public int getItemViewType(int i) {
 		return i;

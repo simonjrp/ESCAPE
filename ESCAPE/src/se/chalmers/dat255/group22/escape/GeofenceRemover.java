@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,14 +16,21 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
 
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.utils.Constants;
+
 /**
  * Class to be used for removing old/unwanted geofences.
  * 
  * @author Simon Persson
  * 
  */
-public class GeofenceRemover implements ConnectionCallbacks,
-		OnConnectionFailedListener, OnRemoveGeofencesResultListener {
+public class GeofenceRemover
+		implements
+			ConnectionCallbacks,
+			OnConnectionFailedListener,
+			OnRemoveGeofencesResultListener {
 
 	// The calling activity
 	private Activity activity;
@@ -167,12 +171,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		// Remove geofences with the appropriate method for the remove type
 
 		switch (removeType) {
-		case INTENT:
-			locationClient.removeGeofences(pendingIntent, this);
-			break;
-		case LIST:
-			locationClient.removeGeofences(currentGeofenceIds, this);
-			break;
+			case INTENT :
+				locationClient.removeGeofences(pendingIntent, this);
+				break;
+			case LIST :
+				locationClient.removeGeofences(currentGeofenceIds, this);
+				break;
 		}
 	}
 

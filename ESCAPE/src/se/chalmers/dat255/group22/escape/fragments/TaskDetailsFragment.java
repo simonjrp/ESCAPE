@@ -1,11 +1,12 @@
 package se.chalmers.dat255.group22.escape.fragments;
 
-import se.chalmers.dat255.group22.escape.R;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import se.chalmers.dat255.group22.escape.R;
 
 /**
  * Class representing a fragment showing the data of a task/event (with

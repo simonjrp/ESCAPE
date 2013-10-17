@@ -14,11 +14,11 @@ public final class Constants {
 	 * The tag of the app, to use when debugging
 	 */
 	public static final String APPTAG = "ESCAPE";
-    /**
-     * Improve readability by using this when creating a new row in a one-line
-     * string.
-     */
-    public static final String NEW_ROW = "\n";
+	/**
+	 * Improve readability by using this when creating a new row in a one-line
+	 * string.
+	 */
+	public static final String NEW_ROW = "\n";
 	/**
 	 * The ID that should be used with an intent to indicate that you want to
 	 * edit a task
@@ -89,7 +89,6 @@ public final class Constants {
 	public static final String ACTION_GEOFENCES_CONNECTION_FAILED = "se.chalmers.dat255.group22.escape.ACTION_GEOFENCES_CONNECTION_FAILED";
 	// Intent extras
 	public static final String EXTRAS_TAG_GEOFENCES_ERROR_CODE = "ERROR_CODE";
-
 
 	private Constants() {
 	}

@@ -1,12 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,7 +10,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
+
+import java.sql.Date;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also

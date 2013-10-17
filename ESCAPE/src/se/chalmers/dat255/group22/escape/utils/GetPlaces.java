@@ -1,6 +1,14 @@
 package se.chalmers.dat255.group22.escape.utils;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,16 +20,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import se.chalmers.dat255.group22.escape.R;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
 
 /**
  * @author tholene
@@ -102,12 +103,11 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 			// now get the JSON array that's inside that object
 			JSONArray allPredictions = new JSONArray(
 					predictions.getString("predictions"));
-
 			for (int i = 0; i < allPredictions.length(); i++) {
 
 				// Parse the JSONArray to exlude the country
 				JSONObject thisPrediction = (JSONObject) allPredictions.get(i);
-
+				System.out.println(thisPrediction.toString());
 				JSONArray allTerms = thisPrediction.getJSONArray("terms");
 
 				String result = "";
@@ -135,6 +135,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 					}
 				}
 				// add each entry to our array
+
 				predictionsArr.add(result);
 			}
 		} catch (IOException e) {

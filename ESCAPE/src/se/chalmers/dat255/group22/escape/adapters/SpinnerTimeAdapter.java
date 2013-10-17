@@ -1,5 +1,13 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,13 +17,6 @@ import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a time are
@@ -149,7 +150,8 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			// Formats the time so that, for example, 12 o clock is shown as
 			// 12:00 instead of 12:0
 
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
 			String customLabel = timeFormatter.format(newTimeAsCal.getTime());
 
 			// Finally, add the data to the adapter and select new item in

@@ -1,8 +1,22 @@
 package se.chalmers.dat255.group22.escape;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -26,23 +40,10 @@ import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
 import se.chalmers.dat255.group22.escape.utils.GetPlaces;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * An activity used for creating a new task
@@ -910,6 +911,7 @@ public class NewTaskActivity extends Activity {
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+				adapter.clear();
 				GetPlaces task = new GetPlaces(autoCompleteTextView, adapter,
 						getBaseContext());
 				// now pass the argument in the textview to the task
@@ -918,9 +920,11 @@ public class NewTaskActivity extends Activity {
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
+				adapter.clear();
 			}
 
 			public void afterTextChanged(Editable s) {
+				adapter.clear();
 			}
 		});
 	}

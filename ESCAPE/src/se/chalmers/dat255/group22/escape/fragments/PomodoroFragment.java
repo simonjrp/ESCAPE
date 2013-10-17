@@ -1,7 +1,5 @@
 package se.chalmers.dat255.group22.escape.fragments;
 
-import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,6 +16,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.R;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 

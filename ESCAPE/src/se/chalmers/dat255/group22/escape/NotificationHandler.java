@@ -1,18 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
-import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
-import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -26,6 +13,20 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.Geofence;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
+import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
+import se.chalmers.dat255.group22.escape.objects.Time;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 
 /**
  * A notification handler for creating notifications that should appear at a

@@ -1,7 +1,16 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
+import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.util.StateSet;
+import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -12,20 +21,8 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.util.StateSet;
-import android.view.View;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
@@ -37,7 +34,7 @@ import android.widget.TextView;
 public class CustomOnClickListener implements View.OnClickListener {
 
 	private static String REMIND_ME_AT;
-    private Context context;
+	private Context context;
 	private TextView parent;
 	private RelativeLayout taskDataLayout;
 	private ListObject listObject;
@@ -62,10 +59,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 *            the TextView containing the data that is associated with this
 	 *            particular listObject
 	 */
-	public CustomOnClickListener(Context context, ListObject listObject, TextView parent,
-			RelativeLayout taskDataLayout) {
+	public CustomOnClickListener(Context context, ListObject listObject,
+			TextView parent, RelativeLayout taskDataLayout) {
 		this.context = context;
-        this.listObject = listObject;
+		this.listObject = listObject;
 		this.parent = parent;
 
 		this.taskDataLayout = taskDataLayout;
@@ -92,29 +89,33 @@ public class CustomOnClickListener implements View.OnClickListener {
 		if (isExpanded) {
 			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
 					"EEE, dd MMM HH:mm", Locale.getDefault());
-            SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
-                    "EEE, dd MMM\nHH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
+					"EEE, dd MMM" + NEW_ROW + "HH:mm", Locale.getDefault());
 			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
 					Locale.getDefault());
-            SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy\nEEE, dd MMM\nHH:mm",
-                    Locale.getDefault());
+			SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy"
+					+ NEW_ROW + "EEE, dd MMM" + NEW_ROW + "HH:mm",
+					Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
-			if (!v.findViewById(    R.id.editButton).isShown()) {
+			if (!v.findViewById(R.id.editButton).isShown()) {
 				Date start = null;
 				Date end = null;
 
-                // Set the state colors of the view
-                ColorDrawable baseColor = new ColorDrawable();
-                baseColor.setColor(context.getResources().getColor(R.color.light_gray));
+				// Set the state colors of the view
+				ColorDrawable baseColor = new ColorDrawable();
+				baseColor.setColor(context.getResources().getColor(
+						R.color.light_gray));
 
-                ColorDrawable colorPressed = new ColorDrawable();
-                colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+				ColorDrawable colorPressed = new ColorDrawable();
+				colorPressed.setColor(context.getResources().getColor(
+						R.color.light_blue_transparent));
 
-                StateListDrawable states = new StateListDrawable();
-                states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
-                states.addState(StateSet.WILD_CARD, baseColor);
+				StateListDrawable states = new StateListDrawable();
+				states.addState(new int[]{android.R.attr.state_pressed},
+						colorPressed);
+				states.addState(StateSet.WILD_CARD, baseColor);
 
-                v.setBackgroundDrawable(states);
+				v.setBackgroundDrawable(states);
 
 				if (listObject.getComment() != null) {
 					taskComment.setText(listObject.getComment());
@@ -157,12 +158,14 @@ public class CustomOnClickListener implements View.OnClickListener {
 						startTime.setText(dateFormatMultiLine.format(start));
 						endTime.setText(dateFormatMultiLine.format(end));
 					} else {
-                        // If not, add the year in the string
-                        startTime.setText(yearWithDateFormat.format(start));
-                        endTime.setText(yearWithDateFormat.format(end));
-                    }
+						// If not, add the year in the string
+						startTime.setText(yearWithDateFormat.format(start));
+						endTime.setText(yearWithDateFormat.format(end));
+					}
 					taskTimeLayout.setVisibility(View.VISIBLE);
 				} else {
+					View separator = v.findViewById(R.id.taskTimeSeparator);
+					separator.setVisibility(View.GONE);
 					taskTimeLayout.setVisibility(View.GONE);
 				}
 
@@ -187,8 +190,9 @@ public class CustomOnClickListener implements View.OnClickListener {
 						taskReminderType
 								.setImageResource(R.drawable.device_access_alarms);
 						taskReminderType.setVisibility(View.VISIBLE);
-						stringBuilder.append(dateFormatSingleLine.format(dbHandler
-                                .getTimeAlarm(listObject).getDate()));
+						stringBuilder.append(dateFormatSingleLine
+								.format(dbHandler.getTimeAlarm(listObject)
+                                        .getDate()));
 					}
 					taskReminder.setVisibility(View.VISIBLE);
 					taskReminder.setText(stringBuilder.toString());
@@ -224,20 +228,23 @@ public class CustomOnClickListener implements View.OnClickListener {
 			// If the view is only expanded, hide it again
 			dismissDetails(v);
 
-            // Set the state colors of the view
-            ColorDrawable baseColor = new ColorDrawable();
-            baseColor.setColor(context.getResources().getColor(android.R.color.transparent));
+			// Set the state colors of the view
+			ColorDrawable baseColor = new ColorDrawable();
+			baseColor.setColor(context.getResources().getColor(
+					android.R.color.transparent));
 
-            ColorDrawable colorPressed = new ColorDrawable();
-            colorPressed.setColor(context.getResources().getColor(R.color.light_blue_transparent));
+			ColorDrawable colorPressed = new ColorDrawable();
+			colorPressed.setColor(context.getResources().getColor(
+					R.color.light_blue_transparent));
 
-            StateListDrawable states = new StateListDrawable();
-            states.addState(new int[] {android.R.attr.state_pressed}, colorPressed);
-            states.addState(StateSet.WILD_CARD, baseColor);
+			StateListDrawable states = new StateListDrawable();
+			states.addState(new int[]{android.R.attr.state_pressed},
+					colorPressed);
+			states.addState(StateSet.WILD_CARD, baseColor);
 
-            v.setBackgroundDrawable(states);
+			v.setBackgroundDrawable(states);
 
-        }
+		}
 
 	}
 

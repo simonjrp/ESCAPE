@@ -1,6 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import se.chalmers.dat255.group22.escape.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import se.chalmers.dat255.group22.escape.R;
 
 /**
  * An adapter that customizes the way spinners for choosing differnet types of

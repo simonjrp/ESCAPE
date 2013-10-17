@@ -1,11 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
-import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,6 +14,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
+import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 
 /**
  * The main activity, to be launched when app is started.
