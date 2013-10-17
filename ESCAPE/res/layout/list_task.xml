@@ -5,7 +5,9 @@
               android:layout_height="wrap_content"
               style="@android:style/Widget.ActionButton"
               android:orientation="vertical"
-              android:padding="@dimen/ui_element_gap">
+              android:paddingTop="@dimen/ui_element_gap"
+              android:paddingRight="@dimen/ui_element_gap"
+              android:paddingLeft="@dimen/ui_element_gap">
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -82,7 +84,7 @@
         <LinearLayout
             android:id="@+id/taskDataTopLayout"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="@dimen/ui_element_gap"
             android:orientation="horizontal"
             android:weightSum="12"
@@ -91,7 +93,7 @@
             <LinearLayout
                 android:id="@+id/taskDataTopLeftLayout"
                 android:layout_width="0dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="9"
                 android:weightSum="1"
                 android:orientation="vertical"
@@ -100,25 +102,33 @@
                 <TextView
                     android:id="@+id/taskDataComment"
                     android:layout_width="fill_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="fill_parent"
                     android:textSize="@dimen/textsize_small"
                     android:textColor="#000000"
                     android:layout_weight="0.9"
                     android:layout_gravity="top"
+                    android:paddingRight="@dimen/ui_element_gap"
                     android:paddingBottom="@dimen/ui_element_gap"
                     />
 
                 <TextView
                     android:id="@+id/taskDataPlace"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:layout_weight="0.1"
                     android:gravity="bottom"
                     />
 
             </LinearLayout>
+
+            <View
+                android:id="@+id/taskTimeSeparator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#bebebe"/>
 
             <RelativeLayout
                 android:id="@+id/taskDataTimeLayout"
@@ -133,6 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
                     android:hint="@string/fromLabel"
                     />
 
@@ -150,6 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
                     android:hint="@string/toLabel"
                     android:layout_below="@id/taskDataStartTime"
                     />
@@ -178,6 +190,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/taskDataSeparator"
+            android:paddingBottom="@dimen/ui_element_gap"
             >
 
             <TextView
@@ -197,6 +210,7 @@
                 />
 
         </RelativeLayout>
+
 
     </RelativeLayout>
 

@@ -11,7 +11,11 @@ import java.util.Locale;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
@@ -39,6 +43,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 	private RelativeLayout taskTimeLayout;
 	private TextView taskReminder;
 	private ImageView taskReminderType;
+
 	/**
 	 * Create a new CustomOnClickListener.
 	 * 
@@ -77,7 +82,6 @@ public class CustomOnClickListener implements View.OnClickListener {
 	@Override
 	public void onClick(View v) {
 		isExpanded = !isExpanded;
-
 		// This happens when the view is clicked...
 		if (isExpanded) {
 			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
@@ -89,7 +93,7 @@ public class CustomOnClickListener implements View.OnClickListener {
             SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy\nEEE, dd MMM\nHH:mm",
                     Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
-			if (!v.findViewById(R.id.editButton).isShown()) {
+			if (!v.findViewById(    R.id.editButton).isShown()) {
 				Date start = null;
 				Date end = null;
 
