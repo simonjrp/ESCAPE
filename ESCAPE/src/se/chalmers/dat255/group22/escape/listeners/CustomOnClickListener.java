@@ -87,10 +87,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
 					"EEE, dd MMM HH:mm", Locale.getDefault());
             SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
-                    "EEE, dd MMM\nHH:mm", Locale.getDefault());
+                    "EEE, dd MMM"+NEW_ROW+"HH:mm", Locale.getDefault());
 			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
 					Locale.getDefault());
-            SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy\nEEE, dd MMM\nHH:mm",
+            SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy"+NEW_ROW+"EEE, dd MMM"+NEW_ROW+"HH:mm",
                     Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
 			if (!v.findViewById(    R.id.editButton).isShown()) {
@@ -144,6 +144,8 @@ public class CustomOnClickListener implements View.OnClickListener {
                     }
 					taskTimeLayout.setVisibility(View.VISIBLE);
 				} else {
+                    View separator = v.findViewById(R.id.taskTimeSeparator);
+                    separator.setVisibility(View.GONE);
 					taskTimeLayout.setVisibility(View.GONE);
 				}
 
