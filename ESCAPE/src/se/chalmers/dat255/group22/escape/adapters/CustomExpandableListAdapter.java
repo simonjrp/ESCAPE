@@ -144,11 +144,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
-				// TODO All categories should be fetched from database!
-				// This category with the same name as the listobject is only
-				// intended to test functionality!
-				lo.addToCategory(new Category(lo.getName(), null, null));
-
 				addListObject(lo);
 				noEvents = false;
 			}
