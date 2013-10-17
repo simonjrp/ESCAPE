@@ -50,7 +50,7 @@
     <string name="geofence_remove_success">Successfully removed specified geofences</string>
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Tryck BAKÅT en gång till för att avsluta</string>
-    <string name="about">Om</string>
+    <string name="about_menu_item">Om</string>
 
 
 </resources>

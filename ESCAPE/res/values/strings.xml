@@ -52,7 +52,13 @@
     <string name="geofence_remove_success">Successfully removed specified geofences</string>
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Press BACK one more time to exit</string>
-    <string name="about">About</string>
+    <string name="about_menu_item">About</string>
+    <string name="about_dialog_title">ESCAPE (v0.5)</string>
+    <string name="about_dialog_header">Get organized</string>
+    <string name="about_dialog_desc">Simple yet powerful planner tool to use for creating events, tasks, reminders and auto generated weekly schedules.</string>
+    <string name="about_dialog_repo">Github: <a href="https://github.com/simonjrp/ESCAPE">ESCAPE</a></string>
+    <string name="about_dialog_license">Licensed under: <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></string>
+    <string name="about_dialog_copyright">Copyright &#169; 2013</string>
 
 
 </resources>

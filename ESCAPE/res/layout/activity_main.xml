@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/drawer_separator"
-                android:text="@string/about"
+                android:text="@string/about_menu_item"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
@@ -58,7 +58,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:onClick="onClickAbout"/>
 
         </RelativeLayout>
     </RelativeLayout>

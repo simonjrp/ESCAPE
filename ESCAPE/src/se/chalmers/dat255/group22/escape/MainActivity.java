@@ -6,6 +6,7 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -34,7 +37,7 @@ public class MainActivity extends FragmentActivity {
 	private String[] drawerTitles;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
-    private RelativeLayout drawerListLayout;
+	private RelativeLayout drawerListLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
@@ -53,7 +56,7 @@ public class MainActivity extends FragmentActivity {
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerList = (ListView) findViewById(R.id.left_drawer_list);
-        drawerListLayout = (RelativeLayout) findViewById(R.id.left_drawer_layout);
+		drawerListLayout = (RelativeLayout) findViewById(R.id.left_drawer_layout);
 
 		drawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, drawerTitles));
@@ -227,4 +230,41 @@ public class MainActivity extends FragmentActivity {
 		}
 
 	}
+
+	/**
+	 * OnClick method for the about menu item in the navigation drawer.
+	 * 
+	 * @param view
+	 *            The view that was clicked.
+	 */
+	public void onClickAbout(View view) {
+		showAboutDialog();
+	}
+
+	/*
+	 * Brings up an about dialog showing short description of the app.
+	 */
+	private void showAboutDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.about_dialog_title));
+		builder.setIcon(R.drawable.ic_launcher);
+
+		View dialogView = getLayoutInflater().inflate(R.layout.about_dialog,
+				null, false);
+
+		// Interprets html link tags correctly and makes links clickable
+		TextView repoLink = (TextView) dialogView
+				.findViewById(R.id.about_dialog_repo);
+		repoLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+		TextView licenseLink = (TextView) dialogView
+				.findViewById(R.id.about_dialog_license);
+		licenseLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+		// Brings up the dialog
+		builder.setView(dialogView);
+		builder.show();
+
+	}
+
 }
