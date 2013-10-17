@@ -239,31 +239,13 @@ public class CustomListAdapter implements ListAdapter {
 				removeListObject(listObject);
 				LinearLayout nextObject = null;
 				try {
-						nextObject = (LinearLayout) getView(nextChild,
-								thisView, thisViewGroup);
+					nextObject = (LinearLayout) getView(nextChild, thisView,
+							thisViewGroup);
+					nextObject.refreshDrawableState();
+					nextObject.postInvalidate();
 
-						TextView timeText = (TextView) nextObject
-								.findViewById(R.id.startTimeTask);
-						timeText.setVisibility(View.VISIBLE);
-
-						ImageButton editButton = (ImageButton) nextObject
-								.findViewById(R.id.editButton);
-						editButton.setVisibility(View.INVISIBLE);
-						editButton.getAnimation().setFillEnabled(false);
-						editButton.getAnimation().setFillAfter(false);
-						editButton.clearAnimation();
-						nextObject.refreshDrawableState();
-                        nextObject.postInvalidate();
-
-						ImageButton deleteButton = (ImageButton) nextObject
-								.findViewById(R.id.deleteButton);
-						deleteButton.setVisibility(View.INVISIBLE);
-						deleteButton.getAnimation().setFillEnabled(false);
-						deleteButton.getAnimation().setFillAfter(false);
-						deleteButton.clearAnimation();
-
-                } catch (NullPointerException e) {
-                    // Do nothing
+				} catch (NullPointerException e) {
+					// Do nothing
 				} catch (IndexOutOfBoundsException e) {
 					// Do nothing
 				}

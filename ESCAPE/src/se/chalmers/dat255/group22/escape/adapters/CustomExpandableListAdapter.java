@@ -253,25 +253,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					nextObject = (LinearLayout) getChildView(thisGroup,
 							nextChild, lastChild, thisView, thisViewGroup);
 
-					TextView timeText = (TextView) nextObject
-							.findViewById(R.id.startTimeTask);
-					timeText.setVisibility(View.VISIBLE);
 
-					ImageButton editButton = (ImageButton) nextObject
-							.findViewById(R.id.editButton);
-					editButton.setVisibility(View.INVISIBLE);
-					editButton.getAnimation().setFillEnabled(false);
-					editButton.getAnimation().setFillAfter(false);
-					editButton.clearAnimation();
 					nextObject.refreshDrawableState();
 					nextObject.postInvalidate();
 
-					ImageButton deleteButton = (ImageButton) nextObject
-							.findViewById(R.id.deleteButton);
-					deleteButton.setVisibility(View.INVISIBLE);
-					deleteButton.getAnimation().setFillEnabled(false);
-					deleteButton.getAnimation().setFillAfter(false);
-					deleteButton.clearAnimation();
 
 				} catch (NullPointerException e) {
 					// Do nothing
