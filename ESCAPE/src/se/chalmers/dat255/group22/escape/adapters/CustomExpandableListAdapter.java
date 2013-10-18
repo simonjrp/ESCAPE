@@ -41,8 +41,8 @@ import android.widget.TextView;
  * {@link se.chalmers.dat255.group22.escape.objects.ListObject}.<br>
  * It also simulates a three level expandable listview by giving each child its
  * own {@link android.view.View.OnClickListener}.
- * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used
- * to determine what ListObjects should be displayed
+ * {@link se.chalmers.dat255.group22.escape.objects.Category} can be used to
+ * determine what ListObjects should be displayed
  * 
  * @author tholene, Carl
  */
@@ -515,6 +515,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		}
 	}
 
+	/**
+	 * Remove a event from this week.
+	 * 
+	 * @param listObject
+	 *            the listObject to remove
+	 */
 	public void removeListObjectThisWeek(ListObject listObject) {
 		if (thisWeekEventList.contains(listObject)) {
 			thisWeekEventList.remove(listObject);
