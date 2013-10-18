@@ -14,11 +14,8 @@ import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.objects.BlockObject;
 import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.utils.AutoGenerator;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -261,8 +258,6 @@ public class CustomListAdapter implements ListAdapter {
 		// Adding touchlisteners
 		convertView.setOnTouchListener(new OptionTouchListener(context,
 				convertView));
-		// convertView.setOnTouchListener(new OptionTouchListener(context,
-		// convertView));
 		if (!getLOShouldBeVisible(listObject))
 			convertView.setVisibility(View.INVISIBLE);
 		else

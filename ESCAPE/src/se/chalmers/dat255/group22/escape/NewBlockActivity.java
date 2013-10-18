@@ -128,7 +128,7 @@ public class NewBlockActivity extends Activity {
 		ArrayAdapter<CharSequence> sessionSpinnerAdapter = (ArrayAdapter<CharSequence>) sessionSpinner
 				.getAdapter();
 		String sessionString = (String) sessionSpinnerAdapter
-				.getItem(hourSpinner.getSelectedItemPosition());
+				.getItem(sessionSpinner.getSelectedItemPosition());
 		int sessionMinutes;
 		if (!sessionString.equals("Custom")) {
 			sessionMinutes = Integer.parseInt(sessionString);

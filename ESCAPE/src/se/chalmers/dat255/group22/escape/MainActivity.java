@@ -3,10 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
-import android.app.ListFragment;
+import se.chalmers.dat255.group22.escape.fragments.listfragments.BlockListFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -174,7 +173,7 @@ public class MainActivity extends FragmentActivity {
 
 				// Add all wanted fragments here
 				fragmentList.add(new TasksEventsFragment());
-				fragmentList.add(new BlocksFragment());
+				fragmentList.add(new BlockListFragment());
 				fragmentList.add(new PomodoroFragment());
 			}
 

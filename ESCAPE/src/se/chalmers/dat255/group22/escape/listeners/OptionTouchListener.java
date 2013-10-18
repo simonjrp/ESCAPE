@@ -45,7 +45,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 
 	@Override
 	public void onClick(View v) {
-		// the CustomOnClickListener takes care of this
+		
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class OptionTouchListener extends LongTouchActionListener {
 			deleteButton.setVisibility(View.VISIBLE);
 
 			// ...instantiate the animation...
-			slide = new TranslateAnimation(-300, 0, 0, 0);
+			slide = new TranslateAnimation(300, 0, 0, 0);
 			slide.setDuration(250);
 			slide.setFillAfter(true);
 			slide.setFillEnabled(true);
