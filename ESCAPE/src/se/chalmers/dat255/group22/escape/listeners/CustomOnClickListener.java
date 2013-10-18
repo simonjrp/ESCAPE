@@ -1,16 +1,5 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +11,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
@@ -44,7 +45,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 	private RelativeLayout taskTimeLayout;
 	private TextView taskReminder;
 	private ImageView taskReminderType;
-
+	private SimpleDateFormat dateFormatSingleLine;
+	private SimpleDateFormat dateFormatMultiLine;
+	private SimpleDateFormat yearFormat;
+	private SimpleDateFormat yearWithDateFormat;
 	/**
 	 * Create a new CustomOnClickListener.
 	 * 
@@ -79,6 +83,13 @@ public class CustomOnClickListener implements View.OnClickListener {
 		dbHandler = new DBHandler(parent.getContext());
 		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":"
 				+ NEW_ROW;
+		dateFormatSingleLine = new SimpleDateFormat("EEE, dd MMM HH:mm",
+				Locale.getDefault());
+		dateFormatMultiLine = new SimpleDateFormat("EEE, dd MMM" + NEW_ROW
+				+ "HH:mm", Locale.getDefault());
+		yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+		yearWithDateFormat = new SimpleDateFormat("yyyy" + NEW_ROW
+				+ "EEE, dd MMM" + NEW_ROW + "HH:mm", Locale.getDefault());
 	}
 
 	@Override
@@ -86,17 +97,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 		isExpanded = !isExpanded;
 		// This happens when the view is clicked...
 		if (isExpanded) {
-			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
-					"EEE, dd MMM HH:mm", Locale.getDefault());
-			SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
-					"EEE, dd MMM" + NEW_ROW + "HH:mm", Locale.getDefault());
-			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
-					Locale.getDefault());
-			SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy"
-					+ NEW_ROW + "EEE, dd MMM" + NEW_ROW + "HH:mm",
-					Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
-			if (!v.findViewById(R.id.editButton).isShown()) {
+			if (!v.findViewById(R.id.deleteButton).isShown()) {
 				Date start = null;
 				Date end = null;
 
@@ -221,7 +223,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 			// If the edit/remove buttons are shown and you click the
 			// listObject...
-		} else if (v.findViewById(R.id.editButton).isShown()) {
+		} else if (v.findViewById(R.id.deleteButton).isShown()) {
 			dismissButtons(v);
 		} else {
 			// If the view is only expanded, hide it again

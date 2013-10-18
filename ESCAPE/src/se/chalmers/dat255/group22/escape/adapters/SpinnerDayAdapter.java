@@ -1,13 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +8,13 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.IntegerToMonthConverter;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -87,7 +86,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		View row = inflater
 				.inflate(R.layout.simple_spinner_item, parent, false);
 
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(days.get(position));
 		// set gray color to "Pick a date" item
@@ -104,10 +103,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.simple_spinner_item_single,
 				parent, false);
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(days.get(position));
-        // Wierd hack to make the width of the spinner relative to its current item
+		// Wierd hack to make the width of the spinner relative to its current
+		// item
 		parent.getLayoutParams().width = day.getLayoutParams().width - 100;
 		row.getLayoutParams().width = day.getLayoutParams().width - 100;
 

@@ -285,7 +285,7 @@ public class CustomListAdapter implements ListAdapter {
 			// added to
 			// Adding touchlisteners
 			convertView.setOnTouchListener(new OptionTouchListener(context,
-					convertView));
+					convertView,listObject));
 			// convertView.setOnTouchListener(new OptionTouchListener(context,
 			// convertView));
 			// Set the state colors of the view
