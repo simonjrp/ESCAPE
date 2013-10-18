@@ -9,6 +9,12 @@
     <color name="light_blue">#FF33B5E5</color>
     <color name="light_blue_dark">#FF0099CC</color>
 
+    <color name="lime_green">#FF32CD32</color>
+    <color name="lime_green_dark">#1E7B1E</color>
+
+    <color name="chocolate_brown">#FF896810</color>
+    <color name="chocolate_brown_dark">#FF6B4A00</color>
+
     <color name="red">#AAFF4444</color>
     <color name="red_dark">#FFCC0000</color>
 
