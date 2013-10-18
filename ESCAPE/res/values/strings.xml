@@ -39,5 +39,7 @@
     <string name="markAsImportant">Mark as important</string>
     <string name="convertToEvent">Convert to event</string>
     <string name="API_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
+    <string name="title_activity_pomodoro_service">PomodoroService</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

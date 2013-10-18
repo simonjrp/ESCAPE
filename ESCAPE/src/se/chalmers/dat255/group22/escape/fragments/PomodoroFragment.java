@@ -1,6 +1,7 @@
 package se.chalmers.dat255.group22.escape.fragments;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.fragments.PomodoroService;
 import se.chalmers.dat255.group22.escape.R;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,6 +13,7 @@ import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,6 +72,21 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		return v;
 	}
 
+	public void startService(View view) {
+
+		Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
+		Intent intent = new Intent(getActivity(),PomodoroService.class);
+		intent.putExtra("ServiceTest", "Sending data works!");
+		getActivity().startService(intent);		
+		Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
+		
+	}
+
+	public void stopService(View view) {
+		Log.d("Pomodoro","In the PomodoroFragment/stopService method");
+		getActivity().stopService(new Intent(getActivity(), PomodoroService.class));
+	}
+	
 	/*
 	 * When clicking on start button, either start the timer (if it hasn't
 	 * started) and change button text to STOP, otherwise stop running timer and
@@ -82,8 +99,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			pomodoroCountDownTimer.start();
 			pomodoroTimerHasStarted = true;
 			startB.setText("STOP");
+			Log.d("Pomodoro","Pomodoro - pressing start button");
+			startService(getActivity().findViewById(R.id.pomodoro_button)); //-- this one works
+			
+			
+			
 		} else if (!breakTimerHasStarted && onBreak == true) {
-			// startTime=300*1000;
 			breakCountDownTimer.start();
 			breakTimerHasStarted = true;
 			startB.setText("STOP");
@@ -92,6 +113,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			pomodoroTimerHasStarted = false;
 			onBreak = false;
 			startB.setText("RESTART");
+			Log.d("PomodoroService","Pomodoro - pressing stop button");
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
 		} else if (breakTimerHasStarted && onBreak == true) {
 			breakCountDownTimer.cancel();
 			breakTimerHasStarted = false;
@@ -127,9 +150,19 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		output = min + " : " + sec;
 		return output;
 	}
+	@Override
+	public void onPause(){
+		super.onPause();
+		Log.d("Pomodoro","Fragment onPause");
+		//startService(getActivity().findViewById(R.id.pomodoro_button));
+	}
 
 	// Count down timer is handled below
-
+	/**
+	 * 
+	 * @author Adam
+	 *
+	 */
 	public class PomodoroTimer extends CountDownTimer {
 		public PomodoroTimer(long startTime, long interval) {
 			super(startTime, interval);

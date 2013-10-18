@@ -37,8 +37,7 @@
 
         <receiver
             android:name="se.chalmers.dat255.group22.escape.AlarmReceiver"
-            android:enabled="true"
-             >
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_TIME_NOTIFICATION" />
                 <action android:name="se.chalmers.dat255.group22.escape.AlarmReceiver.NEW_LOCATION_NOTIFICATION" />
@@ -55,6 +54,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="se.chalmers.dat255.group22.escape.MainActivity" />
         </activity>
+        <service
+            android:name="se.chalmers.dat255.group22.escape.fragments.PomodoroService">
+            <intent-filter>
+                <action android:name="se.chalmers.dat255.group22.escape.fragments.PomodoroService"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="se.chalmers.dat255.group22.escape.PomodoroFragment" />
+        </service>
     </application>
 
 </manifest>
