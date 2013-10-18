@@ -3,45 +3,50 @@
               android:id="@+id/expandedTask"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:paddingTop="@dimen/ui_element_gap"
-              android:paddingRight="@dimen/ui_element_gap"
-              android:paddingLeft="@dimen/ui_element_gap">
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <View
+            android:id="@+id/taskColor"
+            android:layout_width="10dp"
+            android:layout_height="fill_parent"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/ui_element_gap"
+            android:paddingLeft="@dimen/ui_element_gap">
 
             <TextView
                 android:id="@+id/listTask"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
                 android:paddingTop="@dimen/ui_element_gap"
                 android:paddingLeft="@dimen/ui_element_gap"
                 android:textColor="#000000"
                 android:textSize="@dimen/textsize_medium"
-                android:lines="1"/>
+                android:lines="1"
+                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/startTimeTask"
-                android:layout_width="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_gravity="right"
                 android:paddingTop="@dimen/ui_element_gap"
-                android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:textColor="#000000"
                 android:textSize="@dimen/textsize_medium"
-                android:lines="1"/>
+                android:lines="1"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -62,8 +67,7 @@
                     android:visibility="invisible"
                     style="@android:style/Widget.ActionButton"
                     android:contentDescription="@string/editButtonDescription"
-                    android:src="@android:drawable/ic_menu_edit"
-                    android:layout_marginRight="@dimen/ui_element_gap"/>
+                    android:src="@android:drawable/ic_menu_edit"/>
 
                 <ImageButton
                     android:id="@+id/deleteButton"
@@ -80,7 +84,9 @@
     <RelativeLayout
         android:id="@+id/taskDataLayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/ui_element_gap"
+        >
 
         <LinearLayout
             android:id="@+id/taskDataTopLayout"
@@ -196,7 +202,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:paddingRight="@dimen/ui_element_gap"/>
 
         </RelativeLayout>
 

@@ -309,12 +309,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView.setOnClickListener(clickListener);
 
 			// Set the state colors of the view
-			ColorDrawable baseColor = new ColorDrawable();
+			ColorDrawable ribbonColor = new ColorDrawable();
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+
             if (listObject.isImportant())
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getImportantColor()));
             else
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getBaseColor()));
 
 
@@ -322,8 +325,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			states.addState(new int[]{android.R.attr.state_pressed},
                     context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
 			states.addState(StateSet.WILD_CARD, baseColor);
-
-			convertView.setBackgroundDrawable(states);
+            View colorView = convertView.findViewById(R.id.taskColor);
+			colorView.setBackgroundDrawable(ribbonColor);
+            convertView.setBackgroundDrawable(states);
 
 			// We add two listeners since it wont work on one if the other is
 			// added

@@ -101,22 +101,26 @@ public class CustomOnClickListener implements View.OnClickListener {
 				Date start = null;
 				Date end = null;
 
-				// Set the state colors of the view
-				ColorDrawable baseColor = new ColorDrawable();
+                // Set the state colors of the view
+                ColorDrawable ribbonColor = new ColorDrawable();
+                ColorDrawable baseColor = new ColorDrawable();
+                baseColor.setColor(context.getResources().getColor(R.color.white));
+
                 if (listObject.isImportant())
-                    baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                    ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                             .get(0).getImportantColor()));
                 else
-                    baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                    ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                             .get(0).getBaseColor()));
 
 
-				StateListDrawable states = new StateListDrawable();
-				states.addState(new int[]{android.R.attr.state_pressed},
+                StateListDrawable states = new StateListDrawable();
+                states.addState(new int[]{android.R.attr.state_pressed},
                         context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
-				states.addState(StateSet.WILD_CARD, baseColor);
-
-				v.setBackgroundDrawable(states);
+                states.addState(StateSet.WILD_CARD, baseColor);
+                View colorView = v.findViewById(R.id.taskColor);
+                colorView.setBackgroundDrawable(ribbonColor);
+                v.setBackgroundDrawable(states);
 
 				if (listObject.getComment() != null) {
 					taskComment.setText(listObject.getComment());
@@ -232,21 +236,26 @@ public class CustomOnClickListener implements View.OnClickListener {
 			// If the view is only expanded, hide it again
 			dismissDetails(v);
 
-			// Set the state colors of the view
-			ColorDrawable baseColor = new ColorDrawable();
+            // Set the state colors of the view
+            ColorDrawable ribbonColor = new ColorDrawable();
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+
             if (listObject.isImportant())
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getImportantColor()));
             else
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getBaseColor()));
 
-			StateListDrawable states = new StateListDrawable();
-			states.addState(new int[]{android.R.attr.state_pressed},
-                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
-			states.addState(StateSet.WILD_CARD, baseColor);
 
-			v.setBackgroundDrawable(states);
+            StateListDrawable states = new StateListDrawable();
+            states.addState(new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
+            states.addState(StateSet.WILD_CARD, baseColor);
+            View colorView = v.findViewById(R.id.taskColor);
+            colorView.setBackgroundDrawable(ribbonColor);
+            v.setBackgroundDrawable(states);
 
 		}
 

@@ -293,21 +293,26 @@ public class CustomListAdapter implements ListAdapter {
 					convertView));
 			// convertView.setOnTouchListener(new OptionTouchListener(context,
 			// convertView));
-			// Set the state colors of the view
-			ColorDrawable baseColor = new ColorDrawable();
+            // Set the state colors of the view
+            ColorDrawable ribbonColor = new ColorDrawable();
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+
             if (listObject.isImportant())
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getImportantColor()));
             else
-                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getBaseColor()));
 
-			StateListDrawable states = new StateListDrawable();
-			states.addState(new int[]{android.R.attr.state_pressed},
-                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
-			states.addState(StateSet.WILD_CARD, baseColor);
 
-			convertView.setBackgroundDrawable(states);
+            StateListDrawable states = new StateListDrawable();
+            states.addState(new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
+            states.addState(StateSet.WILD_CARD, baseColor);
+            View colorView = convertView.findViewById(R.id.taskColor);
+            colorView.setBackgroundDrawable(ribbonColor);
+            convertView.setBackgroundDrawable(states);
 
 			if (!getLOShouldBeVisible(listObject))
 				convertView.setVisibility(View.VISIBLE);
