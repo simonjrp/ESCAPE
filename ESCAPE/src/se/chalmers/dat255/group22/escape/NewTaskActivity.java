@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.adapters.DateSpinnerSyncer;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
@@ -448,11 +449,6 @@ public class NewTaskActivity extends Activity
 		//
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 
-		dateFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateFromSpinner.getId()));
-
 		// Array containing different days for an event
 		ArrayList<String> strDayList = new ArrayList<String>();
 		strDayList.add(getString(R.string.todayLabel));
@@ -479,10 +475,6 @@ public class NewTaskActivity extends Activity
 		/* To: DateSpinner */
 		//
 		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
-		dateToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateToSpinner.getId()));
 
 		SpinnerDayAdapter dayToAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, dateToSpinner);
@@ -501,10 +493,12 @@ public class NewTaskActivity extends Activity
 
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
-		timeFromSpinner.setAdapter(timeFromAdapter);
+        dateToSpinner.setAdapter(dayToAdapter);
 
-		dateToSpinner.setAdapter(dayToAdapter);
-		timeToSpinner.setAdapter(timeToAdapter);
+        DateSpinnerSyncer dateSpinnerSyncer = new DateSpinnerSyncer(this, dateFromSpinner, dateToSpinner);
+
+        timeFromSpinner.setAdapter(timeFromAdapter);
+        timeToSpinner.setAdapter(timeToAdapter);
 
 		isEvent = true;
 
@@ -926,22 +920,22 @@ public class NewTaskActivity extends Activity
 				getString(R.string.default_category_school), Integer
 						.toHexString(getResources().getColor(R.color.magenta)),
 				Integer.toHexString(getResources().getColor(
-						R.color.magenta_dark))));
+                        R.color.magenta_dark))));
 
 		dbHandler
 				.addCategory(new Category(
-						getString(R.string.default_category_work), Integer
-								.toHexString(getResources().getColor(
-                                        R.color.red)), Integer
-								.toHexString(getResources().getColor(
-                                        R.color.red_dark))));
+                        getString(R.string.default_category_work), Integer
+                        .toHexString(getResources().getColor(
+                                R.color.red)), Integer
+                        .toHexString(getResources().getColor(
+                                R.color.red_dark))));
 		dbHandler
 				.addCategory(new Category(
-						getString(R.string.default_category_spare_time),
-						Integer.toHexString(getResources().getColor(
-								R.color.green)), Integer
-								.toHexString(getResources().getColor(
-                                        R.color.green_dark))));
+                        getString(R.string.default_category_spare_time),
+                        Integer.toHexString(getResources().getColor(
+                                R.color.green)), Integer
+                        .toHexString(getResources().getColor(
+                                R.color.green_dark))));
 
 		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
@@ -977,7 +971,7 @@ public class NewTaskActivity extends Activity
 					inputText,
 					Integer.toHexString(getResources().getColor(R.color.white)),
 					Integer.toHexString(getResources().getColor(
-							R.color.light_gray_transparent)));
+                            R.color.light_gray_transparent)));
 			dbHandler.addCategory(newCategory);
 			initCategoryAdapter();
 		}

@@ -1,13 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +8,13 @@ import java.util.List;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
 import se.chalmers.dat255.group22.escape.utils.IntegerToMonthConverter;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * An adapter that customizes the way spinners for choosing a day are presented.
@@ -40,9 +39,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 * @param textViewResourceId
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
-	 * @param days
-	 *            a stringarray that contains the string to be set for each item
-	 *            in the dropdown list.
+	 * 
 	 * @param spinner
 	 *            the spinner that gets assigned to this adapter.
 	 */
@@ -184,6 +181,8 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			days.add(customLabel);
 			days.add(context.getString(R.string.pick_day_label));
 
+			// The first line below is necessary to fire a onItemSelected event.
+			spinner.setSelection(0, false);
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 
