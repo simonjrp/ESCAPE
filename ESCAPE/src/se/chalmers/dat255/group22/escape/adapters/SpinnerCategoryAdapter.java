@@ -23,7 +23,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 	private ArrayList<String> categories;
 	private Context context;
-    private DBHandler dbHandler;
+	private DBHandler dbHandler;
 
 	/**
 	 * Create a new Adapter. This one is suited for a spinner containing
@@ -44,7 +44,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 		super(context, textViewResourceId, categories);
 		this.context = context;
 		this.categories = categories;
-        this.dbHandler = new DBHandler(context);
+		this.dbHandler = new DBHandler(context);
 	}
 
 	@Override
@@ -55,17 +55,20 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 		View row = inflater
 				.inflate(R.layout.simple_spinner_item, parent, false);
 
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(categories.get(position));
 		// set gray color to "New category" item
-
 		if (position == getCount() - 1) {
 			row.setBackgroundResource(R.drawable.spinner_button_colors);
 		} else {
-            Category category = dbHandler.getCategory(categories.get(position));
-            row.setBackgroundColor(Color.parseColor("#" + category.getBaseColor()));
-        }
+			// for the other positions, set the color of the entire row to its
+			// individual
+			// category color!
+			Category category = dbHandler.getCategory(categories.get(position));
+			row.setBackgroundColor(Color.parseColor("#"
+					+ category.getBaseColor()));
+		}
 
 		return row;
 	}
@@ -76,11 +79,15 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.simple_spinner_item_single,
 				parent, false);
-        View ribbon = row.findViewById(R.id.category_spinner_ribbon);
-        Category category = dbHandler.getCategory(categories.get(position));
-        ribbon.setBackgroundColor(Color.parseColor("#" + category.getBaseColor()));
-        ribbon.setVisibility(View.VISIBLE);
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+
+		// Set a color to the ribbon in the layout
+		View ribbon = row.findViewById(R.id.category_spinner_ribbon);
+		Category category = dbHandler.getCategory(categories.get(position));
+
+		ribbon.setBackgroundColor(Color.parseColor("#"
+				+ category.getBaseColor()));
+
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(categories.get(position));
 

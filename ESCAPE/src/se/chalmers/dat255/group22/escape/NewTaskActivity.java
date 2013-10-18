@@ -128,12 +128,16 @@ public class NewTaskActivity extends Activity
 
 	@Override
 	public void onBackPressed() {
-		DBHandler dbHandler = new DBHandler(this);
 		/* Set data of the object */
 
+		// Get references to all input fields
 		// Title
 		EditText taskTitle = (EditText) findViewById(R.id.task_title);
 		String name = taskTitle.getText().toString();
+
+		// Category
+		Spinner categories = (Spinner) findViewById(R.id.task_categories);
+		String category = categories.getSelectedItem().toString();
 
 		// Description
 		EditText taskDesc = (EditText) findViewById(R.id.task_description);
@@ -143,20 +147,16 @@ public class NewTaskActivity extends Activity
 		CheckBox important = (CheckBox) findViewById(R.id.task_important);
 		boolean importantTask = important.isChecked();
 
-		// Category
-		Spinner categories = (Spinner) findViewById(R.id.task_categories);
-		String category = categories.getSelectedItem().toString();
-
 		// Location
 		String location = "";
 		AutoCompleteTextView taskLocation = (AutoCompleteTextView) findViewById(R.id.task_location);
 		if (taskLocation.getText() != null)
 			location = taskLocation.getText().toString();
+
 		// Time
-		RelativeLayout eventLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
 		String dateFromString = "";
 		String dateToString = "";
-		if (eventLayout.isShown()) {
+		if (isEvent) {
 
 			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
 			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
@@ -171,15 +171,7 @@ public class NewTaskActivity extends Activity
 		TimeAlarm timeAlarm = null;
 
 		if (hasReminder) {
-			// Reminder type
-			Spinner reminderTypeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
-			if (reminderTypeSpinner.getSelectedItemPosition() == 0) {
-				reminderType = Constants.ReminderType.TIME;
-			} else {
-				reminderType = Constants.ReminderType.GPS;
-			}
-
-			if (reminderType == Constants.ReminderType.TIME) {
+			if (isTimeReminder) {
 				// Gets the spinners and their adapters.
 
 				Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
@@ -207,15 +199,15 @@ public class NewTaskActivity extends Activity
 		 * NOTE: GPS Alarm is added in an AsyncTask, because the process of
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
+		DBHandler dbHandler = new DBHandler(this);
 		Category newCategory = new Category(category, dbHandler.getCategory(
 				category).getBaseColor(), dbHandler.getCategory(category)
 				.getImportantColor());
-
+		dbHandler.close();
 		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
 		if (name.trim().length() != 0) {
-			DBHandler db = new DBHandler(this);
 			ListObject newListObject = new ListObject(1, name);
 
 			if (comment.trim().length() != 0)
@@ -243,106 +235,14 @@ public class NewTaskActivity extends Activity
 			 * with the new values
 			 */
 			if (editing) {
-				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
-				long id = bundle.getInt(INTENT_GET_ID);
-				ListObject editedListObject = dbHandler.getListObject(id);
-				editedListObject.setName(newListObject.getName());
-				editedListObject.setComment(newListObject.getComment());
-				editedListObject.setImportant(newListObject.isImportant());
-				long tmpId;
-
-				// Update/add new place
-				Place originalPlace = dbHandler.getPlace(editedListObject);
-				if (originalPlace != null) {
-					originalPlace.setName(place.getName());
-					db.updatePlaces(originalPlace);
-				} else {
-					tmpId = dbHandler.addPlace(place);
-					dbHandler.addListObjectWithPlace(editedListObject,
-							dbHandler.getPlace(tmpId));
-				}
-
-				Category originalCategory = dbHandler.getCategories(
-						editedListObject).get(0);
-				if (originalCategory != null) {
-					db.deleteCategoryWithListObject(originalCategory,
-							editedListObject);
-					originalCategory.setName(newCategory.getName());
-					db.addCategoryWithListObject(originalCategory,
-							editedListObject);
-				}
-
-				// No matter what¸ remove all old time/place reminders.
-				TimeAlarm originalTimeAlarm = dbHandler
-						.getTimeAlarm(editedListObject);
-				if (originalTimeAlarm != null) {
-					dbHandler.deleteTimeAlarm(originalTimeAlarm);
-					dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
-					NotificationHandler.getInstance().removeTimeReminder(
-							editedListObject);
-				}
-
-				GPSAlarm originalGPSAlarm = dbHandler
-						.getGPSAlarm(editedListObject);
-				if (originalGPSAlarm != null) {
-					NotificationHandler.getInstance().removeLocationReminder(
-							editedListObject);
-					dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
-					dbHandler.deleteGPSAlarm(originalGPSAlarm);
-				}
-
-				Time originalTime = dbHandler.getTime(editedListObject);
-				if (originalTime != null) {
-					dbHandler.deleteListObjectWithTime(editedListObject);
-					dbHandler.deleteTime(originalTime);
-
-				}
-
-				// Update/add time
-				if (isEvent) {
-					tmpId = dbHandler.addTime(newTime);
-					dbHandler.addListObjectsWithTime(editedListObject,
-							dbHandler.getTime(tmpId));
-
-				}
-
-				// Update/add new reminder
-				if (hasReminder) {
-					if (reminderType == Constants.ReminderType.TIME
-							&& isTimeReminder) {
-
-						if (originalTimeAlarm != null) {
-							originalTimeAlarm.setDate(timeAlarm.getDate());
-							db.updateTimeAlarm(originalTimeAlarm);
-							NotificationHandler.getInstance().addTimeReminder(
-                                    dbHandler.getListObject(
-                                            (long) editedListObject.getId())
-                                            .getId());
-						} else {
-							tmpId = dbHandler.addTimeAlarm(timeAlarm);
-							dbHandler.addListObjectWithTimeAlarm(
-									editedListObject,
-									dbHandler.getTimeAlarm(tmpId));
-							NotificationHandler.getInstance().addTimeReminder(
-                                    dbHandler.getListObject(
-                                            (long) editedListObject.getId())
-                                            .getId());
-						}
-					} else if (isLocationReminder) {
-						EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-						new GenerateGPSAlarmTask(this, id)
-								.execute(reminderLocationEditText.getText()
-                                        .toString());
-					}
-				}
-
-				dbHandler.updateListObject(editedListObject);
+				updateDataBase(newListObject);
 			} else {
 				saveToDatabase(newListObject);
-
 			}
 			super.onBackPressed();
 		} else {
+			// If there is no title, remind the user that a listObject needs a
+			// title to prevent mistakes
 			if (userIsSure) {
 				if (isEvent)
 					Toast.makeText(this, getText(R.string.event_not_saved),
@@ -358,6 +258,107 @@ public class NewTaskActivity extends Activity
 			}
 		}
 
+	}
+
+	/*
+	 * Grab all values from the fields and update/add the values to the database
+	 */
+	private void updateDataBase(ListObject newListObject) {
+		// References
+		DBHandler dbHandler = new DBHandler(this);
+		Place place = newListObject.getPlace();
+		Category newCategory = newListObject.getCategories().get(0);
+		Time newTime = newListObject.getTime();
+		TimeAlarm timeAlarm = newListObject.getTimeAlarm();
+		// Get the ListObject that wants to be edited
+		Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
+		long id = bundle.getInt(INTENT_GET_ID);
+		long tmpId;
+		ListObject editedListObject = dbHandler.getListObject(id);
+
+		editedListObject.setName(newListObject.getName());
+		editedListObject.setComment(newListObject.getComment());
+		editedListObject.setImportant(newListObject.isImportant());
+
+		// Update/add new place
+		Place originalPlace = dbHandler.getPlace(editedListObject);
+		if (originalPlace != null) {
+			originalPlace.setName(place.getName());
+			dbHandler.updatePlaces(originalPlace);
+		} else {
+			tmpId = dbHandler.addPlace(place);
+			dbHandler.addListObjectWithPlace(editedListObject,
+					dbHandler.getPlace(tmpId));
+		}
+
+		Category originalCategory = dbHandler.getCategories(editedListObject)
+				.get(0);
+		if (originalCategory != null) {
+			dbHandler.deleteCategoryWithListObject(originalCategory,
+					editedListObject);
+			originalCategory.setName(newCategory.getName());
+			dbHandler.addCategoryWithListObject(originalCategory,
+					editedListObject);
+		}
+
+		// No matter what¸ remove all old time/place reminders.
+		TimeAlarm originalTimeAlarm = dbHandler.getTimeAlarm(editedListObject);
+		if (originalTimeAlarm != null) {
+			dbHandler.deleteTimeAlarm(originalTimeAlarm);
+			dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
+			NotificationHandler.getInstance().removeTimeReminder(
+					editedListObject);
+		}
+
+		GPSAlarm originalGPSAlarm = dbHandler.getGPSAlarm(editedListObject);
+		if (originalGPSAlarm != null) {
+			dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
+			dbHandler.deleteGPSAlarm(originalGPSAlarm);
+			NotificationHandler.getInstance().removeLocationReminder(
+					editedListObject);
+		}
+
+		Time originalTime = dbHandler.getTime(editedListObject);
+		if (originalTime != null) {
+			dbHandler.deleteListObjectWithTime(editedListObject);
+			dbHandler.deleteTime(originalTime);
+
+		}
+
+		// Update/add time
+		if (isEvent) {
+			tmpId = dbHandler.addTime(newTime);
+			dbHandler.addListObjectsWithTime(editedListObject,
+					dbHandler.getTime(tmpId));
+
+		}
+
+		// Update/add new reminder
+		if (hasReminder) {
+			if (reminderType == Constants.ReminderType.TIME && isTimeReminder) {
+
+				if (originalTimeAlarm != null) {
+					originalTimeAlarm.setDate(timeAlarm.getDate());
+					dbHandler.updateTimeAlarm(originalTimeAlarm);
+					NotificationHandler.getInstance().addTimeReminder(
+							dbHandler.getListObject(
+									(long) editedListObject.getId()).getId());
+				} else {
+					tmpId = dbHandler.addTimeAlarm(timeAlarm);
+					dbHandler.addListObjectWithTimeAlarm(editedListObject,
+							dbHandler.getTimeAlarm(tmpId));
+					NotificationHandler.getInstance().addTimeReminder(
+							dbHandler.getListObject(
+									(long) editedListObject.getId()).getId());
+				}
+			} else if (isLocationReminder) {
+				EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+				new GenerateGPSAlarmTask(this, id)
+						.execute(reminderLocationEditText.getText().toString());
+			}
+		}
+
+		dbHandler.updateListObject(editedListObject);
 	}
 
 	/**
@@ -422,6 +423,7 @@ public class NewTaskActivity extends Activity
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
 					dbHandler.getPlace(tmpId));
 		}
+		dbHandler.close();
 	}
 
 	/**
@@ -433,7 +435,7 @@ public class NewTaskActivity extends Activity
 	 *            the view that calls this method.
 	 */
 	public void onConvertEvent(View v) {
-
+		isEvent = true;
 		v.setVisibility(View.INVISIBLE);
 
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
@@ -501,9 +503,6 @@ public class NewTaskActivity extends Activity
 
 		dateToSpinner.setAdapter(dayToAdapter);
 		timeToSpinner.setAdapter(timeToAdapter);
-
-		isEvent = true;
-
 	}
 
 	/**
@@ -523,11 +522,9 @@ public class NewTaskActivity extends Activity
 		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
 		relativeLayout.setVisibility(View.VISIBLE);
 
-		/*
-		 * Add items to the spinners
-		 * 
-		 * Begin with the "TYPE" of reminder
-		 */
+		// Add items to the spinners
+		// Begin with the "TYPE" of reminder
+
 		// An array containing the images for a time and location reminder
 		int imgArr[] = {R.drawable.device_access_alarms,
 				R.drawable.location_place};
@@ -560,7 +557,7 @@ public class NewTaskActivity extends Activity
 					}
 				});
 
-		/* Next up is the date of the reminder, simple enough */
+		// Next up is the date of the reminder
 
 		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
 
@@ -573,10 +570,8 @@ public class NewTaskActivity extends Activity
 						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
 						reminderDateSpinner.getId()));
 
-		/*
-		 * Last but not least, time of the reminder with a clarification of the
-		 * time
-		 */
+		// Last but not least, time of the reminder with a clarification of the
+		// time
 
 		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
 
@@ -622,7 +617,6 @@ public class NewTaskActivity extends Activity
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownButton.setVisibility(View.VISIBLE);
-
 		isEvent = false;
 	}
 
@@ -715,6 +709,11 @@ public class NewTaskActivity extends Activity
 		return new Date(dateCalendar.getTimeInMillis());
 	}
 
+	/*
+	 * Add data from a listObject in the database to the input fields! The
+	 * intent should contain the ID of the listObject bundled with a
+	 * EDIT_TASK_MSG to make sure we want to edit an object!
+	 */
 	private void loadListObjectFromIntent(Intent intent) {
 		DBHandler dbHandler = new DBHandler(this);
 		// Get the bundle and the ID of the listObject...
@@ -789,8 +788,6 @@ public class NewTaskActivity extends Activity
 			// ...and set their default values from the listObject!
 			title.setText(nameString);
 
-			// TODO This needs to be worked out
-
 			if (categoryString != null
 					&& !categoryString
 							.equals(getString(R.string.custom_category))) {
@@ -815,7 +812,9 @@ public class NewTaskActivity extends Activity
 
 			important.setChecked(isImportant);
 
-			// Open up the reminder field if it has a reminder...
+			// Open up the reminder field if it has a reminder.
+			// Also check what if is is a...
+			// ...time reminder...
 			if (timeAlarm != null) {
 				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
 				onRemindMe(remindMe);
@@ -835,6 +834,7 @@ public class NewTaskActivity extends Activity
 				isLocationReminder = false;
 
 			}
+			// ... or a location reminder...
 			if (gpsAlarm != null) {
 				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
 				onRemindMe(remindMe);
@@ -848,12 +848,12 @@ public class NewTaskActivity extends Activity
 				isTimeReminder = false;
 			}
 
-			// ...and the event field if it is an event...
+			// ...and show the event field if it is an event...
 			if (timeStart != null) {
 				Button remindMe = (Button) findViewById(R.id.task_convert_event);
 				onConvertEvent(remindMe);
 
-				// Set the spinners according to the current time...
+				// Set the spinners according to the current time
 				// Day from:
 				SpinnerDayAdapter fromDayAdapter = (SpinnerDayAdapter) dateFrom
 						.getAdapter();
@@ -879,6 +879,10 @@ public class NewTaskActivity extends Activity
 		}
 	}
 
+	/*
+	 * Set up the AutoCompleteTextViews. Basically add a listener that executes
+	 * the AsyncTask for predictions.
+	 */
 	private void setupAutoCompleteTextView(
 			final AutoCompleteTextView autoCompleteTextView) {
 		autoCompleteTextView.setThreshold(3);
@@ -895,10 +899,12 @@ public class NewTaskActivity extends Activity
 
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				GetPlaces task = new GetPlaces(autoCompleteTextView, adapter,
-						getBaseContext());
-				// now pass the argument in the textview to the task
-				task.execute(autoCompleteTextView.getText().toString());
+				if (count % 3 == 0) {
+					GetPlaces task = new GetPlaces(autoCompleteTextView,
+							adapter, getBaseContext());
+					// now pass the argument in the textview to the task
+					task.execute(autoCompleteTextView.getText().toString());
+				}
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count,
@@ -910,6 +916,11 @@ public class NewTaskActivity extends Activity
 		});
 	}
 
+	/*
+	 * Add the default categories to the database and add them to the
+	 * categoryAdapter. This is necessary because if the user creates a new
+	 * category, that category should be displayed immediately.
+	 */
 	private void initCategoryAdapter() {
 		DBHandler dbHandler = new DBHandler(this);
 		Spinner categorySpinner = (Spinner) this
