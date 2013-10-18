@@ -147,9 +147,9 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// If we have a time...
 				if (start != null) {
 					TextView startTime = (TextView) v
-							.findViewById(R.id.taskDataStartTime);
+							.findViewById(R.id.taskDataStartTime2);
 					TextView endTime = (TextView) v
-							.findViewById(R.id.taskDataEndTime);
+							.findViewById(R.id.taskDataEndTime2);
 					// Is the date this year?
 					int year = Calendar.getInstance().get(Calendar.YEAR);
 					if (Integer.parseInt(yearFormat.format(start)) == year) {
@@ -215,8 +215,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 				slide.setFillEnabled(true);
 				taskDataLayout.setAnimation(slide);
 				slide.start();
-				TextView timeView = (TextView) v
-						.findViewById(R.id.startTimeTask);
+				RelativeLayout timeView = (RelativeLayout) v
+						.findViewById(R.id.start_time_task);
 				timeView.setVisibility(View.INVISIBLE);
 
 			}
@@ -250,8 +250,9 @@ public class CustomOnClickListener implements View.OnClickListener {
 		// "Original State"
 		// We also clear the animations to make sure they can run again if
 		// invoked
-		TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
-		timeText.setVisibility(View.VISIBLE);
+        RelativeLayout timeView = (RelativeLayout) v
+                .findViewById(R.id.start_time_task);
+        timeView.setVisibility(View.VISIBLE);
 
 		ImageButton editButton = (ImageButton) v.findViewById(R.id.editButton);
 		editButton.setVisibility(View.INVISIBLE);
@@ -267,7 +268,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 		taskDataLayout.clearAnimation();
 		taskDataLayout.setVisibility(View.GONE);
 		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
-		TextView timeView = (TextView) v.findViewById(R.id.startTimeTask);
-		timeView.setVisibility(View.VISIBLE);
+        RelativeLayout timeView = (RelativeLayout) v
+                .findViewById(R.id.start_time_task);
+        timeView.setVisibility(View.VISIBLE);
 	}
 }

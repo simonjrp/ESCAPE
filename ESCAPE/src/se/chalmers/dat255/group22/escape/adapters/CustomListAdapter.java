@@ -1,23 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.NewTaskActivity;
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
-import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
-import se.chalmers.dat255.group22.escape.objects.Category;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -30,12 +12,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.NewTaskActivity;
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
+import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
+import se.chalmers.dat255.group22.escape.objects.Category;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 /**
  * Adapter for displaying
@@ -108,10 +105,10 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	protected void resetEditButtons() {
 		try {
-			TextView timeText = (TextView) ((MainActivity) context)
-					.findViewById(R.id.startTimeTask);
-			if (timeText != null)
-				timeText.setVisibility(View.VISIBLE);
+			RelativeLayout timeLayout = (RelativeLayout) ((MainActivity) context)
+					.findViewById(R.id.start_time_task);
+			if (timeLayout != null)
+				timeLayout.setVisibility(View.VISIBLE);
 
 			ImageButton editButton = (ImageButton) ((MainActivity) context)
 					.findViewById(R.id.editButton);
@@ -191,15 +188,6 @@ public class CustomListAdapter implements ListAdapter {
 
 		if (getLOShouldBeVisible(listObject)) {
 
-			String childTimeText = "";
-			if (dbHandler.getTime(listObject) != null) {
-				final Date childStartDate = dbHandler.getTime(listObject)
-						.getStartDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
-						Locale.getDefault());
-				childTimeText = dateFormat.format(childStartDate);
-			}
-
 			if (convertView == null || !convertView.isShown()) {
 				LayoutInflater infalInflater = (LayoutInflater) this.context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -209,9 +197,9 @@ public class CustomListAdapter implements ListAdapter {
 			// Get a textview for the object
 			final TextView childLabel = (TextView) convertView
 					.findViewById(R.id.listTask);
-
-			final TextView childTimeView = (TextView) convertView
-					.findViewById(R.id.startTimeTask);
+			RelativeLayout timeLayout = (RelativeLayout) convertView
+					.findViewById(R.id.start_time_task);
+			timeLayout.setVisibility(View.GONE);
 
 			final ImageButton editButton = (ImageButton) convertView
 					.findViewById(R.id.editButton);
@@ -265,8 +253,6 @@ public class CustomListAdapter implements ListAdapter {
 
 			// TODO tasks don't have time!
 			childLabel.setText(childText);
-			childTimeView
-					.setText(childTimeText.equals("") ? "" : childTimeText);
 			// Get the layout for the object's data
 			RelativeLayout childData = (RelativeLayout) convertView
 					.findViewById(R.id.taskDataLayout);
@@ -285,7 +271,7 @@ public class CustomListAdapter implements ListAdapter {
 			// added to
 			// Adding touchlisteners
 			convertView.setOnTouchListener(new OptionTouchListener(context,
-					convertView,listObject));
+					convertView, listObject));
 			// convertView.setOnTouchListener(new OptionTouchListener(context,
 			// convertView));
 			// Set the state colors of the view
@@ -313,7 +299,7 @@ public class CustomListAdapter implements ListAdapter {
 			baseColor.setColor(context.getResources().getColor(R.color.white));
 			StateListDrawable states = new StateListDrawable();
 			states.addState(
-					new int[] { android.R.attr.state_pressed },
+					new int[]{android.R.attr.state_pressed},
 					context.getResources().getDrawable(
 							R.drawable.list_pressed_holo_dark));
 			states.addState(StateSet.WILD_CARD, baseColor);

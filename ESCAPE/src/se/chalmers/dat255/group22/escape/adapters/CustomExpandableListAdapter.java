@@ -228,10 +228,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		try {
 			RelativeLayout layout = (RelativeLayout) ((MainActivity) context)
 					.findViewById(R.id.listTask);
-			TextView timeText = (TextView) ((MainActivity) context)
-					.findViewById(R.id.startTimeTask);
-			if (timeText != null)
-				timeText.setVisibility(View.VISIBLE);
+			RelativeLayout timeLayout = (RelativeLayout) ((MainActivity) context)
+					.findViewById(R.id.start_time_task);
+			if (timeLayout != null)
+				timeLayout.setVisibility(View.VISIBLE);
 
 			ImageButton editButton = (ImageButton) ((MainActivity) context)
 					.findViewById(R.id.editButton);
@@ -281,12 +281,15 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			final String childText = listObject.getName();
 
 			// Get the time if it exists
-			String childTimeText = "";
+			String childStartTimeText = "";
+            String childEndTimeText = "";
 			if (listObject.getTime() != null) {
 				final Date childStartDate = listObject.getTime().getStartDate();
+                final Date childEndDate = listObject.getTime().getEndDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
 						Locale.getDefault());
-				childTimeText = dateFormat.format(childStartDate);
+				childStartTimeText = dateFormat.format(childStartDate);
+                childEndTimeText = dateFormat.format(childEndDate);
 			}
 
 			if (convertView == null || !convertView.isShown()) {
@@ -298,8 +301,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			TextView childLabel = (TextView) convertView
 					.findViewById(R.id.listTask);
 
-			TextView childTimeView = (TextView) convertView
-					.findViewById(R.id.startTimeTask);
+			TextView childStartTimeView = (TextView) convertView
+					.findViewById(R.id.taskDataStartTime1);
+            TextView childEndTimeView = (TextView) convertView
+                    .findViewById(R.id.taskDataEndTime1);
 
 			ImageButton editButton = (ImageButton) convertView
 					.findViewById(R.id.editButton);
@@ -351,8 +356,10 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			});
 
 			childLabel.setText(childText);
-			childTimeView
-					.setText(childTimeText.equals("") ? "" : childTimeText);
+			childStartTimeView
+					.setText(childStartTimeText);
+            childEndTimeView
+                    .setText(childEndTimeText);
 			// Get the layout for the object's data
 			RelativeLayout childData = (RelativeLayout) convertView
 					.findViewById(R.id.taskDataLayout);

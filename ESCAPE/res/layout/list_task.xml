@@ -36,18 +36,38 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerHorizontal="true"/>
 
-            <TextView
-                android:id="@+id/startTimeTask"
+            <RelativeLayout
+                android:id="@+id/start_time_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:paddingTop="@dimen/ui_element_gap"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textColor="#000000"
-                android:textSize="@dimen/textsize_medium"
-                android:lines="1"
                 android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/taskDataStartTime1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_micro"
+                    android:textColor="#000000"/>
+
+                <View
+                    android:id="@+id/small_time_view_separator1"
+                    android:layout_width="30dp"
+                    android:layout_height="1dp"
+                    android:background="#bebebe"
+                    android:layout_below="@id/taskDataStartTime1"/>
+
+                <TextView
+                    android:id="@+id/taskDataEndTime1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_micro"
+                    android:textColor="#000000"
+                    android:layout_below="@id/small_time_view_separator1"/>
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -144,7 +164,7 @@
                 android:paddingLeft="@dimen/ui_element_gap">
 
                 <TextView
-                    android:id="@+id/taskDataTimeFromLabel"
+                    android:id="@+id/taskDataTimeFromLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
@@ -152,29 +172,35 @@
                     android:hint="@string/fromLabel"/>
 
                 <TextView
-                    android:id="@+id/taskDataStartTime"
+                    android:id="@+id/taskDataStartTime2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textColor="#000000"
-                    android:layout_below="@id/taskDataTimeFromLabel"/>
+                    android:layout_below="@id/taskDataTimeFromLabel2"/>
+                <View
+                    android:id="@+id/small_time_view_separator2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#bebebe"
+                    android:layout_below="@id/taskDataStartTime2"/>
 
                 <TextView
-                    android:id="@+id/taskDataTimeToLabel"
+                    android:id="@+id/taskDataTimeToLabel2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textStyle="bold"
                     android:hint="@string/toLabel"
-                    android:layout_below="@id/taskDataStartTime"/>
+                    android:layout_below="@id/taskDataStartTime2"/>
 
                 <TextView
-                    android:id="@+id/taskDataEndTime"
+                    android:id="@+id/taskDataEndTime2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textColor="#000000"
-                    android:layout_below="@id/taskDataTimeToLabel"/>
+                    android:layout_below="@id/taskDataTimeToLabel2"/>
             </RelativeLayout>
 
         </LinearLayout>
