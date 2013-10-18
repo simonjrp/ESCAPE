@@ -921,23 +921,28 @@ public class NewTaskActivity extends Activity
 
 		ArrayList<String> categories = new ArrayList<String>();
 		// Grab all the categories from the DB...
-		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_school), Integer
-						.toHexString(getResources()
-                                .getColor(R.color.yellow_transparent)), Integer
-						.toHexString(getResources().getColor(
-                                R.color.yellow))));
 
 		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_work), Integer
-						.toHexString(getResources().getColor(R.color.red_transparent)),
-                Integer.toHexString(getResources().getColor(
-						R.color.red))));
-		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_spare_time), Integer
-						.toHexString(getResources().getColor(R.color.green_transparent)),
-                Integer.toHexString(getResources().getColor(
-						R.color.green))));
+				getString(R.string.default_category_school), Integer
+						.toHexString(getResources().getColor(R.color.magenta)),
+				Integer.toHexString(getResources().getColor(
+						R.color.magenta_dark))));
+
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_work), Integer
+								.toHexString(getResources().getColor(
+                                        R.color.red)), Integer
+								.toHexString(getResources().getColor(
+                                        R.color.red_dark))));
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_spare_time),
+						Integer.toHexString(getResources().getColor(
+								R.color.green)), Integer
+								.toHexString(getResources().getColor(
+                                        R.color.green_dark))));
+
 		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
 		// ...and add them to the array used in the spinner
@@ -971,7 +976,7 @@ public class NewTaskActivity extends Activity
 			Category newCategory = new Category(
 					inputText,
 					Integer.toHexString(getResources().getColor(R.color.white)),
-                    Integer.toHexString(getResources().getColor(
+					Integer.toHexString(getResources().getColor(
 							R.color.light_gray_transparent)));
 			dbHandler.addCategory(newCategory);
 			initCategoryAdapter();

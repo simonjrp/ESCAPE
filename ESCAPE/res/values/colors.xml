@@ -5,13 +5,21 @@
     <color name="black">#000000</color>
     <color name="light_gray">#D3D3D3</color>
     <color name="light_gray_transparent">#60BEBEBE</color>
-    <color name="light_blue">#33B5E5</color>
+
+    <color name="light_blue">#FF33B5E5</color>
+    <color name="light_blue_dark">#FF0099CC</color>
     <color name="light_blue_transparent">#6033B5E5</color>
-    <color name="red">#FFFF0000</color>
-    <color name="red_transparent">#60BE0000</color>
-    <color name="green">#FF00FF00</color>
-    <color name="green_transparent">#6000BE00</color>
-    <color name="yellow">#FFBEBE00</color>
-    <color name="yellow_transparent">#60BEBE00</color>
+
+    <color name="red">#AAFF4444</color>
+    <color name="red_dark">#AACC0000</color>
+
+    <color name="green">#AA99CC00</color>
+    <color name="green_dark">#AA669900</color>
+
+    <color name="orange">#AAFFBB33</color>
+    <color name="orange_dark">#AAFF8800</color>
+
+    <color name="magenta">#AAAA66CC</color>
+    <color name="magenta_dark">#AA9933CC</color>
 
 </resources>
