@@ -4,6 +4,7 @@ import java.util.Timer;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class PomodoroService extends Service {
@@ -37,6 +38,10 @@ public class PomodoroService extends Service {
 		Log.d("Pomodoro","PomodoroService started!!!!!!");
 		doSomethingRepeatedly();
 		Log.d("Pomodoro",intent.getStringExtra("ServiceTest"));
+		String serviceTestString = "Sending data from Service to Activity now works!";
+		Intent serviceIntent = new Intent(PomodoroFragment.RECEIVE_TIME);
+		serviceIntent.putExtra("serviceToActivity", serviceTestString);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceIntent);
 		
 		
 

@@ -1,18 +1,20 @@
 package se.chalmers.dat255.group22.escape.fragments;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroService;
 import se.chalmers.dat255.group22.escape.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	private long pomodoroStartTime = 10 * 1000;
 	private long breakStartTime = 5 * 1000;
 	private final long interval = 1 * 1000;
+	
+	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +52,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
 
+		//Setting up broadcast manager to handle communication between service and activity
+		LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(getActivity());
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(RECEIVE_TIME);
+		bManager.registerReceiver(bReceiver, intentFilter);
+		
 		// Layout for the pomodoro start button
 		startB = (Button) v.findViewById(R.id.pomodoro_button);
 
@@ -71,12 +81,24 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		return v;
 	}
+	
+	private BroadcastReceiver bReceiver = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent){
+			if(intent.getAction().equals(RECEIVE_TIME)){
+				String serviceTimeString = intent.getStringExtra("serviceToActivity");
+				Log.d("Pomodoro",serviceTimeString);
+			}
+		}
+	};
 
+	
+	
 	public void startService(View view) {
 
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
 		Intent intent = new Intent(getActivity(),PomodoroService.class);
-		intent.putExtra("ServiceTest", "Sending data works!");
+		intent.putExtra("ServiceTest", "Sending data from Activity to Service now works!");
 		getActivity().startService(intent);		
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
 		
