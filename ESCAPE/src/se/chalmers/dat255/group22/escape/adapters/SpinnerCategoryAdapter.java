@@ -1,10 +1,5 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import java.util.ArrayList;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,6 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.Category;
 
 /**
  * An adapter that customizes the way spinners for choosing a category are
@@ -82,11 +83,11 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		// Set a color to the ribbon in the layout
 		View ribbon = row.findViewById(R.id.category_spinner_ribbon);
-        ribbon.setVisibility(View.VISIBLE);
+		ribbon.setVisibility(View.VISIBLE);
 		Category category = dbHandler.getCategory(categories.get(position));
-
-		ribbon.setBackgroundColor(Color.parseColor("#"
-				+ category.getBaseColor()));
+		if (position != getCount()-1)
+			ribbon.setBackgroundColor(Color.parseColor("#"
+					+ category.getBaseColor()));
 
 		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 

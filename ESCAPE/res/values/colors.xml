@@ -10,15 +10,15 @@
     <color name="light_blue_dark">#FF0099CC</color>
 
     <color name="red">#AAFF4444</color>
-    <color name="red_dark">#AACC0000</color>
+    <color name="red_dark">#FFCC0000</color>
 
-    <color name="green">#AA99CC00</color>
-    <color name="green_dark">#AA669900</color>
+    <color name="green">#FF99CC00</color>
+    <color name="green_dark">#FF669900</color>
 
-    <color name="orange">#AAFFBB33</color>
-    <color name="orange_dark">#AAFF8800</color>
+    <color name="orange">#FFFFBB33</color>
+    <color name="orange_dark">#FFFF8800</color>
 
-    <color name="magenta">#AAAA66CC</color>
-    <color name="magenta_dark">#AA9933CC</color>
+    <color name="magenta">#FFAA66CC</color>
+    <color name="magenta_dark">#FF9933CC</color>
 
 </resources>
