@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
+
 /**
  * Class representing an OnItemSelectedListener for spinners. Used mainly to
  * bring up date or time dialog pickers when clicking on a specific item in some

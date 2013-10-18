@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
@@ -149,7 +150,8 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			// Formats the time so that, for example, 12 o clock is shown as
 			// 12:00 instead of 12:0
 
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
 			String customLabel = timeFormatter.format(newTimeAsCal.getTime());
 
 			// Finally, add the data to the adapter and select new item in

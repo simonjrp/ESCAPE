@@ -4,13 +4,13 @@
     <string name="app_name">ESCAPE</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="title_activity_new_task">Add new task</string>
-    <string name="today_label">Today</string>
-    <string name="tomorrow_label">Tomorrow</string>
+    <string name="title_activity_new_task">Done</string>
+    <string name="todayLabel">Today</string>
+    <string name="tomorrowLabel">Tomorrow</string>
     <string name="thisweek_label">This week</string>
-    <string name="someday_label">Someday</string>
-    <string name="edit_button_description">Edit</string>
-    <string name="delete_button_description">Delete</string>
+    <string name="somedayLabel">Someday</string>
+    <string name="editButtonDescription">Edit</string>
+    <string name="deleteButtonDescription">Delete</string>
     <string name="pomodoro_start">Start pomodoro</string>
     <string name="pomodoro_stop">Stop</string>
     <string name="remind_me">Remind me at</string>
@@ -32,6 +32,15 @@
     <string name="new_task">New Task</string>
     <string name="new_block">New Block</string>
     <string name="title_activity_new_block">New Block</string>
+    <string name="titleHint">Title</string>
+    <string name="descriptionHint">Description</string>
+    <string name="locationHint">Location</string>
+    <string name="markAsImportant">Mark as important</string>
+    <string name="convertToEvent">Convert to event</string>
+    <string name="API_key">AIzaSyDrot9omu_3zSYpm4tf6sw1x_jKWOB2MFc</string>
+    <string name="event_not_saved">Title required, event was not saved.</string>
+    <string name="task_not_saved">Title required, task was not saved.</string>
+    <string name="no_save">Nothing will be saved without a title.</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Description</string>
     <string name="location_hint">Location</string>
@@ -52,11 +61,6 @@
     <string name="geofence_remove_error">An error occurred when removing specified geofences</string>
     <string name="back_button_hint">Press BACK one more time to exit</string>
     <string name="enter_custom_category">Enter a new category</string>
-    <string name="white_hex_color">"#ffFFFFFF"</string>
-    <string name="grey_hex_color">"#ffbebebe"</string>
-    <string name="default_category_school">School</string>
-    <string name="default_category_work">Work</string>
-    <string name="default_category_life">Life</string>
     <string name="about_menu_item">About</string>
     <string name="about_dialog_title">ESCAPE (v0.5)</string>
     <string name="about_dialog_header">Get organized</string>
@@ -64,6 +68,10 @@
     <string name="about_dialog_repo">Github: <a href="https://github.com/simonjrp/ESCAPE">ESCAPE</a></string>
     <string name="about_dialog_license">Licensed under: <a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></string>
     <string name="about_dialog_copyright">Copyright &#169; 2013</string>
-
+    <string name="default_category_school">School</string>
+    <string name="default_category_work">Work</string>
+    <string name="default_category_spare_time">Spare time</string>
+    <string name="toLabel">To</string>
+    <string name="fromLabel">From</string>
 
 </resources>

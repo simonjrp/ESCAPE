@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +43,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * An activity used for creating a new task
@@ -64,6 +64,7 @@ public class NewTaskActivity extends Activity
 	private boolean editing;
 	private String nextWeekSameDay;
 	private ReminderType reminderType;
+	private boolean userIsSure;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,10 @@ public class NewTaskActivity extends Activity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		userIsSure = false;
+
+		// Set up the spinner for different categories
+		initCategoryAdapter();
 
 		/*
 		 * Check if the activity was called from an already created listObject
@@ -107,8 +112,6 @@ public class NewTaskActivity extends Activity
 		setupAutoCompleteTextView(locationReminderAutoComplete);
 		setupAutoCompleteTextView(locationAutoComplete);
 
-		// Set up the spinner for different categories
-		initCategoryAdapter();
 	}
 
 	@Override
@@ -125,7 +128,7 @@ public class NewTaskActivity extends Activity
 
 	@Override
 	public void onBackPressed() {
-
+		DBHandler dbHandler = new DBHandler(this);
 		/* Set data of the object */
 
 		// Title
@@ -204,10 +207,9 @@ public class NewTaskActivity extends Activity
 		 * NOTE: GPS Alarm is added in an AsyncTask, because the process of
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
-
-		Category newCategory = new Category(category,
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color));
+		Category newCategory = new Category(category, dbHandler.getCategory(
+				category).getBaseColor(), dbHandler.getCategory(category)
+				.getImportantColor());
 
 		Place place = new Place(1, location);
 
@@ -242,7 +244,6 @@ public class NewTaskActivity extends Activity
 			 */
 			if (editing) {
 				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
-				DBHandler dbHandler = new DBHandler(this);
 				long id = bundle.getInt(INTENT_GET_ID);
 				ListObject editedListObject = dbHandler.getListObject(id);
 				editedListObject.setName(newListObject.getName());
@@ -261,15 +262,24 @@ public class NewTaskActivity extends Activity
 							dbHandler.getPlace(tmpId));
 				}
 
+				Category originalCategory = dbHandler.getCategories(
+						editedListObject).get(0);
+				if (originalCategory != null) {
+					db.deleteCategoryWithListObject(originalCategory,
+							editedListObject);
+					originalCategory.setName(newCategory.getName());
+					db.addCategoryWithListObject(originalCategory,
+							editedListObject);
+				}
+
 				// No matter what¸ remove all old time/place reminders.
 				TimeAlarm originalTimeAlarm = dbHandler
 						.getTimeAlarm(editedListObject);
 				if (originalTimeAlarm != null) {
-					NotificationHandler.getInstance().init(this);
+					dbHandler.deleteTimeAlarm(originalTimeAlarm);
+					dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
 					NotificationHandler.getInstance().removeTimeReminder(
 							editedListObject);
-                    dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
-					dbHandler.deleteTimeAlarm(originalTimeAlarm);
 				}
 
 				GPSAlarm originalGPSAlarm = dbHandler
@@ -277,14 +287,15 @@ public class NewTaskActivity extends Activity
 				if (originalGPSAlarm != null) {
 					NotificationHandler.getInstance().removeLocationReminder(
 							editedListObject);
-                    dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
+					dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
 					dbHandler.deleteGPSAlarm(originalGPSAlarm);
 				}
 
 				Time originalTime = dbHandler.getTime(editedListObject);
-                if (originalTime != null) {
-                    dbHandler.deleteListObjectWithTime(editedListObject);
-                    dbHandler.deleteTime(originalTime);
+				if (originalTime != null) {
+					dbHandler.deleteListObjectWithTime(editedListObject);
+					dbHandler.deleteTime(originalTime);
+
 				}
 
 				// Update/add time
@@ -295,34 +306,58 @@ public class NewTaskActivity extends Activity
 
 				}
 
-                // Update/add new reminder
-                if (hasReminder) {
-                    if (reminderType == Constants.ReminderType.TIME) {
+				// Update/add new reminder
+				if (hasReminder) {
+					if (reminderType == Constants.ReminderType.TIME
+							&& isTimeReminder) {
 
-                        tmpId = dbHandler.addTimeAlarm(timeAlarm);
-                        dbHandler.addListObjectWithTimeAlarm(editedListObject,
-                                dbHandler.getTimeAlarm(tmpId));
-                        NotificationHandler.getInstance().addTimeReminder(editedListObject.getId());
-
-                    } else {
-                        EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-                        new GenerateGPSAlarmTask(this, id)
-                                .execute(reminderLocationEditText.getText()
+						if (originalTimeAlarm != null) {
+							originalTimeAlarm.setDate(timeAlarm.getDate());
+							db.updateTimeAlarm(originalTimeAlarm);
+							NotificationHandler.getInstance().addTimeReminder(
+                                    dbHandler.getListObject(
+                                            (long) editedListObject.getId())
+                                            .getId());
+						} else {
+							tmpId = dbHandler.addTimeAlarm(timeAlarm);
+							dbHandler.addListObjectWithTimeAlarm(
+									editedListObject,
+									dbHandler.getTimeAlarm(tmpId));
+							NotificationHandler.getInstance().addTimeReminder(
+                                    dbHandler.getListObject(
+                                            (long) editedListObject.getId())
+                                            .getId());
+						}
+					} else if (isLocationReminder) {
+						EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+						new GenerateGPSAlarmTask(this, id)
+								.execute(reminderLocationEditText.getText()
                                         .toString());
-                    }
-                }
+					}
+				}
 
 				dbHandler.updateListObject(editedListObject);
 			} else {
 				saveToDatabase(newListObject);
 
 			}
-
+			super.onBackPressed();
 		} else {
-			// ... do nothing
+			if (userIsSure) {
+				if (isEvent)
+					Toast.makeText(this, getText(R.string.event_not_saved),
+							Toast.LENGTH_LONG).show();
+				else
+					Toast.makeText(this, getText(R.string.task_not_saved),
+							Toast.LENGTH_LONG).show();
+				super.onBackPressed();
+			} else {
+				Toast.makeText(this, getText(R.string.no_save),
+						Toast.LENGTH_SHORT).show();
+				userIsSure = true;
+			}
 		}
 
-		super.onBackPressed();
 	}
 
 	/**
@@ -416,8 +451,8 @@ public class NewTaskActivity extends Activity
 
 		// Array containing different days for an event
 		ArrayList<String> strDayList = new ArrayList<String>();
-		strDayList.add(getString(R.string.today_label));
-		strDayList.add(getString(R.string.tomorrow_label));
+		strDayList.add(getString(R.string.todayLabel));
+		strDayList.add(getString(R.string.tomorrowLabel));
 		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pick_day_label));
 
@@ -706,14 +741,12 @@ public class NewTaskActivity extends Activity
 			if (listObject.getName() != null)
 				nameString = listObject.getName();
 
-			// TODO This needs to be fixed
-			/*
-			 * if (listObject.getCategories() != null) categoryString =
-			 * listObject.getCategories().get(0) .getName();
-			 */
-
 			if (listObject.getComment() != null)
 				descriptionString = listObject.getComment();
+
+			if (listObject.getCategories() != null)
+				categoryString = dbHandler.getCategories(listObject).get(0)
+						.getName();
 
 			if (dbHandler.getPlace(listObject) != null)
 				locationString = dbHandler.getPlace(listObject).getName();
@@ -757,11 +790,19 @@ public class NewTaskActivity extends Activity
 			title.setText(nameString);
 
 			// TODO This needs to be worked out
-			/*
-			 * if(categoryString != null &&
-			 * !categoryString.equals(getString(R.string.custom_category)))
-			 * category.setSelection(0);
-			 */
+
+			if (categoryString != null
+					&& !categoryString
+							.equals(getString(R.string.custom_category))) {
+				for (int i = 0; i < category.getAdapter().getCount(); i++) {
+					String c = (String) category.getAdapter().getItem(i);
+					if (c.equals(categoryString)) {
+						category.setSelection(i);
+						break;
+					}
+				}
+
+			}
 
 			if (descriptionString != null) {
 				if (descriptionString.trim().length() != 0)
@@ -801,8 +842,6 @@ public class NewTaskActivity extends Activity
 				showLocationReminderInput();
 
 				// Set the text of the location field
-				// TODO Need latest DB to get Location as string from
-				// TODO GPSAlarm
 				remindLocation.setText(gpsAlarm.getAdress());
 
 				isLocationReminder = true;
@@ -878,22 +917,31 @@ public class NewTaskActivity extends Activity
 
 		ArrayList<String> categories = new ArrayList<String>();
 		// Grab all the categories from the DB...
+
 		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_school),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
-		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_work),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
-		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_life),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
+				getString(R.string.default_category_school), Integer
+						.toHexString(getResources().getColor(R.color.magenta)),
+				Integer.toHexString(getResources().getColor(
+						R.color.magenta_dark))));
+
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_work), Integer
+								.toHexString(getResources().getColor(
+										R.color.red)), Integer
+								.toHexString(getResources().getColor(
+										R.color.red_dark))));
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_spare_time),
+						Integer.toHexString(getResources().getColor(
+								R.color.green)), Integer
+								.toHexString(getResources().getColor(
+										R.color.green_dark))));
+
 		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
 		// ...and add them to the array used in the spinner
-		// TODO Catch eventual NullPointerException?
 		for (Category c : categoriesFromDB) {
 			if (!c.getName().equals(getString(R.string.custom_category)))
 				categories.add(c.getName());
@@ -920,9 +968,12 @@ public class NewTaskActivity extends Activity
 	public void onFinishEditDialog(String inputText) {
 		DBHandler dbHandler = new DBHandler(this);
 		if (!inputText.equals(getString(R.string.custom_category))) {
-			Category newCategory = new Category(inputText,
-					getString(R.string.white_hex_color),
-					getString(R.string.grey_hex_color));
+			// TODO The colors SHOULD be something the user has defined...
+			Category newCategory = new Category(
+					inputText,
+					Integer.toHexString(getResources().getColor(R.color.white)),
+					Integer.toHexString(getResources().getColor(
+							R.color.light_gray_transparent)));
 			dbHandler.addCategory(newCategory);
 			initCategoryAdapter();
 		}

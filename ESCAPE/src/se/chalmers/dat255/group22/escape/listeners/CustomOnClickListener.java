@@ -1,16 +1,27 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import android.graphics.Paint;
-import android.text.format.Time;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
+import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.util.StateSet;
+import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
@@ -20,13 +31,19 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORM
  * @author tholene
  */
 public class CustomOnClickListener implements View.OnClickListener {
-	private final static String NEW_ROW = "\n";
-	private final String REMIND_ME_AT;
-	private TextView childLabel;
-	private TextView taskData;
+
+	private static String REMIND_ME_AT;
+	private Context context;
+	private TextView parent;
+	private RelativeLayout taskDataLayout;
 	private ListObject listObject;
 	private boolean isExpanded;
 	private DBHandler dbHandler;
+	private TextView taskComment;
+	private TextView taskPlace;
+	private RelativeLayout taskTimeLayout;
+	private TextView taskReminder;
+	private ImageView taskReminderType;
 
 	/**
 	 * Create a new CustomOnClickListener.
@@ -35,119 +52,220 @@ public class CustomOnClickListener implements View.OnClickListener {
 	 *            the
 	 *            {@link se.chalmers.dat255.group22.escape.objects.ListObject}
 	 *            that contains the data to be viewed.
-	 * @param childLabel
+	 * @param parent
 	 *            the TextView that the listener will be added to.
-	 * @param taskData
+	 * @param taskDataLayout
 	 *            the TextView containing the data that is associated with this
 	 *            particular listObject
 	 */
-	public CustomOnClickListener(ListObject listObject, TextView childLabel,
-			TextView taskData) {
+	public CustomOnClickListener(Context context, ListObject listObject,
+			TextView parent, RelativeLayout taskDataLayout) {
+		this.context = context;
 		this.listObject = listObject;
-		this.childLabel = childLabel;
-		this.taskData = taskData;
+		this.parent = parent;
+
+		this.taskDataLayout = taskDataLayout;
+
+		taskComment = (TextView) taskDataLayout
+				.findViewById(R.id.taskDataComment);
+		taskPlace = (TextView) taskDataLayout.findViewById(R.id.taskDataPlace);
+		taskTimeLayout = (RelativeLayout) taskDataLayout
+				.findViewById(R.id.taskDataTimeLayout);
+		taskReminder = (TextView) taskDataLayout
+				.findViewById(R.id.taskDataReminder);
+		taskReminderType = (ImageView) taskDataLayout
+				.findViewById(R.id.taskDataReminderType);
 		isExpanded = false;
-		dbHandler = new DBHandler(childLabel.getContext());
-		REMIND_ME_AT = childLabel.getContext().getString(R.string.remind_me)
-				+ " ";
+		dbHandler = new DBHandler(parent.getContext());
+		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":"
+				+ NEW_ROW;
 	}
 
 	@Override
 	public void onClick(View v) {
 		isExpanded = !isExpanded;
-
 		// This happens when the view is clicked...
 		if (isExpanded) {
+			SimpleDateFormat dateFormatSingleLine = new SimpleDateFormat(
+					"EEE, dd MMM HH:mm", Locale.getDefault());
+			SimpleDateFormat dateFormatMultiLine = new SimpleDateFormat(
+					"EEE, dd MMM" + NEW_ROW + "HH:mm", Locale.getDefault());
+			SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy",
+					Locale.getDefault());
+			SimpleDateFormat yearWithDateFormat = new SimpleDateFormat("yyyy"
+					+ NEW_ROW + "EEE, dd MMM" + NEW_ROW + "HH:mm",
+					Locale.getDefault());
 			// ... and the edit/remove buttons are not showing.
 			if (!v.findViewById(R.id.editButton).isShown()) {
-				Time start = new Time();
-				Time end = new Time();
+				Date start = null;
+				Date end = null;
+
+				// Set the state colors of the view
+				ColorDrawable baseColor = new ColorDrawable();
+				baseColor.setColor(context.getResources().getColor(
+						R.color.white));
+
+				StateListDrawable states = new StateListDrawable();
+				states.addState(
+						new int[]{android.R.attr.state_pressed},
+						context.getResources().getDrawable(
+								R.drawable.list_pressed_holo_dark));
+				states.addState(StateSet.WILD_CARD, baseColor);
+				v.setBackgroundDrawable(states);
+
+				if (listObject.getComment() != null) {
+					taskComment.setText(listObject.getComment());
+					taskComment.setVisibility(View.VISIBLE);
+					if (start != null)
+						taskComment.setMinLines(4);
+					else
+						taskComment.setMinLines(0);
+				} else {
+					taskComment.setVisibility(View.GONE);
+				}
+
+				if (dbHandler.getPlace(listObject) != null) {
+					taskPlace.setText(dbHandler.getPlace(listObject).getName());
+					taskPlace.setVisibility(View.VISIBLE);
+				} else {
+					taskPlace.setVisibility(View.GONE);
+				}
 
 				// If the listObject has a time (AKA is an event)...
 				if (dbHandler.getTime(listObject) != null) {
-					// ... get the start and end time...
-					long startTime = dbHandler.getTime(listObject)
-							.getStartDate().getTime();
-					long endTime = dbHandler.getTime(listObject).getEndDate()
-							.getTime();
-					// ... and set them to the local variables.
-					start.set(startTime);
-					end.set(endTime);
+					// ... get the start and end dates...
+					start = dbHandler.getTime(listObject).getStartDate();
+					end = dbHandler.getTime(listObject).getEndDate();
+
 				} else {
 					start = null;
 					end = null;
 				}
 
-				// Start building the string that will contain the various data
-				// associated with this particular listObject.
-				StringBuilder builder = new StringBuilder();
-
-				if (listObject.getComment() != null)
-					builder.append(listObject.getComment());
-				if (dbHandler.getPlace(listObject) != null)
-					// No "    " or places as such are allowed.
-					if (dbHandler.getPlace(listObject).getName().trim()
-							.length() != 0)
-						builder.append(NEW_ROW).append(
-								dbHandler.getPlace(listObject).getName());
-				if (start != null)
-					// Format the start time to HH:MM...
-					builder.append(NEW_ROW).append(
-							start.format(HOUR_MINUTE_FORMAT));
-				if (end != null)
-					// ...and format the end time to HH:MM
-					builder.append("-").append(end.format(HOUR_MINUTE_FORMAT));
-				if (dbHandler.getTimeAlarm(listObject) != null)
-					// If this listObject has a reminder, present is aswell
-					builder.append(NEW_ROW + REMIND_ME_AT).append(
-							dbHandler.getTimeAlarm(listObject).getDate()
-									.toString());
-
-				// Set the string to textView
-				taskData.setText(builder.toString());
-
-				// If the string was built and contained something...
-				if (taskData.getText() != null) {
-					// Make the textView visible and set the height relative to
-					// the amount of lines
-					taskData.setVisibility(View.VISIBLE);
-
-					taskData.setHeight(taskData.getLineCount()
-							* taskData.getLineHeight() + 5);
-
-					// Make the header label underlined to indicate that
-					// "this is the selected item"
-					// Also "style" the text of the details somewhat
-					taskData.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
-					childLabel.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+				// If we have a time...
+				if (start != null) {
+					TextView startTime = (TextView) v
+							.findViewById(R.id.taskDataStartTime);
+					TextView endTime = (TextView) v
+							.findViewById(R.id.taskDataEndTime);
+					// Is the date this year?
+					int year = Calendar.getInstance().get(Calendar.YEAR);
+					if (Integer.parseInt(yearFormat.format(start)) == year) {
+						startTime.setText(dateFormatMultiLine.format(start));
+					} else {
+						// If not, add the year in the string
+						startTime.setText(yearWithDateFormat.format(start));
+					}
+					if (Integer.parseInt(yearFormat.format(end)) == year) {
+						endTime.setText(dateFormatMultiLine.format(end));
+					} else {
+						endTime.setText(yearWithDateFormat.format(end));
+					}
+					taskTimeLayout.setVisibility(View.VISIBLE);
+				} else {
+					View separator = v.findViewById(R.id.taskTimeSeparator);
+					separator.setVisibility(View.GONE);
+					taskTimeLayout.setVisibility(View.GONE);
 				}
+
+				// Does the listObject have a reminder?
+				if (dbHandler.getTimeAlarm(listObject) != null
+						|| dbHandler.getGPSAlarm(listObject) != null) {
+					View separator = v.findViewById(R.id.taskDataSeparator);
+					separator.setVisibility(View.VISIBLE);
+					StringBuilder stringBuilder = new StringBuilder();
+					stringBuilder.append(REMIND_ME_AT);
+					// when it is removable
+					// If it is a GPSAlarm...
+					if (dbHandler.getTimeAlarm(listObject) == null
+							&& dbHandler.getGPSAlarm(listObject) != null) {
+						taskReminderType
+								.setImageResource(R.drawable.location_place);
+						stringBuilder.append(dbHandler.getGPSAlarm(listObject)
+								.getAdress());
+						// If it is a TimeAlarm...
+					} else if (dbHandler.getTimeAlarm(listObject) != null
+							&& dbHandler.getGPSAlarm(listObject) == null) {
+						taskReminderType
+								.setImageResource(R.drawable.device_access_alarms);
+						taskReminderType.setVisibility(View.VISIBLE);
+						stringBuilder.append(dateFormatSingleLine
+								.format(dbHandler.getTimeAlarm(listObject)
+										.getDate()));
+					}
+					taskReminder.setVisibility(View.VISIBLE);
+					taskReminder.setText(stringBuilder.toString());
+				} else {
+					taskReminderType.setVisibility(View.GONE);
+					taskReminder.setVisibility(View.GONE);
+					View separator = v.findViewById(R.id.taskDataSeparator);
+					separator.setVisibility(View.GONE);
+				}
+
+				taskDataLayout.setVisibility(View.VISIBLE);
+				// Make the header label underlined to indicate that
+				// "this is the selected item"
+				parent.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+				TranslateAnimation slide = new TranslateAnimation(0, 0, -50, 0);
+				slide.setDuration(150);
+				slide.setFillAfter(true);
+				slide.setFillEnabled(true);
+				taskDataLayout.setAnimation(slide);
+				slide.start();
+				TextView timeView = (TextView) v
+						.findViewById(R.id.startTimeTask);
+				timeView.setVisibility(View.INVISIBLE);
+
 			}
+
 			// If the edit/remove buttons are shown and you click the
 			// listObject...
 		} else if (v.findViewById(R.id.editButton).isShown()) {
-			// ...we basically hide the buttons and reset the view to it's
-			// "Original State"
-			// We also clear the animations to make sure they can run again if
-			// invoked
-			TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
-			timeText.setVisibility(View.VISIBLE);
-
-			ImageButton editButton = (ImageButton) v
-					.findViewById(R.id.editButton);
-			editButton.setVisibility(View.INVISIBLE);
-			editButton.clearAnimation();
-
-			ImageButton deleteButton = (ImageButton) v
-					.findViewById(R.id.deleteButton);
-			deleteButton.setVisibility(View.INVISIBLE);
-			deleteButton.clearAnimation();
+			dismissButtons(v);
 		} else {
 			// If the view is only expanded, hide it again
-			taskData.setVisibility(View.INVISIBLE);
-			taskData.setHeight(0);
-			childLabel.setPaintFlags(1);
+			dismissDetails(v);
+
+			// Set the state colors of the view
+			ColorDrawable baseColor = new ColorDrawable();
+			baseColor.setColor(context.getResources().getColor(R.color.white));
+
+			StateListDrawable states = new StateListDrawable();
+			states.addState(
+					new int[]{android.R.attr.state_pressed},
+					context.getResources().getDrawable(
+							R.drawable.list_pressed_holo_dark));
+			states.addState(StateSet.WILD_CARD, baseColor);
+			v.setBackgroundDrawable(states);
+
 		}
 
 	}
 
+	private void dismissButtons(View v) {
+		// ...we basically hide the buttons and reset the view to it's
+		// "Original State"
+		// We also clear the animations to make sure they can run again if
+		// invoked
+		TextView timeText = (TextView) v.findViewById(R.id.startTimeTask);
+		timeText.setVisibility(View.VISIBLE);
+
+		ImageButton editButton = (ImageButton) v.findViewById(R.id.editButton);
+		editButton.setVisibility(View.INVISIBLE);
+		editButton.clearAnimation();
+
+		ImageButton deleteButton = (ImageButton) v
+				.findViewById(R.id.deleteButton);
+		deleteButton.setVisibility(View.INVISIBLE);
+		deleteButton.clearAnimation();
+	}
+
+	private void dismissDetails(View v) {
+		taskDataLayout.clearAnimation();
+		taskDataLayout.setVisibility(View.GONE);
+		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
+		TextView timeView = (TextView) v.findViewById(R.id.startTimeTask);
+		timeView.setVisibility(View.VISIBLE);
+	}
 }

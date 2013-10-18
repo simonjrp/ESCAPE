@@ -4,10 +4,13 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
+import java.net.CookieHandler;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
@@ -23,18 +26,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+import android.util.StateSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An ExpandableListAdapter that makes use of a
@@ -65,8 +74,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	private List<Category> theCategories;
 	// The database
 	private DBHandler dbHandler;
-	// A temporary task that is displayed if list is empty
-	ListObject emptyListDefaultTask;
 
 	/**
 	 * Create a new custom expandable list adapter used to display events
@@ -94,36 +101,28 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		somedayEventList = new ArrayList<ListObject>();
 		headerList = new ArrayList<String>();
 
-		headerList.add(context.getResources().getString(R.string.today_label));
-		headerList.add(context.getResources()
-				.getString(R.string.tomorrow_label));
+		headerList.add(context.getResources().getString(R.string.todayLabel));
+		headerList
+				.add(context.getResources().getString(R.string.tomorrowLabel));
 		headerList.add(context.getResources()
 				.getString(R.string.thisweek_label));
 
-		headerList
-				.add(context.getResources().getString(R.string.someday_label));
+		headerList.add(context.getResources().getString(R.string.somedayLabel));
 
-		objectDataMap.put(context.getResources()
-				.getString(R.string.today_label), todayEventList);
 		objectDataMap.put(
-				context.getResources().getString(R.string.tomorrow_label),
+				context.getResources().getString(R.string.todayLabel),
+				todayEventList);
+		objectDataMap.put(
+				context.getResources().getString(R.string.tomorrowLabel),
 				tomorrowEventList);
 		objectDataMap.put(
 				context.getResources().getString(R.string.thisweek_label),
 				thisWeekEventList);
 		objectDataMap.put(
-				context.getResources().getString(R.string.someday_label),
+				context.getResources().getString(R.string.somedayLabel),
 				somedayEventList);
 
 		theCategories = new ArrayList<Category>();
-
-		emptyListDefaultTask = new ListObject(97569754,
-				"Anything you need to do?");
-		emptyListDefaultTask
-				.setComment("In this list you can add events, tasks with a set time!");
-		emptyListDefaultTask.setTime(new Time(1, new Date(System
-				.currentTimeMillis()), new Date(
-				System.currentTimeMillis() + 1000 * 60 * 60)));
 	}
 
 	/**
@@ -132,7 +131,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
@@ -145,14 +143,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					lo.addToCategory(cat);
 
 				addListObject(lo);
-				noEvents = false;
 			}
 		}
 		// If list is empty add a default event
-		if (noEvents)
-			addListObjectToday(emptyListDefaultTask);
-		else
-			removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -160,6 +153,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		// First expandable group is always expanded when adapter reinits
 		expLv.expandGroup(0, true);
+		resetEditButtons();
 	}
 
 	/**
@@ -211,6 +205,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		final ListObject listObject = ((ListObject) getChild(groupPosition,
 				childPosition));
+		final int thisGroup = groupPosition;
+		final int nextChild = childPosition;
+		final boolean lastChild = isLastChild;
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 
 		if (getLOShouldBeVisible(listObject)) {
 
@@ -222,8 +221,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			if (dbHandler.getTime(listObject) != null) {
 				final Date childStartDate = dbHandler.getTime(listObject)
 						.getStartDate();
-				childTimeText = DateFormat.format("hh:mm", childStartDate)
-						.toString();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+						Locale.getDefault());
+				childTimeText = dateFormat.format(childStartDate);
 			}
 
 			if (convertView == null || !convertView.isShown()) {
@@ -245,7 +245,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					.findViewById(R.id.deleteButton);
 
 			resetEditButtons();
-
 			// OnClickListener for sending an intent with the ID of the
 			// listObject
 			// that was clicked
@@ -256,7 +255,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 					Bundle bundle = new Bundle();
 					intent.putExtra(EDIT_TASK_MSG, bundle);
-
 					bundle.putInt(INTENT_GET_ID, listObject.getId());
 					intent.setFlags(EDIT_TASK_ID);
 					context.startActivity(intent);
@@ -266,31 +264,77 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				@Override
 				public void onClick(View v) {
 					DBHandler dbh = new DBHandler(context);
-					dbh.purgeListObject(listObject);
-					removeListObject(listObject);
-				}
+					dbh.deleteListObject(listObject);
+					removeListObjectToday(listObject);
+					removeListObjectTomorrow(listObject);
+					removeListObjectSomeday(listObject);
 
+					LinearLayout nextObject = null;
+					try {
+						nextObject = (LinearLayout) getChildView(thisGroup,
+								nextChild, lastChild, thisView, thisViewGroup);
+
+						nextObject.refreshDrawableState();
+						nextObject.postInvalidate();
+
+					} catch (NullPointerException e) {
+						// Do nothing
+					} catch (IndexOutOfBoundsException e) {
+						// Do nothing
+					}
+				}
 			});
 
 			childLabel.setText(childText);
-			childTimeView.setText(childTimeText.equals("")
-					? "no start time"
-					: childTimeText);
-			// Get a textview for the object's data
-			TextView childData = (TextView) convertView
-					.findViewById(R.id.taskData);
+			childTimeView
+					.setText(childTimeText.equals("") ? "" : childTimeText);
+			// Get the layout for the object's data
+			RelativeLayout childData = (RelativeLayout) convertView
+					.findViewById(R.id.taskDataLayout);
 
 			// We don't want the data to show yet...
-			childData.setVisibility(View.INVISIBLE);
-			childData.setHeight(0);
+			childData.setVisibility(View.GONE);
 
 			childLabel.setText(childText);
+			childTimeView
+					.setText(childTimeText.equals("") ? "" : childTimeText);
 
 			// Custom listener for showing/hiding data relevant to the
 			// listObject
 			CustomOnClickListener clickListener = new CustomOnClickListener(
-					listObject, childLabel, childData);
+					context, listObject, childLabel, childData);
 			convertView.setOnClickListener(clickListener);
+
+            // Set the state colors of the view
+            ColorDrawable ribbonColor = new ColorDrawable();
+
+            if (listObject.isImportant())
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getImportantColor()));
+            else
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getBaseColor()));
+
+            LinearLayout ribbonView = (LinearLayout) convertView
+                    .findViewById(R.id.task_ribbons);
+            View ribbon = new View(convertView.getContext());
+            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+                    .getResources().getDimension(R.dimen.ribbon_width),
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+            ribbon.setBackgroundDrawable(ribbonColor);
+            ribbonView.addView(ribbon);
+
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+            StateListDrawable states = new StateListDrawable();
+            states.addState(
+                    new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(
+                            R.drawable.list_pressed_holo_dark));
+            states.addState(StateSet.WILD_CARD, baseColor);
+            convertView.setBackgroundDrawable(states);
 
 			// We add two listeners since it wont work on one if the other is
 			// added
@@ -685,8 +729,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	}
 
 	/**
-	 * removes a list with categories from the list with categories displayed by
-	 * this adapter.
+	 * <<<<<<< HEAD removes a list with categories from the list with categories
+	 * displayed in by this adapter. ======= removes a list with categories from
+	 * the list with categories displayed by this adapter. >>>>>>> dev
 	 * 
 	 * @param catList
 	 *            List with categories that will be removed

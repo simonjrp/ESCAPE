@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/expandedTask"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="#eaeaea"
-    android:orientation="vertical"
-    android:padding="@dimen/ui_element_gap">
+              android:id="@+id/expandedTask"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -13,31 +11,45 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/task_ribbons"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/ui_element_gap"
+            android:paddingLeft="@dimen/ui_element_gap">
 
             <TextView
                 android:id="@+id/listTask"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingLeft="@dimen/ui_element_gap"
                 android:textColor="#000000"
-                android:textSize="@dimen/textsize_large" />
+                android:textSize="@dimen/textsize_medium"
+                android:lines="1"
+                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/startTimeTask"
-                android:layout_width="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_gravity="right"
-                android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:textColor="#000000"
                 android:textSize="@dimen/textsize_medium"
-                android:lines="1" />
+                android:lines="1"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -48,34 +60,158 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageButton
                     android:id="@+id/editButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
-                    android:contentDescription="@string/edit_button_description"
-                    android:src="@drawable/edit_icon" />
+                    style="@android:style/Widget.ActionButton"
+                    android:contentDescription="@string/editButtonDescription"
+                    android:src="@android:drawable/ic_menu_edit"/>
 
                 <ImageButton
                     android:id="@+id/deleteButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
-                    android:contentDescription="@string/delete_button_description"
-                    android:src="@drawable/delete_icon_2" />
+                    style="@android:style/Widget.ActionButton"
+                    android:contentDescription="@string/deleteButtonDescription"
+                    android:src="@android:drawable/ic_menu_delete"/>
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/taskData"
+    <RelativeLayout
+        android:id="@+id/taskDataLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textsize_medium"
-        android:background="#f1f1f1"
-        android:textColor="#000000" />
+        android:paddingLeft="@dimen/ribbon_width"
+        >
+
+        <LinearLayout
+            android:id="@+id/taskDataTopLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/ui_element_gap"
+            android:orientation="horizontal"
+            android:weightSum="12">
+
+            <LinearLayout
+                android:id="@+id/taskDataTopLeftLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:weightSum="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/taskDataComment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:textSize="@dimen/textsize_small"
+                    android:textColor="#000000"
+                    android:layout_weight="0.9"
+                    android:layout_gravity="top"
+                    android:paddingRight="@dimen/ui_element_gap"
+                    android:paddingBottom="@dimen/ui_element_gap"/>
+
+                <TextView
+                    android:id="@+id/taskDataPlace"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:layout_weight="0.1"
+                    android:gravity="bottom"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/taskTimeSeparator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#bebebe"/>
+
+            <RelativeLayout
+                android:id="@+id/taskDataTimeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:paddingLeft="@dimen/ui_element_gap">
+
+                <TextView
+                    android:id="@+id/taskDataTimeFromLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
+                    android:hint="@string/fromLabel"/>
+
+                <TextView
+                    android:id="@+id/taskDataStartTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_small"
+                    android:textColor="#000000"
+                    android:layout_below="@id/taskDataTimeFromLabel"/>
+
+                <TextView
+                    android:id="@+id/taskDataTimeToLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_small"
+                    android:textStyle="bold"
+                    android:hint="@string/toLabel"
+                    android:layout_below="@id/taskDataStartTime"/>
+
+                <TextView
+                    android:id="@+id/taskDataEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_small"
+                    android:textColor="#000000"
+                    android:layout_below="@id/taskDataTimeToLabel"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/taskDataSeparator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/taskDataTopLayout"
+            android:background="#bebebe"/>
+
+        <RelativeLayout
+            android:id="@+id/taskDataBottomLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/taskDataSeparator"
+            android:paddingBottom="@dimen/ui_element_gap">
+
+            <TextView
+                android:id="@+id/taskDataReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textsize_small"
+                android:textColor="#000000"/>
+
+            <ImageView
+                android:id="@+id/taskDataReminderType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="@dimen/ui_element_gap"/>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
 
 
 </LinearLayout>

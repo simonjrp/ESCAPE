@@ -1,21 +1,14 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
 import se.chalmers.dat255.group22.escape.NewTaskActivity;
@@ -25,10 +18,24 @@ import se.chalmers.dat255.group22.escape.listeners.CustomOnClickListener;
 import se.chalmers.dat255.group22.escape.listeners.OptionTouchListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.content.Context;
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
+import android.util.StateSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * Adapter for displaying
@@ -50,8 +57,6 @@ public class CustomListAdapter implements ListAdapter {
 	private ArrayList<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	// The database
 	private DBHandler dbHandler;
-	// A temporary task that is displayed if list is empty
-	ListObject emptyListDefaultTask;
 
 	/**
 	 * Creates a new CustomListAdapter used to display tasks
@@ -71,11 +76,6 @@ public class CustomListAdapter implements ListAdapter {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
-
-		emptyListDefaultTask = new ListObject(97569754,
-				"Anything you need to do?");
-		emptyListDefaultTask
-				.setComment("In this list you can add general things that you need to do!");
 	}
 
 	/**
@@ -85,33 +85,28 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		boolean noTasks = true;
+
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
 
-                // These variables must be set on the object since they are used
-                // when sorting the list objects and choosing what to display.
+				// These variables must be set on the object since they are used
+				// when sorting the list objects and choosing what to display.
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
 
 				addListObject(lo);
-				noTasks = false;
 			}
 		}
-        // If list is empty add a default task
-		if (noTasks)
-			addListObject(emptyListDefaultTask);
-		else
-			removeListObject(emptyListDefaultTask);
-		updateEditButtons();
+
+		resetEditButtons();
 	}
 
 	/**
-     * If edit and delete buttons initialized this method will make them
-     * invisible
+	 * If edit and delete buttons initialized this method will make them
+	 * invisible
 	 */
-	protected void updateEditButtons() {
+	protected void resetEditButtons() {
 		try {
 			TextView timeText = (TextView) ((MainActivity) context)
 					.findViewById(R.id.startTimeTask);
@@ -187,20 +182,22 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-		updateEditButtons();
+		resetEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
+		final int nextChild = childPosition;
+		final String childText = listObject.getName();
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 
 		if (getLOShouldBeVisible(listObject)) {
 
-			final String childText = listObject.getName();
-
-			// final Time childTime = listObject.getTime();
 			String childTimeText = "";
 			if (dbHandler.getTime(listObject) != null) {
 				final Date childStartDate = dbHandler.getTime(listObject)
 						.getStartDate();
-				childTimeText = DateFormat.format("HH:mm", childStartDate)
-						.toString();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm",
+						Locale.getDefault());
+				childTimeText = dateFormat.format(childStartDate);
 			}
 
 			if (convertView == null || !convertView.isShown()) {
@@ -236,18 +233,30 @@ public class CustomListAdapter implements ListAdapter {
 
 					Bundle bundle = new Bundle();
 					intent.putExtra(EDIT_TASK_MSG, bundle);
-
 					bundle.putInt(INTENT_GET_ID, listObject.getId());
 					intent.setFlags(EDIT_TASK_ID);
 					context.startActivity(intent);
 				}
 			});
+
 			deleteButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					DBHandler dbh = new DBHandler(context);
-					dbh.purgeListObject(listObject);
+					dbh.deleteListObject(listObject);
 					removeListObject(listObject);
+					LinearLayout nextObject = null;
+					try {
+						nextObject = (LinearLayout) getView(nextChild,
+								thisView, thisViewGroup);
+						nextObject.refreshDrawableState();
+						nextObject.postInvalidate();
+
+					} catch (NullPointerException e) {
+						// Do nothing
+					} catch (IndexOutOfBoundsException e) {
+						// Do nothing
+					}
 
 					// v.refreshDrawableState();
 				}
@@ -258,19 +267,19 @@ public class CustomListAdapter implements ListAdapter {
 			childLabel.setText(childText);
 			childTimeView
 					.setText(childTimeText.equals("") ? "" : childTimeText);
-			// Get a textview for the object's data
-			TextView childData = (TextView) convertView
-					.findViewById(R.id.taskData);
+			// Get the layout for the object's data
+			RelativeLayout childData = (RelativeLayout) convertView
+					.findViewById(R.id.taskDataLayout);
 
 			// We don't want the data to show yet...
-			childData.setVisibility(View.INVISIBLE);
-			childData.setHeight(0);
+			childData.setVisibility(View.GONE);
 
 			childLabel.setText(childText);
 
 			CustomOnClickListener clickListener = new CustomOnClickListener(
-					listObject, childLabel, childData);
+					context, listObject, childLabel, childData);
 			convertView.setOnClickListener(clickListener);
+
 			// TODO We add two listeners since it wont work on one if the other
 			// is
 			// added to
@@ -278,8 +287,40 @@ public class CustomListAdapter implements ListAdapter {
 			convertView.setOnTouchListener(new OptionTouchListener(context,
 					convertView));
 			// convertView.setOnTouchListener(new OptionTouchListener(context,
-			// convertView))
-			convertView.setVisibility(View.VISIBLE);
+			// convertView));
+            // Set the state colors of the view
+            ColorDrawable ribbonColor = new ColorDrawable();
+
+            if (listObject.isImportant())
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getImportantColor()));
+            else
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getBaseColor()));
+
+            LinearLayout ribbonView = (LinearLayout) convertView
+                    .findViewById(R.id.task_ribbons);
+            View ribbon = new View(convertView.getContext());
+            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+                    .getResources().getDimension(R.dimen.ribbon_width),
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+            ribbon.setBackgroundDrawable(ribbonColor);
+            ribbonView.addView(ribbon);
+
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+            StateListDrawable states = new StateListDrawable();
+            states.addState(
+                    new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(
+                            R.drawable.list_pressed_holo_dark));
+            states.addState(StateSet.WILD_CARD, baseColor);
+            convertView.setBackgroundDrawable(states);
+
+			if (!getLOShouldBeVisible(listObject))
+				convertView.setVisibility(View.VISIBLE);
 		} else {
 			// TODO is there a way to fix visibility without this?
 			convertView = new View(context);
