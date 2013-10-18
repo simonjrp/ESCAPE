@@ -79,6 +79,10 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.simple_spinner_item_single,
 				parent, false);
+        View ribbon = row.findViewById(R.id.category_spinner_ribbon);
+        Category category = dbHandler.getCategory(categories.get(position));
+        ribbon.setBackgroundColor(Color.parseColor("#" + category.getBaseColor()));
+        ribbon.setVisibility(View.VISIBLE);
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
 		day.setText(categories.get(position));

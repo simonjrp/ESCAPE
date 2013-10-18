@@ -9,10 +9,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <View
-            android:id="@+id/taskColor"
-            android:layout_width="10dp"
-            android:layout_height="fill_parent"/>
+
+        <LinearLayout
+            android:id="@+id/task_ribbons"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -85,7 +88,7 @@
         android:id="@+id/taskDataLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/ui_element_gap"
+        android:paddingLeft="@dimen/ribbon_width"
         >
 
         <LinearLayout

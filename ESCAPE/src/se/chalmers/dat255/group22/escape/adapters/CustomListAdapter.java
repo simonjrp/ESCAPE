@@ -30,12 +30,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Adapter for displaying
@@ -295,23 +295,33 @@ public class CustomListAdapter implements ListAdapter {
 			// convertView));
             // Set the state colors of the view
             ColorDrawable ribbonColor = new ColorDrawable();
-            ColorDrawable baseColor = new ColorDrawable();
-            baseColor.setColor(context.getResources().getColor(R.color.white));
 
             if (listObject.isImportant())
-                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
-                        .get(0).getImportantColor()));
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getImportantColor()));
             else
-                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
-                        .get(0).getBaseColor()));
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getBaseColor()));
 
+            LinearLayout ribbonView = (LinearLayout) convertView
+                    .findViewById(R.id.task_ribbons);
+            View ribbon = new View(convertView.getContext());
+            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+                    .getResources().getDimension(R.dimen.ribbon_width),
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+            ribbon.setBackgroundDrawable(ribbonColor);
+            ribbonView.addView(ribbon);
 
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
             StateListDrawable states = new StateListDrawable();
-            states.addState(new int[]{android.R.attr.state_pressed},
-                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
+            states.addState(
+                    new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(
+                            R.drawable.list_pressed_holo_dark));
             states.addState(StateSet.WILD_CARD, baseColor);
-            View colorView = convertView.findViewById(R.id.taskColor);
-            colorView.setBackgroundDrawable(ribbonColor);
             convertView.setBackgroundDrawable(states);
 
 			if (!getLOShouldBeVisible(listObject))

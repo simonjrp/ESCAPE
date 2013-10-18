@@ -4,6 +4,7 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
+import java.net.CookieHandler;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -308,25 +310,35 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					context, listObject, childLabel, childData);
 			convertView.setOnClickListener(clickListener);
 
-			// Set the state colors of the view
-			ColorDrawable ribbonColor = new ColorDrawable();
-            ColorDrawable baseColor = new ColorDrawable();
-            baseColor.setColor(context.getResources().getColor(R.color.white));
+            // Set the state colors of the view
+            ColorDrawable ribbonColor = new ColorDrawable();
 
             if (listObject.isImportant())
-                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
-                        .get(0).getImportantColor()));
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getImportantColor()));
             else
-                ribbonColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
-                        .get(0).getBaseColor()));
+                ribbonColor.setColor(Color.parseColor("#"
+                        + dbHandler.getCategories(listObject).get(0)
+                        .getBaseColor()));
 
+            LinearLayout ribbonView = (LinearLayout) convertView
+                    .findViewById(R.id.task_ribbons);
+            View ribbon = new View(convertView.getContext());
+            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+                    .getResources().getDimension(R.dimen.ribbon_width),
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+            ribbon.setBackgroundDrawable(ribbonColor);
+            ribbonView.addView(ribbon);
 
-			StateListDrawable states = new StateListDrawable();
-			states.addState(new int[]{android.R.attr.state_pressed},
-                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
-			states.addState(StateSet.WILD_CARD, baseColor);
-            View colorView = convertView.findViewById(R.id.taskColor);
-			colorView.setBackgroundDrawable(ribbonColor);
+            ColorDrawable baseColor = new ColorDrawable();
+            baseColor.setColor(context.getResources().getColor(R.color.white));
+            StateListDrawable states = new StateListDrawable();
+            states.addState(
+                    new int[]{android.R.attr.state_pressed},
+                    context.getResources().getDrawable(
+                            R.drawable.list_pressed_holo_dark));
+            states.addState(StateSet.WILD_CARD, baseColor);
             convertView.setBackgroundDrawable(states);
 
 			// We add two listeners since it wont work on one if the other is
