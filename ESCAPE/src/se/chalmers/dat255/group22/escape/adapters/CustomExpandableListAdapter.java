@@ -62,8 +62,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	List<ListObject> tomorrowEventList;
 	List<ListObject> thisWeekEventList;
 	List<ListObject> somedayEventList;
-	// A temporary task that is displayed if list is empty
-	ListObject emptyListDefaultTask;
 	// The context this is used in
 	private Context context;
 	// header titles
@@ -123,15 +121,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				somedayEventList);
 
 		theCategories = new ArrayList<Category>();
-
-		emptyListDefaultTask = new ListObject(97569754,
-				"Anything you need to do?");
-		emptyListDefaultTask
-				.setComment("In this list you can add events, tasks with a set time!");
-		emptyListDefaultTask.setTime(new Time(1, new Date(System
-				.currentTimeMillis()), new Date(
-				System.currentTimeMillis() + 1000 * 60 * 60)));
-        emptyListDefaultTask.addToCategory(dbHandler.getCategory(context.getString(R.string.default_category_spare_time)));
 	}
 
 	/**
@@ -140,7 +129,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	 */
 	public void reInit() {
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		boolean noEvents = true;
 
 		for (ListObject lo : listObjects) {
 			// we only want evens in this fragment (objects with a set time)
@@ -158,7 +146,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-				noEvents = false;
 			}
 		}
 		// If list is empty add a default event
@@ -273,12 +260,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					intent.putExtra(EDIT_TASK_MSG, bundle);
 					bundle.putInt(INTENT_GET_ID, listObject.getId());
 					intent.setFlags(EDIT_TASK_ID);
-					if (listObject.getName().equals("Anything you need to do?"))
-						Toast.makeText(context,
-								"This default event can't be edited!",
-								Toast.LENGTH_SHORT).show();
-					else
-						context.startActivity(intent);
+					context.startActivity(intent);
 				}
 			});
 			deleteButton.setOnClickListener(new OnClickListener() {
