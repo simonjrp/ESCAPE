@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -130,6 +131,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		emptyListDefaultTask.setTime(new Time(1, new Date(System
 				.currentTimeMillis()), new Date(
 				System.currentTimeMillis() + 1000 * 60 * 60)));
+        emptyListDefaultTask.addToCategory(dbHandler.getCategory(context.getString(R.string.default_category_spare_time)));
 	}
 
 	/**
@@ -160,10 +162,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			}
 		}
 		// If list is empty add a default event
-		if (noEvents)
-			addListObjectToday(emptyListDefaultTask);
-		else
-			removeListObjectToday(emptyListDefaultTask);
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
@@ -330,8 +328,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 			// Set the state colors of the view
 			ColorDrawable baseColor = new ColorDrawable();
-			baseColor.setColor(context.getResources().getColor(
-					android.R.color.transparent));
+            if (listObject.isImportant())
+                baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                        .get(0).getImportantColor()));
+            else
+                baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                        .get(0).getBaseColor()));
 
 			ColorDrawable colorPressed = new ColorDrawable();
 			colorPressed.setColor(context.getResources().getColor(
@@ -342,7 +344,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 					colorPressed);
 			states.addState(StateSet.WILD_CARD, baseColor);
 
-			convertView.setBackground(states);
+			convertView.setBackgroundDrawable(states);
 
 			// We add two listeners since it wont work on one if the other is
 			// added

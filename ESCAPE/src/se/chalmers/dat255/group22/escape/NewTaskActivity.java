@@ -128,7 +128,7 @@ public class NewTaskActivity extends Activity
 
 	@Override
 	public void onBackPressed() {
-
+		DBHandler dbHandler = new DBHandler(this);
 		/* Set data of the object */
 
 		// Title
@@ -207,10 +207,9 @@ public class NewTaskActivity extends Activity
 		 * NOTE: GPS Alarm is added in an AsyncTask, because the process of
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
-
-		Category newCategory = new Category(category,
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color));
+		Category newCategory = new Category(category, dbHandler.getCategory(
+				category).getBaseColor(), dbHandler.getCategory(category)
+				.getImportantColor());
 
 		Place place = new Place(1, location);
 
@@ -245,7 +244,6 @@ public class NewTaskActivity extends Activity
 			 */
 			if (editing) {
 				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
-				DBHandler dbHandler = new DBHandler(this);
 				long id = bundle.getInt(INTENT_GET_ID);
 				ListObject editedListObject = dbHandler.getListObject(id);
 				editedListObject.setName(newListObject.getName());
@@ -267,9 +265,11 @@ public class NewTaskActivity extends Activity
 				Category originalCategory = dbHandler.getCategories(
 						editedListObject).get(0);
 				if (originalCategory != null) {
+					db.deleteCategoryWithListObject(originalCategory,
+							editedListObject);
 					originalCategory.setName(newCategory.getName());
-					db.updateCategory(originalCategory, null);
-                    db.addCategoryWithListObject(originalCategory, editedListObject);
+					db.addCategoryWithListObject(originalCategory,
+							editedListObject);
 				}
 
 				// No matter what¸ remove all old time/place reminders.
@@ -922,21 +922,25 @@ public class NewTaskActivity extends Activity
 		ArrayList<String> categories = new ArrayList<String>();
 		// Grab all the categories from the DB...
 		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_school),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
+				getString(R.string.default_category_school), Integer
+						.toHexString(getResources()
+                                .getColor(R.color.light_blue)), Integer
+						.toHexString(getResources().getColor(
+                                R.color.light_blue_transparent))));
+
 		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_work),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
+				getString(R.string.default_category_work), Integer
+						.toHexString(getResources().getColor(R.color.red)),
+				Integer.toHexString(getResources().getColor(
+						R.color.red_transparent))));
 		dbHandler.addCategory(new Category(
-				getString(R.string.default_category_life),
-				getString(R.string.white_hex_color),
-				getString(R.string.grey_hex_color)));
+				getString(R.string.default_category_spare_time), Integer
+						.toHexString(getResources().getColor(R.color.green)),
+				Integer.toHexString(getResources().getColor(
+						R.color.green_transparent))));
 		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
 		// ...and add them to the array used in the spinner
-		// TODO Catch eventual NullPointerException?
 		for (Category c : categoriesFromDB) {
 			if (!c.getName().equals(getString(R.string.custom_category)))
 				categories.add(c.getName());
@@ -963,9 +967,12 @@ public class NewTaskActivity extends Activity
 	public void onFinishEditDialog(String inputText) {
 		DBHandler dbHandler = new DBHandler(this);
 		if (!inputText.equals(getString(R.string.custom_category))) {
-			Category newCategory = new Category(inputText,
-					getString(R.string.white_hex_color),
-					getString(R.string.grey_hex_color));
+			// TODO The colors SHOULD be something the user has defined...
+			Category newCategory = new Category(
+					inputText,
+					Integer.toHexString(getResources().getColor(R.color.white)),
+					Integer.toHexString(getResources().getColor(
+							R.color.light_gray_transparent)));
 			dbHandler.addCategory(newCategory);
 			initCategoryAdapter();
 		}

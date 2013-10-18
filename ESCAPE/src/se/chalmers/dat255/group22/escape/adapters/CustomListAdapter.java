@@ -21,6 +21,7 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
@@ -82,6 +83,7 @@ public class CustomListAdapter implements ListAdapter {
 				"Anything you need to do?");
 		emptyListDefaultTask
 				.setComment("In this list you can add general things that you need to do!");
+        emptyListDefaultTask.addToCategory(dbHandler.getCategory(context.getString(R.string.default_category_spare_time)));
 	}
 
 	/**
@@ -111,10 +113,7 @@ public class CustomListAdapter implements ListAdapter {
 			}
 		}
 		// If list is empty add a default task
-		if (noTasks)
-			addListObject(emptyListDefaultTask);
-		else
-			removeListObject(emptyListDefaultTask);
+
 		resetEditButtons();
 	}
 
@@ -312,19 +311,23 @@ public class CustomListAdapter implements ListAdapter {
 
 			// Set the state colors of the view
 			ColorDrawable baseColor = new ColorDrawable();
-			baseColor.setColor(context.getResources().getColor(
-					android.R.color.transparent));
+            if (listObject.isImportant())
+                baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                        .get(0).getImportantColor()));
+            else
+                baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                        .get(0).getBaseColor()));
 
 			ColorDrawable colorPressed = new ColorDrawable();
 			colorPressed.setColor(context.getResources().getColor(
-					R.color.light_blue_transparent));
+                    R.color.light_blue_transparent));
 
 			StateListDrawable states = new StateListDrawable();
 			states.addState(new int[]{android.R.attr.state_pressed},
 					colorPressed);
 			states.addState(StateSet.WILD_CARD, baseColor);
 
-			convertView.setBackground(states);
+			convertView.setBackgroundDrawable(states);
 
 			if (!getLOShouldBeVisible(listObject))
 				convertView.setVisibility(View.VISIBLE);

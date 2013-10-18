@@ -1,8 +1,18 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
-
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -13,23 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.DEFAULT_PAINT_FLAG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.NEW_ROW;
-import static se.chalmers.dat255.group22.escape.utils.Constants.HOUR_MINUTE_FORMAT;
-
 
 /**
  * An {@link android.view.View.OnClickListener} that will show additional
@@ -110,8 +103,12 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 				// Set the state colors of the view
 				ColorDrawable baseColor = new ColorDrawable();
-				baseColor.setColor(context.getResources().getColor(
-						R.color.light_gray));
+                if (listObject.isImportant())
+                    baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                            .get(0).getImportantColor()));
+                else
+                    baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                            .get(0).getBaseColor()));
 
 				ColorDrawable colorPressed = new ColorDrawable();
 				colorPressed.setColor(context.getResources().getColor(
@@ -163,10 +160,13 @@ public class CustomOnClickListener implements View.OnClickListener {
 					int year = Calendar.getInstance().get(Calendar.YEAR);
 					if (Integer.parseInt(yearFormat.format(start)) == year) {
 						startTime.setText(dateFormatMultiLine.format(start));
-						endTime.setText(dateFormatMultiLine.format(end));
 					} else {
 						// If not, add the year in the string
 						startTime.setText(yearWithDateFormat.format(start));
+					}
+					if (Integer.parseInt(yearFormat.format(end)) == year) {
+						endTime.setText(dateFormatMultiLine.format(end));
+					} else {
 						endTime.setText(yearWithDateFormat.format(end));
 					}
 					taskTimeLayout.setVisibility(View.VISIBLE);
@@ -199,7 +199,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 						taskReminderType.setVisibility(View.VISIBLE);
 						stringBuilder.append(dateFormatSingleLine
 								.format(dbHandler.getTimeAlarm(listObject)
-                                        .getDate()));
+										.getDate()));
 					}
 					taskReminder.setVisibility(View.VISIBLE);
 					taskReminder.setText(stringBuilder.toString());
@@ -237,8 +237,12 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 			// Set the state colors of the view
 			ColorDrawable baseColor = new ColorDrawable();
-			baseColor.setColor(context.getResources().getColor(
-					android.R.color.transparent));
+			if (listObject.isImportant())
+				baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+						.get(0).getImportantColor()));
+			else
+				baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+						.get(0).getBaseColor()));
 
 			ColorDrawable colorPressed = new ColorDrawable();
 			colorPressed.setColor(context.getResources().getColor(
