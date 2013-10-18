@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
+import se.chalmers.dat255.group22.escape.adapters.EventSpinnerSyncer;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
@@ -448,11 +449,6 @@ public class NewTaskActivity extends Activity
 		//
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 
-		dateFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateFromSpinner.getId()));
-
 		// Array containing different days for an event
 		ArrayList<String> strDayList = new ArrayList<String>();
 		strDayList.add(getString(R.string.todayLabel));
@@ -467,10 +463,6 @@ public class NewTaskActivity extends Activity
 		/* From: TimeSpinner */
 		//
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
-		timeFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeFromSpinner.getId()));
 
 		SpinnerTimeAdapter timeFromAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeFromSpinner);
@@ -479,10 +471,6 @@ public class NewTaskActivity extends Activity
 		/* To: DateSpinner */
 		//
 		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
-		dateToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateToSpinner.getId()));
 
 		SpinnerDayAdapter dayToAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, dateToSpinner);
@@ -491,20 +479,20 @@ public class NewTaskActivity extends Activity
 		/* To: TimeSpinner */
 		//
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
-		timeToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeToSpinner.getId()));
 
 		SpinnerTimeAdapter timeToAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeToSpinner);
 
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
-		timeFromSpinner.setAdapter(timeFromAdapter);
+        dateToSpinner.setAdapter(dayToAdapter);
+        timeFromSpinner.setAdapter(timeFromAdapter);
+        timeToSpinner.setAdapter(timeToAdapter);
 
-		dateToSpinner.setAdapter(dayToAdapter);
-		timeToSpinner.setAdapter(timeToAdapter);
+        EventSpinnerSyncer eventSpinnerSyncer = new EventSpinnerSyncer(this, dateFromSpinner, dateToSpinner, timeFromSpinner, timeToSpinner);
+
+		isEvent = true;
+
 	}
 
 	/**
@@ -935,7 +923,7 @@ public class NewTaskActivity extends Activity
 				getString(R.string.default_category_school), Integer
 						.toHexString(getResources().getColor(R.color.magenta)),
 				Integer.toHexString(getResources().getColor(
-						R.color.magenta_dark))));
+                        R.color.magenta_dark))));
 
 		dbHandler
 				.addCategory(new Category(

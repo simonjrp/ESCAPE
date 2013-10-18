@@ -72,6 +72,10 @@ public final class Constants {
 	 * The key to use when getting reminder type from an intent.
 	 */
 	public static final String REMINDER_TYPE = "REMINDER_TYPE";
+
+    public static final long ONE_HOUR_IN_MILLIS = 3600000;
+
+    public static final long ONE_DAY_IN_MILLIS = 86400000;
 	/*
 	 * ******** NOTIFICATION HANDLER ******** *
 	 */
