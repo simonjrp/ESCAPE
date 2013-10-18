@@ -317,13 +317,9 @@ public class CustomListAdapter implements ListAdapter {
                 baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                         .get(0).getBaseColor()));
 
-			ColorDrawable colorPressed = new ColorDrawable();
-			colorPressed.setColor(context.getResources().getColor(
-                    R.color.light_blue_transparent));
-
 			StateListDrawable states = new StateListDrawable();
 			states.addState(new int[]{android.R.attr.state_pressed},
-					colorPressed);
+                    context.getResources().getDrawable(R.drawable.list_pressed_holo_dark));
 			states.addState(StateSet.WILD_CARD, baseColor);
 
 			convertView.setBackgroundDrawable(states);
