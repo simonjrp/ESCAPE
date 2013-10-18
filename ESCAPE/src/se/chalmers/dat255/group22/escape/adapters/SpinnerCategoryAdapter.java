@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.android.gms.internal.db;
-
 import java.util.ArrayList;
 
 import se.chalmers.dat255.group22.escape.R;
