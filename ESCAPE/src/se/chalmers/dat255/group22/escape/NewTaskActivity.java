@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.adapters.DateSpinnerSyncer;
+import se.chalmers.dat255.group22.escape.adapters.EventSpinnerSyncer;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
@@ -463,10 +463,6 @@ public class NewTaskActivity extends Activity
 		/* From: TimeSpinner */
 		//
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
-		timeFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeFromSpinner.getId()));
 
 		SpinnerTimeAdapter timeFromAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeFromSpinner);
@@ -483,10 +479,6 @@ public class NewTaskActivity extends Activity
 		/* To: TimeSpinner */
 		//
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
-		timeToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeToSpinner.getId()));
 
 		SpinnerTimeAdapter timeToAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeToSpinner);
@@ -494,11 +486,11 @@ public class NewTaskActivity extends Activity
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
         dateToSpinner.setAdapter(dayToAdapter);
-
-        DateSpinnerSyncer dateSpinnerSyncer = new DateSpinnerSyncer(this, dateFromSpinner, dateToSpinner);
-
         timeFromSpinner.setAdapter(timeFromAdapter);
         timeToSpinner.setAdapter(timeToAdapter);
+
+        EventSpinnerSyncer eventSpinnerSyncer = new EventSpinnerSyncer(this, dateFromSpinner, dateToSpinner, timeFromSpinner, timeToSpinner);
+
 
 		isEvent = true;
 
