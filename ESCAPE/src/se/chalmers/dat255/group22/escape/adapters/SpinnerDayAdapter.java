@@ -40,9 +40,6 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 * @param textViewResourceId
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
-	 * @param days
-	 *            a stringarray that contains the string to be set for each item
-	 *            in the dropdown list.
 	 * @param spinner
 	 *            the spinner that gets assigned to this adapter.
 	 */
@@ -110,8 +107,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
 
 		day.setText(days.get(position));
-
-		// TODO How the **** did this do the trick???
+        // Wierd hack to make the width of the spinner relative to its current item
 		parent.getLayoutParams().width = day.getLayoutParams().width - 100;
 		row.getLayoutParams().width = day.getLayoutParams().width - 100;
 
