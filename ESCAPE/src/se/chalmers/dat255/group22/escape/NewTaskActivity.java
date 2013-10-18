@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -229,10 +230,10 @@ public class NewTaskActivity extends Activity
 			} else if (isLocationReminder) {
 				// lo.setGpsAlarm(...);
 			}
-			Time time = null;
+			Time newTime = null;
 			if (isEvent) {
-				time = getTimeFromSpinners(dateFromString, dateToString);
-				newListObject.setTime(time);
+				newTime = getTimeFromSpinners(dateFromString, dateToString);
+				newListObject.setTime(newTime);
 			}
 
 			/*
@@ -267,6 +268,7 @@ public class NewTaskActivity extends Activity
 					NotificationHandler.getInstance().init(this);
 					NotificationHandler.getInstance().removeTimeReminder(
 							editedListObject);
+                    dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
 					dbHandler.deleteTimeAlarm(originalTimeAlarm);
 				}
 
@@ -275,57 +277,41 @@ public class NewTaskActivity extends Activity
 				if (originalGPSAlarm != null) {
 					NotificationHandler.getInstance().removeLocationReminder(
 							editedListObject);
+                    dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
 					dbHandler.deleteGPSAlarm(originalGPSAlarm);
 				}
 
-				// Update/add new reminder
-				if (hasReminder) {
-					if (reminderType == Constants.ReminderType.TIME) {
-
-						if (originalTimeAlarm != null) {
-							originalTimeAlarm.setDate(timeAlarm.getDate());
-							db.updateTimeAlarm(originalTimeAlarm);
-							NotificationHandler
-									.getInstance()
-									.addTimeReminder(
-											dbHandler
-													.getListObject((long) editedListObject
-															.getId()));
-						} else {
-							tmpId = dbHandler.addTimeAlarm(timeAlarm);
-							dbHandler.addListObjectWithTimeAlarm(
-									editedListObject,
-									dbHandler.getTimeAlarm(tmpId));
-							NotificationHandler
-									.getInstance()
-									.addTimeReminder(
-											dbHandler
-													.getListObject((long) editedListObject
-															.getId()));
-						}
-					} else {
-						EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-						new GenerateGPSAlarmTask(this, id)
-								.execute(reminderLocationEditText.getText()
-										.toString());
-					}
+				Time originalTime = dbHandler.getTime(editedListObject);
+                if (originalTime != null) {
+                    dbHandler.deleteListObjectWithTime(editedListObject);
+                    dbHandler.deleteTime(originalTime);
 				}
 
 				// Update/add time
 				if (isEvent) {
-					Time originalTime = dbHandler.getTime(editedListObject);
-					if (originalTime != null) {
-						originalTime.setStartDate(time.getStartDate());
-						originalTime.setEndDate(time.getEndDate());
-						db.updateTimes(originalTime);
-					} else {
-						tmpId = dbHandler.addTime(time);
-						dbHandler.addListObjectsWithTime(editedListObject,
-								dbHandler.getTime(tmpId));
-					}
-				} else {
-					dbHandler.deleteListObjectWithTime(editedListObject);
+					tmpId = dbHandler.addTime(newTime);
+					dbHandler.addListObjectsWithTime(editedListObject,
+							dbHandler.getTime(tmpId));
+
 				}
+
+                // Update/add new reminder
+                if (hasReminder) {
+                    if (reminderType == Constants.ReminderType.TIME) {
+
+                        tmpId = dbHandler.addTimeAlarm(timeAlarm);
+                        dbHandler.addListObjectWithTimeAlarm(editedListObject,
+                                dbHandler.getTimeAlarm(tmpId));
+                        NotificationHandler.getInstance().addTimeReminder(editedListObject.getId());
+
+                    } else {
+                        EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+                        new GenerateGPSAlarmTask(this, id)
+                                .execute(reminderLocationEditText.getText()
+                                        .toString());
+                    }
+                }
+
 				dbHandler.updateListObject(editedListObject);
 			} else {
 				saveToDatabase(newListObject);
@@ -365,8 +351,7 @@ public class NewTaskActivity extends Activity
 					dbHandler.getTimeAlarm(tmpId));
 
 			// creates a time notification
-			NotificationHandler.getInstance().addTimeReminder(
-					dbHandler.getListObject(objId));
+			NotificationHandler.getInstance().addTimeReminder(objId);
 
 		}
 
@@ -927,8 +912,8 @@ public class NewTaskActivity extends Activity
 		categorySpinner.setAdapter(categoryAdapter);
 		categorySpinner
 				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-                        this, OnItemSelectedSpinnerListener.CATEGORY_SPINNER,
-                        categorySpinner.getId()));
+						this, OnItemSelectedSpinnerListener.CATEGORY_SPINNER,
+						categorySpinner.getId()));
 	}
 
 	@Override

@@ -1,5 +1,12 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.sql.Date;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,14 +17,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-
-import java.sql.Date;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also
@@ -63,16 +62,33 @@ public class AlarmReceiver extends BroadcastReceiver {
 						+ args.getString(Constants.NOTIFICATION_DESC)
 				: args.getString(Constants.NOTIFICATION_DESC);
 
-		// Creates the intents containing the actions to be performed when
-		// clicking on notification action buttons
-		Intent doneIntent = new Intent();
-		doneIntent.setAction(NOTIFICATION_DONE);
-		doneIntent.putExtra(Constants.NOTIFICATION_ID,
-				args.getInt(Constants.NOTIFICATION_ID));
-		doneIntent.putExtra(Constants.REMINDER_TYPE,
-				(Parcelable) ReminderType.GPS);
-		PendingIntent donePendingIntent = PendingIntent.getBroadcast(context,
-				0, doneIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Creates a notification with data such as title and comment
+		// from the ListObject for which the notification is created
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+				context);
+		notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+		notificationBuilder.setContentTitle(args
+				.getString(Constants.NOTIFICATION_TITLE));
+		notificationBuilder.setContentText(description);
+		notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
+				.bigText(description));
+
+		// Creates the action buttons for the notification. Only adds a done
+		// button if the ListObject is a task and not an event.
+		if (!args.getBoolean(Constants.NOTOFICATION_IS_EVENT)) {
+			Intent doneIntent = new Intent();
+			doneIntent.setAction(NOTIFICATION_DONE);
+			doneIntent.putExtra(Constants.NOTIFICATION_ID,
+					args.getInt(Constants.NOTIFICATION_ID));
+			doneIntent.putExtra(Constants.REMINDER_TYPE,
+					(Parcelable) ReminderType.GPS);
+			PendingIntent donePendingIntent = PendingIntent.getBroadcast(
+					context, 0, doneIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+			notificationBuilder.addAction(R.drawable.task_done,
+					context.getString(R.string.notification_done),
+					donePendingIntent);
+		}
 
 		Intent snoozeIntent = new Intent();
 		snoozeIntent.setAction(NOTIFICATION_SNOOZE);
@@ -83,22 +99,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context,
 				0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		// Creates a notification with data such as title and comment
-		// from the ListObject for which the notification is created
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-				context)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(args.getString(Constants.NOTIFICATION_TITLE))
-				.setContentText(description)
-				.setStyle(
-						new NotificationCompat.BigTextStyle()
-								.bigText(description))
-				.addAction(R.drawable.task_done,
-						context.getString(R.string.notification_done),
-						donePendingIntent)
-				.addAction(R.drawable.task_snooze_place,
-						context.getString(R.string.notification_snooze_place),
-						snoozePendingIntent);
+		notificationBuilder.addAction(R.drawable.task_snooze_place,
+				context.getString(R.string.notification_snooze_place),
+				snoozePendingIntent);
 
 		// Enables sound and vibration for the notification
 		notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
@@ -145,16 +148,33 @@ public class AlarmReceiver extends BroadcastReceiver {
 						+ args.getString(Constants.NOTIFICATION_DESC)
 				: args.getString(Constants.NOTIFICATION_DESC);
 
-		// Creates the intents containing the actions to be performed when
-		// clicking on notification action buttons
-		Intent doneIntent = new Intent();
-		doneIntent.setAction(NOTIFICATION_DONE);
-		doneIntent.putExtra(Constants.NOTIFICATION_ID,
-				args.getInt(Constants.NOTIFICATION_ID));
-		doneIntent.putExtra(Constants.REMINDER_TYPE,
-				(Parcelable) ReminderType.TIME);
-		PendingIntent donePendingIntent = PendingIntent.getBroadcast(context,
-				0, doneIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Creates a notification with data such as title and comment
+		// from the ListObject for which the notification is created
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+				context);
+		notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+		notificationBuilder.setContentTitle(args
+				.getString(Constants.NOTIFICATION_TITLE));
+		notificationBuilder.setContentText(description);
+		notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
+				.bigText(description));
+
+		// Creates the action buttons for the notification. Only adds a done
+		// button if the ListObject is a task and not an event.
+		if (!args.getBoolean(Constants.NOTOFICATION_IS_EVENT)) {
+			Intent doneIntent = new Intent();
+			doneIntent.setAction(NOTIFICATION_DONE);
+			doneIntent.putExtra(Constants.NOTIFICATION_ID,
+					args.getInt(Constants.NOTIFICATION_ID));
+			doneIntent.putExtra(Constants.REMINDER_TYPE,
+					(Parcelable) ReminderType.TIME);
+			PendingIntent donePendingIntent = PendingIntent.getBroadcast(
+					context, 0, doneIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+			notificationBuilder.addAction(R.drawable.task_done,
+					context.getString(R.string.notification_done),
+					donePendingIntent);
+		}
 
 		Intent snoozeIntent = new Intent();
 		snoozeIntent.setAction(NOTIFICATION_SNOOZE);
@@ -165,22 +185,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context,
 				0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		// Creates a notification with data such as title and comment
-		// from the ListObject for which the notification is created
-		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-				context)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(args.getString(Constants.NOTIFICATION_TITLE))
-				.setContentText(description)
-				.setStyle(
-						new NotificationCompat.BigTextStyle()
-								.bigText(description))
-				.addAction(R.drawable.task_done,
-						context.getString(R.string.notification_done),
-						donePendingIntent)
-				.addAction(R.drawable.task_snooze_time,
-						context.getString(R.string.notification_snooze_time),
-						snoozePendingIntent);
+		notificationBuilder.addAction(R.drawable.task_snooze_time,
+				context.getString(R.string.notification_snooze_time),
+				snoozePendingIntent);
 
 		// Enables sound and vibration for the notification
 		notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
@@ -213,7 +220,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 		mNotificationManager.notify(args.getInt(Constants.NOTIFICATION_ID),
 				notificationBuilder.build());
 	}
-
 	/*
 	 * Method called when a task should be marked as done.
 	 */
@@ -283,7 +289,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 					dbH.getTimeAlarm(idTimeAlarm));
 
 			// Creates new notification reminder with the new time alarm.
-			NotificationHandler.getInstance().addTimeReminder(listObject);
+			NotificationHandler.getInstance().addTimeReminder(id);
 
 		} else {
 			// When snoozing place reminder, do nothing... The geofence will be

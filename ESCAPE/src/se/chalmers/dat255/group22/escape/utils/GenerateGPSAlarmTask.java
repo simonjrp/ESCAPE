@@ -87,7 +87,6 @@ public class GenerateGPSAlarmTask extends AsyncTask<String, Void, GPSAlarm> {
 				+ newGPSAlarm.getLatitude() + "," + newGPSAlarm.getLongitude()
 				+ ".");
 
-		NotificationHandler.getInstance().addPlaceReminder(
-				dbHandler.getListObject(listObjectId));
+		NotificationHandler.getInstance().addPlaceReminder(listObjectId);
 	}
 }

@@ -17,7 +17,7 @@
     <string name="time_reminder">Time reminder</string>
     <string name="location_reminder">Location reminder</string>
     <string name="notification_done">Done</string>
-    <string name="notification_snooze_time">In an hour</string>
+    <string name="notification_snooze_time">Snooze 1h</string>
     <string name="notification_snooze_place">Next time</string>
     <string name="pick_time_label">Pick a time&#8230;</string>
     <string name="pick_day_label">Pick a day&#8230;</string>

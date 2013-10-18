@@ -81,20 +81,25 @@ public class NotificationHandler {
 	/**
 	 * Method for adding a time reminder notification for a task or event.
 	 * 
-	 * @param listObject
-	 *            The ListObject describing the task or event.
+	 * @param idListObject
+	 *            The database id of the ListObject describing a task or event.
 	 * @throws NullPointerException
 	 *             If the ListObject's TimeAlarm object is null.
 	 * @throws UnsupportedOperationException
 	 *             If the notification handler hasn't been initialized.
 	 */
-	public void addTimeReminder(ListObject listObject)
+	public void addTimeReminder(long idListObject)
 			throws NullPointerException, UnsupportedOperationException {
 
 		if (!isInitialized()) {
 			throw new UnsupportedOperationException(
 					context.getString(R.string.nh_not_init));
 		}
+
+        ListObject listObject = dbH.getListObject(idListObject);
+        if(listObject == null) {
+            throw new NullPointerException("Couldn't find a ListObject with provided id.");
+        }
 
 		TimeAlarm timeAlarm = dbH.getTimeAlarm(listObject);
 		if (timeAlarm == null) {
@@ -136,19 +141,24 @@ public class NotificationHandler {
 	/**
 	 * Method for adding a place reminder notification for a task or event.
 	 * 
-	 * @param listObject
-	 *            The ListObject describing the task or event.
+	 * @param idListObject
+	 *            The database id of the ListObject describing a task or event.
 	 * @throws NullPointerException
 	 *             If the ListObject's GPSAlarm object is null.
 	 * @throws UnsupportedOperationException
 	 *             If the notification handler hasn't been initialized.
 	 */
-	public void addPlaceReminder(ListObject listObject)
+	public void addPlaceReminder(long idListObject)
 			throws NullPointerException, UnsupportedOperationException {
 		if (!isInitialized()) {
 			throw new UnsupportedOperationException(
 					"NotificationHandler hasn't been initialized yet. Run init(FragmentActivity) when starting application.");
 		}
+
+        ListObject listObject = dbH.getListObject(idListObject);
+        if(listObject == null) {
+            throw new NullPointerException("Couldn't find a ListObject with provided id.");
+        }
 
 		GPSAlarm gpsAlarm = dbH.getGPSAlarm(listObject);
 
