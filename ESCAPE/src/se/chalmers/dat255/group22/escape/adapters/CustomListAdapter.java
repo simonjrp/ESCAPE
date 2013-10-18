@@ -84,9 +84,9 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public void reInit() {
 		// Fetch tasks from database
-		List<ListObject> listObjects = dbHandler.getAllListObjects();
+		List<ListObject> databaseList = dbHandler.getAllListObjects();
 
-		for (ListObject lo : listObjects) {
+		for (ListObject lo : databaseList) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
 
@@ -243,7 +243,7 @@ public class CustomListAdapter implements ListAdapter {
 				@Override
 				public void onClick(View v) {
 					DBHandler dbh = new DBHandler(context);
-					dbh.deleteListObject(listObject);
+					dbh.purgeListObject(listObject);
 					removeListObject(listObject);
 					LinearLayout nextObject = null;
 					try {
@@ -288,36 +288,36 @@ public class CustomListAdapter implements ListAdapter {
 					convertView));
 			// convertView.setOnTouchListener(new OptionTouchListener(context,
 			// convertView));
-            // Set the state colors of the view
-            ColorDrawable ribbonColor = new ColorDrawable();
+			// Set the state colors of the view
+			ColorDrawable ribbonColor = new ColorDrawable();
 
-            if (listObject.isImportant())
-                ribbonColor.setColor(Color.parseColor("#"
-                        + dbHandler.getCategories(listObject).get(0)
-                        .getImportantColor()));
-            else
-                ribbonColor.setColor(Color.parseColor("#"
-                        + dbHandler.getCategories(listObject).get(0)
-                        .getBaseColor()));
+			if (listObject.isImportant())
+				ribbonColor.setColor(Color.parseColor("#"
+						+ dbHandler.getCategories(listObject).get(0)
+								.getImportantColor()));
+			else
+				ribbonColor.setColor(Color.parseColor("#"
+						+ dbHandler.getCategories(listObject).get(0)
+								.getBaseColor()));
 
-            LinearLayout ribbonView = (LinearLayout) convertView
-                    .findViewById(R.id.task_ribbons);
-            View ribbon = new View(convertView.getContext());
-            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
-                    .getResources().getDimension(R.dimen.ribbon_width),
-                    LinearLayout.LayoutParams.MATCH_PARENT));
-            ribbon.setBackgroundDrawable(ribbonColor);
-            ribbonView.addView(ribbon);
+			LinearLayout ribbonView = (LinearLayout) convertView
+					.findViewById(R.id.task_ribbons);
+			View ribbon = new View(convertView.getContext());
+			ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+					.getResources().getDimension(R.dimen.ribbon_width),
+					LinearLayout.LayoutParams.MATCH_PARENT));
+			ribbon.setBackgroundDrawable(ribbonColor);
+			ribbonView.addView(ribbon);
 
-            ColorDrawable baseColor = new ColorDrawable();
-            baseColor.setColor(context.getResources().getColor(R.color.white));
-            StateListDrawable states = new StateListDrawable();
-            states.addState(
-                    new int[]{android.R.attr.state_pressed},
-                    context.getResources().getDrawable(
-                            R.drawable.list_pressed_holo_dark));
-            states.addState(StateSet.WILD_CARD, baseColor);
-            convertView.setBackgroundDrawable(states);
+			ColorDrawable baseColor = new ColorDrawable();
+			baseColor.setColor(context.getResources().getColor(R.color.white));
+			StateListDrawable states = new StateListDrawable();
+			states.addState(
+					new int[] { android.R.attr.state_pressed },
+					context.getResources().getDrawable(
+							R.drawable.list_pressed_holo_dark));
+			states.addState(StateSet.WILD_CARD, baseColor);
+			convertView.setBackgroundDrawable(states);
 
 			if (!getLOShouldBeVisible(listObject))
 				convertView.setVisibility(View.VISIBLE);

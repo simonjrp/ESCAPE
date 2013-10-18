@@ -3,9 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+import se.chalmers.dat255.group22.escape.fragments.listfragments.BlockListFragment;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,13 +26,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
-import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
-import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
 
 /**
  * The main activity, to be launched when app is started.
@@ -189,7 +182,7 @@ public class MainActivity extends FragmentActivity {
 
 				// Add all wanted fragments here
 				fragmentList.add(new TasksEventsFragment());
-				fragmentList.add(new BlocksFragment());
+				fragmentList.add(new BlockListFragment());
 				fragmentList.add(new PomodoroFragment());
 			}
 

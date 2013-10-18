@@ -132,10 +132,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 				}
 
 				// If the listObject has a time (AKA is an event)...
-				if (dbHandler.getTime(listObject) != null) {
+				if (listObject.getTime() != null) {
 					// ... get the start and end dates...
-					start = dbHandler.getTime(listObject).getStartDate();
-					end = dbHandler.getTime(listObject).getEndDate();
+					start = listObject.getTime().getStartDate();
+					end = listObject.getTime().getEndDate();
 
 				} else {
 					start = null;

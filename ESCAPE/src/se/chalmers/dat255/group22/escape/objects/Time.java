@@ -62,22 +62,21 @@ public class Time {
 				+ endDate + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + id;
+		result = prime * result
+				+ ((startDate == null) ? 0 : startDate.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -92,7 +91,21 @@ public class Time {
 			return false;
 		}
 		Time other = (Time) obj;
+		if (endDate == null) {
+			if (other.endDate != null) {
+				return false;
+			}
+		} else if (!endDate.equals(other.endDate)) {
+			return false;
+		}
 		if (id != other.id) {
+			return false;
+		}
+		if (startDate == null) {
+			if (other.startDate != null) {
+				return false;
+			}
+		} else if (!startDate.equals(other.startDate)) {
 			return false;
 		}
 		return true;
