@@ -47,8 +47,6 @@ import android.widget.Toast;
  */
 public class CustomListAdapter implements ListAdapter {
 
-	// A temporary task that is displayed if list is empty
-	ListObject emptyListDefaultTask;
 	// The context this adapter is used in
 	private Context context;
 	// The tasks in the list
@@ -78,12 +76,6 @@ public class CustomListAdapter implements ListAdapter {
 		dbHandler = new DBHandler(context);
 		taskList = new ArrayList<ListObject>();
 		theCategories = new ArrayList<Category>();
-
-		emptyListDefaultTask = new ListObject(97569754,
-				"Anything you need to do?");
-		emptyListDefaultTask
-				.setComment("In this list you can add general things that you need to do!");
-        emptyListDefaultTask.addToCategory(dbHandler.getCategory(context.getString(R.string.default_category_spare_time)));
 	}
 
 	/**
@@ -93,7 +85,7 @@ public class CustomListAdapter implements ListAdapter {
 	public void reInit() {
 		// Fetch tasks from database
 		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		boolean noTasks = true;
+
 		for (ListObject lo : listObjects) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
@@ -109,10 +101,8 @@ public class CustomListAdapter implements ListAdapter {
 				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
-				noTasks = false;
 			}
 		}
-		// If list is empty add a default task
 
 		resetEditButtons();
 	}
@@ -250,12 +240,7 @@ public class CustomListAdapter implements ListAdapter {
 					intent.putExtra(EDIT_TASK_MSG, bundle);
 					bundle.putInt(INTENT_GET_ID, listObject.getId());
 					intent.setFlags(EDIT_TASK_ID);
-					if (listObject.getName().equals("Anything you need to do?"))
-						Toast.makeText(context,
-								"This default task can't be edited!",
-								Toast.LENGTH_SHORT).show();
-					else
-						context.startActivity(intent);
+					context.startActivity(intent);
 				}
 			});
 
