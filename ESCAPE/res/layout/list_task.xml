@@ -23,6 +23,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:paddingTop="@dimen/ui_element_gap"
+                android:paddingLeft="@dimen/ui_element_gap"
                 android:textColor="#000000"
                 android:textSize="@dimen/textsize_medium"
                 android:lines="1"/>
@@ -33,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_gravity="right"
+                android:paddingTop="@dimen/ui_element_gap"
                 android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
                 android:textColor="#000000"
                 android:textSize="@dimen/textsize_medium"
