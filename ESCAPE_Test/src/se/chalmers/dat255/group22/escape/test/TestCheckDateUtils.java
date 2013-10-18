@@ -1,9 +1,13 @@
 package se.chalmers.dat255.group22.escape.test;
-import static org.junit.Assert.*;
-import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
+import static org.junit.Assert.assertEquals;
+
 import java.sql.Date;
 import java.util.Calendar;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
 
 /**
  * test for utils class with methods related to dates
@@ -12,17 +16,18 @@ import org.junit.Test;
  */
 public class TestCheckDateUtils {
 	
-	private long DAYINMILLIS = 100*60*60*24;
-	private Date aWeekAgo;
-	private Date yesterday;
-	private Date today;
-	private Date tomorrow;
-	private Date inTwoDays;
-	private Date firstDayInWeek;
-	private Date lastDayInWeek;
-	private Date inAWeek;
+	private static long DAYINMILLIS = 100*60*60*24;
+	private static Date aWeekAgo;
+	private static Date yesterday;
+	private static Date today;
+	private static Date tomorrow;
+	private static Date inTwoDays;
+	private static Date firstDayInWeek;
+	private static Date lastDayInWeek;
+	private static Date inAWeek;
 	
-	protected void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		
 		Calendar tmpDate = Calendar.getInstance();
 		
@@ -102,5 +107,4 @@ public class TestCheckDateUtils {
 		assertEquals(false, CheckDateUtils.dateHasPassed(lastDayInWeek));
 		assertEquals(false, CheckDateUtils.dateHasPassed(inAWeek));
 	}
-
 }
