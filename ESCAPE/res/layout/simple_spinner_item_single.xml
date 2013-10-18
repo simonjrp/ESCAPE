@@ -23,7 +23,8 @@
             android:id="@+id/category_spinner_ribbon"
             android:layout_height="fill_parent"
             android:layout_width="20dp"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
         </View>
     </RelativeLayout>
 </LinearLayout>
