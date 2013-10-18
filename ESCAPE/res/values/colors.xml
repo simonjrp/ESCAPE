@@ -8,8 +8,10 @@
     <color name="light_blue">#33B5E5</color>
     <color name="light_blue_transparent">#6033B5E5</color>
     <color name="red">#FFFF0000</color>
-    <color  name="red_transparent">#60BE0000</color>
+    <color name="red_transparent">#60BE0000</color>
     <color name="green">#FF00FF00</color>
     <color name="green_transparent">#6000BE00</color>
+    <color name="yellow">#FFBEBE00</color>
+    <color name="yellow_transparent">#60BEBE00</color>
 
 </resources>

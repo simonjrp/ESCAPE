@@ -924,20 +924,20 @@ public class NewTaskActivity extends Activity
 		dbHandler.addCategory(new Category(
 				getString(R.string.default_category_school), Integer
 						.toHexString(getResources()
-                                .getColor(R.color.light_blue)), Integer
+                                .getColor(R.color.yellow_transparent)), Integer
 						.toHexString(getResources().getColor(
-                                R.color.light_blue_transparent))));
+                                R.color.yellow))));
 
 		dbHandler.addCategory(new Category(
 				getString(R.string.default_category_work), Integer
-						.toHexString(getResources().getColor(R.color.red)),
-				Integer.toHexString(getResources().getColor(
-						R.color.red_transparent))));
+						.toHexString(getResources().getColor(R.color.red_transparent)),
+                Integer.toHexString(getResources().getColor(
+						R.color.red))));
 		dbHandler.addCategory(new Category(
 				getString(R.string.default_category_spare_time), Integer
-						.toHexString(getResources().getColor(R.color.green)),
-				Integer.toHexString(getResources().getColor(
-						R.color.green_transparent))));
+						.toHexString(getResources().getColor(R.color.green_transparent)),
+                Integer.toHexString(getResources().getColor(
+						R.color.green))));
 		List<Category> categoriesFromDB = dbHandler.getAllCategories();
 
 		// ...and add them to the array used in the spinner
@@ -971,7 +971,7 @@ public class NewTaskActivity extends Activity
 			Category newCategory = new Category(
 					inputText,
 					Integer.toHexString(getResources().getColor(R.color.white)),
-					Integer.toHexString(getResources().getColor(
+                    Integer.toHexString(getResources().getColor(
 							R.color.light_gray_transparent)));
 			dbHandler.addCategory(newCategory);
 			initCategoryAdapter();

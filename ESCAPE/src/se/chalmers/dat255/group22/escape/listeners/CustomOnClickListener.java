@@ -104,10 +104,10 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// Set the state colors of the view
 				ColorDrawable baseColor = new ColorDrawable();
                 if (listObject.isImportant())
-                    baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                    baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                             .get(0).getImportantColor()));
                 else
-                    baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
+                    baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
                             .get(0).getBaseColor()));
 
 				ColorDrawable colorPressed = new ColorDrawable();
@@ -237,12 +237,12 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 			// Set the state colors of the view
 			ColorDrawable baseColor = new ColorDrawable();
-			if (listObject.isImportant())
-				baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
-						.get(0).getImportantColor()));
-			else
-				baseColor.setColor(Color.parseColor(dbHandler.getCategories(listObject)
-						.get(0).getBaseColor()));
+            if (listObject.isImportant())
+                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                        .get(0).getImportantColor()));
+            else
+                baseColor.setColor(Color.parseColor("#" + dbHandler.getCategories(listObject)
+                        .get(0).getBaseColor()));
 
 			ColorDrawable colorPressed = new ColorDrawable();
 			colorPressed.setColor(context.getResources().getColor(
