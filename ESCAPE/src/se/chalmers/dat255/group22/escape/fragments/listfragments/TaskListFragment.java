@@ -67,7 +67,7 @@ public class TaskListFragment extends Fragment {
 		ourListAdapter.reInit();
 	}
 
-	/**
+	/*
 	 * Initialize the list, adapter and popup
 	 */
 	private void initialize() {
@@ -79,7 +79,7 @@ public class TaskListFragment extends Fragment {
 		initPopup();
 	}
 
-	/**
+	/*
 	 * Create the popup used to pick what categories to display
 	 */
 	private void initPopup() {
@@ -99,7 +99,7 @@ public class TaskListFragment extends Fragment {
 				});
 	}
 
-	/**
+	/*
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {

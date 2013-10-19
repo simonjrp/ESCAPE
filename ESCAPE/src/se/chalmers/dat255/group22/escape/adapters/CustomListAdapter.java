@@ -66,7 +66,7 @@ public class CustomListAdapter implements ListAdapter {
 		initialize();
 	}
 
-	/**
+	/*
 	 * Initialize the database and lists
 	 */
 	private void initialize() {

@@ -1,5 +1,8 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,11 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
-
 
 /**
  * A fragment displaying an expandable list with events.<br>
@@ -32,8 +30,8 @@ public class ExpandableEventListFragment extends Fragment {
 	private ListPopupWindow listPopupWindow;
 	// The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
-    // the width used for the category popup
-    private int categoryListWidth;
+	// the width used for the category popup
+	private int categoryListWidth;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class ExpandableEventListFragment extends Fragment {
 		listAdapter.reInit();
 	}
 
-	/**
+	/*
 	 * Initialize the lists and adapter
 	 */
 	private void initialize() {
@@ -83,12 +81,12 @@ public class ExpandableEventListFragment extends Fragment {
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
 
-        categoryListWidth = getActivity().getResources().getDimensionPixelSize(
-                R.dimen.category_list_width);
-        initPopup();
+		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
+				R.dimen.category_list_width);
+		initPopup();
 	}
 
-	/**
+	/*
 	 * Create the popup used to pick what categories to display
 	 */
 	private void initPopup() {
@@ -100,14 +98,17 @@ public class ExpandableEventListFragment extends Fragment {
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
 		listPopupWindow
 				.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        if (listAdapter != null)
-                            listAdapter.notifyDataSetChanged();
-                    }
-                });
+					@Override
+					public void onDismiss() {
+						if (listAdapter != null)
+							listAdapter.notifyDataSetChanged();
+					}
+				});
 	}
 
+	/*
+	 * Called in order to display the category popup
+	 */
 	private void getPopup() {
 		// TODO Find way to use popup without creating it every time!
 		if (!listAdapter.getTheCategories().isEmpty()) {
