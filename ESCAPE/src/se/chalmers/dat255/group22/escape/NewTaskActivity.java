@@ -1,22 +1,8 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
+import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
+import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -39,14 +25,26 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
 import se.chalmers.dat255.group22.escape.utils.GetPlaces;
-
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
-import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
-import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * An activity used for creating a new task
@@ -66,7 +64,6 @@ public class NewTaskActivity extends Activity
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
-	private ReminderType reminderType;
 	private boolean userIsSure;
 
 	@Override
@@ -307,18 +304,20 @@ public class NewTaskActivity extends Activity
 		// No matter what¸ remove all old time/place reminders.
 		TimeAlarm originalTimeAlarm = dbHandler.getTimeAlarm(editedListObject);
 		if (originalTimeAlarm != null) {
-			dbHandler.deleteTimeAlarm(originalTimeAlarm);
-			dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
 			NotificationHandler.getInstance().removeTimeReminder(
 					editedListObject);
+			dbHandler.deleteTimeAlarm(originalTimeAlarm);
+			dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
+
 		}
 
 		GPSAlarm originalGPSAlarm = dbHandler.getGPSAlarm(editedListObject);
 		if (originalGPSAlarm != null) {
-			dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
-			dbHandler.deleteGPSAlarm(originalGPSAlarm);
 			NotificationHandler.getInstance().removeLocationReminder(
 					editedListObject);
+			dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
+			dbHandler.deleteGPSAlarm(originalGPSAlarm);
+
 		}
 
 		Time originalTime = dbHandler.getTime(editedListObject);
@@ -338,15 +337,9 @@ public class NewTaskActivity extends Activity
 
 		// Update/add new reminder
 		if (hasReminder) {
-			if (reminderType == Constants.ReminderType.TIME && isTimeReminder) {
-
-				if (originalTimeAlarm != null) {
-					originalTimeAlarm.setDate(timeAlarm.getDate());
-					dbHandler.updateTimeAlarm(originalTimeAlarm);
-					NotificationHandler.getInstance().addTimeReminder(
-							dbHandler.getListObject(
-									(long) editedListObject.getId()).getId());
-				} else {
+			if (isTimeReminder) {
+				Log.d("BÖG", timeAlarm.toString());
+				if (timeAlarm != null) {
 					tmpId = dbHandler.addTimeAlarm(timeAlarm);
 					dbHandler.addListObjectWithTimeAlarm(editedListObject,
 							dbHandler.getTimeAlarm(tmpId));
@@ -354,10 +347,15 @@ public class NewTaskActivity extends Activity
 							dbHandler.getListObject(
 									(long) editedListObject.getId()).getId());
 				}
+
 			} else if (isLocationReminder) {
+
 				EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
-				new GenerateGPSAlarmTask(this, id)
-						.execute(reminderLocationEditText.getText().toString());
+				if (reminderLocationEditText.getText().toString().length() != 0) {
+					new GenerateGPSAlarmTask(this, id)
+							.execute(reminderLocationEditText.getText()
+									.toString());
+				}
 			}
 		}
 
@@ -415,10 +413,13 @@ public class NewTaskActivity extends Activity
 		 * freezes when trying to find coordinates matching the text string in
 		 * the reminder location text field.
 		 */
-		if (reminderType == Constants.ReminderType.GPS) {
+		if (isLocationReminder) {
 			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
-			new GenerateGPSAlarmTask(this, objId)
-					.execute(reminderLocationEditText.getText().toString());
+			if (reminderLocationEditText.getText().toString().length() != 0) {
+				new GenerateGPSAlarmTask(this, objId)
+						.execute(reminderLocationEditText.getText().toString());
+			}
+
 		}
 
 		if (lo.getPlace() != null) {
@@ -485,11 +486,12 @@ public class NewTaskActivity extends Activity
 
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
-        dateToSpinner.setAdapter(dayToAdapter);
-        timeFromSpinner.setAdapter(timeFromAdapter);
-        timeToSpinner.setAdapter(timeToAdapter);
+		dateToSpinner.setAdapter(dayToAdapter);
+		timeFromSpinner.setAdapter(timeFromAdapter);
+		timeToSpinner.setAdapter(timeToAdapter);
 
-        EventSpinnerSyncer eventSpinnerSyncer = new EventSpinnerSyncer(this, dateFromSpinner, dateToSpinner, timeFromSpinner, timeToSpinner);
+		EventSpinnerSyncer eventSpinnerSyncer = new EventSpinnerSyncer(this,
+				dateFromSpinner, dateToSpinner, timeFromSpinner, timeToSpinner);
 
 		isEvent = true;
 
@@ -923,7 +925,7 @@ public class NewTaskActivity extends Activity
 				getString(R.string.default_category_school), Integer
 						.toHexString(getResources().getColor(R.color.magenta)),
 				Integer.toHexString(getResources().getColor(
-                        R.color.magenta_dark))));
+						R.color.magenta_dark))));
 
 		dbHandler
 				.addCategory(new Category(
