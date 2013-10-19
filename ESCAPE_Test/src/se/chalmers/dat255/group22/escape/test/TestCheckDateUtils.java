@@ -16,7 +16,7 @@ import se.chalmers.dat255.group22.escape.utils.CheckDateUtils;
  */
 public class TestCheckDateUtils {
 	
-	private static long DAYINMILLIS = 100*60*60*24;
+	private static long DAYINMILLIS = 1000*60*60*24;
 	private static Date aWeekAgo;
 	private static Date yesterday;
 	private static Date today;
