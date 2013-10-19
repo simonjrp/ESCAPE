@@ -6,239 +6,242 @@
               android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/task_ribbons"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
+                android:id="@+id/task_ribbons"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/ui_element_gap"
-            android:paddingLeft="@dimen/ui_element_gap">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/ui_element_gap"
+                android:paddingLeft="@dimen/ui_element_gap">
 
             <TextView
-                android:id="@+id/list_object_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/ui_element_gap"
-                android:paddingLeft="@dimen/ui_element_gap"
-                android:textColor="#000000"
-                android:textSize="@dimen/textsize_medium"
-                android:lines="1"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"/>
+                    android:id="@+id/list_object_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/ui_element_gap"
+                    android:paddingLeft="@dimen/ui_element_gap"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/textsize_medium"
+                    android:lines="1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
 
             <RelativeLayout
-                android:id="@+id/list_object_collapsed_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/ui_element_gap"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
-
-                <TextView
-                    android:id="@+id/list_object_small_start_time"
+                    android:id="@+id/list_object_collapsed_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_micro"
-                    android:textColor="#000000"/>
+                    android:paddingTop="@dimen/ui_element_gap"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true">
+
+                <TextView
+                        android:id="@+id/list_object_small_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_micro"
+                        android:textColor="#000000"/>
 
                 <View
-                    android:id="@+id/list_object_collapsed_small_time_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#bebebe"
-                    android:layout_below="@id/list_object_small_start_time"
-                    android:layout_alignRight="@id/list_object_small_start_time"
-                    android:layout_alignLeft="@id/list_object_small_start_time"/>
+                        android:id="@+id/list_object_collapsed_small_time_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#bebebe"
+                        android:layout_below="@id/list_object_small_start_time"
+                        android:layout_alignRight="@id/list_object_small_start_time"
+                        android:layout_alignLeft="@id/list_object_small_start_time"/>
 
                 <TextView
-                    android:id="@+id/list_object_small_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_micro"
-                    android:textColor="#000000"
-                    android:layout_below="@id/list_object_collapsed_small_time_separator"/>
+                        android:id="@+id/list_object_small_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_micro"
+                        android:textColor="#000000"
+                        android:layout_below="@id/list_object_collapsed_small_time_separator"/>
             </RelativeLayout>
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true"
-                android:paddingRight="@dimen/activity_horizontal_margin">
-
-                <ImageButton
-                    android:id="@+id/edit_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    style="@android:style/Widget.ActionButton"
-                    android:contentDescription="@string/edit_button_description"
-                    android:src="@android:drawable/ic_menu_edit"/>
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageButton
-                    android:id="@+id/delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    style="@android:style/Widget.ActionButton"
-                    android:contentDescription="@string/delete_button_description"
-                    android:src="@android:drawable/ic_menu_delete"/>
+                        android:id="@+id/edit_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        style="@android:style/Widget.ActionButton"
+                        android:contentDescription="@string/edit_button_description"
+                        android:src="@android:drawable/ic_menu_edit"/>
+
+                <ImageButton
+                        android:id="@+id/delete_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        style="@android:style/Widget.ActionButton"
+                        android:contentDescription="@string/delete_button_description"
+                        android:src="@android:drawable/ic_menu_delete"/>
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/list_object_expanded_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/ribbon_width"
-        >
-
-        <LinearLayout
-            android:id="@+id/list_object_expanded_info_layout"
+            android:id="@+id/list_object_expanded_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/ui_element_gap"
-            android:orientation="horizontal"
-            android:weightSum="12">
+            android:paddingLeft="@dimen/ribbon_width"
+            >
+
+        <LinearLayout
+                android:id="@+id/list_object_expanded_info_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/ui_element_gap"
+                android:orientation="horizontal"
+                android:weightSum="12">
 
             <LinearLayout
-                android:id="@+id/list_object_expanded_comment_place_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="9"
-                android:weightSum="1"
-                android:orientation="vertical">
+                    android:id="@+id/list_object_expanded_comment_place_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:weightSum="1"
+                    android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/list_object_comment"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:textSize="@dimen/textsize_small"
-                    android:textColor="#000000"
-                    android:layout_weight="0.9"
-                    android:layout_gravity="top"
-                    android:paddingRight="@dimen/ui_element_gap"
-                    android:paddingBottom="@dimen/ui_element_gap"/>
+                        android:id="@+id/list_object_comment"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:textSize="@dimen/textsize_small"
+                        android:textColor="#000000"
+                        android:layout_weight="0.9"
+                        android:layout_gravity="top"
+                        android:paddingRight="@dimen/ui_element_gap"
+                        android:paddingBottom="@dimen/ui_element_gap"/>
 
                 <TextView
-                    android:id="@+id/list_object_place"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:textSize="@dimen/textsize_small"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:layout_weight="0.1"
-                    android:gravity="bottom"/>
+                        android:id="@+id/list_object_place"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:textSize="@dimen/textsize_small"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:layout_weight="0.1"
+                        android:gravity="bottom"/>
 
             </LinearLayout>
 
             <View
-                android:id="@+id/list_object_expanded_horizontal_separator"
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#bebebe"/>
+                    android:id="@+id/list_object_expanded_horizontal_separator"
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="#bebebe"/>
 
             <RelativeLayout
-                android:id="@+id/list_object_expanded_time_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:paddingLeft="@dimen/ui_element_gap">
+                    android:id="@+id/list_object_expanded_time_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingLeft="@dimen/ui_element_gap">
 
                 <TextView
-                    android:id="@+id/list_object_expanded_from_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_small"
-                    android:textStyle="bold"
-                    android:hint="@string/from_label"/>
+                        android:id="@+id/list_object_expanded_from_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_small"
+                        android:textStyle="bold"
+                        android:hint="@string/from_label"/>
 
                 <TextView
-                    android:id="@+id/list_object_expanded_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_small"
-                    android:textColor="#000000"
-                    android:layout_below="@id/list_object_expanded_from_label"/>
+                        android:id="@+id/list_object_expanded_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_small"
+                        android:textColor="#000000"
+                        android:layout_below="@id/list_object_expanded_from_label"/>
 
                 <View
-                    android:id="@+id/list_object_expanded_small_time_separator"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:background="#bebebe"
-                    android:layout_below="@id/list_object_expanded_start_time"/>
+                        android:id="@+id/list_object_expanded_small_time_separator"
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="#bebebe"
+                        android:layout_below="@id/list_object_expanded_start_time"/>
 
                 <TextView
-                    android:id="@+id/list_object_expanded_to_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_small"
-                    android:textStyle="bold"
-                    android:hint="@string/to_label"
-                    android:layout_below="@id/list_object_expanded_start_time"/>
+                        android:id="@+id/list_object_expanded_to_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_small"
+                        android:textStyle="bold"
+                        android:hint="@string/to_label"
+                        android:layout_below="@id/list_object_expanded_start_time"/>
 
                 <TextView
-                    android:id="@+id/list_object_expanded_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/textsize_small"
-                    android:textColor="#000000"
-                    android:layout_below="@id/list_object_expanded_to_label"/>
+                        android:id="@+id/list_object_expanded_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textsize_small"
+                        android:textColor="#000000"
+                        android:layout_below="@id/list_object_expanded_to_label"/>
             </RelativeLayout>
 
         </LinearLayout>
 
         <View
-            android:id="@+id/list_object_expanded_reminder_separator"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/list_object_expanded_info_layout"
-            android:background="#bebebe"/>
+                android:id="@+id/list_object_expanded_reminder_separator"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/list_object_expanded_info_layout"
+                android:background="#bebebe"/>
 
         <RelativeLayout
-            android:id="@+id/list_object_expanded_reminder_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/list_object_expanded_reminder_separator"
-            android:paddingBottom="@dimen/ui_element_gap">
+                android:id="@+id/list_object_expanded_reminder_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/list_object_expanded_reminder_separator"
+                android:paddingBottom="@dimen/ui_element_gap">
 
             <TextView
-                android:id="@+id/list_object_expanded_reminder_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/textsize_small"
-                android:textColor="#000000"/>
+                    android:id="@+id/list_object_expanded_reminder_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textsize_small"
+                    android:textColor="#000000"/>
 
             <ImageView
-                android:id="@+id/list_object_expanded_reminder_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="@dimen/ui_element_gap"/>
+                    android:id="@+id/list_object_expanded_reminder_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingRight="@dimen/ui_element_gap"/>
 
         </RelativeLayout>
 
 
     </RelativeLayout>
 
-
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#60bebebe"/>
 </LinearLayout>

@@ -74,6 +74,7 @@ public class TaskListFragment extends Fragment {
 		ourListAdapter = new CustomListAdapter(getActivity());
 		ourTaskList = (ListView) getActivity().findViewById(R.id.task_list);
 		ourTaskList.setAdapter(ourListAdapter);
+        ourTaskList.setDivider(null);
 		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
 				R.dimen.category_list_width);
 		initPopup();
