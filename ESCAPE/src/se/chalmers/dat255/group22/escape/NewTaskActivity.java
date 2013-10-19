@@ -340,12 +340,22 @@ public class NewTaskActivity extends Activity
 			if (isTimeReminder) {
 				Log.d("BÖG", timeAlarm.toString());
 				if (timeAlarm != null) {
-					tmpId = dbHandler.addTimeAlarm(timeAlarm);
-					dbHandler.addListObjectWithTimeAlarm(editedListObject,
-							dbHandler.getTimeAlarm(tmpId));
-					NotificationHandler.getInstance().addTimeReminder(
-							dbHandler.getListObject(
-									(long) editedListObject.getId()).getId());
+					boolean timeHasPassed = (timeAlarm.getDate().getTime() - System
+							.currentTimeMillis()) < 0;
+
+					if (timeHasPassed) {
+						Toast.makeText(this,
+								getString(R.string.invalid_time_reminder),
+								Toast.LENGTH_LONG).show();
+					} else {
+						tmpId = dbHandler.addTimeAlarm(timeAlarm);
+						dbHandler.addListObjectWithTimeAlarm(editedListObject,
+								dbHandler.getTimeAlarm(tmpId));
+						NotificationHandler.getInstance().addTimeReminder(
+								dbHandler.getListObject(
+										(long) editedListObject.getId())
+										.getId());
+					}
 				}
 
 			} else if (isLocationReminder) {
@@ -382,13 +392,22 @@ public class NewTaskActivity extends Activity
 		 */
 
 		if (lo.getTimeAlarm() != null) {
-			tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
-			dbHandler.addListObjectWithTimeAlarm(
-					dbHandler.getListObject(objId),
-					dbHandler.getTimeAlarm(tmpId));
 
-			// creates a time notification
-			NotificationHandler.getInstance().addTimeReminder(objId);
+			boolean timeHasPassed = (lo.getTimeAlarm().getDate().getTime() - System
+					.currentTimeMillis()) < 0;
+
+			if (timeHasPassed) {
+				Toast.makeText(this, getString(R.string.invalid_time_reminder),
+						Toast.LENGTH_LONG).show();
+			} else {
+				tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
+				dbHandler.addListObjectWithTimeAlarm(
+						dbHandler.getListObject(objId),
+						dbHandler.getTimeAlarm(tmpId));
+
+				// creates a time notification
+				NotificationHandler.getInstance().addTimeReminder(objId);
+			}
 
 		}
 
