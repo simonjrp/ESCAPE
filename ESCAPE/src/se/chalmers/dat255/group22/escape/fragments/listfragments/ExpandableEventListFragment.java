@@ -80,6 +80,7 @@ public class ExpandableEventListFragment extends Fragment {
 				R.id.expendable_event_list);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
+        expListView.setDivider(null);
 
 		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
 				R.dimen.category_list_width);
