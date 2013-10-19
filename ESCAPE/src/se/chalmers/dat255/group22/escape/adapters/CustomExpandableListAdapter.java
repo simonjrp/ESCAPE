@@ -466,7 +466,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		convertView = infalInflater.inflate(R.layout.list_header, null);
 
 		TextView lblListHeader = (TextView) convertView
-				.findViewById(R.id.expendable_list_header);
+				.findViewById(R.id.expandable_list_header);
 		lblListHeader.setTypeface(null, Typeface.BOLD);
 		lblListHeader.setText(headerTitle);
 
