@@ -62,7 +62,7 @@ public class BlockListFragment extends Fragment {
 	 */
 	private void initialize() {
 		ourListAdapter = new BlockListAdapter(getActivity());
-		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
+		ourTaskList = (ListView) getActivity().findViewById(R.id.task_list);
 		ourTaskList.setAdapter(ourListAdapter);
 	}
 }

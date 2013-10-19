@@ -215,7 +215,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		MainActivity mActivity = (MainActivity) context;
 		ExpandableListView expLv = (ExpandableListView) mActivity
-				.findViewById(R.id.expEventList);
+				.findViewById(R.id.expendable_event_list);
 
 		// First expandable group is always expanded when adapter reinits
 		expLv.expandGroup(0, true);
@@ -230,21 +230,21 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 	protected void resetEditButtons() {
 		try {
 			RelativeLayout layout = (RelativeLayout) ((MainActivity) context)
-					.findViewById(R.id.listTask);
+					.findViewById(R.id.list_object_name);
 			RelativeLayout timeLayout = (RelativeLayout) ((MainActivity) context)
-					.findViewById(R.id.start_time_task);
+					.findViewById(R.id.list_object_collapsed_time);
 			if (timeLayout != null)
 				timeLayout.setVisibility(View.VISIBLE);
 
 			ImageButton editButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.editButton);
+					.findViewById(R.id.edit_button);
 			if (editButton != null) {
 				editButton.setVisibility(View.INVISIBLE);
 				editButton.clearAnimation();
 			}
 
 			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 			if (deleteButton != null) {
 				deleteButton.setVisibility(View.INVISIBLE);
 				deleteButton.clearAnimation();
@@ -313,18 +313,18 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			}
 			// Get a textview for the object
 			TextView childLabel = (TextView) convertView
-					.findViewById(R.id.listTask);
+					.findViewById(R.id.list_object_name);
 
 			TextView childStartTimeView = (TextView) convertView
-					.findViewById(R.id.taskDataStartTime1);
+					.findViewById(R.id.list_object_small_start_time);
 			TextView childEndTimeView = (TextView) convertView
-					.findViewById(R.id.taskDataEndTime1);
+					.findViewById(R.id.list_object_small_end_time);
 
 			ImageButton editButton = (ImageButton) convertView
-					.findViewById(R.id.editButton);
+					.findViewById(R.id.edit_button);
 
 			ImageButton deleteButton = (ImageButton) convertView
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 
 			resetEditButtons();
 
@@ -374,7 +374,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 			childEndTimeView.setText(childEndTimeText);
 			// Get the layout for the object's data
 			RelativeLayout childData = (RelativeLayout) convertView
-					.findViewById(R.id.taskDataLayout);
+					.findViewById(R.id.list_object_expanded_layout);
 
 			// We don't want the data to show yet...
 			childData.setVisibility(View.GONE);
@@ -466,7 +466,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 		convertView = infalInflater.inflate(R.layout.list_header, null);
 
 		TextView lblListHeader = (TextView) convertView
-				.findViewById(R.id.listHeader);
+				.findViewById(R.id.expendable_list_header);
 		lblListHeader.setTypeface(null, Typeface.BOLD);
 		lblListHeader.setText(headerTitle);
 

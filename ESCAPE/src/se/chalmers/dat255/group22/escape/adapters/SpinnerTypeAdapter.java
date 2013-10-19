@@ -56,11 +56,11 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.type_spinner_item, parent, false);
 
-		TextView label = (TextView) row.findViewById(R.id.spinnerTypeText);
+		TextView label = (TextView) row.findViewById(R.id.spinner_type_text);
 
 		label.setText(types[position]);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
+		ImageView icon = (ImageView) row.findViewById(R.id.spinner_type_image);
 
 		icon.setImageResource(imgArr[position]);
 
@@ -75,9 +75,9 @@ public class SpinnerTypeAdapter extends ArrayAdapter<String> {
 				false);
 
 		Spinner currentSpinner = (Spinner) parent
-				.findViewById(R.id.reminderTypeSpinner);
+				.findViewById(R.id.reminder_type_spinner);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.spinnerImage);
+		ImageView icon = (ImageView) row.findViewById(R.id.spinner_type_image);
 
 		icon.setImageResource(imgArr[position]);
 		currentSpinner.getLayoutParams().width = currentSpinner

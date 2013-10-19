@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/expandedTask"
+              android:id="@+id/list_object_layout"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
@@ -24,7 +24,7 @@
             android:paddingLeft="@dimen/ui_element_gap">
 
             <TextView
-                android:id="@+id/listTask"
+                android:id="@+id/list_object_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/ui_element_gap"
@@ -36,7 +36,7 @@
                 android:layout_centerVertical="true"/>
 
             <RelativeLayout
-                android:id="@+id/start_time_task"
+                android:id="@+id/list_object_collapsed_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/ui_element_gap"
@@ -45,28 +45,28 @@
                 android:layout_centerVertical="true">
 
                 <TextView
-                    android:id="@+id/taskDataStartTime1"
+                    android:id="@+id/list_object_small_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_micro"
                     android:textColor="#000000"/>
 
                 <View
-                    android:id="@+id/small_time_view_separator1"
+                    android:id="@+id/list_object_collapsed_small_time_separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#bebebe"
-                    android:layout_below="@id/taskDataStartTime1"
-                    android:layout_alignRight="@id/taskDataStartTime1"
-                    android:layout_alignLeft="@id/taskDataStartTime1"/>
+                    android:layout_below="@id/list_object_small_start_time"
+                    android:layout_alignRight="@id/list_object_small_start_time"
+                    android:layout_alignLeft="@id/list_object_small_start_time"/>
 
                 <TextView
-                    android:id="@+id/taskDataEndTime1"
+                    android:id="@+id/list_object_small_end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_micro"
                     android:textColor="#000000"
-                    android:layout_below="@id/small_time_view_separator1"/>
+                    android:layout_below="@id/list_object_collapsed_small_time_separator"/>
             </RelativeLayout>
 
         </RelativeLayout>
@@ -84,35 +84,35 @@
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <ImageButton
-                    android:id="@+id/editButton"
+                    android:id="@+id/edit_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
                     style="@android:style/Widget.ActionButton"
-                    android:contentDescription="@string/editButtonDescription"
+                    android:contentDescription="@string/edit_button_description"
                     android:src="@android:drawable/ic_menu_edit"/>
 
                 <ImageButton
-                    android:id="@+id/deleteButton"
+                    android:id="@+id/delete_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
                     style="@android:style/Widget.ActionButton"
-                    android:contentDescription="@string/deleteButtonDescription"
+                    android:contentDescription="@string/delete_button_description"
                     android:src="@android:drawable/ic_menu_delete"/>
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/taskDataLayout"
+        android:id="@+id/list_object_expanded_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/ribbon_width"
         >
 
         <LinearLayout
-            android:id="@+id/taskDataTopLayout"
+            android:id="@+id/list_object_expanded_info_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/ui_element_gap"
@@ -120,7 +120,7 @@
             android:weightSum="12">
 
             <LinearLayout
-                android:id="@+id/taskDataTopLeftLayout"
+                android:id="@+id/list_object_expanded_comment_place_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
@@ -128,7 +128,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/taskDataComment"
+                    android:id="@+id/list_object_comment"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:textSize="@dimen/textsize_small"
@@ -139,7 +139,7 @@
                     android:paddingBottom="@dimen/ui_element_gap"/>
 
                 <TextView
-                    android:id="@+id/taskDataPlace"
+                    android:id="@+id/list_object_place"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:textSize="@dimen/textsize_small"
@@ -151,83 +151,84 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/taskTimeSeparator"
+                android:id="@+id/list_object_expanded_horizontal_separator"
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
                 android:background="#bebebe"/>
 
             <RelativeLayout
-                android:id="@+id/taskDataTimeLayout"
+                android:id="@+id/list_object_expanded_time_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:paddingLeft="@dimen/ui_element_gap">
 
                 <TextView
-                    android:id="@+id/taskDataTimeFromLabel2"
+                    android:id="@+id/list_object_expanded_from_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textStyle="bold"
-                    android:hint="@string/fromLabel"/>
+                    android:hint="@string/from_label"/>
 
                 <TextView
-                    android:id="@+id/taskDataStartTime2"
+                    android:id="@+id/list_object_expanded_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textColor="#000000"
-                    android:layout_below="@id/taskDataTimeFromLabel2"/>
+                    android:layout_below="@id/list_object_expanded_from_label"/>
+
                 <View
-                    android:id="@+id/small_time_view_separator2"
+                    android:id="@+id/list_object_expanded_small_time_separator"
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
                     android:background="#bebebe"
-                    android:layout_below="@id/taskDataStartTime2"/>
+                    android:layout_below="@id/list_object_expanded_start_time"/>
 
                 <TextView
-                    android:id="@+id/taskDataTimeToLabel2"
+                    android:id="@+id/list_object_expanded_to_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textStyle="bold"
-                    android:hint="@string/toLabel"
-                    android:layout_below="@id/taskDataStartTime2"/>
+                    android:hint="@string/to_label"
+                    android:layout_below="@id/list_object_expanded_start_time"/>
 
                 <TextView
-                    android:id="@+id/taskDataEndTime2"
+                    android:id="@+id/list_object_expanded_end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/textsize_small"
                     android:textColor="#000000"
-                    android:layout_below="@id/taskDataTimeToLabel2"/>
+                    android:layout_below="@id/list_object_expanded_to_label"/>
             </RelativeLayout>
 
         </LinearLayout>
 
         <View
-            android:id="@+id/taskDataSeparator"
+            android:id="@+id/list_object_expanded_reminder_separator"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/taskDataTopLayout"
+            android:layout_below="@id/list_object_expanded_info_layout"
             android:background="#bebebe"/>
 
         <RelativeLayout
-            android:id="@+id/taskDataBottomLayout"
+            android:id="@+id/list_object_expanded_reminder_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/taskDataSeparator"
+            android:layout_below="@id/list_object_expanded_reminder_separator"
             android:paddingBottom="@dimen/ui_element_gap">
 
             <TextView
-                android:id="@+id/taskDataReminder"
+                android:id="@+id/list_object_expanded_reminder_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/textsize_small"
                 android:textColor="#000000"/>
 
             <ImageView
-                android:id="@+id/taskDataReminderType"
+                android:id="@+id/list_object_expanded_reminder_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

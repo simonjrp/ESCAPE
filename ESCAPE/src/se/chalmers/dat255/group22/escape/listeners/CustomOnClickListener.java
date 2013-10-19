@@ -71,14 +71,14 @@ public class CustomOnClickListener implements View.OnClickListener {
 		this.taskDataLayout = taskDataLayout;
 
 		taskComment = (TextView) taskDataLayout
-				.findViewById(R.id.taskDataComment);
-		taskPlace = (TextView) taskDataLayout.findViewById(R.id.taskDataPlace);
+				.findViewById(R.id.list_object_comment);
+		taskPlace = (TextView) taskDataLayout.findViewById(R.id.list_object_place);
 		taskTimeLayout = (RelativeLayout) taskDataLayout
-				.findViewById(R.id.taskDataTimeLayout);
+				.findViewById(R.id.list_object_expanded_time_layout);
 		taskReminder = (TextView) taskDataLayout
-				.findViewById(R.id.taskDataReminder);
+				.findViewById(R.id.list_object_expanded_reminder_text);
 		taskReminderType = (ImageView) taskDataLayout
-				.findViewById(R.id.taskDataReminderType);
+				.findViewById(R.id.list_object_expanded_reminder_image);
 		isExpanded = false;
 		dbHandler = new DBHandler(parent.getContext());
 		REMIND_ME_AT = parent.getContext().getString(R.string.remind_me) + ":"
@@ -98,7 +98,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 		// This happens when the view is clicked...
 		if (isExpanded) {
 			// ... and the edit/remove buttons are not showing.
-			if (!v.findViewById(R.id.deleteButton).isShown()) {
+			if (!v.findViewById(R.id.delete_button).isShown()) {
 				Date start = null;
 				Date end = null;
 
@@ -147,9 +147,9 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// If we have a time...
 				if (start != null) {
 					TextView startTime = (TextView) v
-							.findViewById(R.id.taskDataStartTime2);
+							.findViewById(R.id.list_object_expanded_start_time);
 					TextView endTime = (TextView) v
-							.findViewById(R.id.taskDataEndTime2);
+							.findViewById(R.id.list_object_expanded_end_time);
 					// Is the date this year?
 					int year = Calendar.getInstance().get(Calendar.YEAR);
 					if (Integer.parseInt(yearFormat.format(start)) == year) {
@@ -165,7 +165,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 					}
 					taskTimeLayout.setVisibility(View.VISIBLE);
 				} else {
-					View separator = v.findViewById(R.id.taskTimeSeparator);
+					View separator = v.findViewById(R.id.list_object_expanded_horizontal_separator);
 					separator.setVisibility(View.GONE);
 					taskTimeLayout.setVisibility(View.GONE);
 				}
@@ -173,7 +173,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// Does the listObject have a reminder?
 				if (dbHandler.getTimeAlarm(listObject) != null
 						|| dbHandler.getGPSAlarm(listObject) != null) {
-					View separator = v.findViewById(R.id.taskDataSeparator);
+					View separator = v.findViewById(R.id.list_object_expanded_reminder_separator);
 					separator.setVisibility(View.VISIBLE);
 					StringBuilder stringBuilder = new StringBuilder();
 					stringBuilder.append(REMIND_ME_AT);
@@ -200,7 +200,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 				} else {
 					taskReminderType.setVisibility(View.GONE);
 					taskReminder.setVisibility(View.GONE);
-					View separator = v.findViewById(R.id.taskDataSeparator);
+					View separator = v.findViewById(R.id.list_object_expanded_reminder_separator);
 					separator.setVisibility(View.GONE);
 				}
 
@@ -216,14 +216,14 @@ public class CustomOnClickListener implements View.OnClickListener {
 				taskDataLayout.setAnimation(slide);
 				slide.start();
 				RelativeLayout timeView = (RelativeLayout) v
-						.findViewById(R.id.start_time_task);
+						.findViewById(R.id.list_object_collapsed_time);
 				timeView.setVisibility(View.INVISIBLE);
 
 			}
 
 			// If the edit/remove buttons are shown and you click the
 			// listObject...
-		} else if (v.findViewById(R.id.deleteButton).isShown()) {
+		} else if (v.findViewById(R.id.delete_button).isShown()) {
 			dismissButtons(v);
 		} else {
 			// If the view is only expanded, hide it again
@@ -251,15 +251,15 @@ public class CustomOnClickListener implements View.OnClickListener {
 		// We also clear the animations to make sure they can run again if
 		// invoked
         RelativeLayout timeView = (RelativeLayout) v
-                .findViewById(R.id.start_time_task);
+                .findViewById(R.id.list_object_collapsed_time);
         timeView.setVisibility(View.VISIBLE);
 
-		ImageButton editButton = (ImageButton) v.findViewById(R.id.editButton);
+		ImageButton editButton = (ImageButton) v.findViewById(R.id.edit_button);
 		editButton.setVisibility(View.INVISIBLE);
 		editButton.clearAnimation();
 
 		ImageButton deleteButton = (ImageButton) v
-				.findViewById(R.id.deleteButton);
+				.findViewById(R.id.delete_button);
 		deleteButton.setVisibility(View.INVISIBLE);
 		deleteButton.clearAnimation();
 	}
@@ -269,7 +269,7 @@ public class CustomOnClickListener implements View.OnClickListener {
 		taskDataLayout.setVisibility(View.GONE);
 		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
         RelativeLayout timeView = (RelativeLayout) v
-                .findViewById(R.id.start_time_task);
+                .findViewById(R.id.list_object_collapsed_time);
         timeView.setVisibility(View.VISIBLE);
 	}
 }

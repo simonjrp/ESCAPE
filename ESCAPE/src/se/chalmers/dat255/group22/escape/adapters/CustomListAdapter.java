@@ -106,19 +106,19 @@ public class CustomListAdapter implements ListAdapter {
 	protected void resetEditButtons() {
 		try {
 			RelativeLayout timeLayout = (RelativeLayout) ((MainActivity) context)
-					.findViewById(R.id.start_time_task);
+					.findViewById(R.id.list_object_collapsed_time);
 			if (timeLayout != null)
 				timeLayout.setVisibility(View.VISIBLE);
 
 			ImageButton editButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.editButton);
+					.findViewById(R.id.edit_button);
 			if (editButton != null) {
 				editButton.setVisibility(View.INVISIBLE);
 				editButton.clearAnimation();
 			}
 
 			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 			if (deleteButton != null) {
 				deleteButton.setVisibility(View.INVISIBLE);
 				deleteButton.clearAnimation();
@@ -196,16 +196,16 @@ public class CustomListAdapter implements ListAdapter {
 
 			// Get a textview for the object
 			final TextView childLabel = (TextView) convertView
-					.findViewById(R.id.listTask);
+					.findViewById(R.id.list_object_name);
 			RelativeLayout timeLayout = (RelativeLayout) convertView
-					.findViewById(R.id.start_time_task);
+					.findViewById(R.id.list_object_collapsed_time);
 			timeLayout.setVisibility(View.GONE);
 
 			final ImageButton editButton = (ImageButton) convertView
-					.findViewById(R.id.editButton);
+					.findViewById(R.id.edit_button);
 
 			final ImageButton deleteButton = (ImageButton) convertView
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 
 			editButton.setVisibility(View.INVISIBLE);
 			deleteButton.setVisibility(View.INVISIBLE);
@@ -255,7 +255,7 @@ public class CustomListAdapter implements ListAdapter {
 			childLabel.setText(childText);
 			// Get the layout for the object's data
 			RelativeLayout childData = (RelativeLayout) convertView
-					.findViewById(R.id.taskDataLayout);
+					.findViewById(R.id.list_object_expanded_layout);
 
 			// We don't want the data to show yet...
 			childData.setVisibility(View.GONE);

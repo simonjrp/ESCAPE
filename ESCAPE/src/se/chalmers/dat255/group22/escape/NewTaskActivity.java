@@ -104,7 +104,7 @@ public class NewTaskActivity extends Activity
 		}
 
 		// Initiate the AutoCompleteTextViews
-		locationReminderAutoComplete = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		locationReminderAutoComplete = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		locationAutoComplete = (AutoCompleteTextView) findViewById(R.id.task_location);
 
 		// Initiate the ArrayAdapter
@@ -177,11 +177,11 @@ public class NewTaskActivity extends Activity
 			if (isTimeReminder) {
 				// Gets the spinners and their adapters.
 
-				Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
+				Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminder_date_spinner);
 				SpinnerDayAdapter reminderDateAdapter = (SpinnerDayAdapter) reminderDateSpinner
 						.getAdapter();
 
-				Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
+				Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminder_time_spinner);
 				SpinnerTimeAdapter reminderTimeAdapter = (SpinnerTimeAdapter) reminderTimeSpinner
 						.getAdapter();
 
@@ -355,7 +355,7 @@ public class NewTaskActivity extends Activity
 									(long) editedListObject.getId()).getId());
 				}
 			} else if (isLocationReminder) {
-				EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+				EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
 				new GenerateGPSAlarmTask(this, id)
 						.execute(reminderLocationEditText.getText().toString());
 			}
@@ -416,7 +416,7 @@ public class NewTaskActivity extends Activity
 		 * the reminder location text field.
 		 */
 		if (reminderType == Constants.ReminderType.GPS) {
-			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
+			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
 			new GenerateGPSAlarmTask(this, objId)
 					.execute(reminderLocationEditText.getText().toString());
 		}
@@ -441,7 +441,7 @@ public class NewTaskActivity extends Activity
 		isEvent = true;
 		v.setVisibility(View.INVISIBLE);
 
-		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.event_spinners);
 		relativeLayout.setVisibility(View.VISIBLE);
 
 		//
@@ -509,7 +509,7 @@ public class NewTaskActivity extends Activity
 		v.setVisibility(View.INVISIBLE);
 
 		// View the reminder layout
-		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.set_reminder_field);
 		relativeLayout.setVisibility(View.VISIBLE);
 
 		// Add items to the spinners
@@ -526,7 +526,7 @@ public class NewTaskActivity extends Activity
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
 
-		Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
+		Spinner typeSpinner = (Spinner) findViewById(R.id.reminder_type_spinner);
 		typeSpinner.setAdapter(typeAdapter);
 
 		typeSpinner
@@ -549,7 +549,7 @@ public class NewTaskActivity extends Activity
 
 		// Next up is the date of the reminder
 
-		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
+		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminder_date_spinner);
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, reminderDateSpinner);
@@ -563,7 +563,7 @@ public class NewTaskActivity extends Activity
 		// Last but not least, time of the reminder with a clarification of the
 		// time
 
-		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, reminderTimeSpinner);
@@ -585,8 +585,8 @@ public class NewTaskActivity extends Activity
 	 *            the view that calls this method.
 	 */
 	public void onCancelReminder(View v) {
-		RelativeLayout toBeHidden = (RelativeLayout) findViewById(R.id.setReminderField);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
+		RelativeLayout toBeHidden = (RelativeLayout) findViewById(R.id.set_reminder_field);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remind_me_field);
 
 		toBeHidden.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
@@ -602,7 +602,7 @@ public class NewTaskActivity extends Activity
 	 *            the view that calls this method.
 	 */
 	public void onCancelEvent(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.event_spinners);
 		Button toBeShownButton = (Button) findViewById(R.id.task_convert_event);
 
 		currentLayout.setVisibility(View.INVISIBLE);
@@ -615,15 +615,15 @@ public class NewTaskActivity extends Activity
 	 */
 	private void showTimeReminderInput() {
 		isTimeReminder = true;
-		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
-		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner day = (Spinner) findViewById(R.id.reminder_date_spinner);
+		Spinner time = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		day.setVisibility(View.VISIBLE);
 		time.setVisibility(View.VISIBLE);
 
 		// Also hiding previous input
 
-		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		location.setVisibility(View.INVISIBLE);
 		isLocationReminder = false;
 	}
@@ -633,13 +633,13 @@ public class NewTaskActivity extends Activity
 	 */
 	private void showLocationReminderInput() {
 		isLocationReminder = true;
-		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		location.setVisibility(View.VISIBLE);
 
 		// Also hiding previous input
 
-		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
-		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner day = (Spinner) findViewById(R.id.reminder_date_spinner);
+		Spinner time = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		day.setVisibility(View.INVISIBLE);
 		time.setVisibility(View.INVISIBLE);
@@ -764,11 +764,11 @@ public class NewTaskActivity extends Activity
 			AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.task_location);
 			CheckBox important = (CheckBox) findViewById(R.id.task_important);
 
-			Spinner remindType = (Spinner) findViewById(R.id.reminderTypeSpinner);
-			Spinner remindDate = (Spinner) findViewById(R.id.reminderDateSpinner);
-			Spinner remindTime = (Spinner) findViewById(R.id.reminderTimeSpinner);
+			Spinner remindType = (Spinner) findViewById(R.id.reminder_type_spinner);
+			Spinner remindDate = (Spinner) findViewById(R.id.reminder_date_spinner);
+			Spinner remindTime = (Spinner) findViewById(R.id.reminder_time_spinner);
 
-			AutoCompleteTextView remindLocation = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+			AutoCompleteTextView remindLocation = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 
 			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
 			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
@@ -806,7 +806,7 @@ public class NewTaskActivity extends Activity
 			// Also check what if is is a...
 			// ...time reminder...
 			if (timeAlarm != null) {
-				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
+				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remind_me_field);
 				onRemindMe(remindMe);
 				remindType.setSelection(0);
 				showTimeReminderInput();
@@ -826,7 +826,7 @@ public class NewTaskActivity extends Activity
 			}
 			// ... or a location reminder...
 			if (gpsAlarm != null) {
-				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
+				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remind_me_field);
 				onRemindMe(remindMe);
 				remindType.setSelection(1);
 				showLocationReminderInput();
@@ -976,7 +976,7 @@ public class NewTaskActivity extends Activity
 		DBHandler dbHandler = new DBHandler(this);
 		if (!inputText.equals(getString(R.string.custom_category))) {
 			// TODO The colors SHOULD be something the user has defined...
-			// Its more fun if the new categories atleast have SOME different
+			// Its more fun if the new categories at least have SOME different
 			// color...
 			Random random = new Random();
 			String baseColor = "";

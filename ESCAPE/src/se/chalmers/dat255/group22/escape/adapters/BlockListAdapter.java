@@ -72,7 +72,7 @@ public class BlockListAdapter implements ListAdapter {
 	protected void updateButtons() {
 		try {
 			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 			if (deleteButton != null) {
 				deleteButton.setVisibility(View.INVISIBLE);
 				deleteButton.clearAnimation();
@@ -144,24 +144,24 @@ public class BlockListAdapter implements ListAdapter {
 		}
 
 		final TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
+				.findViewById(R.id.list_object_name);
 
 		final ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
+				.findViewById(R.id.edit_button);
 
 		final ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
+				.findViewById(R.id.delete_button);
 
 		editButton.setVisibility(View.GONE);
 		deleteButton.setVisibility(View.INVISIBLE);
 		
 		// *****
 		// We need to hide the extra bits of the layout that we don't need
-		final RelativeLayout extra = (RelativeLayout) convertView.findViewById(R.id.taskDataTimeLayout);
-		final View extra2 = (View) convertView.findViewById(R.id.taskTimeSeparator);
-		final View extra3 = (View) convertView.findViewById(R.id.taskDataSeparator);
-		final View extra4 = (View) convertView.findViewById(R.id.taskDataPlace);
-		final View extra5 = (View) convertView.findViewById(R.id.taskDataBottomLayout);
+		final RelativeLayout extra = (RelativeLayout) convertView.findViewById(R.id.list_object_expanded_time_layout);
+		final View extra2 = (View) convertView.findViewById(R.id.list_object_expanded_horizontal_separator);
+		final View extra3 = (View) convertView.findViewById(R.id.list_object_expanded_reminder_separator);
+		final View extra4 = (View) convertView.findViewById(R.id.list_object_place);
+		final View extra5 = (View) convertView.findViewById(R.id.list_object_expanded_reminder_layout);
 		
 		extra.setVisibility(View.GONE);
 		extra2.setVisibility(View.GONE);
@@ -184,9 +184,9 @@ public class BlockListAdapter implements ListAdapter {
 
 		childLabel.setText(childText);
 
-		RelativeLayout childDataLayout = (RelativeLayout) convertView.findViewById(R.id.taskDataLayout);
+		RelativeLayout childDataLayout = (RelativeLayout) convertView.findViewById(R.id.list_object_expanded_layout);
 		
-		TextView childData = (TextView) convertView.findViewById(R.id.taskDataComment);
+		TextView childData = (TextView) convertView.findViewById(R.id.list_object_comment);
 		childData.setText("Hours: \t\t\t\t\t\t" + blockObject.getHours()
 				+ " h\nMinutes/session: \t" + blockObject.getSessionMinutes()
 				+ " min");
@@ -210,7 +210,7 @@ public class BlockListAdapter implements ListAdapter {
 					isExpanded = !isExpanded;
 				}
 
-				RelativeLayout childData = (RelativeLayout) v.findViewById(R.id.taskDataLayout);
+				RelativeLayout childData = (RelativeLayout) v.findViewById(R.id.list_object_expanded_layout);
 				if (isExpanded) {
 					if (!deleteButton.isShown()) {
 

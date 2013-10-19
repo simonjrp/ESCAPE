@@ -87,11 +87,11 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.time_spinner_item, parent, false);
 
 		TextView timeAsText = (TextView) row
-				.findViewById(R.id.spinnerTimeAsText);
+				.findViewById(R.id.spinner_time_as_text);
 		timeAsText.setText(times.get(position));
 
 		TextView timeAsTime = (TextView) row
-				.findViewById(R.id.spinnerTimeAsTime);
+				.findViewById(R.id.spinner_time_as_time);
 
 		if (position < getCount() - 1) {
 			Date date = getData(position);
@@ -117,7 +117,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 				false);
 
 		TextView timeAsText = (TextView) row
-				.findViewById(R.id.spinnerTimeAsText);
+				.findViewById(R.id.spinner_time_as_text);
 
 		timeAsText.setText(times.get(position));
 

@@ -79,7 +79,7 @@ public class ExpandableEventListFragment extends Fragment {
 		listAdapter = new CustomExpandableListAdapter(getActivity());
 		// getting the list view
 		expListView = (ExpandableListView) getActivity().findViewById(
-				R.id.expEventList);
+				R.id.expendable_event_list);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
 
