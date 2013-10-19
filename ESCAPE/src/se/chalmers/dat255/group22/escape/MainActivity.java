@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity {
 	private CharSequence drawerTitle;
 	private int fragmentPosition;
 	private boolean backPressedOnce;
-    private AlertDialog aboutDialog;
+	private AlertDialog aboutDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,6 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
 
@@ -106,15 +105,18 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		// Handle all action bar items except for the back/up button here.
+		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.add_task :
-				Intent intent = new Intent(this, NewTaskActivity.class);
+				intent = new Intent(this, NewTaskActivity.class);
 				startActivity(intent);
 				break;
+			case R.id.add_blocks :
+				intent = new Intent(this, NewBlockActivity.class);
+				startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 	/*
 	 * Called when invalidateOptionsMenu() is called.
 	 * 
@@ -124,10 +126,14 @@ public class MainActivity extends FragmentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// Hides the "New task" button in actionbar if navigation drawer is open
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListLayout);
-		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
+		menu.findItem(R.id.add_task).setVisible(
+				!drawerOpen && fragmentPosition == 0);
 
 		menu.findItem(R.id.pick_category).setVisible(
-				!(drawerOpen || fragmentPosition != 0));
+				(!drawerOpen && fragmentPosition == 0));
+
+		menu.findItem(R.id.add_blocks).setVisible(
+				!drawerOpen && fragmentPosition == 1);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -246,29 +252,29 @@ public class MainActivity extends FragmentActivity {
 	 * Brings up an about dialog showing short description of the app.
 	 */
 	private void showAboutDialog() {
-		if(aboutDialog == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.about_dialog_title));
-            builder.setIcon(R.drawable.ic_launcher);
+		if (aboutDialog == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.about_dialog_title));
+			builder.setIcon(R.drawable.ic_launcher);
 
-            View dialogView = getLayoutInflater().inflate(R.layout.about_dialog,
-                    null, false);
+			View dialogView = getLayoutInflater().inflate(
+					R.layout.about_dialog, null, false);
 
-            // Interprets html link tags correctly and makes links clickable
-            TextView repoLink = (TextView) dialogView
-                    .findViewById(R.id.about_dialog_repo);
-            repoLink.setMovementMethod(LinkMovementMethod.getInstance());
+			// Interprets html link tags correctly and makes links clickable
+			TextView repoLink = (TextView) dialogView
+					.findViewById(R.id.about_dialog_repo);
+			repoLink.setMovementMethod(LinkMovementMethod.getInstance());
 
-            TextView licenseLink = (TextView) dialogView
-                    .findViewById(R.id.about_dialog_license);
-            licenseLink.setMovementMethod(LinkMovementMethod.getInstance());
+			TextView licenseLink = (TextView) dialogView
+					.findViewById(R.id.about_dialog_license);
+			licenseLink.setMovementMethod(LinkMovementMethod.getInstance());
 
-            builder.setView(dialogView);
+			builder.setView(dialogView);
 
-            aboutDialog = builder.create();
-        }
+			aboutDialog = builder.create();
+		}
 
-        // Brings up the dialog
+		// Brings up the dialog
 		aboutDialog.show();
 
 	}

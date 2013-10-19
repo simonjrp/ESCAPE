@@ -1,9 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/pick_category"
+        android:icon="@drawable/custom_ic_action_select"
+        android:showAsAction="ifRoom"
+        android:title="Pick categories"
+        android:orderInCategory="10" />
+
     <item
         android:id="@+id/add_task"
         android:icon="@drawable/add_task_icon"
         android:showAsAction="ifRoom"
         android:title="@string/new_task"
+        android:orderInCategory="10000" />
+    <item
+        android:id="@+id/add_blocks"
+        android:icon="@drawable/add_task_icon"
+        android:showAsAction="ifRoom"
+        android:title="@string/new_block"
         android:orderInCategory="10000" />
 
 

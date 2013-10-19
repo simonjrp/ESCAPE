@@ -1,9 +1,7 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
-import se.chalmers.dat255.group22.escape.NewBlockActivity;
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.adapters.BlockListAdapter;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,11 +34,6 @@ public class BlockListFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.add_task:
-			Intent intent = new Intent(getActivity(), NewBlockActivity.class);
-			startActivity(intent);
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
