@@ -91,9 +91,11 @@ public class CheckDateUtils {
 		Calendar systemCalendar = Calendar.getInstance();
 		// If it should return true only if today and not before use == instead
 		// of >=
-		return systemCalendar.get(Calendar.YEAR) >= theCalendar
+		return systemCalendar.get(Calendar.YEAR) > theCalendar
 				.get(Calendar.YEAR)
-				&& systemCalendar.get(Calendar.DAY_OF_YEAR) > theCalendar
-						.get(Calendar.DAY_OF_YEAR);
+				|| (systemCalendar.get(Calendar.YEAR) == theCalendar
+						.get(Calendar.YEAR) && systemCalendar
+						.get(Calendar.DAY_OF_YEAR) > theCalendar
+						.get(Calendar.DAY_OF_YEAR));
 	}
 }
