@@ -32,7 +32,11 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	private boolean onBreak = false;
 	private String pomodoroServiceRunning;
 	private String serviceTimeString;
+	
 
+	public long timeOnTimer;
+	public String timeOnTimerString;
+	
 	// Button to start pomodoro timer
 	private Button startB;
 
@@ -128,10 +132,11 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	
 	public void startService(View view) {
 
+		//This is where the data is sent from the activity to the service
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
 		Intent dataToPomodoroService = new Intent(getActivity(),PomodoroService.class);
-		dataToPomodoroService.putExtra("ServiceTest", "Sending data from Activity to Service now works!");
-		dataToPomodoroService.putExtra("ServiceTest2", "Sending 2 messages to service now works!");
+		dataToPomodoroService.putExtra("activeTimer", "ON_BREAK");
+		dataToPomodoroService.putExtra("secondsOnTimer", timeOnTimerString);
 		getActivity().startService(dataToPomodoroService);		
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
 		
@@ -207,7 +212,16 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	public void onPause(){
 		super.onPause();
 		Log.d("Pomodoro","Fragment onPause");
+		Log.d("Pomodoro","Time on Timer:");
+		Log.d("Pomodoro",timeOnTimerString);
 		startService(getActivity().findViewById(R.id.pomodoro_button));
+		if(pomodoroTimerHasStarted==true){
+			pomodoroCountDownTimer.cancel();
+		}
+		else if(breakTimerHasStarted==true){
+			breakCountDownTimer.cancel();
+		}
+		Log.d("Pomodoro","onPause = done");
 		//startService(getActivity().findViewById(R.id.pomodoro_button));
 	}
 	
@@ -345,6 +359,9 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			timeLeftText.setText(formatTime(millisUntilFinished));
+			timeOnTimer = millisUntilFinished;
+			timeOnTimer = timeOnTimer/1000;
+			timeOnTimerString = String.valueOf(timeOnTimer);
 		}
 	}
 

@@ -22,8 +22,11 @@ public class PomodoroService extends Service {
 	}
 	private CountDownTimer servicePomodoroTimer;
 	private long serviceStartTime = 10 * 1000;
+	private long activityTimerSecondsLong;
 	private final long interval = 1 * 1000;
 	private String secondsInString;
+	public String serviceActiveTimer;
+	public String activityTimerSeconds;
 	
 	int counter = 0;
 	static final int UPDATE_INTERVAL = 1000;
@@ -48,23 +51,42 @@ public class PomodoroService extends Service {
 		// stopped, so return sticky.
 		Log.d("Pomodoro","PomodoroService started!!!!!!");
 		doSomethingRepeatedly();
-		Log.d("Pomodoro",intent.getStringExtra("ServiceTest"));
-		Log.d("Pomodoro",intent.getStringExtra("ServiceTest2"));
 		
+		//This is where the data from the activity is received
+		Log.d("Pomodoro",intent.getStringExtra("activeTimer"));
+		Log.d("Pomodoro",intent.getStringExtra("secondsOnTimer"));
 		
+		serviceActiveTimer = intent.getStringExtra("activeTimer");
+		activityTimerSeconds = intent.getStringExtra("secondsOnTimer");
+		activityTimerSecondsLong = Long.parseLong(activityTimerSeconds);
+		activityTimerSecondsLong = activityTimerSecondsLong*1000;
+		Log.d("Pomodoro",serviceActiveTimer);
 		
-		servicePomodoroTimer = new ServiceTimer(serviceStartTime, interval);
+
+		// App crashes if I use this if statement, wtf?!?!
+		//		if(serviceActiveTimer=="ON_BREAK"){
+//			
+//			servicePomodoroTimer = new ServiceTimer(activityTimerSecondsLong, interval);
+//			servicePomodoroTimer.start();
+//			Log.d("Pomodoro","Service timer started with hopefully 150 seconds???");
+//			
+//		}
+//		else {
+//			Log.d("Pomodoro","I guess the Pomodoro timer is active");
+//		}
+		
+		servicePomodoroTimer = new ServiceTimer(activityTimerSecondsLong, interval);
 		servicePomodoroTimer.start();
+		Log.d("Pomodoro","Service timer started with hopefully 150 seconds???");
 		
-		//RECEIVE_TIME intent is not working!
 		
+		//This is where messages are sent from the service to the activity
 		//String serviceTestString = secondsInString;	
 				Intent serviceIntent = new Intent(PomodoroFragment.RECEIVE_TIME);
 //				serviceIntent.putExtra("serviceToActivity", serviceTestString);
 				serviceIntent.putExtra("serviceToActivity", "SecondFilterWorks");
 				LocalBroadcastManager.getInstance(this).sendBroadcast(serviceIntent);
 		
-		//Need to figure out if my filters are correct
 		Intent serviceRunningIntent = new Intent(PomodoroFragment.POMODORO_SERVICE);
 //		serviceRunningIntent.putExtra("serviceRunningMsg", serviceRunningString);
 		serviceRunningIntent.putExtra("serviceRunningMsg", "RUNNING");
