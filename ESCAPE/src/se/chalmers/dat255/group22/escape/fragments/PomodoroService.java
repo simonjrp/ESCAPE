@@ -49,6 +49,7 @@ public class PomodoroService extends Service {
 		Log.d("Pomodoro","PomodoroService started!!!!!!");
 		doSomethingRepeatedly();
 		Log.d("Pomodoro",intent.getStringExtra("ServiceTest"));
+		Log.d("Pomodoro",intent.getStringExtra("ServiceTest2"));
 		
 		
 		

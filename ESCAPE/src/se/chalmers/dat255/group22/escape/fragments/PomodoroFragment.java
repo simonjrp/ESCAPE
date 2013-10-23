@@ -129,10 +129,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	public void startService(View view) {
 
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
-		Intent intent = new Intent(getActivity(),PomodoroService.class);
-		intent.putExtra("ServiceTest", "Sending data from Activity to Service now works!");
-		getActivity().startService(intent);		
+		Intent dataToPomodoroService = new Intent(getActivity(),PomodoroService.class);
+		dataToPomodoroService.putExtra("ServiceTest", "Sending data from Activity to Service now works!");
+		dataToPomodoroService.putExtra("ServiceTest2", "Sending 2 messages to service now works!");
+		getActivity().startService(dataToPomodoroService);		
 		Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
+		
 		
 	}
 
