@@ -87,7 +87,7 @@ public class PomodoroService extends Service {
 				serviceIntent.putExtra("serviceToActivity", "SecondFilterWorks");
 				LocalBroadcastManager.getInstance(this).sendBroadcast(serviceIntent);
 		
-		Intent serviceRunningIntent = new Intent(PomodoroFragment.POMODORO_SERVICE);
+		Intent serviceRunningIntent = new Intent(PomodoroFragment.RECEIVE_STATUS);
 //		serviceRunningIntent.putExtra("serviceRunningMsg", serviceRunningString);
 		serviceRunningIntent.putExtra("serviceRunningMsg", "RUNNING");
 		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceRunningIntent);

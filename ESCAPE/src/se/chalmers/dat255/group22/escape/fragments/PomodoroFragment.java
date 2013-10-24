@@ -46,12 +46,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	// startTime defines the amount of time in the pomodoro timer.
 	// 1500 seconds = 25 minutes.
-	private long pomodoroStartTime = 10 * 1000;
-	private long breakStartTime = 5 * 1000;
+	private long pomodoroStartTime = 60 * 1000;
+	private long breakStartTime = 25 * 1000;
 	private final long interval = 1 * 1000;
 	
 	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
-	public static final String POMODORO_SERVICE = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.POMODORO_SERVICE";
+	public static final String RECEIVE_STATUS = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.POMODORO_SERVICE";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +70,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// Layout for the time display in the pomodoro timer
 		timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
 
+		
+		
 		// Initializing pomodoro count down timer
 		pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime, interval);
 
@@ -81,47 +83,25 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		// Setting start time of the break timer
 		timeLeftText.setText(formatTime(breakStartTime));
-		
-		//Setting up broadcast manager to handle communication between service and activity
-				LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(getActivity());
-				//Getting time from service
-				IntentFilter receiveTimeFilter = new IntentFilter();
-				receiveTimeFilter.addAction(RECEIVE_TIME);
-				bManager.registerReceiver(bReceiver, receiveTimeFilter);
-				//Asking if service is running
-				IntentFilter pomodoroRunningFilter = new IntentFilter();
-				pomodoroRunningFilter.addAction(POMODORO_SERVICE);
-				bManager.registerReceiver(bReceiver, pomodoroRunningFilter);
-		
-		if(pomodoroServiceRunning=="RUNNING" && serviceTimeString=="SecondFilterWorks"){
-			Log.d("Pomodoro","OnCreate - Service was running before this! AND second filter works!");
-			//Log.d("Pomodoro","serviceTimeString shows " + serviceTimeString + " seconds!");
-		}
-		
-		else if(pomodoroServiceRunning=="RUNNING" && serviceTimeString!="SecondFilterWorks"){
-			Log.d("Pomodoro","OnCreate - Service was running before this! Second filter FUCKED UP");
-			//Log.d("Pomodoro","serviceTimeString shows " + serviceTimeString + " seconds!");
-		}
-		
-		else{
-			Log.d("Pomodoro","OnCreate - Service was not running before this!");
-		}
-
+	
 
 		
 		return v;
 	}
 	//Used to be private
+	//This is where the data from the service is received
 	public BroadcastReceiver bReceiver = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent){
+			//Time from service is received and stored in variable serviceTimeString
 			if(intent.getAction().equals(RECEIVE_TIME)){
 				serviceTimeString = intent.getStringExtra("serviceToActivity");
 				//Log.d("Pomodoro","From broadcast receiver:");
 				//Log.d("Pomodoro",serviceTimeString);
 				//Log.d("Pomodoro","end of broadcast receiver message.");
 			}
-			if(intent.getAction().equals(POMODORO_SERVICE)){
+			//Running status from service is received and stored in variable pomodoroServiceRunning
+			if(intent.getAction().equals(RECEIVE_STATUS)){
 				pomodoroServiceRunning = intent.getStringExtra("serviceRunningMsg");
 				Log.d("Pomodoro", pomodoroServiceRunning);
 			}
@@ -213,13 +193,16 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		super.onPause();
 		Log.d("Pomodoro","Fragment onPause");
 		Log.d("Pomodoro","Time on Timer:");
-		Log.d("Pomodoro",timeOnTimerString);
-		startService(getActivity().findViewById(R.id.pomodoro_button));
+		
 		if(pomodoroTimerHasStarted==true){
 			pomodoroCountDownTimer.cancel();
+			Log.d("Pomodoro",timeOnTimerString);
+			startService(getActivity().findViewById(R.id.pomodoro_button));
 		}
 		else if(breakTimerHasStarted==true){
 			breakCountDownTimer.cancel();
+			Log.d("Pomodoro",timeOnTimerString);
+			startService(getActivity().findViewById(R.id.pomodoro_button));
 		}
 		Log.d("Pomodoro","onPause = done");
 		//startService(getActivity().findViewById(R.id.pomodoro_button));
@@ -228,17 +211,44 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume(){
 		super.onResume();
-		Log.d("Pomodoro","Fragment onResume");
+		Log.d("Pomodoro","onResume----------------");
+		
+		//This taken from onCreate - starts here
+		
+		//Setting up broadcast manager to handle communication between service and activity
+				LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(getActivity());
+				
+				//This is where the pomodoro fragment receives data from the service
+				//Getting time from service
+				IntentFilter receiveTimeFilter = new IntentFilter();
+				receiveTimeFilter.addAction(RECEIVE_TIME);
+				bManager.registerReceiver(bReceiver, receiveTimeFilter);
+				//Asking if service is running
+				IntentFilter receiveRunningStatusFilter = new IntentFilter();
+				receiveRunningStatusFilter.addAction(RECEIVE_STATUS);
+				bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
+		
+		if(pomodoroServiceRunning=="RUNNING"){
+			Log.d("Pomodoro","onRESUME - Service was running before this!");
+			
+		}		
+		else{
+			Log.d("Pomodoro","onRESUME - Service was not running before this!");
+		}
+		
+		//The stuff taken from onCreate stops here
+		
 		stopService(getActivity().findViewById(R.id.pomodoro_button));
 	
-		if(pomodoroServiceRunning=="RUNNING"){
-			Log.d("Pomodoro","onResume - Service was running before this!");
-			//Log.d("Pomodoro","serviceTimeString shows");
-			//Log.d("Pomodoro",serviceTimeString);
-		}
-		else{
-			Log.d("Pomodoro","onResume - Service was not running before this!");
-		}
+//Commenting this away while trying the onCreate code in onResume instead
+		//		if(pomodoroServiceRunning=="RUNNING"){
+//			Log.d("Pomodoro","onResume - Service was running before this!");
+//			//Log.d("Pomodoro","serviceTimeString shows");
+//			//Log.d("Pomodoro",serviceTimeString);
+//		}
+//		else{
+//			Log.d("Pomodoro","onResume - Service was not running before this!");
+//		}
 		
 		//Log.d("Pomodoro",pomodoroServiceRunning);
 		
