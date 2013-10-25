@@ -78,9 +78,25 @@ public class PomodoroService extends Service {
                 serviceIntent.putExtra("serviceToActivity", secondsInStringTest);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(serviceIntent);
                 
-                Intent serviceRunningIntent = new Intent(PomodoroFragment.RECEIVE_STATUS);
-                serviceRunningIntent.putExtra("serviceRunningMsg", "RUNNING");
-                LocalBroadcastManager.getInstance(this).sendBroadcast(serviceRunningIntent);
+                //If the Pomodoro timer was active in the activity, inform activity about it (the activity
+                //reads this message when it is resumed, so that it knows if it should start the pomodoro
+                //timer or the break timer)
+                if(serviceActiveTimer.contains("ON_POMODORO")){
+                
+                	Log.d("Pomodoro","The service timer is ON_POMODORO!");
+                	Intent serviceRunningIntent = new Intent(PomodoroFragment.RECEIVE_STATUS);
+                    serviceRunningIntent.putExtra("serviceRunningMsg", "POMODORO_TIMER");
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(serviceRunningIntent);
+                }
+                //Else, inform activity break timer was active
+                else{
+                	
+                	Log.d("Pomodoro","The service timer is ON_BREAK!");
+                	Intent serviceRunningIntent = new Intent(PomodoroFragment.RECEIVE_STATUS);
+                    serviceRunningIntent.putExtra("serviceRunningMsg", "BREAK_TIMER");
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(serviceRunningIntent);
+                }
+                
                 
                 
                 
