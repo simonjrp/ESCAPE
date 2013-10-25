@@ -48,8 +48,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	// startTime defines the amount of time in the pomodoro timer.
 	// 1500 seconds = 25 minutes.
-	private long pomodoroStartTime = 60 * 1000;
-	private long breakStartTime = 10 * 1000;
+	private long pomodoroStartTime = 50 * 1000;
+	private long breakStartTime = 27 * 1000;
 	private final long interval = 1 * 1000;
 
 	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
@@ -58,6 +58,10 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("Pomodoro", "onCreate------------");
+		stopService(getActivity().findViewById(R.id.pomodoro_button));
+		Log.d("Pomdoro", "onCreate--------------END");
+
 	}
 
 	@Override
@@ -82,7 +86,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
 
 		if (pomodoroServiceRunning == "POMODORO_TIMER") {
-			Log.d("Pomodoro", "onRESUME - Service was running before this!");
+			Log.d("Pomodoro",
+					"onRESUME - Service was running POMODOROTIMER before this!");
 			Log.d("Pomodoro",
 					"And there was this much time on the service timer:");
 			Log.d("Pomodoro", serviceTimeString);
@@ -133,7 +138,67 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 			// end of "outside of if/else statement" stub
 
-		} else {
+		}
+
+		else if (pomodoroServiceRunning == "BREAK_TIMER") {
+
+			Log.d("Pomodoro",
+					"onRESUME - Service was running BREAKTIMER before this!");
+			Log.d("Pomodoro",
+					"And there was this much time on the service timer:");
+			Log.d("Pomodoro", serviceTimeString);
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+
+			// converting string message from service to a long
+			serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+
+			// Since timer is managed in milliseconds, multiply value by 1000
+			serviceTimeStringToLong = serviceTimeStringToLong * 1000;
+
+			// This below used to be outside of if statement, see corresponding
+			// stub for else statement below
+
+			// Layout for the pomodoro start button
+			startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			// TEST without pomodoro timer being initialized in service timer
+			// session
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			serviceCountDownTimer = new PomodoroTimer(serviceTimeStringToLong,
+					interval);
+			// Initializing break count down timer
+			// TEST without break timer being initialized in pomodoro timer
+			// session
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			// timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			pomodoroTimerHasStarted = false;
+			breakTimerHasStarted = false;
+			onBreak = true;
+			serviceCountDownTimer.start();
+			serviceTimerHasStarted = true;
+			// pomodoroTimerHasStarted = true;
+			startB.setText("STOP");
+
+			// end of "outside of if/else statement" stub
+
+		}
+
+		else {
 			Log.d("Pomodoro", "onRESUME - Service was not running before this!");
 
 			// Used to be outside of else statement
@@ -235,6 +300,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			// startService(getActivity().findViewById(R.id.pomodoro_button));
 			// //-- this one works
 		} else if (!breakTimerHasStarted && onBreak == true) {
+			serviceCountDownTimer.cancel();
 			breakCountDownTimer.start();
 			breakTimerHasStarted = true;
 			startB.setText("STOP");
