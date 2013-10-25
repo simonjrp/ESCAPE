@@ -25,354 +25,387 @@ import android.widget.TextView;
 
 public class PomodoroFragment extends Fragment implements OnClickListener {
 
-	private CountDownTimer pomodoroCountDownTimer;
-	private CountDownTimer breakCountDownTimer;
-	private boolean pomodoroTimerHasStarted = false;
-	private boolean breakTimerHasStarted = false;
-	private boolean onBreak = false;
-	private String pomodoroServiceRunning;
-	private String serviceTimeString;
-	
+        private CountDownTimer pomodoroCountDownTimer;
+        private CountDownTimer breakCountDownTimer;
+        private boolean pomodoroTimerHasStarted = false;
+        private boolean breakTimerHasStarted = false;
+        private boolean onBreak = false;
+        private String pomodoroServiceRunning;
+        public String serviceTimeString;
+        private long serviceTimeStringToLong;
+        
 
-	public long timeOnTimer;
-	public String timeOnTimerString;
-	
-	// Button to start pomodoro timer
-	private Button startB;
+        public long timeOnTimer;
+        public String timeOnTimerString;
+        
+        // Button to start pomodoro timer
+        private Button startB;
 
-	// TextView that shows the time left on the timer in seconds(shows
-	// minutes:seconds format after running formatTime())
-	public TextView timeLeftText;
+        // TextView that shows the time left on the timer in seconds(shows
+        // minutes:seconds format after running formatTime())
+        public TextView timeLeftText;
 
-	// startTime defines the amount of time in the pomodoro timer.
-	// 1500 seconds = 25 minutes.
-	private long pomodoroStartTime = 60 * 1000;
-	private long breakStartTime = 25 * 1000;
-	private final long interval = 1 * 1000;
-	
-	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
-	public static final String RECEIVE_STATUS = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.POMODORO_SERVICE";
+        // startTime defines the amount of time in the pomodoro timer.
+        // 1500 seconds = 25 minutes.
+        private long pomodoroStartTime = 120 * 1000;
+        private long breakStartTime = 90 * 1000;
+        private final long interval = 1 * 1000;
+        
+        public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
+        public static final String RECEIVE_STATUS = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.POMODORO_SERVICE";
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+        
+        
+        @Override
+        public void onCreate(Bundle savedInstanceState){
+        	super.onCreate(savedInstanceState);
+        }
+        
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                        Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
+                View v = inflater.inflate(R.layout.pomodoro_fragment, container, false);
 
-		
-		
-		// Layout for the pomodoro start button
-		startB = (Button) v.findViewById(R.id.pomodoro_button);
+                //Setting up broadcast manager to handle communication between service and activity
+                LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(getActivity());
+                
+                //This is where the pomodoro fragment receives data from the service
+                //Getting time from service
+                IntentFilter receiveTimeFilter = new IntentFilter();
+                receiveTimeFilter.addAction(RECEIVE_TIME);
+                bManager.registerReceiver(bReceiver, receiveTimeFilter);
+                //Asking if service is running
+                IntentFilter receiveRunningStatusFilter = new IntentFilter();
+                receiveRunningStatusFilter.addAction(RECEIVE_STATUS);
+                bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
 
-		// Listener for pomodoro start button
-		startB.setOnClickListener(this);
+    			if(pomodoroServiceRunning=="RUNNING"){
+    			    Log.d("Pomodoro","onRESUME - Service was running before this!");
+    			    Log.d("Pomodoro","And there was this much time on the service timer:");
+    			    Log.d("Pomodoro",serviceTimeString);
+    			    stopService(getActivity().findViewById(R.id.pomodoro_button));
+    			    
+    			    //converting string message from service to a long
+    			    serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+    			    
+    			    //Since timer is managed in milliseconds, multiply value by 1000
+    			    serviceTimeStringToLong = serviceTimeStringToLong*1000;
+    			    
+    			    //This below used to be outside of if statement, see corresponding stub for else statement below
+    			    
+    			    // Layout for the pomodoro start button
+                    startB = (Button) v.findViewById(R.id.pomodoro_button);
 
-		// Layout for the time display in the pomodoro timer
-		timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+                    // Listener for pomodoro start button
+                    startB.setOnClickListener(this);
 
-		
-		
-		// Initializing pomodoro count down timer
-		pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime, interval);
+                    // Layout for the time display in the pomodoro timer
+                    timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+                    
+                    // Initializing pomodoro count down timer
+                    pomodoroCountDownTimer = new PomodoroTimer(serviceTimeStringToLong, interval);
 
-		// Initializing break count down timer
-		breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+                    // Initializing break count down timer
+                    breakCountDownTimer = new PomodoroTimer(serviceTimeStringToLong, interval);
 
-		// Setting start time of the pomodoro timer
-		timeLeftText.setText(formatTime(pomodoroStartTime));
+                    // Setting start time of the break timer
+                    timeLeftText.setText(formatTime(serviceTimeStringToLong));
+                    
+                    // Setting start time of the pomodoro timer
+                    timeLeftText.setText(formatTime(serviceTimeStringToLong));
 
-		// Setting start time of the break timer
-		timeLeftText.setText(formatTime(breakStartTime));
-	
+                    
+    			    
+                    //end of "outside of if/else statement" stub
+    			    
+    			}                
+    			else{
+    			    Log.d("Pomodoro","onRESUME - Service was not running before this!");
+    			    
+    			    //Used to be outside of else statement
+    			    
+    			    // Layout for the pomodoro start button
+                    startB = (Button) v.findViewById(R.id.pomodoro_button);
 
-		
-		return v;
-	}
-	//Used to be private
-	//This is where the data from the service is received
-	public BroadcastReceiver bReceiver = new BroadcastReceiver(){
-		@Override
-		public void onReceive(Context context, Intent intent){
-			//Time from service is received and stored in variable serviceTimeString
-			if(intent.getAction().equals(RECEIVE_TIME)){
-				serviceTimeString = intent.getStringExtra("serviceToActivity");
-				//Log.d("Pomodoro","From broadcast receiver:");
-				//Log.d("Pomodoro",serviceTimeString);
-				//Log.d("Pomodoro","end of broadcast receiver message.");
-			}
-			//Running status from service is received and stored in variable pomodoroServiceRunning
-			if(intent.getAction().equals(RECEIVE_STATUS)){
-				pomodoroServiceRunning = intent.getStringExtra("serviceRunningMsg");
-				Log.d("Pomodoro", pomodoroServiceRunning);
-			}
-		}
-	};
+                    // Listener for pomodoro start button
+                    startB.setOnClickListener(this);
 
-	
-	
-	public void startService(View view) {
+                    // Layout for the time display in the pomodoro timer
+                    timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
 
-		//This is where the data is sent from the activity to the service
-		Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
-		Intent dataToPomodoroService = new Intent(getActivity(),PomodoroService.class);
-		dataToPomodoroService.putExtra("activeTimer", "ON_BREAK");
-		dataToPomodoroService.putExtra("secondsOnTimer", timeOnTimerString);
-		getActivity().startService(dataToPomodoroService);		
-		Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
-		
-		
-	}
+                    
+                    
+                    // Initializing pomodoro count down timer
+                    pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime, interval);
 
-	public void stopService(View view) {
-		Log.d("Pomodoro","In the PomodoroFragment/stopService method");
-		getActivity().stopService(new Intent(getActivity(), PomodoroService.class));
-	}
-	
-	/*
-	 * When clicking on start button, either start the timer (if it hasn't
-	 * started) and change button text to STOP, otherwise stop running timer and
-	 * change button text to RESTART.
-	 */
-	@Override
-	public void onClick(View v) {
-		if (!pomodoroTimerHasStarted && onBreak == false) {
-			// startTime=15*1000;
-			pomodoroCountDownTimer.start();
-			pomodoroTimerHasStarted = true;
-			startB.setText("STOP");
-			Log.d("Pomodoro","Pomodoro - pressing start button");
-//			startService(getActivity().findViewById(R.id.pomodoro_button)); //-- this one works	
-		} else if (!breakTimerHasStarted && onBreak == true) {
-			breakCountDownTimer.start();
-			breakTimerHasStarted = true;
-			startB.setText("STOP");
-		} else if (pomodoroTimerHasStarted && onBreak == false) {
-			pomodoroCountDownTimer.cancel();
-			pomodoroTimerHasStarted = false;
-			onBreak = false;
-			startB.setText("RESTART");
-			Log.d("PomodoroService","Pomodoro - pressing stop button");
-//			stopService(getActivity().findViewById(R.id.pomodoro_button));
-		} else if (breakTimerHasStarted && onBreak == true) {
-			breakCountDownTimer.cancel();
-			breakTimerHasStarted = false;
-			startB.setText("RESTART");
-		}
-	}
+                    // Initializing break count down timer
+                    breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
 
-	/**
-	 * Method to format time from seconds to minutes:seconds
-	 * 
-	 * @param startTime
-	 *            the initial time in seconds, set to 1500 seconds
-	 * @return The formatted seconds displayed as minutes:seconds, for example
-	 *         "25:00" instead of 1500 seconds
-	 */
-	public String formatTime(long startTime) {
+                    // Setting start time of the break timer
+                    timeLeftText.setText(formatTime(breakStartTime));
+                    
+                    // Setting start time of the pomodoro timer
+                    timeLeftText.setText(formatTime(pomodoroStartTime));
 
-		String output = "00:00";
-		long seconds = startTime / 1000;
-		long minutes = seconds / 60;
+                    
+                    
+                    //end of stuff that used to be outside else statement
+    			}
 
-		seconds = seconds % 60;
-		minutes = minutes % 60;
+    			
+                
+              
+        
 
-		String sec = String.valueOf(seconds);
-		String min = String.valueOf(minutes);
+                
+                return v;
+        }
+        //Used to be private
+        //This is where the data from the service is received
+        public BroadcastReceiver bReceiver = new BroadcastReceiver(){
+                @Override
+                public void onReceive(Context context, Intent intent){
+                        //Time from service is received and stored in variable serviceTimeString
+                        if(intent.getAction().equals(RECEIVE_TIME)){
+                                serviceTimeString = intent.getStringExtra("serviceToActivity");
+                                //Log.d("Pomodoro","From broadcast receiver:");
+                                //Log.d("Pomodoro",serviceTimeString);
+                                //Log.d("Pomodoro","end of broadcast receiver message.");
+                        }
+                        //Running status from service is received and stored in variable pomodoroServiceRunning
+                        if(intent.getAction().equals(RECEIVE_STATUS)){
+                                pomodoroServiceRunning = intent.getStringExtra("serviceRunningMsg");
+                                Log.d("Pomodoro", pomodoroServiceRunning);
+                        }
+                }
+        };
 
-		if (seconds < 10)
-			sec = "0" + seconds;
-		if (minutes < 10)
-			min = "0" + minutes;
+        
+        
+        public void startService(View view) {
 
-		output = min + " : " + sec;
-		return output;
-	}
-	@Override
-	public void onPause(){
-		super.onPause();
-		Log.d("Pomodoro","Fragment onPause");
-		Log.d("Pomodoro","Time on Timer:");
-		
-		if(pomodoroTimerHasStarted==true){
-			pomodoroCountDownTimer.cancel();
-			Log.d("Pomodoro",timeOnTimerString);
-			startService(getActivity().findViewById(R.id.pomodoro_button));
-		}
-		else if(breakTimerHasStarted==true){
-			breakCountDownTimer.cancel();
-			Log.d("Pomodoro",timeOnTimerString);
-			startService(getActivity().findViewById(R.id.pomodoro_button));
-		}
-		Log.d("Pomodoro","onPause = done");
-		//startService(getActivity().findViewById(R.id.pomodoro_button));
-	}
-	
-	@Override
-	public void onResume(){
-		super.onResume();
-		Log.d("Pomodoro","onResume----------------");
-		
-		//This taken from onCreate - starts here
-		
-		//Setting up broadcast manager to handle communication between service and activity
-				LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(getActivity());
-				
-				//This is where the pomodoro fragment receives data from the service
-				//Getting time from service
-				IntentFilter receiveTimeFilter = new IntentFilter();
-				receiveTimeFilter.addAction(RECEIVE_TIME);
-				bManager.registerReceiver(bReceiver, receiveTimeFilter);
-				//Asking if service is running
-				IntentFilter receiveRunningStatusFilter = new IntentFilter();
-				receiveRunningStatusFilter.addAction(RECEIVE_STATUS);
-				bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
-		
-		if(pomodoroServiceRunning=="RUNNING"){
-			Log.d("Pomodoro","onRESUME - Service was running before this!");
-			
-		}		
-		else{
-			Log.d("Pomodoro","onRESUME - Service was not running before this!");
-		}
-		
-		//The stuff taken from onCreate stops here
-		
-		stopService(getActivity().findViewById(R.id.pomodoro_button));
-	
-//Commenting this away while trying the onCreate code in onResume instead
-		//		if(pomodoroServiceRunning=="RUNNING"){
-//			Log.d("Pomodoro","onResume - Service was running before this!");
-//			//Log.d("Pomodoro","serviceTimeString shows");
-//			//Log.d("Pomodoro",serviceTimeString);
-//		}
-//		else{
-//			Log.d("Pomodoro","onResume - Service was not running before this!");
-//		}
-		
-		//Log.d("Pomodoro",pomodoroServiceRunning);
-		
-	}
+                //This is where the data is sent from the activity to the service
+                Log.d("Pomodoro","In the PomodoroFragment/startService method - before");
+                Intent dataToPomodoroService = new Intent(getActivity(),PomodoroService.class);
+                dataToPomodoroService.putExtra("activeTimer", "ON_BREAK");
+                dataToPomodoroService.putExtra("secondsOnTimer", timeOnTimerString);
+                getActivity().startService(dataToPomodoroService);                
+                Log.d("Pomodoro","In the PomodoroFragment/startService method - after");
+                
+                
+        }
 
-	// Count down timer is handled below
-	/**
-	 * 
-	 * @author Adam
-	 *
-	 */
-	public class PomodoroTimer extends CountDownTimer {
-		public PomodoroTimer(long startTime, long interval) {
-			super(startTime, interval);
-		}
+        public void stopService(View view) {
+                Log.d("Pomodoro","In the PomodoroFragment/stopService method");
+                getActivity().stopService(new Intent(getActivity(), PomodoroService.class));
+        }
+        
+        /*
+         * When clicking on start button, either start the timer (if it hasn't
+         * started) and change button text to STOP, otherwise stop running timer and
+         * change button text to RESTART.
+         */
+        @Override
+        public void onClick(View v) {
+                if (!pomodoroTimerHasStarted && onBreak == false) {
+                        // startTime=15*1000;
+                        pomodoroCountDownTimer.start();
+                        pomodoroTimerHasStarted = true;
+                        startB.setText("STOP");
+                        Log.d("Pomodoro","Pomodoro - pressing start button");
+//                        startService(getActivity().findViewById(R.id.pomodoro_button)); //-- this one works        
+                } else if (!breakTimerHasStarted && onBreak == true) {
+                        breakCountDownTimer.start();
+                        breakTimerHasStarted = true;
+                        startB.setText("STOP");
+                } else if (pomodoroTimerHasStarted && onBreak == false) {
+                        pomodoroCountDownTimer.cancel();
+                        pomodoroTimerHasStarted = false;
+                        onBreak = false;
+                        startB.setText("RESTART");
+                        Log.d("PomodoroService","Pomodoro - pressing stop button");
+//                        stopService(getActivity().findViewById(R.id.pomodoro_button));
+                } else if (breakTimerHasStarted && onBreak == true) {
+                        breakCountDownTimer.cancel();
+                        breakTimerHasStarted = false;
+                        startB.setText("RESTART");
+                }
+        }
 
-		// When timer has reached zero, display "Break time!" instead of time.
-		@Override
-		public void onFinish() {
+        /**
+         * Method to format time from seconds to minutes:seconds
+         * 
+         * @param startTime
+         *            the initial time in seconds, set to 1500 seconds
+         * @return The formatted seconds displayed as minutes:seconds, for example
+         *         "25:00" instead of 1500 seconds
+         */
+        public String formatTime(long startTime) {
 
-			if (onBreak == false) {
-				onBreak = true;
-				timeLeftText.setText("Break time!");
+                String output = "00:00";
+                long seconds = startTime / 1000;
+                long minutes = seconds / 60;
 
-				// Creates a notification that informs the user it's time for a
-				// break
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-						getActivity()).setSmallIcon(R.drawable.ic_launcher)
-						.setContentTitle("ESCAPE")
-						.setContentText("Time for a break");
+                seconds = seconds % 60;
+                minutes = minutes % 60;
 
-				// Enables sound and vibration for the notification
-				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+                String sec = String.valueOf(seconds);
+                String min = String.valueOf(minutes);
 
-				// Creates an intent with the activity to launch when
-				// notification is
-				// clicked
-				Intent resultIntent = new Intent(getActivity(),
-						MainActivity.class);
+                if (seconds < 10)
+                        sec = "0" + seconds;
+                if (minutes < 10)
+                        min = "0" + minutes;
 
-				// Creates a back stack to be used by the launched activity.
-				TaskStackBuilder stackBuilder = TaskStackBuilder
-						.create(getActivity());
+                output = min + " : " + sec;
+                return output;
+        }
+        @Override
+        public void onPause(){
+                super.onPause();
+                Log.d("Pomodoro","Fragment onPause");
+                Log.d("Pomodoro","Time on Timer:");
+                
+                if(pomodoroTimerHasStarted==true){
+                        pomodoroCountDownTimer.cancel();
+                        Log.d("Pomodoro",timeOnTimerString);
+                        startService(getActivity().findViewById(R.id.pomodoro_button));
+                }
+                else if(breakTimerHasStarted==true){
+                        breakCountDownTimer.cancel();
+                        Log.d("Pomodoro",timeOnTimerString);
+                        startService(getActivity().findViewById(R.id.pomodoro_button));
+                }
+                Log.d("Pomodoro","onPause = done");
+                //startService(getActivity().findViewById(R.id.pomodoro_button));
+        }
+        
+        @Override
+        public void onResume(){
+                super.onResume();
+                Log.d("Pomodoro","onResume----------------");
+        }
 
-				// Adds all the parent activities/views of the
-				// activity to be opened when clicking on the notification to
-				// the back
-				// stack. Might be useful later, if clicking on the notification
-				// does
-				// not take you to a parent view.
-				stackBuilder.addParentStack(MainActivity.class);
+        // Count down timer is handled below
+        /**
+         * 
+         * @author Adam
+         *
+         */
+        public class PomodoroTimer extends CountDownTimer {
+                public PomodoroTimer(long startTime, long interval) {
+                        super(startTime, interval);
+                }
 
-				// Adds the Intent that starts the Activity to the top of the
-				// stack
-				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent resultPendingIntent = stackBuilder
-						.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                // When timer has reached zero, display "Break time!" instead of time.
+                @Override
+                public void onFinish() {
 
-				// Assigns the pending intent (containing MainActivity with a
-				// proper
-				// back stack) to the notification
-				notificationBuilder.setContentIntent(resultPendingIntent);
+                        if (onBreak == false) {
+                                onBreak = true;
+                                timeLeftText.setText("Break time!");
 
-				// Sends the notification to the android system
-				NotificationManager mNotificationManager = (NotificationManager) getActivity()
-						.getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(0, notificationBuilder.build());
-			} else if (onBreak == true) {
-				onBreak = false;
-				timeLeftText.setText("Break over!");
+                                // Creates a notification that informs the user it's time for a
+                                // break
+                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+                                                getActivity()).setSmallIcon(R.drawable.ic_launcher)
+                                                .setContentTitle("ESCAPE")
+                                                .setContentText("Time for a break");
 
-				// Creates a notification that informs the user it's time for a
-				// break
-				NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-						getActivity()).setSmallIcon(R.drawable.ic_launcher)
-						.setContentTitle("ESCAPE").setContentText("Break over");
+                                // Enables sound and vibration for the notification
+                                notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
 
-				// Enables sound and vibration for the notification
-				notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+                                // Creates an intent with the activity to launch when
+                                // notification is
+                                // clicked
+                                Intent resultIntent = new Intent(getActivity(),
+                                                MainActivity.class);
 
-				// Creates an intent with the activity to launch when
-				// notification is
-				// clicked
-				Intent resultIntent = new Intent(getActivity(),
-						MainActivity.class);
+                                // Creates a back stack to be used by the launched activity.
+                                TaskStackBuilder stackBuilder = TaskStackBuilder
+                                                .create(getActivity());
 
-				// Creates a back stack to be used by the launched activity.
-				TaskStackBuilder stackBuilder = TaskStackBuilder
-						.create(getActivity());
+                                // Adds all the parent activities/views of the
+                                // activity to be opened when clicking on the notification to
+                                // the back
+                                // stack. Might be useful later, if clicking on the notification
+                                // does
+                                // not take you to a parent view.
+                                stackBuilder.addParentStack(MainActivity.class);
 
-				// Adds all the parent activities/views of the
-				// activity to be opened when clicking on the notification to
-				// the back
-				// stack. Might be useful later, if clicking on the notification
-				// does
-				// not take you to a parent view.
-				stackBuilder.addParentStack(MainActivity.class);
+                                // Adds the Intent that starts the Activity to the top of the
+                                // stack
+                                stackBuilder.addNextIntent(resultIntent);
+                                PendingIntent resultPendingIntent = stackBuilder
+                                                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-				// Adds the Intent that starts the Activity to the top of the
-				// stack
-				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent resultPendingIntent = stackBuilder
-						.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                                // Assigns the pending intent (containing MainActivity with a
+                                // proper
+                                // back stack) to the notification
+                                notificationBuilder.setContentIntent(resultPendingIntent);
 
-				// Assigns the pending intent (containing MainActivity with a
-				// proper
-				// back stack) to the notification
-				notificationBuilder.setContentIntent(resultPendingIntent);
+                                // Sends the notification to the android system
+                                NotificationManager mNotificationManager = (NotificationManager) getActivity()
+                                                .getSystemService(Context.NOTIFICATION_SERVICE);
+                                mNotificationManager.notify(0, notificationBuilder.build());
+                        } else if (onBreak == true) {
+                                onBreak = false;
+                                timeLeftText.setText("Break over!");
 
-				// Sends the notification to the android system
-				NotificationManager mNotificationManager = (NotificationManager) getActivity()
-						.getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(0, notificationBuilder.build());
-			}
-		}
+                                // Creates a notification that informs the user it's time for a
+                                // break
+                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+                                                getActivity()).setSmallIcon(R.drawable.ic_launcher)
+                                                .setContentTitle("ESCAPE").setContentText("Break over");
 
-		// Method to update the display of minutes:seconds left
-		@Override
-		public void onTick(long millisUntilFinished) {
-			timeLeftText.setText(formatTime(millisUntilFinished));
-			timeOnTimer = millisUntilFinished;
-			timeOnTimer = timeOnTimer/1000;
-			timeOnTimerString = String.valueOf(timeOnTimer);
-		}
-	}
+                                // Enables sound and vibration for the notification
+                                notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+
+                                // Creates an intent with the activity to launch when
+                                // notification is
+                                // clicked
+                                Intent resultIntent = new Intent(getActivity(),
+                                                MainActivity.class);
+
+                                // Creates a back stack to be used by the launched activity.
+                                TaskStackBuilder stackBuilder = TaskStackBuilder
+                                                .create(getActivity());
+
+                                // Adds all the parent activities/views of the
+                                // activity to be opened when clicking on the notification to
+                                // the back
+                                // stack. Might be useful later, if clicking on the notification
+                                // does
+                                // not take you to a parent view.
+                                stackBuilder.addParentStack(MainActivity.class);
+
+                                // Adds the Intent that starts the Activity to the top of the
+                                // stack
+                                stackBuilder.addNextIntent(resultIntent);
+                                PendingIntent resultPendingIntent = stackBuilder
+                                                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                // Assigns the pending intent (containing MainActivity with a
+                                // proper
+                                // back stack) to the notification
+                                notificationBuilder.setContentIntent(resultPendingIntent);
+
+                                // Sends the notification to the android system
+                                NotificationManager mNotificationManager = (NotificationManager) getActivity()
+                                                .getSystemService(Context.NOTIFICATION_SERVICE);
+                                mNotificationManager.notify(0, notificationBuilder.build());
+                        }
+                }
+
+                // Method to update the display of minutes:seconds left
+                @Override
+                public void onTick(long millisUntilFinished) {
+                        timeLeftText.setText(formatTime(millisUntilFinished));
+                        timeOnTimer = millisUntilFinished;
+                        timeOnTimer = timeOnTimer/1000;
+                        timeOnTimerString = String.valueOf(timeOnTimer);
+                }
+        }
 
 }
