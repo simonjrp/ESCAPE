@@ -48,7 +48,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	// startTime defines the amount of time in the pomodoro timer.
 	// 1500 seconds = 25 minutes.
-	private long pomodoroStartTime = 50 * 1000;
+	private long pomodoroStartTime = 10 * 1000;
 	private long breakStartTime = 27 * 1000;
 	private final long interval = 1 * 1000;
 
@@ -87,7 +87,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 		if (pomodoroServiceRunning == "POMODORO_TIMER") {
 			Log.d("Pomodoro",
-					"onRESUME - Service was running POMODOROTIMER before this!");
+					"onRESUME - Service was running POMODORO-TIMER before this!");
 			Log.d("Pomodoro",
 					"And there was this much time on the service timer:");
 			Log.d("Pomodoro", serviceTimeString);
@@ -143,7 +143,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		else if (pomodoroServiceRunning == "BREAK_TIMER") {
 
 			Log.d("Pomodoro",
-					"onRESUME - Service was running BREAKTIMER before this!");
+					"onRESUME - Service was running BREAK-TIMER before this!");
 			Log.d("Pomodoro",
 					"And there was this much time on the service timer:");
 			Log.d("Pomodoro", serviceTimeString);
@@ -189,6 +189,63 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			pomodoroTimerHasStarted = false;
 			breakTimerHasStarted = false;
 			onBreak = true;
+			serviceCountDownTimer.start();
+			serviceTimerHasStarted = true;
+			// pomodoroTimerHasStarted = true;
+			startB.setText("STOP");
+
+			// end of "outside of if/else statement" stub
+
+		}
+
+		else if (pomodoroServiceRunning == "SERVICE_TIMER") {
+
+			Log.d("Pomodoro",
+					"onRESUME - Service was running SERVICE-TIMER before this!");
+			Log.d("Pomodoro",
+					"And there was this much time on the service timer:");
+			Log.d("Pomodoro", serviceTimeString);
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+
+			// converting string message from service to a long
+			serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+
+			// Since timer is managed in milliseconds, multiply value by 1000
+			serviceTimeStringToLong = serviceTimeStringToLong * 1000;
+
+			// This below used to be outside of if statement, see corresponding
+			// stub for else statement below
+
+			// Layout for the pomodoro start button
+			startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			// TEST without pomodoro timer being initialized in service timer
+			// session
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			serviceCountDownTimer = new PomodoroTimer(serviceTimeStringToLong,
+					interval);
+			// Initializing break count down timer
+			// TEST without break timer being initialized in pomodoro timer
+			// session
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			// timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			pomodoroTimerHasStarted = false;
+			breakTimerHasStarted = false;
 			serviceCountDownTimer.start();
 			serviceTimerHasStarted = true;
 			// pomodoroTimerHasStarted = true;
@@ -266,8 +323,10 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		// send "ON_BREAK" to service
 		if (pomodoroTimerHasStarted == true) {
 			dataToPomodoroService.putExtra("activeTimer", "ON_POMODORO");
-		} else {
+		} else if (breakTimerHasStarted == true) {
 			dataToPomodoroService.putExtra("activeTimer", "ON_BREAK");
+		} else if (serviceTimerHasStarted == true) {
+			dataToPomodoroService.putExtra("activeTimer", "ON_SERVICE");
 		}
 		dataToPomodoroService.putExtra("secondsOnTimer", timeOnTimerString);
 		getActivity().startService(dataToPomodoroService);
@@ -360,6 +419,10 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		} else if (breakTimerHasStarted == true) {
 			breakCountDownTimer.cancel();
 			Log.d("Pomodoro", timeOnTimerString);
+			startService(getActivity().findViewById(R.id.pomodoro_button));
+		} else if (serviceTimerHasStarted == true) {
+			serviceCountDownTimer.cancel();
+			Log.d("Pomdoro", timeOnTimerString);
 			startService(getActivity().findViewById(R.id.pomodoro_button));
 		}
 		Log.d("Pomodoro", "onPause = done");
