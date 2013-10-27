@@ -5,10 +5,10 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_new_task">Done</string>
-    <string name="todayLabel">Today</string>
-    <string name="tomorrowLabel">Tomorrow</string>
+    <string name="today_label">Today</string>
+    <string name="tomorrow_label">Tomorrow</string>
     <string name="thisweek_label">This week</string>
-    <string name="somedayLabel">Someday</string>
+    <string name="someday_label">Someday</string>
     <string name="edit_button_description">Edit</string>
     <string name="delete_button_description">Delete</string>
     <string name="pomodoro_start">Start pomodoro</string>
@@ -31,6 +31,7 @@
     <string name="nextweeksameday">Next</string>
     <string name="new_task">New Task</string>
     <string name="new_block">New Block</string>
+    <string name="pick_caterory">Pick Cetegories</string>
     <string name="title_activity_new_block">New Block</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Description</string>
