@@ -31,6 +31,7 @@
     <string name="nextweeksameday">Nästa</string>
     <string name="new_task">Ny arbetsuppgift</string>
     <string name="new_block">Nytt block</string>
+    <string name="pick_caterory">Välj Kategorier</string>
     <string name="title_activity_new_block">Nytt block</string>
     <string name="title_hint">Titel</string>
     <string name="description_hint">Beskrivning</string>

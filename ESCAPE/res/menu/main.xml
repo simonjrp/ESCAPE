@@ -4,7 +4,7 @@
         android:id="@+id/pick_category"
         android:icon="@drawable/custom_ic_action_select"
         android:showAsAction="ifRoom"
-        android:title="Pick categories"
+        android:title="@string/pick_caterory"
         android:orderInCategory="10" />
 
     <item

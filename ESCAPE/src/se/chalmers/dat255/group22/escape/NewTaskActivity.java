@@ -472,8 +472,8 @@ public class NewTaskActivity extends Activity
 
 		// Array containing different days for an event
 		ArrayList<String> strDayList = new ArrayList<String>();
-		strDayList.add(getString(R.string.todayLabel));
-		strDayList.add(getString(R.string.tomorrowLabel));
+		strDayList.add(getString(R.string.today_label));
+		strDayList.add(getString(R.string.tomorrow_label));
 		strDayList.add(nextWeekSameDay);
 		strDayList.add(getString(R.string.pick_day_label));
 
