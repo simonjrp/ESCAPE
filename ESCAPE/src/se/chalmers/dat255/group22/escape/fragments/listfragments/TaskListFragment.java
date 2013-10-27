@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 /**
  * A fragment displaying a list with tasks. A task is different from an event
  * such that a task does not have a set time while an event does.
- *
+ * 
  * @author tholene, Carl
  */
 public class TaskListFragment extends Fragment {
@@ -27,8 +27,10 @@ public class TaskListFragment extends Fragment {
 	private CustomListAdapter ourListAdapter;
 	// popup where use can pick what categories to display
 	private ListPopupWindow listPopupWindow;
-
+	// The adapter used to display the category popup
 	private CategoryAdapter categoryAdapter;
+	// the width used for the category popup
+	private int categoryListWidth;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -38,11 +40,6 @@ public class TaskListFragment extends Fragment {
 		setHasOptionsMenu(true);
 		initialize();
 	}
-
-	//@Override
-	//public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	//	inflater.inflate(R.menu.fragment_action, menu);
-	//}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -57,13 +54,6 @@ public class TaskListFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-	//@Override
-	//public void onPrepareOptionsMenu(Menu menu) {
-	//	super.onPrepareOptionsMenu(menu);
-    //
-	//	menu.findItem(R.id.pick_category).setVisible(true);
-	//}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -73,21 +63,24 @@ public class TaskListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        initialize();
+		initialize();
 		ourListAdapter.reInit();
 	}
 
-	/**
+	/*
 	 * Initialize the list, adapter and popup
 	 */
 	private void initialize() {
 		ourListAdapter = new CustomListAdapter(getActivity());
-		ourTaskList = (ListView) getActivity().findViewById(R.id.listView);
+		ourTaskList = (ListView) getActivity().findViewById(R.id.task_list);
 		ourTaskList.setAdapter(ourListAdapter);
+		ourTaskList.setDivider(null);
+		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
+				R.dimen.category_list_width);
 		initPopup();
 	}
 
-	/**
+	/*
 	 * Create the popup used to pick what categories to display
 	 */
 	private void initPopup() {
@@ -95,24 +88,26 @@ public class TaskListFragment extends Fragment {
 		listPopupWindow = new ListPopupWindow(getActivity());
 		listPopupWindow.setAnchorView(menuItemView);
 		listPopupWindow.setModal(true);
-		listPopupWindow.setWidth(300);
+		listPopupWindow.setWidth(categoryListWidth);
 		listPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
-        listPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){
-            @Override
-            public void onDismiss() {
-                if (ourListAdapter != null)
-                    ourListAdapter.notifyDataSetChanged();
-            }
-        });
+		listPopupWindow
+				.setOnDismissListener(new PopupWindow.OnDismissListener() {
+					@Override
+					public void onDismiss() {
+						if (ourListAdapter != null)
+							ourListAdapter.notifyDataSetChanged();
+					}
+				});
 	}
 
-	/**
+	/*
 	 * Called when popup should be displayed
 	 */
 	private void getPopup() {
+		// TODO Find way to use popup without creating it every time!
 		if (!ourListAdapter.getTheCategories().isEmpty()) {
-            //if (listPopupWindow == null)
-                initPopup();
+			// if (listPopupWindow == null)
+			initPopup();
 			categoryAdapter = new CategoryAdapter(getActivity());
 			categoryAdapter.setCategories(ourListAdapter.getTheCategories());
 			listPopupWindow.setAdapter(categoryAdapter);

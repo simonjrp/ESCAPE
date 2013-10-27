@@ -39,9 +39,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 	 * @param textViewResourceId
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
-	 * @param days
-	 *            a stringarray that contains the string to be set for each item
-	 *            in the dropdown list.
+	 * 
 	 * @param spinner
 	 *            the spinner that gets assigned to this adapter.
 	 */
@@ -72,10 +70,10 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		dateData.add(new Date(currentTimeInMillis + ONE_WEEK_IN_MILLIS));
 
 		days = new ArrayList<String>();
-		days.add(context.getString(R.string.todayLabel));
-		days.add(context.getString(R.string.tomorrowLabel));
+		days.add(context.getString(R.string.today_label));
+		days.add(context.getString(R.string.tomorrow_label));
 		days.add(nextWeekSameDay);
-		days.add(context.getString(R.string.pickDayLabel));
+		days.add(context.getString(R.string.pick_day_label));
 
 		clear();
 		addAll(days);
@@ -89,7 +87,7 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 		View row = inflater
 				.inflate(R.layout.simple_spinner_item, parent, false);
 
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(days.get(position));
 		// set gray color to "Pick a date" item
@@ -106,11 +104,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 		View row = inflater.inflate(R.layout.simple_spinner_item_single,
 				parent, false);
-		TextView day = (TextView) row.findViewById(R.id.simpleSpinnerText);
+		TextView day = (TextView) row.findViewById(R.id.simple_spinner_text);
 
 		day.setText(days.get(position));
-
-		// TODO How the **** did this do the trick???
+		// Wierd hack to make the width of the spinner relative to its current
+		// item
 		parent.getLayoutParams().width = day.getLayoutParams().width - 100;
 		row.getLayoutParams().width = day.getLayoutParams().width - 100;
 
@@ -165,11 +163,11 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 
 			// Refresh adapter's internal list.
 			clear();
-			add(context.getString(R.string.todayLabel));
-			add(context.getString(R.string.tomorrowLabel));
+			add(context.getString(R.string.today_label));
+			add(context.getString(R.string.tomorrow_label));
 			add(nextWeekSameDayLabel);
 			add(customLabel);
-			add(context.getString(R.string.pickDayLabel));
+			add(context.getString(R.string.pick_day_label));
 			this.notifyDataSetChanged();
 
 			// Refresh local list. This
@@ -177,12 +175,14 @@ public class SpinnerDayAdapter extends ArrayAdapter<String> {
 			// the local list is unsynced.
 
 			days.clear();
-			days.add(context.getString(R.string.todayLabel));
-			days.add(context.getString(R.string.tomorrowLabel));
+			days.add(context.getString(R.string.today_label));
+			days.add(context.getString(R.string.tomorrow_label));
 			days.add(nextWeekSameDayLabel);
 			days.add(customLabel);
-			days.add(context.getString(R.string.pickDayLabel));
+			days.add(context.getString(R.string.pick_day_label));
 
+			// The first line below is necessary to fire a onItemSelected event.
+			spinner.setSelection(0, false);
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 

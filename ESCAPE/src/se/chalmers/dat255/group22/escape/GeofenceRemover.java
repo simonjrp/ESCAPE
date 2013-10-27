@@ -3,10 +3,9 @@ package se.chalmers.dat255.group22.escape;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.utils.Constants;
-import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -25,11 +24,14 @@ import com.google.android.gms.location.LocationStatusCodes;
  * @author Simon Persson
  * 
  */
-public class GeofenceRemover implements ConnectionCallbacks,
-		OnConnectionFailedListener, OnRemoveGeofencesResultListener {
+public class GeofenceRemover
+		implements
+			ConnectionCallbacks,
+			OnConnectionFailedListener,
+			OnRemoveGeofencesResultListener {
 
 	// The calling activity
-	private Activity activity;
+	private Context context;
 
 	// List of all ids for current geofences
 	private List<String> currentGeofenceIds;
@@ -51,12 +53,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	/**
 	 * Constructor for creating a new GeofenceRemover.
 	 * 
-	 * @param activity
+	 * @param context
 	 *            The activity context. Used to create a location client, make
 	 *            broadcasts etc.
 	 */
-	public GeofenceRemover(Activity activity) {
-		this.activity = activity;
+	public GeofenceRemover(Context context) {
+		this.context = context;
 
 		currentGeofenceIds = null;
 		locationClient = null;
@@ -143,7 +145,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	// geofences)
 	private GooglePlayServicesClient getLocationClient() {
 		if (locationClient == null) {
-			locationClient = new LocationClient(activity, this, this);
+			locationClient = new LocationClient(context, this, this);
 		}
 
 		return locationClient;
@@ -152,7 +154,7 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	// This method is called once the location client is connected
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_CONNECTED);
+		Log.d(Constants.APPTAG, context.getString(R.string.geofence_connected));
 
 		// Now that the location client is connected, continue with actually
 		// removing the geofences.
@@ -167,12 +169,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		// Remove geofences with the appropriate method for the remove type
 
 		switch (removeType) {
-		case INTENT:
-			locationClient.removeGeofences(pendingIntent, this);
-			break;
-		case LIST:
-			locationClient.removeGeofences(currentGeofenceIds, this);
-			break;
+			case INTENT :
+				locationClient.removeGeofences(pendingIntent, this);
+				break;
+			case LIST :
+				locationClient.removeGeofences(currentGeofenceIds, this);
+				break;
 		}
 	}
 
@@ -184,16 +186,18 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
+			Log.d(Constants.APPTAG,
+					context.getString(R.string.geofence_remove_success));
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
+			Log.e(Constants.APPTAG,
+					context.getString(R.string.geofence_remove_error));
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
 		}
 
-		LocalBroadcastManager.getInstance(activity).sendBroadcast(
+		LocalBroadcastManager.getInstance(context).sendBroadcast(
 				broadcastIntent);
 
 		requestDisconnection();
@@ -208,16 +212,18 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		Intent broadcastIntent = new Intent();
 
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_SUCCESS);
+			Log.d(Constants.APPTAG,
+					context.getString(R.string.geofence_remove_success));
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVED);
 		} else {
-			Log.e(Constants.APPTAG, Constants.DEBUG_GEOFENCES_REMOVE_ERROR);
+			Log.e(Constants.APPTAG,
+					context.getString(R.string.geofence_remove_error));
 
 			broadcastIntent.setAction(Constants.ACTION_GEOFENCES_REMOVE_ERROR);
 		}
 
-		LocalBroadcastManager.getInstance(activity).sendBroadcast(
+		LocalBroadcastManager.getInstance(context).sendBroadcast(
 				broadcastIntent);
 
 		requestDisconnection();
@@ -236,7 +242,8 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	public void onDisconnected() {
 		inProgress = false;
 
-		Log.d(Constants.APPTAG, Constants.DEBUG_GEOFENCES_DISCONNECTED);
+		Log.d(Constants.APPTAG,
+				context.getString(R.string.geofence_disconnected));
 
 		// Reset current location client
 		locationClient = null;
@@ -247,30 +254,29 @@ public class GeofenceRemover implements ConnectionCallbacks,
 	public void onConnectionFailed(ConnectionResult result) {
 		inProgress = false;
 
-		if (result.hasResolution()) {
-			// If Google Play services have a solution to the failed connection,
-			// try to start a Google Play services activity that resolves it.
-			try {
-				// The requestcode is the one received by the activity when the
-				// started resolution returns some results.
-				result.startResolutionForResult(activity,
-						Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			} catch (SendIntentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			// Notify interested components that the connection failed. The
-			// MainActivity should bring up an error dialog.
-			Intent errorBroadcast = new Intent();
-			errorBroadcast
-					.setAction(Constants.ACTION_GEOFENCES_CONNECTION_FAILED);
-			errorBroadcast.putExtra(Constants.EXTRAS_TAG_GEOFENCES_ERROR_CODE,
-					result.getErrorCode());
+		// if (result.hasResolution()) {
+		// // If Google Play services have a solution to the failed connection,
+		// // try to start a Google Play service activity that resolves it.
+		// try {
+		// // The requestcode is the one received by the activity when the
+		// // started resolution returns some results.
+		// result.startResolutionForResult(activity,
+		// Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+		// } catch (SendIntentException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// } else {
+		// Notify interested components that the connection failed. The
+		// MainActivity should bring up an error dialog.
+		Intent errorBroadcast = new Intent();
+		errorBroadcast.setAction(Constants.ACTION_GEOFENCES_CONNECTION_FAILED);
+		errorBroadcast.putExtra(Constants.EXTRAS_TAG_GEOFENCES_ERROR_CODE,
+				result.getErrorCode());
 
-			LocalBroadcastManager.getInstance(activity).sendBroadcast(
-					errorBroadcast);
-		}
+		LocalBroadcastManager.getInstance(context)
+				.sendBroadcast(errorBroadcast);
+		// }
 
 	}
 

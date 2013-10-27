@@ -12,11 +12,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 /**
- * A pager adapter to use with a viewpager.
+ * A pager adapter to use with a viewpager (swipeable tabs).
+ * 
+ * @author Simon Persson
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-	// List of all fragments in the swipeable viewpager
 	private String[] fragmentTitles;
 	private List<Fragment> fragmentList;
 
@@ -50,25 +51,16 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 	}
 
 	@Override
-	/**
-	 * {@inheritDoc}
-	 */
 	public Fragment getItem(int position) {
 		return fragmentList.get(position);
 	}
 
 	@Override
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getCount() {
 		return fragmentList.size();
 	}
 
 	@Override
-	/**
-	 * {@inheritDoc}
-	 */
 	public CharSequence getPageTitle(int position) {
 
 		return fragmentTitles[position];

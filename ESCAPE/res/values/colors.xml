@@ -4,7 +4,27 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="light_gray">#D3D3D3</color>
-    <color name="light_blue">#33B5E5</color>
+    <color name="light_gray_transparent">#60BEBEBE</color>
 
+    <color name="light_blue">#FF33B5E5</color>
+    <color name="light_blue_dark">#FF0099CC</color>
+
+    <color name="lime_green">#FF32CD32</color>
+    <color name="lime_green_dark">#1E7B1E</color>
+
+    <color name="chocolate_brown">#FF896810</color>
+    <color name="chocolate_brown_dark">#FF6B4A00</color>
+
+    <color name="red">#AAFF4444</color>
+    <color name="red_dark">#FFCC0000</color>
+
+    <color name="green">#FF99CC00</color>
+    <color name="green_dark">#FF669900</color>
+
+    <color name="orange">#FFFFBB33</color>
+    <color name="orange_dark">#FFFF8800</color>
+
+    <color name="magenta">#FFAA66CC</color>
+    <color name="magenta_dark">#FF9933CC</color>
 
 </resources>

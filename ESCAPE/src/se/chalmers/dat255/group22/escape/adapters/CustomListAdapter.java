@@ -4,7 +4,6 @@ import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_ID;
 import static se.chalmers.dat255.group22.escape.utils.Constants.EDIT_TASK_MSG;
 import static se.chalmers.dat255.group22.escape.utils.Constants.INTENT_GET_ID;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +18,19 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+import android.util.StateSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -51,7 +55,7 @@ public class CustomListAdapter implements ListAdapter {
 	private DBHandler dbHandler;
 
 	/**
-	 * Creates a new CustomListAdapter
+	 * Creates a new CustomListAdapter used to display tasks
 	 * 
 	 * @param context
 	 *            The context (activity) this adapter is used in
@@ -61,7 +65,7 @@ public class CustomListAdapter implements ListAdapter {
 		initialize();
 	}
 
-	/**
+	/*
 	 * Initialize the database and lists
 	 */
 	private void initialize() {
@@ -76,43 +80,44 @@ public class CustomListAdapter implements ListAdapter {
 	 */
 	public void reInit() {
 		// Fetch tasks from database
-		List<ListObject> listObjects = dbHandler.getAllListObjects();
-		for (ListObject lo : listObjects) {
+		List<ListObject> databaseList = dbHandler.getAllListObjects();
+
+		for (ListObject lo : databaseList) {
 			// we only want ListObjects without a specific time in this list!
 			if (dbHandler.getTime(lo) == null) {
+
+				// These variables must be set on the object since they are used
+				// when sorting the list objects and choosing what to display.
 				for (Category cat : dbHandler.getCategories(lo))
 					lo.addToCategory(cat);
-
-				// TODO All categories should be fetched from database!
-				// This category with the same name as the listobject is only
-				// intended to test functionality!
-				lo.addToCategory(new Category(lo.getName(), null, null));
 
 				addListObject(lo);
 			}
 		}
-		updateEditButtons();
+
+		resetEditButtons();
 	}
 
 	/**
-	 * update the edit/remove button
+	 * If edit and delete buttons initialized this method will make them
+	 * invisible
 	 */
-	protected void updateEditButtons() {
+	protected void resetEditButtons() {
 		try {
-			TextView timeText = (TextView) ((MainActivity) context)
-					.findViewById(R.id.startTimeTask);
-			if (timeText != null)
-				timeText.setVisibility(View.VISIBLE);
+			RelativeLayout timeLayout = (RelativeLayout) ((MainActivity) context)
+					.findViewById(R.id.list_object_collapsed_time);
+			if (timeLayout != null)
+				timeLayout.setVisibility(View.VISIBLE);
 
 			ImageButton editButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.editButton);
+					.findViewById(R.id.edit_button);
 			if (editButton != null) {
 				editButton.setVisibility(View.INVISIBLE);
 				editButton.clearAnimation();
 			}
 
 			ImageButton deleteButton = (ImageButton) ((MainActivity) context)
-					.findViewById(R.id.deleteButton);
+					.findViewById(R.id.delete_button);
 			if (deleteButton != null) {
 				deleteButton.setVisibility(View.INVISIBLE);
 				deleteButton.clearAnimation();
@@ -173,98 +178,142 @@ public class CustomListAdapter implements ListAdapter {
 	@Override
 	public View getView(int childPosition, View convertView, ViewGroup parent) {
 		// Get the name of the task to display for each task entry
-		updateEditButtons();
+		resetEditButtons();
 		final ListObject listObject = (ListObject) getItem(childPosition);
-
+		final int nextChild = childPosition;
 		final String childText = listObject.getName();
+		final View thisView = convertView;
+		final ViewGroup thisViewGroup = parent;
 
-		// final Time childTime = listObject.getTime();
-		String childTimeText = "";
-		if (dbHandler.getTime(listObject) != null) {
-			final Date childStartDate = dbHandler.getTime(listObject)
-					.getStartDate();
-			childTimeText = DateFormat.format("HH:mm", childStartDate)
-					.toString();
-		}
+		if (getLOShouldBeVisible(listObject)) {
 
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.list_task, null);
-		}
-
-		// Get a textview for the object
-		final TextView childLabel = (TextView) convertView
-				.findViewById(R.id.listTask);
-
-		final TextView childTimeView = (TextView) convertView
-				.findViewById(R.id.startTimeTask);
-
-		final ImageButton editButton = (ImageButton) convertView
-				.findViewById(R.id.editButton);
-
-		final ImageButton deleteButton = (ImageButton) convertView
-				.findViewById(R.id.deleteButton);
-
-		editButton.setVisibility(View.INVISIBLE);
-		deleteButton.setVisibility(View.INVISIBLE);
-
-		// editButton.setX(convertView.getRight() + deleteButton.getWidth() +
-		// 300);
-		// deleteButton.setX(convertView.getRight() + 300);
-		editButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, NewTaskActivity.class);
-
-				Bundle bundle = new Bundle();
-				intent.putExtra(EDIT_TASK_MSG, bundle);
-
-				bundle.putInt(INTENT_GET_ID, listObject.getId());
-				intent.setFlags(EDIT_TASK_ID);
-				context.startActivity(intent);
-			}
-		});
-		deleteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				DBHandler dbh = new DBHandler(context);
-				dbh.deleteListObject(listObject);
-				removeListObject(listObject);
-
-				// v.refreshDrawableState();
+			if (convertView == null || !convertView.isShown()) {
+				LayoutInflater infalInflater = (LayoutInflater) this.context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				convertView = infalInflater.inflate(R.layout.list_task, null);
 			}
 
-		});
+			// Get a textview for the object
+			final TextView childLabel = (TextView) convertView
+					.findViewById(R.id.list_object_name);
+			RelativeLayout timeLayout = (RelativeLayout) convertView
+					.findViewById(R.id.list_object_collapsed_time);
+			timeLayout.setVisibility(View.GONE);
 
-		// TODO tasks don't have time!
-		childLabel.setText(childText);
-		childTimeView.setText(childTimeText.equals("") ? "" : childTimeText);
-		// Get a textview for the object's data
-		TextView childData = (TextView) convertView.findViewById(R.id.taskData);
+			final ImageButton editButton = (ImageButton) convertView
+					.findViewById(R.id.edit_button);
 
-		// We don't want the data to show yet...
-		childData.setVisibility(View.INVISIBLE);
-		childData.setHeight(0);
+			final ImageButton deleteButton = (ImageButton) convertView
+					.findViewById(R.id.delete_button);
 
-		childLabel.setText(childText);
+			editButton.setVisibility(View.INVISIBLE);
+			deleteButton.setVisibility(View.INVISIBLE);
 
-		CustomOnClickListener clickListener = new CustomOnClickListener(
-				listObject, childLabel, childData);
-		convertView.setOnClickListener(clickListener);
-		// TODO We add two listeners since it wont work on one if the other is
-		// added to
-		// Adding touchlisteners
-		convertView.setOnTouchListener(new OptionTouchListener(context,
-				convertView));
-		// convertView.setOnTouchListener(new OptionTouchListener(context,
-		// convertView));
-		if (!getLOShouldBeVisible(listObject))
+			// editButton.setX(convertView.getRight() + deleteButton.getWidth()
+			// +
+			// 300);
+			// deleteButton.setX(convertView.getRight() + 300);
+			editButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, NewTaskActivity.class);
+
+					Bundle bundle = new Bundle();
+					intent.putExtra(EDIT_TASK_MSG, bundle);
+					bundle.putInt(INTENT_GET_ID, listObject.getId());
+					intent.setFlags(EDIT_TASK_ID);
+					context.startActivity(intent);
+				}
+			});
+
+			deleteButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					DBHandler dbh = new DBHandler(context);
+					dbh.purgeListObject(listObject);
+					removeListObject(listObject);
+					LinearLayout nextObject = null;
+					try {
+						nextObject = (LinearLayout) getView(nextChild,
+								thisView, thisViewGroup);
+						nextObject.refreshDrawableState();
+						nextObject.postInvalidate();
+
+					} catch (NullPointerException e) {
+						// Do nothing
+					} catch (IndexOutOfBoundsException e) {
+						// Do nothing
+					}
+
+					// v.refreshDrawableState();
+				}
+
+			});
+
+			// TODO tasks don't have time!
+			childLabel.setText(childText);
+			// Get the layout for the object's data
+			RelativeLayout childData = (RelativeLayout) convertView
+					.findViewById(R.id.list_object_expanded_layout);
+
+			// We don't want the data to show yet...
+			childData.setVisibility(View.GONE);
+
+			childLabel.setText(childText);
+
+			CustomOnClickListener clickListener = new CustomOnClickListener(
+					context, listObject, childLabel, childData);
+			convertView.setOnClickListener(clickListener);
+
+			// TODO We add two listeners since it wont work on one if the other
+			// is
+			// added to
+			// Adding touchlisteners
+			convertView.setOnTouchListener(new OptionTouchListener(context,
+					convertView, listObject));
+			// convertView.setOnTouchListener(new OptionTouchListener(context,
+			// convertView));
+			// Set the state colors of the view
+			ColorDrawable ribbonColor = new ColorDrawable();
+
+			if (listObject.isImportant())
+				ribbonColor.setColor(Color.parseColor("#"
+						+ dbHandler.getCategories(listObject).get(0)
+								.getImportantColor()));
+			else
+				ribbonColor.setColor(Color.parseColor("#"
+						+ dbHandler.getCategories(listObject).get(0)
+								.getBaseColor()));
+
+			LinearLayout ribbonView = (LinearLayout) convertView
+					.findViewById(R.id.task_ribbons);
+			View ribbon = new View(convertView.getContext());
+			ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+					.getResources().getDimension(R.dimen.ribbon_width),
+					LinearLayout.LayoutParams.MATCH_PARENT));
+			ribbon.setBackgroundDrawable(ribbonColor);
+			ribbonView.addView(ribbon);
+
+			ColorDrawable baseColor = new ColorDrawable();
+			baseColor.setColor(context.getResources().getColor(R.color.white));
+			StateListDrawable states = new StateListDrawable();
+			states.addState(
+					new int[]{android.R.attr.state_pressed},
+					context.getResources().getDrawable(
+							R.drawable.list_pressed_holo_dark));
+			states.addState(StateSet.WILD_CARD, baseColor);
+			convertView.setBackgroundDrawable(states);
+
+			if (!getLOShouldBeVisible(listObject))
+				convertView.setVisibility(View.VISIBLE);
+		} else {
+			// TODO is there a way to fix visibility without this?
+			convertView = new View(context);
 			convertView.setVisibility(View.INVISIBLE);
-		else
-			convertView.setVisibility(View.VISIBLE);
+		}
 		return convertView;
 	}
+
 	@Override
 	public int getItemViewType(int i) {
 		return i;
@@ -326,7 +375,7 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * Add a category to the category list of categories to be displyed
+	 * Add a category to the list with categories displayed by this adapter.
 	 * 
 	 * @param cat
 	 *            the category to add
@@ -337,8 +386,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * add a list with categories. If a category from input list is already in
-	 * the list it will not be added again.
+	 * add a list with categories to the category list. If a category from input
+	 * list is already in the list it will not be added again.
 	 * 
 	 * @param catList
 	 *            a list with new categories to add into the list
@@ -349,7 +398,8 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * remove a category from the category list of categories to be displayed
+	 * remove a category from the list with categories displayed by this
+	 * adapter.
 	 * 
 	 * @param cat
 	 *            the category to remove
@@ -381,9 +431,11 @@ public class CustomListAdapter implements ListAdapter {
 	}
 
 	/**
-	 * removes a list with categories.
+	 * removes a list with categories from the list with categories displayed in
+	 * by this adapter.
 	 * 
 	 * @param catList
+	 *            List with categories that will be removed
 	 */
 	public void removeCategoryList(List<Category> catList) {
 		for (Category cat : catList)

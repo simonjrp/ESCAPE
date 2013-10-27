@@ -3,23 +3,29 @@ package se.chalmers.dat255.group22.escape;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.chalmers.dat255.group22.escape.fragments.BlocksFragment;
 import se.chalmers.dat255.group22.escape.fragments.PomodoroFragment;
 import se.chalmers.dat255.group22.escape.fragments.TasksEventsFragment;
+import se.chalmers.dat255.group22.escape.fragments.listfragments.BlockListFragment;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * The main activity, to be launched when app is started.
@@ -31,23 +37,27 @@ public class MainActivity extends FragmentActivity {
 	private String[] drawerTitles;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
+	private RelativeLayout drawerListLayout;
 	private ActionBarDrawerToggle drawerToggle;
 	private CharSequence title;
 	private CharSequence drawerTitle;
 	private int fragmentPosition;
+	private boolean backPressedOnce;
+	private AlertDialog aboutDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// Initializes the notification handler with this FragmentActivity
+		// Initializes the notification handler with this context
 		NotificationHandler.getInstance().init(this);
 
 		// Configure the navigation drawer
 		drawerTitles = getResources().getStringArray(R.array.drawer_titles);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		drawerList = (ListView) findViewById(R.id.left_drawer);
+		drawerList = (ListView) findViewById(R.id.left_drawer_list);
+		drawerListLayout = (RelativeLayout) findViewById(R.id.left_drawer_layout);
 
 		drawerList.setAdapter(new ArrayAdapter<String>(this,
 				R.layout.drawer_list_item, drawerTitles));
@@ -81,7 +91,6 @@ public class MainActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		getMenuInflater().inflate(R.menu.fragment_action, menu);
 		return true;
 	}
 
@@ -89,23 +98,25 @@ public class MainActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Send item selected event to the drawer toggle (to handle click on the
 		// back/up button in the actionbar). If back/up button was pressed, the
-		// drawer toggle will return true, and false otherwised (i.e some other
+		// drawer toggle will return true, and false otherwise (i.e some other
 		// button in action bar was pressed)
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 
 		// Handle all action bar items except for the back/up button here.
+		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.add_task :
-				Intent intent = new Intent(this, NewTaskActivity.class);
+				intent = new Intent(this, NewTaskActivity.class);
 				startActivity(intent);
 				break;
+			case R.id.add_blocks :
+				intent = new Intent(this, NewBlockActivity.class);
+				startActivity(intent);
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
-
 	/*
 	 * Called when invalidateOptionsMenu() is called.
 	 * 
@@ -114,11 +125,15 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// Hides the "New task" button in actionbar if navigation drawer is open
-		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-		menu.findItem(R.id.add_task).setVisible(!drawerOpen);
+		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerListLayout);
+		menu.findItem(R.id.add_task).setVisible(
+				!drawerOpen && fragmentPosition == 0);
 
 		menu.findItem(R.id.pick_category).setVisible(
-				!(drawerOpen || fragmentPosition != 0));
+				(!drawerOpen && fragmentPosition == 0));
+
+		menu.findItem(R.id.add_blocks).setVisible(
+				!drawerOpen && fragmentPosition == 1);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -173,7 +188,7 @@ public class MainActivity extends FragmentActivity {
 
 				// Add all wanted fragments here
 				fragmentList.add(new TasksEventsFragment());
-				fragmentList.add(new BlocksFragment());
+				fragmentList.add(new BlockListFragment());
 				fragmentList.add(new PomodoroFragment());
 			}
 
@@ -184,7 +199,7 @@ public class MainActivity extends FragmentActivity {
 
 			drawerList.setItemChecked(position, true);
 			setTitle(drawerTitles[position]);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawerListLayout);
 
 		}
 
@@ -198,4 +213,70 @@ public class MainActivity extends FragmentActivity {
 			title = string;
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		/*
+		 * Displays a toast about exiting the app if the user clicks on the back
+		 * button one time. If the user clicks one more time in the next 2
+		 * seconds, the application exits.
+		 */
+		if (backPressedOnce) {
+			super.onBackPressed();
+		} else {
+			backPressedOnce = true;
+			Toast.makeText(this, getString(R.string.back_button_hint),
+					Toast.LENGTH_SHORT).show();
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					backPressedOnce = false;
+				}
+			}, 2000);
+		}
+
+	}
+
+	/**
+	 * OnClick method for the about menu item in the navigation drawer.
+	 * 
+	 * @param view
+	 *            The view that was clicked.
+	 */
+	public void onClickAbout(View view) {
+		showAboutDialog();
+	}
+
+	/*
+	 * Brings up an about dialog showing short description of the app.
+	 */
+	private void showAboutDialog() {
+		if (aboutDialog == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.about_dialog_title));
+			builder.setIcon(R.drawable.ic_launcher);
+
+			View dialogView = getLayoutInflater().inflate(
+					R.layout.about_dialog, null, false);
+
+			// Interprets html link tags correctly and makes links clickable
+			TextView repoLink = (TextView) dialogView
+					.findViewById(R.id.about_dialog_repo);
+			repoLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+			TextView licenseLink = (TextView) dialogView
+					.findViewById(R.id.about_dialog_license);
+			licenseLink.setMovementMethod(LinkMovementMethod.getInstance());
+
+			builder.setView(dialogView);
+
+			aboutDialog = builder.create();
+		}
+
+		// Brings up the dialog
+		aboutDialog.show();
+
+	}
+
 }

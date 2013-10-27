@@ -8,7 +8,7 @@
                 style="@android:style/Widget.DropDownItem.Spinner">
 
     <TextView
-        android:id="@+id/spinnerTimeAsText"
+        android:id="@+id/spinner_time_as_text"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:paddingRight="25dp"
@@ -17,7 +17,7 @@
     </TextView>
 
     <TextView
-        android:id="@+id/spinnerTimeAsTime"
+        android:id="@+id/spinner_time_as_time"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="@dimen/textsize_small"

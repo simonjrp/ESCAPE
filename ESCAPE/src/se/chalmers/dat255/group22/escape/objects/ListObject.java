@@ -179,7 +179,18 @@ public class ListObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((categories == null) ? 0 : categories.hashCode());
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+		result = prime * result
+				+ ((gpsAlarm == null) ? 0 : gpsAlarm.hashCode());
 		result = prime * result + id;
+		result = prime * result + (important ? 1231 : 1237);
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((place == null) ? 0 : place.hashCode());
+		result = prime * result + ((time == null) ? 0 : time.hashCode());
+		result = prime * result
+				+ ((timeAlarm == null) ? 0 : timeAlarm.hashCode());
 		return result;
 	}
 
@@ -200,7 +211,59 @@ public class ListObject {
 			return false;
 		}
 		ListObject other = (ListObject) obj;
-		if (id != other.getId()) {
+		if (categories == null) {
+			if (other.categories != null) {
+				return false;
+			}
+		} else if (!categories.equals(other.categories)) {
+			return false;
+		}
+		if (comment == null) {
+			if (other.comment != null) {
+				return false;
+			}
+		} else if (!comment.equals(other.comment)) {
+			return false;
+		}
+		if (gpsAlarm == null) {
+			if (other.gpsAlarm != null) {
+				return false;
+			}
+		} else if (!gpsAlarm.equals(other.gpsAlarm)) {
+			return false;
+		}
+		if (id != other.id) {
+			return false;
+		}
+		if (important != other.important) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (place == null) {
+			if (other.place != null) {
+				return false;
+			}
+		} else if (!place.equals(other.place)) {
+			return false;
+		}
+		if (time == null) {
+			if (other.time != null) {
+				return false;
+			}
+		} else if (!time.equals(other.time)) {
+			return false;
+		}
+		if (timeAlarm == null) {
+			if (other.timeAlarm != null) {
+				return false;
+			}
+		} else if (!timeAlarm.equals(other.timeAlarm)) {
 			return false;
 		}
 		return true;

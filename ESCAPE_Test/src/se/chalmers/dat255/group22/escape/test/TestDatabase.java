@@ -419,6 +419,22 @@ public class TestDatabase extends AndroidTestCase {
 		db.deleteListObjectWithPlace(lo);
 		assertEquals(null, db.getPlace(lo));
 	}
+	
+	public void testGetListObjectsThatHaveTime() {
+		Date date1 = new Date(1l);
+		Date date2 = new Date(2l);
+		Time time = new Time(1, date1, date2);
+		ListObject lo = new ListObject(1, "listobject");
+		db.addTime(time);
+		Long id = db.addListObject(lo);
+		lo = db.getListObject(id);
+
+		db.addListObjectsWithTime(lo, time);
+		assertEquals(time, db.getTime(lo));
+
+		List<ListObject> lotimes = db.getAllListObjectsThatHaveTimeAndCategories();
+		assertTrue(lotimes.contains(lo));
+	}
 
 	@Override
 	protected void tearDown() throws Exception {

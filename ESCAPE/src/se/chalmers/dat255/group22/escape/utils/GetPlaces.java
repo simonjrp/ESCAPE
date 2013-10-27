@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape.utils;
 
+import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +42,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 	// three dots is java for an array of strings
 	protected ArrayList<String> doInBackground(String... args) {
 
-		Log.d("gottaGo", "doInBackground");
+		Log.d(APPTAG, "doInBackground");
 
 		ArrayList<String> predictionsArr = new ArrayList<String>();
 
@@ -52,7 +54,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 		try {
 			// Browser key for Google API
 
-			String key = "key=" + context.getString(R.string.API_key);
+			String key = "key=" + context.getString(R.string.api_key);
 
 			String input = "";
 
@@ -100,16 +102,18 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 			// now get the JSON array that's inside that object
 			JSONArray allPredictions = new JSONArray(
 					predictions.getString("predictions"));
-
 			for (int i = 0; i < allPredictions.length(); i++) {
 
 				// Parse the JSONArray to exlude the country
 				JSONObject thisPrediction = (JSONObject) allPredictions.get(i);
-
+				System.out.println(thisPrediction.toString());
 				JSONArray allTerms = thisPrediction.getJSONArray("terms");
 
 				String result = "";
 				String unallowed = "0123456789";
+				// If the length is greater than 2, there is a country included
+				// in the array. Then we set the length to 2, else we use the
+				// full length.
 				int length = allTerms.length() > 2 ? 2 : allTerms.length();
 				for (int j = 0; j < length; j++) {
 					String thisValue = allTerms.getJSONObject(j).getString(
@@ -130,15 +134,16 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 					}
 				}
 				// add each entry to our array
+
 				predictionsArr.add(result);
 			}
 		} catch (IOException e) {
 
-			Log.e("ESCAPE", "GetPlaces : doInBackground", e);
+			Log.e(APPTAG, "GetPlaces : doInBackground", e);
 
 		} catch (JSONException e) {
 
-			Log.e("ESCAPE", "GetPlaces : doInBackground", e);
+			Log.e(APPTAG, "GetPlaces : doInBackground", e);
 
 		}
 
@@ -151,7 +156,7 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 	@Override
 	protected void onPostExecute(ArrayList<String> result) {
 
-		Log.d("ESCAPE", "onPostExecute : " + result.size());
+		Log.d(APPTAG, "onPostExecute : " + result.size());
 		// update the adapter
 		adapter = new ArrayAdapter<String>(context, R.layout.location_item);
 		adapter.setNotifyOnChange(true);
@@ -160,14 +165,14 @@ public class GetPlaces extends AsyncTask<String, Void, ArrayList<String>> {
 
 		for (String string : result) {
 
-			Log.d("ESCAPE", "onPostExecute : result = " + string);
+			Log.d(APPTAG, "onPostExecute : result = " + string);
 
 			adapter.add(string);
 			adapter.notifyDataSetChanged();
 
 		}
 
-		Log.d("ESCAPE",
+		Log.d(APPTAG,
 				"onPostExecute : autoCompleteAdapter" + adapter.getCount());
 
 	}

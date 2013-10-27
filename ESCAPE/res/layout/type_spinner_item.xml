@@ -8,21 +8,19 @@
                 style="@android:style/Widget.DropDownItem.Spinner">
 
     <ImageView
-        android:id="@+id/spinnerImage"
+        android:id="@+id/spinner_type_image"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:paddingRight="@dimen/ui_element_gap"
-        android:layout_centerVertical="true">
-    </ImageView>
+        android:layout_centerVertical="true"></ImageView>
 
     <TextView
-        android:id="@+id/spinnerTypeText"
+        android:id="@+id/spinner_type_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="@dimen/textsize_medium"
-        android:layout_toRightOf="@id/spinnerImage"
-        android:layout_centerVertical="true">
-    </TextView>
+        android:layout_toRightOf="@id/spinner_type_image"
+        android:layout_centerVertical="true"></TextView>
 
 
 </RelativeLayout>

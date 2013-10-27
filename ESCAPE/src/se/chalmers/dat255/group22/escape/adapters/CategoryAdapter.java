@@ -3,13 +3,16 @@ package se.chalmers.dat255.group22.escape.adapters;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 /**
@@ -102,6 +105,10 @@ public class CategoryAdapter implements ListAdapter {
 		final int myPos = position;
 		// Create the view if it does not exist
 		if (view == null) {
+
+			// The layout containing the ribbon and the checkbox
+			LinearLayout layout = new LinearLayout(context);
+
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
 			tmpBox.setChecked(theCategory.getShouldBeDisplayed());
@@ -116,7 +123,19 @@ public class CategoryAdapter implements ListAdapter {
 							.setShouldBeDisplayed(newButtonValue);
 				}
 			});
-			view = tmpBox;
+
+			// Ribbon
+			View ribbon = new View(context);
+			ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+					.getResources().getDimension(R.dimen.ribbon_width),
+					LinearLayout.LayoutParams.MATCH_PARENT));
+			ribbon.setBackgroundColor(Color.parseColor("#"
+					+ theCategory.getBaseColor()));
+
+			layout.addView(ribbon);
+			layout.addView(tmpBox);
+
+			view = layout;
 		}
 		return view;
 	}

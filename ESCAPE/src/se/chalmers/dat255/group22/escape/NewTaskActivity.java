@@ -8,13 +8,16 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
+import se.chalmers.dat255.group22.escape.adapters.EventSpinnerSyncer;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerCategoryAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerDayAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import se.chalmers.dat255.group22.escape.adapters.SpinnerTypeAdapter;
 import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.fragments.TaskDetailsFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.CategoryCreatorFragment;
 import se.chalmers.dat255.group22.escape.listeners.OnItemSelectedSpinnerListener;
 import se.chalmers.dat255.group22.escape.objects.Category;
 import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
@@ -22,8 +25,6 @@ import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Place;
 import se.chalmers.dat255.group22.escape.objects.Time;
 import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import se.chalmers.dat255.group22.escape.utils.GenerateGPSAlarmTask;
 import se.chalmers.dat255.group22.escape.utils.GetPlaces;
 import android.app.Activity;
@@ -32,6 +33,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,13 +44,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * An activity used for creating a new task
  * 
  * @author Erik, Carl, Simon Persson
  */
-public class NewTaskActivity extends Activity {
+public class NewTaskActivity extends Activity
+		implements
+			CategoryCreatorFragment.EditCategoryDialogListener {
 
 	private AutoCompleteTextView locationAutoComplete;
 	private AutoCompleteTextView locationReminderAutoComplete;
@@ -59,7 +64,7 @@ public class NewTaskActivity extends Activity {
 	private boolean isEvent;
 	private boolean editing;
 	private String nextWeekSameDay;
-	private ReminderType reminderType;
+	private boolean userIsSure;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,37 +83,12 @@ public class NewTaskActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		userIsSure = false;
 
-		DBHandler dbHandler = new DBHandler(this);
 		// Set up the spinner for different categories
-		Spinner categorySpinner = (Spinner) this
-				.findViewById(R.id.task_categories);
+		initCategoryAdapter();
 
-		ArrayList<String> categories = new ArrayList<String>();
-		// Grab all the categories from the DB...
-		List<Category> categoriesFromDB = dbHandler.getAllCategories();
-
-		// ...and add them to the array used in the spinner
-		// TODO Catch eventual NullPointerException?
-		for (Category c : categoriesFromDB) {
-			if (!c.getName().equals(getString(R.string.custom_category)))
-				categories.add(c.getName());
-
-		}
-		// Add the last item that will act as a button for adding a new category
-		categories.add(getString(R.string.custom_category));
-
-		// The DayAdapter only makes use of simple strings and presents its
-		// items the way we want the categories to be presented. It would be
-		// unnecessary to create an identical adapter just for the categories,
-		// so we just use this one instead
-
-		SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
-				this, R.layout.simple_spinner_item, categories);
-
-		categorySpinner.setAdapter(categoryAdapter);
-
-		/**
+		/*
 		 * Check if the activity was called from an already created listObject
 		 * by checking the flag of the intent.
 		 * 
@@ -116,221 +96,22 @@ public class NewTaskActivity extends Activity {
 		 * creating a new one.
 		 */
 		Intent intent = getIntent();
-
 		if (intent.getFlags() == EDIT_TASK_ID) {
-			// Get the bundle and the ID of the listObject...
-			Bundle bundle = intent.getBundleExtra(EDIT_TASK_MSG);
-			if (bundle != null) {
-				long id = bundle.getInt(INTENT_GET_ID);
-
-				ListObject listObject = dbHandler.getListObject(id);
-				editing = true;
-
-				// ...and get data from the listObject that "called" the
-				// activity
-
-				// Avoid NullPointerException
-				String nameString = "";
-				String categoryString = "";
-				String descriptionString = "";
-				String locationString = "";
-				TimeAlarm timeAlarm = null;
-				GPSAlarm gpsAlarm = null;
-				Date timeStart = null;
-				Date timeEnd = null;
-
-				if (listObject.getName() != null)
-					nameString = listObject.getName();
-
-				// TODO This needs to be fixed
-				/*
-				 * if (listObject.getCategories() != null) categoryString =
-				 * listObject.getCategories().get(0) .getName();
-				 */
-
-				if (listObject.getComment() != null)
-					descriptionString = listObject.getComment();
-
-				if (dbHandler.getPlace(listObject) != null)
-					locationString = dbHandler.getPlace(listObject).getName();
-
-				Boolean isImportant = listObject.isImportant();
-
-				if (dbHandler.getTimeAlarm(listObject) != null) {
-					timeAlarm = dbHandler.getTimeAlarm(listObject);
-				}
-
-				if (dbHandler.getGPSAlarm(listObject) != null) {
-					gpsAlarm = dbHandler.getGPSAlarm(listObject);
-				}
-
-				if (dbHandler.getTime(listObject) != null)
-					timeStart = dbHandler.getTime(listObject).getStartDate();
-
-				if (dbHandler.getTime(listObject) != null)
-					timeEnd = dbHandler.getTime(listObject).getEndDate();
-
-				// Grab references to all the input fields...
-
-				EditText title = (EditText) findViewById(R.id.task_title);
-				Spinner category = (Spinner) findViewById(R.id.task_categories);
-				EditText description = (EditText) findViewById(R.id.task_description);
-				AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.task_location);
-				CheckBox important = (CheckBox) findViewById(R.id.task_important);
-
-				Spinner remindType = (Spinner) findViewById(R.id.reminderTypeSpinner);
-				Spinner remindDate = (Spinner) findViewById(R.id.reminderDateSpinner);
-				Spinner remindTime = (Spinner) findViewById(R.id.reminderTimeSpinner);
-
-				AutoCompleteTextView remindLocation = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
-
-				Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
-				Spinner dateTo = (Spinner) findViewById(R.id.date_to);
-				Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
-				Spinner timeTo = (Spinner) findViewById(R.id.time_to);
-
-				// ...and set their default values from the listObject!
-				title.setText(nameString);
-
-				// TODO This needs to be worked out
-				/*
-				 * if(categoryString != null &&
-				 * !categoryString.equals(getString(R.string.custom_category)))
-				 * category.setSelection(0);
-				 */
-
-				if (descriptionString != null) {
-					if (descriptionString.trim().length() != 0)
-						description.setText(descriptionString);
-				}
-				if (locationString != null) {
-					if (locationString.trim().length() != 0)
-						location.setText(locationString);
-				}
-
-				important.setChecked(isImportant);
-
-				// Open up the reminder field if it has a reminder...
-				if (timeAlarm != null) {
-					RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
-					onRemindMe(remindMe);
-					remindType.setSelection(0);
-					showTimeReminderInput();
-
-					// Set the spinners according to the current time alarm...
-					SpinnerDayAdapter dayAdapter = (SpinnerDayAdapter) remindDate
-							.getAdapter();
-					dayAdapter.addDate(timeAlarm.getDate());
-
-					SpinnerTimeAdapter timeAdapter = (SpinnerTimeAdapter) remindTime
-							.getAdapter();
-					timeAdapter.addTime(timeAlarm.getDate());
-
-					isTimeReminder = true;
-					isLocationReminder = false;
-
-				}
-				if (gpsAlarm != null) {
-					RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remindMeField);
-					onRemindMe(remindMe);
-					remindType.setSelection(1);
-					showLocationReminderInput();
-
-					// Set the text of the location field
-					// TODO Need latest DB to get Location as string from
-					// TODO GPSAlarm
-					remindLocation.setText(gpsAlarm.getAdress());
-
-					isLocationReminder = true;
-					isTimeReminder = false;
-				}
-
-				// ...and the event field if it is an event...
-				if (timeStart != null) {
-					Button remindMe = (Button) findViewById(R.id.task_convert_event);
-					onConvertEvent(remindMe);
-
-					// Set the spinners according to the current time...
-					// Day from:
-					SpinnerDayAdapter fromDayAdapter = (SpinnerDayAdapter) dateFrom
-							.getAdapter();
-					fromDayAdapter.addDate(timeStart);
-
-					// Time from:
-					SpinnerTimeAdapter fromTimeAdapter = (SpinnerTimeAdapter) timeFrom
-							.getAdapter();
-					fromTimeAdapter.addTime(timeStart);
-
-					// Day to:
-					SpinnerDayAdapter toDayAdapter = (SpinnerDayAdapter) dateTo
-							.getAdapter();
-					toDayAdapter.addDate(timeEnd);
-
-					// Time to:
-					SpinnerTimeAdapter toTimeAdapter = (SpinnerTimeAdapter) timeTo
-							.getAdapter();
-					toTimeAdapter.addTime(timeEnd);
-
-					isEvent = true;
-				}
-			}
+			loadListObjectFromIntent(intent);
 		}
 
-		// Initiate the AutoCompleteView
-		locationReminderAutoComplete = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
-		// Initiate the ArrayAdapter
-		adapter = new ArrayAdapter<String>(this, R.layout.location_item) {
-
-		};
-		adapter.setNotifyOnChange(true);
-		locationReminderAutoComplete.setThreshold(3);
-		locationReminderAutoComplete.setAdapter(adapter);
-		locationReminderAutoComplete
-				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus)
-							locationReminderAutoComplete.setSelection(0);
-					}
-				});
-		locationReminderAutoComplete.addTextChangedListener(new TextWatcher() {
-
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				GetPlaces task = new GetPlaces(locationReminderAutoComplete,
-						adapter, getBaseContext());
-				// now pass the argument in the textview to the task
-				task.execute(locationReminderAutoComplete.getText().toString());
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			public void afterTextChanged(Editable s) {
-			}
-		});
-
+		// Initiate the AutoCompleteTextViews
+		locationReminderAutoComplete = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		locationAutoComplete = (AutoCompleteTextView) findViewById(R.id.task_location);
-		locationAutoComplete.setThreshold(3);
-		locationAutoComplete.setAdapter(adapter);
-		locationAutoComplete.addTextChangedListener(new TextWatcher() {
 
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				GetPlaces task = new GetPlaces(locationAutoComplete, adapter,
-						getBaseContext());
-				// now pass the argument in the textview to the task
-				task.execute(locationAutoComplete.getText().toString());
-			}
+		// Initiate the ArrayAdapter
+		adapter = new ArrayAdapter<String>(this, R.layout.location_item);
+		adapter.setNotifyOnChange(true);
 
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
+		// Set up the AutoCompleteTextViews
+		setupAutoCompleteTextView(locationReminderAutoComplete);
+		setupAutoCompleteTextView(locationAutoComplete);
 
-			public void afterTextChanged(Editable s) {
-			}
-		});
 	}
 
 	@Override
@@ -347,12 +128,16 @@ public class NewTaskActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-
 		/* Set data of the object */
 
+		// Get references to all input fields
 		// Title
 		EditText taskTitle = (EditText) findViewById(R.id.task_title);
 		String name = taskTitle.getText().toString();
+
+		// Category
+		Spinner categories = (Spinner) findViewById(R.id.task_categories);
+		String category = categories.getSelectedItem().toString();
 
 		// Description
 		EditText taskDesc = (EditText) findViewById(R.id.task_description);
@@ -362,20 +147,16 @@ public class NewTaskActivity extends Activity {
 		CheckBox important = (CheckBox) findViewById(R.id.task_important);
 		boolean importantTask = important.isChecked();
 
-		// Category
-		Spinner categories = (Spinner) findViewById(R.id.task_categories);
-		String category = categories.getSelectedItem().toString();
-
 		// Location
 		String location = "";
 		AutoCompleteTextView taskLocation = (AutoCompleteTextView) findViewById(R.id.task_location);
 		if (taskLocation.getText() != null)
 			location = taskLocation.getText().toString();
+
 		// Time
-		RelativeLayout eventLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
 		String dateFromString = "";
 		String dateToString = "";
-		if (eventLayout.isShown()) {
+		if (isEvent) {
 
 			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
 			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
@@ -390,22 +171,14 @@ public class NewTaskActivity extends Activity {
 		TimeAlarm timeAlarm = null;
 
 		if (hasReminder) {
-			// Reminder type
-			Spinner reminderTypeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
-			if (reminderTypeSpinner.getSelectedItemPosition() == 0) {
-				reminderType = Constants.ReminderType.TIME;
-			} else {
-				reminderType = Constants.ReminderType.GPS;
-			}
-
-			if (reminderType == Constants.ReminderType.TIME) {
+			if (isTimeReminder) {
 				// Gets the spinners and their adapters.
 
-				Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
+				Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminder_date_spinner);
 				SpinnerDayAdapter reminderDateAdapter = (SpinnerDayAdapter) reminderDateSpinner
 						.getAdapter();
 
-				Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
+				Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminder_time_spinner);
 				SpinnerTimeAdapter reminderTimeAdapter = (SpinnerTimeAdapter) reminderTimeSpinner
 						.getAdapter();
 
@@ -426,17 +199,15 @@ public class NewTaskActivity extends Activity {
 		 * NOTE: GPS Alarm is added in an AsyncTask, because the process of
 		 * getting coordinates from a textfields would freeze the UI otherwise
 		 */
-
-		// TODO Fix Category from spinner!
-		// Category newCategory = new Category(category, "Random Color",
-		// "Another random Color");
-		Category newCategory = new Category("Tmp default ", "Random Color",
-				"Another random Color");
+		DBHandler dbHandler = new DBHandler(this);
+		Category newCategory = new Category(category, dbHandler.getCategory(
+				category).getBaseColor(), dbHandler.getCategory(category)
+				.getImportantColor());
+		dbHandler.close();
 		Place place = new Place(1, location);
 
 		// If a name is set, create ListObject...
 		if (name.trim().length() != 0) {
-			DBHandler db = new DBHandler(this);
 			ListObject newListObject = new ListObject(1, name);
 
 			if (comment.trim().length() != 0)
@@ -453,10 +224,10 @@ public class NewTaskActivity extends Activity {
 			} else if (isLocationReminder) {
 				// lo.setGpsAlarm(...);
 			}
-			Time time = null;
+			Time newTime = null;
 			if (isEvent) {
-				time = getTimeFromSpinners(dateFromString, dateToString);
-				newListObject.setTime(time);
+				newTime = getTimeFromSpinners(dateFromString, dateToString);
+				newListObject.setTime(newTime);
 			}
 
 			/*
@@ -464,99 +235,141 @@ public class NewTaskActivity extends Activity {
 			 * with the new values
 			 */
 			if (editing) {
-				Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
-				DBHandler dbHandler = new DBHandler(this);
-				long id = bundle.getInt(INTENT_GET_ID);
-				ListObject editedListObject = dbHandler.getListObject(id);
-				editedListObject.setName(newListObject.getName());
-				editedListObject.setComment(newListObject.getComment());
-				editedListObject.setImportant(newListObject.isImportant());
-				long tmpId;
-
-				// Update/add new place
-				Place originalPlace = dbHandler.getPlace(editedListObject);
-				if (originalPlace != null) {
-					originalPlace.setName(place.getName());
-					db.updatePlaces(originalPlace);
-				} else {
-					tmpId = dbHandler.addPlace(place);
-					dbHandler.addListObjectWithPlace(editedListObject,
-							dbHandler.getPlace(tmpId));
-				}
-
-				// No matter what¸ remove all old time/place reminders.
-				TimeAlarm originalTimeAlarm = dbHandler
-						.getTimeAlarm(editedListObject);
-				if (originalTimeAlarm != null) {
-					NotificationHandler.getInstance().removeTimeReminder(
-							editedListObject);
-				}
-
-				GPSAlarm originalGPSAlarm = dbHandler
-						.getGPSAlarm(editedListObject);
-				if (originalGPSAlarm != null) {
-					dbHandler.deleteGPSAlarm(originalGPSAlarm);
-				}
-
-				// Update/add new reminder
-				if (hasReminder) {
-					if (reminderType == Constants.ReminderType.TIME) {
-
-						if (originalTimeAlarm != null) {
-							originalTimeAlarm.setDate(timeAlarm.getDate());
-							db.updateTimeAlarm(originalTimeAlarm);
-							NotificationHandler
-									.getInstance()
-									.addTimeReminder(
-											dbHandler
-													.getListObject((long) editedListObject
-															.getId()));
-						} else {
-							tmpId = dbHandler.addTimeAlarm(timeAlarm);
-							dbHandler.addListObjectWithTimeAlarm(
-									editedListObject,
-									dbHandler.getTimeAlarm(tmpId));
-							NotificationHandler
-									.getInstance()
-									.addTimeReminder(
-											dbHandler
-													.getListObject((long) editedListObject
-															.getId()));
-						}
-					} else {
-						EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-						new GenerateGPSAlarmTask(this, id)
-								.execute(reminderLocationEditText.getText()
-										.toString());
-					}
-				}
-
-				// Update/add time
-				if (isEvent) {
-					Time originalTime = dbHandler.getTime(editedListObject);
-					if (originalTime != null) {
-						originalTime.setStartDate(time.getStartDate());
-						originalTime.setEndDate(time.getEndDate());
-						db.updateTimes(originalTime);
-					} else {
-						tmpId = dbHandler.addTime(time);
-						dbHandler.addListObjectsWithTime(editedListObject,
-								dbHandler.getTime(tmpId));
-					}
-				} else {
-					dbHandler.deleteListObjectWithTime(editedListObject);
-				}
-				dbHandler.updateListObject(editedListObject);
+				updateDataBase(newListObject);
 			} else {
 				saveToDatabase(newListObject);
-
 			}
-
+			super.onBackPressed();
 		} else {
-			// ... do nothing
+			// If there is no title, remind the user that a listObject needs a
+			// title to prevent mistakes
+			if (userIsSure) {
+				if (isEvent)
+					Toast.makeText(this, getText(R.string.event_not_saved),
+							Toast.LENGTH_LONG).show();
+				else
+					Toast.makeText(this, getText(R.string.task_not_saved),
+							Toast.LENGTH_LONG).show();
+				super.onBackPressed();
+			} else {
+				Toast.makeText(this, getText(R.string.no_save),
+						Toast.LENGTH_SHORT).show();
+				userIsSure = true;
+			}
 		}
 
-		super.onBackPressed();
+	}
+
+	/*
+	 * Grab all values from the fields and update/add the values to the database
+	 */
+	private void updateDataBase(ListObject newListObject) {
+		// References
+		DBHandler dbHandler = new DBHandler(this);
+		Place place = newListObject.getPlace();
+		Category newCategory = newListObject.getCategories().get(0);
+		Time newTime = newListObject.getTime();
+		TimeAlarm timeAlarm = newListObject.getTimeAlarm();
+		// Get the ListObject that wants to be edited
+		Bundle bundle = getIntent().getBundleExtra(EDIT_TASK_MSG);
+		long id = bundle.getInt(INTENT_GET_ID);
+		long tmpId;
+		ListObject editedListObject = dbHandler.getListObject(id);
+
+		editedListObject.setName(newListObject.getName());
+		editedListObject.setComment(newListObject.getComment());
+		editedListObject.setImportant(newListObject.isImportant());
+
+		// Update/add new place
+		Place originalPlace = dbHandler.getPlace(editedListObject);
+		if (originalPlace != null) {
+			originalPlace.setName(place.getName());
+			dbHandler.updatePlaces(originalPlace);
+		} else {
+			tmpId = dbHandler.addPlace(place);
+			dbHandler.addListObjectWithPlace(editedListObject,
+					dbHandler.getPlace(tmpId));
+		}
+
+		Category originalCategory = dbHandler.getCategories(editedListObject)
+				.get(0);
+		if (originalCategory != null) {
+			dbHandler.deleteCategoryWithListObject(originalCategory,
+					editedListObject);
+			originalCategory.setName(newCategory.getName());
+			dbHandler.addCategoryWithListObject(originalCategory,
+					editedListObject);
+		}
+
+		// No matter what¸ remove all old time/place reminders.
+		TimeAlarm originalTimeAlarm = dbHandler.getTimeAlarm(editedListObject);
+		if (originalTimeAlarm != null) {
+			NotificationHandler.getInstance().removeTimeReminder(
+					editedListObject);
+			dbHandler.deleteTimeAlarm(originalTimeAlarm);
+			dbHandler.deleteListObjectWithTimeAlarm(editedListObject);
+
+		}
+
+		GPSAlarm originalGPSAlarm = dbHandler.getGPSAlarm(editedListObject);
+		if (originalGPSAlarm != null) {
+			NotificationHandler.getInstance().removeLocationReminder(
+					editedListObject);
+			dbHandler.deleteListObjectWithGPSAlarm(editedListObject);
+			dbHandler.deleteGPSAlarm(originalGPSAlarm);
+
+		}
+
+		Time originalTime = dbHandler.getTime(editedListObject);
+		if (originalTime != null) {
+			dbHandler.deleteListObjectWithTime(editedListObject);
+			dbHandler.deleteTime(originalTime);
+
+		}
+
+		// Update/add time
+		if (isEvent) {
+			tmpId = dbHandler.addTime(newTime);
+			dbHandler.addListObjectsWithTime(editedListObject,
+					dbHandler.getTime(tmpId));
+
+		}
+
+		// Update/add new reminder
+		if (hasReminder) {
+			if (isTimeReminder) {
+				Log.d("BÖG", timeAlarm.toString());
+				if (timeAlarm != null) {
+					boolean timeHasPassed = (timeAlarm.getDate().getTime() - System
+							.currentTimeMillis()) < 0;
+
+					if (timeHasPassed) {
+						Toast.makeText(this,
+								getString(R.string.invalid_time_reminder),
+								Toast.LENGTH_LONG).show();
+					} else {
+						tmpId = dbHandler.addTimeAlarm(timeAlarm);
+						dbHandler.addListObjectWithTimeAlarm(editedListObject,
+								dbHandler.getTimeAlarm(tmpId));
+						NotificationHandler.getInstance().addTimeReminder(
+								dbHandler.getListObject(
+										(long) editedListObject.getId())
+										.getId());
+					}
+				}
+
+			} else if (isLocationReminder) {
+
+				EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
+				if (reminderLocationEditText.getText().toString().length() != 0) {
+					new GenerateGPSAlarmTask(this, id)
+							.execute(reminderLocationEditText.getText()
+									.toString());
+				}
+			}
+		}
+
+		dbHandler.updateListObject(editedListObject);
 	}
 
 	/**
@@ -579,14 +392,22 @@ public class NewTaskActivity extends Activity {
 		 */
 
 		if (lo.getTimeAlarm() != null) {
-			tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
-			dbHandler.addListObjectWithTimeAlarm(
-					dbHandler.getListObject(objId),
-					dbHandler.getTimeAlarm(tmpId));
 
-			// creates a time notification
-			NotificationHandler.getInstance().addTimeReminder(
-					dbHandler.getListObject(objId));
+			boolean timeHasPassed = (lo.getTimeAlarm().getDate().getTime() - System
+					.currentTimeMillis()) < 0;
+
+			if (timeHasPassed) {
+				Toast.makeText(this, getString(R.string.invalid_time_reminder),
+						Toast.LENGTH_LONG).show();
+			} else {
+				tmpId = dbHandler.addTimeAlarm(lo.getTimeAlarm());
+				dbHandler.addListObjectWithTimeAlarm(
+						dbHandler.getListObject(objId),
+						dbHandler.getTimeAlarm(tmpId));
+
+				// creates a time notification
+				NotificationHandler.getInstance().addTimeReminder(objId);
+			}
 
 		}
 
@@ -611,10 +432,13 @@ public class NewTaskActivity extends Activity {
 		 * freezes when trying to find coordinates matching the text string in
 		 * the reminder location text field.
 		 */
-		if (reminderType == Constants.ReminderType.GPS) {
-			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminderLocationEditText);
-			new GenerateGPSAlarmTask(this, objId)
-					.execute(reminderLocationEditText.getText().toString());
+		if (isLocationReminder) {
+			EditText reminderLocationEditText = (EditText) findViewById(R.id.reminder_location_edittext);
+			if (reminderLocationEditText.getText().toString().length() != 0) {
+				new GenerateGPSAlarmTask(this, objId)
+						.execute(reminderLocationEditText.getText().toString());
+			}
+
 		}
 
 		if (lo.getPlace() != null) {
@@ -622,6 +446,7 @@ public class NewTaskActivity extends Activity {
 			dbHandler.addListObjectWithPlace(dbHandler.getListObject(objId),
 					dbHandler.getPlace(tmpId));
 		}
+		dbHandler.close();
 	}
 
 	/**
@@ -633,10 +458,10 @@ public class NewTaskActivity extends Activity {
 	 *            the view that calls this method.
 	 */
 	public void onConvertEvent(View v) {
-
+		isEvent = true;
 		v.setVisibility(View.INVISIBLE);
 
-		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.event_spinners);
 		relativeLayout.setVisibility(View.VISIBLE);
 
 		//
@@ -644,17 +469,12 @@ public class NewTaskActivity extends Activity {
 		//
 		Spinner dateFromSpinner = (Spinner) findViewById(R.id.date_from);
 
-		dateFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateFromSpinner.getId()));
-
 		// Array containing different days for an event
 		ArrayList<String> strDayList = new ArrayList<String>();
-		strDayList.add(getString(R.string.todayLabel));
-		strDayList.add(getString(R.string.tomorrowLabel));
+		strDayList.add(getString(R.string.today_label));
+		strDayList.add(getString(R.string.tomorrow_label));
 		strDayList.add(nextWeekSameDay);
-		strDayList.add(getString(R.string.pickDayLabel));
+		strDayList.add(getString(R.string.pick_day_label));
 
 		SpinnerDayAdapter dayFromAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, dateFromSpinner);
@@ -663,10 +483,6 @@ public class NewTaskActivity extends Activity {
 		/* From: TimeSpinner */
 		//
 		Spinner timeFromSpinner = (Spinner) findViewById(R.id.time_from);
-		timeFromSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeFromSpinner.getId()));
 
 		SpinnerTimeAdapter timeFromAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeFromSpinner);
@@ -675,10 +491,6 @@ public class NewTaskActivity extends Activity {
 		/* To: DateSpinner */
 		//
 		Spinner dateToSpinner = (Spinner) findViewById(R.id.date_to);
-		dateToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
-						dateToSpinner.getId()));
 
 		SpinnerDayAdapter dayToAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, dateToSpinner);
@@ -687,20 +499,18 @@ public class NewTaskActivity extends Activity {
 		/* To: TimeSpinner */
 		//
 		Spinner timeToSpinner = (Spinner) findViewById(R.id.time_to);
-		timeToSpinner
-				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
-						this, OnItemSelectedSpinnerListener.TIME_SPINNER,
-						timeToSpinner.getId()));
 
 		SpinnerTimeAdapter timeToAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, timeToSpinner);
 
 		// Set all adapters
 		dateFromSpinner.setAdapter(dayFromAdapter);
-		timeFromSpinner.setAdapter(timeFromAdapter);
-
 		dateToSpinner.setAdapter(dayToAdapter);
+		timeFromSpinner.setAdapter(timeFromAdapter);
 		timeToSpinner.setAdapter(timeToAdapter);
+
+		EventSpinnerSyncer eventSpinnerSyncer = new EventSpinnerSyncer(this,
+				dateFromSpinner, dateToSpinner, timeFromSpinner, timeToSpinner);
 
 		isEvent = true;
 
@@ -720,14 +530,12 @@ public class NewTaskActivity extends Activity {
 		v.setVisibility(View.INVISIBLE);
 
 		// View the reminder layout
-		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.setReminderField);
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.set_reminder_field);
 		relativeLayout.setVisibility(View.VISIBLE);
 
-		/*
-		 * Add items to the spinners
-		 * 
-		 * Begin with the "TYPE" of reminder
-		 */
+		// Add items to the spinners
+		// Begin with the "TYPE" of reminder
+
 		// An array containing the images for a time and location reminder
 		int imgArr[] = {R.drawable.device_access_alarms,
 				R.drawable.location_place};
@@ -739,7 +547,7 @@ public class NewTaskActivity extends Activity {
 		SpinnerTypeAdapter typeAdapter = new SpinnerTypeAdapter(this,
 				R.layout.type_spinner_item, strTypeArr, imgArr);
 
-		Spinner typeSpinner = (Spinner) findViewById(R.id.reminderTypeSpinner);
+		Spinner typeSpinner = (Spinner) findViewById(R.id.reminder_type_spinner);
 		typeSpinner.setAdapter(typeAdapter);
 
 		typeSpinner
@@ -760,9 +568,9 @@ public class NewTaskActivity extends Activity {
 					}
 				});
 
-		/* Next up is the date of the reminder, simple enough */
+		// Next up is the date of the reminder
 
-		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminderDateSpinner);
+		Spinner reminderDateSpinner = (Spinner) findViewById(R.id.reminder_date_spinner);
 
 		SpinnerDayAdapter dayAdapter = new SpinnerDayAdapter(this,
 				R.layout.simple_spinner_item, reminderDateSpinner);
@@ -773,12 +581,10 @@ public class NewTaskActivity extends Activity {
 						this, OnItemSelectedSpinnerListener.DATE_SPINNER,
 						reminderDateSpinner.getId()));
 
-		/*
-		 * Last but not least, time of the reminder with a clarification of the
-		 * time
-		 */
+		// Last but not least, time of the reminder with a clarification of the
+		// time
 
-		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner reminderTimeSpinner = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		SpinnerTimeAdapter timeAdapter = new SpinnerTimeAdapter(this,
 				R.layout.time_spinner_item, reminderTimeSpinner);
@@ -800,8 +606,8 @@ public class NewTaskActivity extends Activity {
 	 *            the view that calls this method.
 	 */
 	public void onCancelReminder(View v) {
-		RelativeLayout toBeHidden = (RelativeLayout) findViewById(R.id.setReminderField);
-		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remindMeField);
+		RelativeLayout toBeHidden = (RelativeLayout) findViewById(R.id.set_reminder_field);
+		RelativeLayout toBeShownLayout = (RelativeLayout) findViewById(R.id.remind_me_field);
 
 		toBeHidden.setVisibility(View.INVISIBLE);
 		toBeShownLayout.setVisibility(View.VISIBLE);
@@ -817,12 +623,11 @@ public class NewTaskActivity extends Activity {
 	 *            the view that calls this method.
 	 */
 	public void onCancelEvent(View v) {
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.eventSpinners);
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.event_spinners);
 		Button toBeShownButton = (Button) findViewById(R.id.task_convert_event);
 
 		currentLayout.setVisibility(View.INVISIBLE);
 		toBeShownButton.setVisibility(View.VISIBLE);
-
 		isEvent = false;
 	}
 
@@ -831,15 +636,15 @@ public class NewTaskActivity extends Activity {
 	 */
 	private void showTimeReminderInput() {
 		isTimeReminder = true;
-		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
-		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner day = (Spinner) findViewById(R.id.reminder_date_spinner);
+		Spinner time = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		day.setVisibility(View.VISIBLE);
 		time.setVisibility(View.VISIBLE);
 
 		// Also hiding previous input
 
-		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		location.setVisibility(View.INVISIBLE);
 		isLocationReminder = false;
 	}
@@ -849,13 +654,13 @@ public class NewTaskActivity extends Activity {
 	 */
 	private void showLocationReminderInput() {
 		isLocationReminder = true;
-		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminderLocationEditText);
+		AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
 		location.setVisibility(View.VISIBLE);
 
 		// Also hiding previous input
 
-		Spinner day = (Spinner) findViewById(R.id.reminderDateSpinner);
-		Spinner time = (Spinner) findViewById(R.id.reminderTimeSpinner);
+		Spinner day = (Spinner) findViewById(R.id.reminder_date_spinner);
+		Spinner time = (Spinner) findViewById(R.id.reminder_time_spinner);
 
 		day.setVisibility(View.INVISIBLE);
 		time.setVisibility(View.INVISIBLE);
@@ -915,4 +720,318 @@ public class NewTaskActivity extends Activity {
 		return new Date(dateCalendar.getTimeInMillis());
 	}
 
+	/*
+	 * Add data from a listObject in the database to the input fields! The
+	 * intent should contain the ID of the listObject bundled with a
+	 * EDIT_TASK_MSG to make sure we want to edit an object!
+	 */
+	private void loadListObjectFromIntent(Intent intent) {
+		DBHandler dbHandler = new DBHandler(this);
+		// Get the bundle and the ID of the listObject...
+		Bundle bundle = intent.getBundleExtra(EDIT_TASK_MSG);
+		if (bundle != null) {
+			long id = bundle.getInt(INTENT_GET_ID);
+			ListObject listObject = dbHandler.getListObject(id);
+
+			editing = true;
+
+			// ...and get data from the listObject that "called" the
+			// activity
+
+			// Avoid NullPointerException
+			String nameString = "";
+			String categoryString = "";
+			String descriptionString = "";
+			String locationString = "";
+			TimeAlarm timeAlarm = null;
+			GPSAlarm gpsAlarm = null;
+			Date timeStart = null;
+			Date timeEnd = null;
+
+			if (listObject.getName() != null)
+				nameString = listObject.getName();
+
+			if (listObject.getComment() != null)
+				descriptionString = listObject.getComment();
+
+			if (listObject.getCategories() != null)
+				categoryString = dbHandler.getCategories(listObject).get(0)
+						.getName();
+
+			if (dbHandler.getPlace(listObject) != null)
+				locationString = dbHandler.getPlace(listObject).getName();
+
+			Boolean isImportant = listObject.isImportant();
+
+			if (dbHandler.getTimeAlarm(listObject) != null) {
+				timeAlarm = dbHandler.getTimeAlarm(listObject);
+			}
+
+			if (dbHandler.getGPSAlarm(listObject) != null) {
+				gpsAlarm = dbHandler.getGPSAlarm(listObject);
+			}
+
+			if (dbHandler.getTime(listObject) != null)
+				timeStart = dbHandler.getTime(listObject).getStartDate();
+
+			if (dbHandler.getTime(listObject) != null)
+				timeEnd = dbHandler.getTime(listObject).getEndDate();
+
+			// Grab references to all the input fields...
+
+			EditText title = (EditText) findViewById(R.id.task_title);
+			Spinner category = (Spinner) findViewById(R.id.task_categories);
+			EditText description = (EditText) findViewById(R.id.task_description);
+			AutoCompleteTextView location = (AutoCompleteTextView) findViewById(R.id.task_location);
+			CheckBox important = (CheckBox) findViewById(R.id.task_important);
+
+			Spinner remindType = (Spinner) findViewById(R.id.reminder_type_spinner);
+			Spinner remindDate = (Spinner) findViewById(R.id.reminder_date_spinner);
+			Spinner remindTime = (Spinner) findViewById(R.id.reminder_time_spinner);
+
+			AutoCompleteTextView remindLocation = (AutoCompleteTextView) findViewById(R.id.reminder_location_edittext);
+
+			Spinner dateFrom = (Spinner) findViewById(R.id.date_from);
+			Spinner dateTo = (Spinner) findViewById(R.id.date_to);
+			Spinner timeFrom = (Spinner) findViewById(R.id.time_from);
+			Spinner timeTo = (Spinner) findViewById(R.id.time_to);
+
+			// ...and set their default values from the listObject!
+			title.setText(nameString);
+
+			if (categoryString != null
+					&& !categoryString
+							.equals(getString(R.string.custom_category))) {
+				for (int i = 0; i < category.getAdapter().getCount(); i++) {
+					String c = (String) category.getAdapter().getItem(i);
+					if (c.equals(categoryString)) {
+						category.setSelection(i);
+						break;
+					}
+				}
+
+			}
+
+			if (descriptionString != null) {
+				if (descriptionString.trim().length() != 0)
+					description.setText(descriptionString);
+			}
+			if (locationString != null) {
+				if (locationString.trim().length() != 0)
+					location.setText(locationString);
+			}
+
+			important.setChecked(isImportant);
+
+			// Open up the reminder field if it has a reminder.
+			// Also check what if is is a...
+			// ...time reminder...
+			if (timeAlarm != null) {
+				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remind_me_field);
+				onRemindMe(remindMe);
+				remindType.setSelection(0);
+				showTimeReminderInput();
+
+				// Set the spinners according to the current time alarm...
+				SpinnerDayAdapter dayAdapter = (SpinnerDayAdapter) remindDate
+						.getAdapter();
+				dayAdapter.addDate(timeAlarm.getDate());
+
+				SpinnerTimeAdapter timeAdapter = (SpinnerTimeAdapter) remindTime
+						.getAdapter();
+				timeAdapter.addTime(timeAlarm.getDate());
+
+				isTimeReminder = true;
+				isLocationReminder = false;
+
+			}
+			// ... or a location reminder...
+			if (gpsAlarm != null) {
+				RelativeLayout remindMe = (RelativeLayout) findViewById(R.id.remind_me_field);
+				onRemindMe(remindMe);
+				remindType.setSelection(1);
+				showLocationReminderInput();
+
+				// Set the text of the location field
+				remindLocation.setText(gpsAlarm.getAdress());
+
+				isLocationReminder = true;
+				isTimeReminder = false;
+			}
+
+			// ...and show the event field if it is an event...
+			if (timeStart != null) {
+				Button remindMe = (Button) findViewById(R.id.task_convert_event);
+				onConvertEvent(remindMe);
+
+				// Set the spinners according to the current time
+				// Day from:
+				SpinnerDayAdapter fromDayAdapter = (SpinnerDayAdapter) dateFrom
+						.getAdapter();
+				fromDayAdapter.addDate(timeStart);
+
+				// Time from:
+				SpinnerTimeAdapter fromTimeAdapter = (SpinnerTimeAdapter) timeFrom
+						.getAdapter();
+				fromTimeAdapter.addTime(timeStart);
+
+				// Day to:
+				SpinnerDayAdapter toDayAdapter = (SpinnerDayAdapter) dateTo
+						.getAdapter();
+				toDayAdapter.addDate(timeEnd);
+
+				// Time to:
+				SpinnerTimeAdapter toTimeAdapter = (SpinnerTimeAdapter) timeTo
+						.getAdapter();
+				toTimeAdapter.addTime(timeEnd);
+
+				isEvent = true;
+			}
+		}
+	}
+
+	/*
+	 * Set up the AutoCompleteTextViews. Basically add a listener that executes
+	 * the AsyncTask for predictions.
+	 */
+	private void setupAutoCompleteTextView(
+			final AutoCompleteTextView autoCompleteTextView) {
+		autoCompleteTextView.setThreshold(3);
+		autoCompleteTextView.setAdapter(adapter);
+		autoCompleteTextView
+				.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (!hasFocus)
+							autoCompleteTextView.setSelection(0);
+					}
+				});
+		autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if (count % 3 == 0) {
+					GetPlaces task = new GetPlaces(autoCompleteTextView,
+							adapter, getBaseContext());
+					// now pass the argument in the textview to the task
+					task.execute(autoCompleteTextView.getText().toString());
+				}
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+			}
+		});
+	}
+
+	/*
+	 * Add the default categories to the database and add them to the
+	 * categoryAdapter. This is necessary because if the user creates a new
+	 * category, that category should be displayed immediately.
+	 */
+	private void initCategoryAdapter() {
+		DBHandler dbHandler = new DBHandler(this);
+		Spinner categorySpinner = (Spinner) this
+				.findViewById(R.id.task_categories);
+
+		ArrayList<String> categories = new ArrayList<String>();
+		// Grab all the categories from the DB...
+
+		dbHandler.addCategory(new Category(
+				getString(R.string.default_category_school), Integer
+						.toHexString(getResources().getColor(R.color.magenta)),
+				Integer.toHexString(getResources().getColor(
+						R.color.magenta_dark))));
+
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_work), Integer
+								.toHexString(getResources().getColor(
+										R.color.red)), Integer
+								.toHexString(getResources().getColor(
+										R.color.red_dark))));
+		dbHandler
+				.addCategory(new Category(
+						getString(R.string.default_category_spare_time),
+						Integer.toHexString(getResources().getColor(
+								R.color.green)), Integer
+								.toHexString(getResources().getColor(
+										R.color.green_dark))));
+
+		dbHandler.addCategory(new Category(getString(R.string.autogenerated),
+				Integer.toHexString(getResources().getColor(R.color.orange)),
+				Integer.toHexString(getResources()
+						.getColor(R.color.orange_dark))));
+
+		List<Category> categoriesFromDB = dbHandler.getAllCategories();
+
+		// ...and add them to the array used in the spinner
+		for (Category c : categoriesFromDB) {
+			if (!c.getName().equals(getString(R.string.custom_category))
+					&& !c.getName().equals(getString(R.string.autogenerated)))
+				categories.add(c.getName());
+		}
+		// Add the last item that will act as a button for adding a new category
+		categories.add(getString(R.string.custom_category));
+
+		// The DayAdapter only makes use of simple strings and presents its
+		// items the way we want the categories to be presented. It would be
+		// unnecessary to create an identical adapter just for the categories,
+		// so we just use this one instead
+
+		SpinnerCategoryAdapter categoryAdapter = new SpinnerCategoryAdapter(
+				this, R.layout.simple_spinner_item, categories);
+
+		categorySpinner.setAdapter(categoryAdapter);
+		categorySpinner
+				.setOnItemSelectedListener(new OnItemSelectedSpinnerListener(
+						this, OnItemSelectedSpinnerListener.CATEGORY_SPINNER,
+						categorySpinner.getId()));
+	}
+
+	@Override
+	public void onFinishEditDialog(String inputText) {
+		DBHandler dbHandler = new DBHandler(this);
+		if (!inputText.equals(getString(R.string.custom_category))) {
+			// TODO The colors SHOULD be something the user has defined...
+			// Its more fun if the new categories at least have SOME different
+			// color...
+			Random random = new Random();
+			String baseColor = "";
+			String importantColor = "";
+			switch (random.nextInt(3)) {
+				case 0 :
+					baseColor = Integer.toHexString(getResources().getColor(
+							R.color.lime_green));
+					importantColor = Integer.toHexString(getResources()
+							.getColor(R.color.lime_green_dark));
+					break;
+				case 1 :
+					baseColor = Integer.toHexString(getResources().getColor(
+							R.color.light_blue));
+					importantColor = Integer.toHexString(getResources()
+							.getColor(R.color.light_blue_dark));
+					break;
+				case 2 :
+					baseColor = Integer.toHexString(getResources().getColor(
+							R.color.chocolate_brown));
+					importantColor = Integer.toHexString(getResources()
+							.getColor(R.color.chocolate_brown_dark));
+					break;
+				default :
+					baseColor = Integer.toHexString(getResources().getColor(
+							R.color.white));
+					importantColor = Integer.toHexString(getResources()
+							.getColor(R.color.white));
+					break;
+			}
+			Category newCategory = new Category(inputText, baseColor,
+					importantColor);
+			dbHandler.addCategory(newCategory);
+			initCategoryAdapter();
+		}
+	}
 }

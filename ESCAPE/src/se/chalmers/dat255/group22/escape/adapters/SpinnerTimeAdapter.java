@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import se.chalmers.dat255.group22.escape.R;
 import se.chalmers.dat255.group22.escape.utils.Constants;
@@ -38,9 +39,6 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 	 * @param textViewResourceId
 	 *            the resource ID for the layout that each item in the dropdown
 	 *            list will use.
-	 * @param times
-	 *            a stringarray that contains the string to be set for each item
-	 *            in the dropdown list.
 	 */
 	public SpinnerTimeAdapter(Context context, int textViewResourceId,
 			Spinner spinner) {
@@ -54,8 +52,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		Calendar tempCalendar = Calendar.getInstance();
 
 		// Sets minutes and seconds of reference time to zero
-		tempCalendar.set(Calendar.MINUTE, 0);
-		tempCalendar.set(Calendar.SECOND, 0);
+		tempCalendar.set(0, 0, 0, 0, 0, 0);
 		tempCalendar.set(Calendar.MILLISECOND, 0);
 
 		// Saves the standard time data relative to current day
@@ -74,7 +71,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		times.add(context.getString(R.string.afternoon));
 		times.add(context.getString(R.string.evening));
 		times.add(context.getString(R.string.night));
-		times.add(context.getString(R.string.pickTimeLabel));
+		times.add(context.getString(R.string.pick_time_label));
 
 		clear();
 		addAll(times);
@@ -89,11 +86,11 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.time_spinner_item, parent, false);
 
 		TextView timeAsText = (TextView) row
-				.findViewById(R.id.spinnerTimeAsText);
+				.findViewById(R.id.spinner_time_as_text);
 		timeAsText.setText(times.get(position));
 
 		TextView timeAsTime = (TextView) row
-				.findViewById(R.id.spinnerTimeAsTime);
+				.findViewById(R.id.spinner_time_as_time);
 
 		if (position < getCount() - 1) {
 			Date date = getData(position);
@@ -119,11 +116,12 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 				false);
 
 		TextView timeAsText = (TextView) row
-				.findViewById(R.id.spinnerTimeAsText);
+				.findViewById(R.id.spinner_time_as_text);
 
 		timeAsText.setText(times.get(position));
 
-		// TODO How the **** did this do the trick???
+		// Wierd hack to make the width of the spinner relative to its current
+		// item
 		parent.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
 		row.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
 
@@ -148,7 +146,8 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			// Formats the time so that, for example, 12 o clock is shown as
 			// 12:00 instead of 12:0
 
-			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm",
+					Locale.getDefault());
 			String customLabel = timeFormatter.format(newTimeAsCal.getTime());
 
 			// Finally, add the data to the adapter and select new item in
@@ -165,7 +164,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			add(context.getString(R.string.evening));
 			add(context.getString(R.string.night));
 			add(customLabel);
-			add(context.getString(R.string.pickTimeLabel));
+			add(context.getString(R.string.pick_time_label));
 
 			// Refresh local list. This
 			// is necessary because the adapters internal list of items and
@@ -176,8 +175,11 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			times.add(context.getString(R.string.evening));
 			times.add(context.getString(R.string.night));
 			times.add(customLabel);
-			times.add(context.getString(R.string.pickTimeLabel));
+			times.add(context.getString(R.string.pick_time_label));
 			this.notifyDataSetChanged();
+
+			// The first line below is necessary to fire a onItemSelected event.
+			spinner.setSelection(0, false);
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 
