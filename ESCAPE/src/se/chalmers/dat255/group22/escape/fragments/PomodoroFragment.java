@@ -57,8 +57,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 	// startTime defines the amount of time in the pomodoro timer.
 	// 1500 seconds = 25 minutes.
-	private long pomodoroStartTime = 10 * 1000;
-	private long breakStartTime = 15 * 1000;
+	private long pomodoroStartTime = 1500 * 1000;
+	private long breakStartTime = 300 * 1000;
 	private final long interval = 1 * 1000;
 
 	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
