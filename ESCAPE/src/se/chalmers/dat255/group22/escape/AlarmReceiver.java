@@ -1,12 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import java.sql.Date;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +10,14 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+
+import java.sql.Date;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
+import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
+import se.chalmers.dat255.group22.escape.utils.Constants;
+import se.chalmers.dat255.group22.escape.utils.Constants.ReminderType;
 
 /**
  * Custom broadcast receiver used to create notifications for task/event. Also
@@ -242,23 +243,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		dbH.purgeListObject(dbH.getListObject(id));
 		dismissNotification(context, id);
-
-		// // Updates the GUI
-		// FragmentActivity activity = (FragmentActivity) context;
-		//
-		// ListView expListViewTask = (ListView) activity
-		// .findViewById(R.id.expandedTask);
-		// ExpandableListView expListViewEvent = (ExpandableListView) activity
-		// .findViewById(R.id.expEventList);
-		//
-		// CustomListAdapter expListViewTaskAdapter = (CustomListAdapter)
-		// expListViewTask
-		// .getAdapter();
-		// CustomExpandableListAdapter expListViewEventAdapter =
-		// (CustomExpandableListAdapter) expListViewEvent
-		// .getAdapter();
-		// expListViewTaskAdapter.notifyDataSetChanged();
-		// expListViewEventAdapter.notifyDataSetChanged();
 	}
 
 	/*
@@ -299,6 +283,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		dismissNotification(context, id);
 	}
 
+	/*
+	 * Method used to dismiss a notification.
+	 */
 	private void dismissNotification(Context context, long id) {
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

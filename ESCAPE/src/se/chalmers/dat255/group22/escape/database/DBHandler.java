@@ -98,7 +98,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	// "List objects with place" table column names
 	private static final String COLUMN_LIST_OBJECTS_WITH_PLACE_LIST_OBJECT = "_listObject";
 	private static final String COLUMN_LIST_OBJECTS_WITH_PLACE_PLACE = "place";
-	
+
 	// Blocks table column names
 	private static final String COLUMN_BLOCKS_ID = "_id";
 	private static final String COLUMN_BLOCKS_NAME = "name";
@@ -244,19 +244,12 @@ public class DBHandler extends SQLiteOpenHelper {
 			+ COLUMN_PLACES_ID
 			+ ") ON DELETE CASCADE"
 			+ ")";
-	private static final String CREATE_BLOCKS_TABLE = "CREATE TABLE " +
-			TABLE_BLOCKS + "(" +
-			COLUMN_BLOCKS_ID +
-			" INTEGER PRIMARY KEY AUTOINCREMENT," +
-			COLUMN_BLOCKS_NAME +
-			" TEXT NOT NULL," +
-			COLUMN_BLOCKS_HOURS +
-			" INTEGER NOT NULL," +
-			COLUMN_BLOCKS_SESSION_MINUTES +
-			" INTEGER NOT NULL," +
-			COLUMN_BLOCKS_TIMEWINDOW +
-			" INTEGER NOT NULL" +
-			")";
+	private static final String CREATE_BLOCKS_TABLE = "CREATE TABLE "
+			+ TABLE_BLOCKS + "(" + COLUMN_BLOCKS_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_BLOCKS_NAME
+			+ " TEXT NOT NULL," + COLUMN_BLOCKS_HOURS + " INTEGER NOT NULL,"
+			+ COLUMN_BLOCKS_SESSION_MINUTES + " INTEGER NOT NULL,"
+			+ COLUMN_BLOCKS_TIMEWINDOW + " INTEGER NOT NULL" + ")";
 
 	public DBHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -289,7 +282,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		if (oldVersion < 3) {
 			db.execSQL(CREATE_BLOCKS_TABLE);
 		}
-		
+
 	}
 
 	// This enables foreign_keys such that "ON DELETE CASCADE" works.
@@ -512,11 +505,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.close();
 		return id;
 	}
-	
+
 	/**
 	 * Saves a block to the database
 	 * 
-	 * @param block the IBlockObject to be added
+	 * @param block
+	 *            the IBlockObject to be added
 	 * @return the generated id of the saved object
 	 */
 	public Long addBlock(IBlockObject block) {
@@ -527,7 +521,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_BLOCKS_HOURS, block.getHours());
 		values.put(COLUMN_BLOCKS_SESSION_MINUTES, block.getSessionMinutes());
 		values.put(COLUMN_BLOCKS_TIMEWINDOW, block.getTimeWindow().getNumVal());
-		
+
 		Long id = db.insert(TABLE_BLOCKS, null, values);
 		db.close();
 		return id;
@@ -697,7 +691,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @return All the list objects that have a time
 	 */
@@ -705,13 +699,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<ListObject> list = new LinkedList<ListObject>();
-		
+
 		String raw = "SELECT b." + COLUMN_LIST_OBJECTS_ID + " AS loid, b."
 				+ COLUMN_LIST_OBJECTS_NAME + ", b."
 				+ COLUMN_LIST_OBJECTS_COMMENT + ", b."
-				+ COLUMN_LIST_OBJECTS_IMPORTANT + ", c." 
-				+ COLUMN_TIMES_ID + " AS timeid, c." 
-				+ COLUMN_TIMES_START_DATE + ", c." 
+				+ COLUMN_LIST_OBJECTS_IMPORTANT + ", c." + COLUMN_TIMES_ID
+				+ " AS timeid, c." + COLUMN_TIMES_START_DATE + ", c."
 				+ COLUMN_TIMES_END_DATE + " FROM "
 				+ TABLE_LIST_OBJECTS_WITH_TIME + " a" + " INNER JOIN "
 				+ TABLE_LIST_OBJECTS + " b" + " ON a."
@@ -719,24 +712,27 @@ public class DBHandler extends SQLiteOpenHelper {
 				+ COLUMN_LIST_OBJECTS_ID + " INNER JOIN " + TABLE_TIMES
 				+ " c ON a." + COLUMN_LIST_OBJECTS_WITH_TIME_TIME + " = c."
 				+ COLUMN_TIMES_ID;
-		
+
 		Cursor cursor = db.rawQuery(raw, null);
 		if (cursor.moveToFirst()) {
 			do {
 				ListObject object = new ListObject(cursor.getInt(cursor
-						.getColumnIndex("loid")),
-						cursor.getString(cursor
-								.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
+						.getColumnIndex("loid")), cursor.getString(cursor
+						.getColumnIndex(COLUMN_LIST_OBJECTS_NAME)));
 				object.setComment(cursor.getString(cursor
 						.getColumnIndex(COLUMN_LIST_OBJECTS_COMMENT)));
 				object.setImportant((cursor.getInt(cursor
-						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1 ? true
+						.getColumnIndex(COLUMN_LIST_OBJECTS_IMPORTANT)) == 1
+						? true
 						: false));
-				object.setTime(new Time(cursor.getInt(cursor.getColumnIndex("timeid")),
-						new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMES_START_DATE))),
-						new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMES_END_DATE)))));
+				object.setTime(new Time(cursor.getInt(cursor
+						.getColumnIndex("timeid")), new Date(
+						cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_START_DATE))),
+						new Date(cursor.getLong(cursor
+								.getColumnIndex(COLUMN_TIMES_END_DATE)))));
 				List<Category> categoryList = getCategories(object);
-				for(Category category : categoryList) {
+				for (Category category : categoryList) {
 					object.addToCategory(category);
 				}
 				list.add(object);
@@ -744,7 +740,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @return a list of all the BlockObjects in the database
 	 */
@@ -752,19 +748,17 @@ public class DBHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		List<IBlockObject> list = new LinkedList<IBlockObject>();
-		Cursor cursor = db.query(TABLE_BLOCKS, new String[] {
-				COLUMN_BLOCKS_ID, COLUMN_BLOCKS_NAME,
-				COLUMN_BLOCKS_HOURS, COLUMN_BLOCKS_SESSION_MINUTES,
-				COLUMN_BLOCKS_TIMEWINDOW},
-				null, null, null, null, null);
+		Cursor cursor = db.query(TABLE_BLOCKS, new String[]{COLUMN_BLOCKS_ID,
+				COLUMN_BLOCKS_NAME, COLUMN_BLOCKS_HOURS,
+				COLUMN_BLOCKS_SESSION_MINUTES, COLUMN_BLOCKS_TIMEWINDOW}, null,
+				null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				IBlockObject object = new BlockObject(cursor.getInt(cursor
 						.getColumnIndex(COLUMN_BLOCKS_ID)),
 						cursor.getString(cursor
 								.getColumnIndex(COLUMN_BLOCKS_NAME)),
-						TimeWindow.parseNumVal(
-						cursor.getInt(cursor
+						TimeWindow.parseNumVal(cursor.getInt(cursor
 								.getColumnIndex(COLUMN_BLOCKS_TIMEWINDOW))),
 						cursor.getInt(cursor
 								.getColumnIndex(COLUMN_BLOCKS_HOURS)),
@@ -1246,19 +1240,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return list.isEmpty() ? null : list.get(0);
 	}
-	
+
 	/**
 	 * Returns the block with the id specified
+	 * 
 	 * @param id
 	 * @return IBlockObject with the id
 	 */
 	public IBlockObject getBlock(Long id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
-		Cursor cursor = db.query(TABLE_BLOCKS, new String[] { COLUMN_BLOCKS_ID,
+		Cursor cursor = db.query(TABLE_BLOCKS, new String[]{COLUMN_BLOCKS_ID,
 				COLUMN_BLOCKS_NAME, COLUMN_BLOCKS_HOURS,
-				COLUMN_BLOCKS_SESSION_MINUTES, COLUMN_BLOCKS_TIMEWINDOW },
-				COLUMN_BLOCKS_ID + "=?", new String[] { id.toString() }, null,
+				COLUMN_BLOCKS_SESSION_MINUTES, COLUMN_BLOCKS_TIMEWINDOW},
+				COLUMN_BLOCKS_ID + "=?", new String[]{id.toString()}, null,
 				null, null);
 
 		List<IBlockObject> list = new LinkedList<IBlockObject>();
@@ -1269,8 +1264,7 @@ public class DBHandler extends SQLiteOpenHelper {
 						.getColumnIndex(COLUMN_BLOCKS_ID)),
 						cursor.getString(cursor
 								.getColumnIndex(COLUMN_BLOCKS_NAME)),
-						TimeWindow.parseNumVal(
-						cursor.getInt(cursor
+						TimeWindow.parseNumVal(cursor.getInt(cursor
 								.getColumnIndex(COLUMN_BLOCKS_TIMEWINDOW))),
 						cursor.getInt(cursor
 								.getColumnIndex(COLUMN_BLOCKS_HOURS)),
@@ -1328,8 +1322,8 @@ public class DBHandler extends SQLiteOpenHelper {
 				category.getImportantColor());
 
 		int rv = db.update(TABLE_CATEGORIES, values, COLUMN_CATEGORIES_NAME
-                + "=?",
-                new String[]{(oldName != null) ? oldName : category.getName()});
+				+ "=?",
+				new String[]{(oldName != null) ? oldName : category.getName()});
 		db.close();
 
 		return rv;
@@ -1513,8 +1507,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		return rv;
 	}
-	
-	
+
 	/**
 	 * Updates a block, if it exists in the database.
 	 * 
@@ -1532,7 +1525,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(COLUMN_BLOCKS_TIMEWINDOW, block.getTimeWindow().getNumVal());
 
 		int rv = db.update(TABLE_BLOCKS, values, COLUMN_BLOCKS_ID + "=?",
-				new String[] { "" + block.getId() });
+				new String[]{"" + block.getId()});
 		db.close();
 
 		return rv;
@@ -1757,19 +1750,19 @@ public class DBHandler extends SQLiteOpenHelper {
 		db.close();
 		return rv > 0;
 	}
-	
+
 	/**
 	 * Deletes the block from the database
 	 * 
-	 * @param block to delete
+	 * @param block
+	 *            to delete
 	 * @return true if anything was deleted, false otherwise
 	 */
 	public boolean deleteBlock(IBlockObject block) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		int rv = db.delete(TABLE_BLOCKS,
-				COLUMN_BLOCKS_ID + "=?",
-				new String[] { "" + block.getId() });
+		int rv = db.delete(TABLE_BLOCKS, COLUMN_BLOCKS_ID + "=?",
+				new String[]{"" + block.getId()});
 		db.close();
 		return rv > 0;
 	}

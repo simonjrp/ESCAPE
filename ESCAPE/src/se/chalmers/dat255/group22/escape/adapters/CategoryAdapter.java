@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +107,8 @@ public class CategoryAdapter implements ListAdapter {
 		// Create the view if it does not exist
 		if (view == null) {
 
-            // The layout containing the ribbon and the checkbox
-            LinearLayout layout = new LinearLayout(context);
+			// The layout containing the ribbon and the checkbox
+			LinearLayout layout = new LinearLayout(context);
 
 			CheckBox tmpBox = new CheckBox(context);
 			// The buttons initial state
@@ -126,15 +125,16 @@ public class CategoryAdapter implements ListAdapter {
 				}
 			});
 
-            // Ribbon
-            View ribbon = new View(context);
-            ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
-                    .getResources().getDimension(R.dimen.ribbon_width),
-                    LinearLayout.LayoutParams.MATCH_PARENT));
-            ribbon.setBackgroundColor(Color.parseColor("#" + theCategory.getBaseColor()));
+			// Ribbon
+			View ribbon = new View(context);
+			ribbon.setLayoutParams(new LinearLayout.LayoutParams((int) context
+					.getResources().getDimension(R.dimen.ribbon_width),
+					LinearLayout.LayoutParams.MATCH_PARENT));
+			ribbon.setBackgroundColor(Color.parseColor("#"
+					+ theCategory.getBaseColor()));
 
-            layout.addView(ribbon);
-            layout.addView(tmpBox);
+			layout.addView(ribbon);
+			layout.addView(tmpBox);
 
 			view = layout;
 		}

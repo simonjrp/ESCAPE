@@ -1,9 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.BlockObject;
-import se.chalmers.dat255.group22.escape.objects.IBlockObject;
-import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -13,6 +9,11 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.BlockObject;
+import se.chalmers.dat255.group22.escape.objects.IBlockObject;
+import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 
 /**
  * Class representing the activity started when user adds new time blocks
@@ -29,7 +30,6 @@ public class NewBlockActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		// TODO Assigns test data (temporary) to all spinners.
 		Spinner totalHoursSpinner = (Spinner) findViewById(R.id.block_hours_spinner);
 		Spinner splitTimeSpinner = (Spinner) findViewById(R.id.split_time_spinner);
 		Spinner whenSpinner = (Spinner) findViewById(R.id.when_to_gen);
@@ -76,17 +76,17 @@ public class NewBlockActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			onBackPressed();
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+			case android.R.id.home :
+				// This ID represents the Home or Up button. In the case of this
+				// activity, the Up button is shown. Use NavUtils to allow users
+				// to navigate up one level in the application structure. For
+				// more details, see the Navigation pattern on Android Design:
+				//
+				// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+				//
+				onBackPressed();
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -143,15 +143,15 @@ public class NewBlockActivity extends Activity {
 		int timeOfDayPosition = timeOfDaySpinner.getSelectedItemPosition();
 		TimeWindow timeWindow;
 		switch (timeOfDayPosition) {
-		case 0:
-			timeWindow = TimeWindow.WORKING;
-			break;
-		case 1:
-			timeWindow = TimeWindow.LEISURE;
-			break;
-		default:
-			timeWindow = TimeWindow.ALL;
-			break;
+			case 0 :
+				timeWindow = TimeWindow.WORKING;
+				break;
+			case 1 :
+				timeWindow = TimeWindow.LEISURE;
+				break;
+			default :
+				timeWindow = TimeWindow.ALL;
+				break;
 		}
 
 		// If a name is set, create BlockObject

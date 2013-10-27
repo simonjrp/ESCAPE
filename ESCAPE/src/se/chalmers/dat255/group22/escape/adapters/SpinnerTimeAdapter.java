@@ -53,7 +53,7 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 		Calendar tempCalendar = Calendar.getInstance();
 
 		// Sets minutes and seconds of reference time to zero
-        tempCalendar.set(0, 0, 0, 0, 0, 0);
+		tempCalendar.set(0, 0, 0, 0, 0, 0);
 		tempCalendar.set(Calendar.MILLISECOND, 0);
 
 		// Saves the standard time data relative to current day
@@ -121,7 +121,8 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 
 		timeAsText.setText(times.get(position));
 
-        // Wierd hack to make the width of the spinner relative to its current item
+		// Wierd hack to make the width of the spinner relative to its current
+		// item
 		parent.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
 		row.getLayoutParams().width = timeAsText.getLayoutParams().width - 100;
 
@@ -178,8 +179,8 @@ public class SpinnerTimeAdapter extends ArrayAdapter<String> {
 			times.add(context.getString(R.string.pick_time_label));
 			this.notifyDataSetChanged();
 
-            // The first line below is necessary to fire a onItemSelected event.
-            spinner.setSelection(0, false);
+			// The first line below is necessary to fire a onItemSelected event.
+			spinner.setSelection(0, false);
 			spinner.setSelection(spinner.getCount() - 2, true);
 		}
 

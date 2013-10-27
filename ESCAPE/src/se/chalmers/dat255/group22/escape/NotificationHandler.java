@@ -1,14 +1,10 @@
 package se.chalmers.dat255.group22.escape;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,20 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
-import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
-import se.chalmers.dat255.group22.escape.objects.Time;
-import se.chalmers.dat255.group22.escape.objects.TimeAlarm;
-import se.chalmers.dat255.group22.escape.utils.Constants;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.ErrorGPlayFragment;
 import se.chalmers.dat255.group22.escape.objects.GPSAlarm;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.SimpleGeofence;
@@ -106,18 +88,19 @@ public class NotificationHandler {
 	 * @throws UnsupportedOperationException
 	 *             If the notification handler hasn't been initialized.
 	 */
-	public void addTimeReminder(long idListObject)
-			throws NullPointerException, UnsupportedOperationException {
+	public void addTimeReminder(long idListObject) throws NullPointerException,
+			UnsupportedOperationException {
 
 		if (!isInitialized()) {
 			throw new UnsupportedOperationException(
 					context.getString(R.string.nh_not_init));
 		}
 
-        ListObject listObject = dbH.getListObject(idListObject);
-        if(listObject == null) {
-            throw new NullPointerException("Couldn't find a ListObject with provided id.");
-        }
+		ListObject listObject = dbH.getListObject(idListObject);
+		if (listObject == null) {
+			throw new NullPointerException(
+					"Couldn't find a ListObject with provided id.");
+		}
 
 		TimeAlarm timeAlarm = dbH.getTimeAlarm(listObject);
 		if (timeAlarm == null) {
@@ -137,14 +120,14 @@ public class NotificationHandler {
 		alarmIntent.setAction(AlarmReceiver.NEW_TIME_NOTIFICATION);
 		alarmIntent.putExtras(args);
 
-		/*
-		 * Creates a PendingIntent that'll be used by the alarm manager
-		 * (external application) to send a broadcast at a given time from the
-		 * context (in this case, the MainActivity) to all receivers matching
-		 * the alarmIntent. When AlarmReceiver (the matching receiver) receives
-		 * the broadcast, it generates and sends a custom notification to the
-		 * system.
-		 */
+		//
+		// Creates a PendingIntent that'll be used by the alarm manager
+		// (external application) to send a broadcast at a given time from the
+		// context (in this case, the MainActivity) to all receivers matching
+		// the alarmIntent. When AlarmReceiver (the matching receiver) receives
+		// the broadcast, it generates and sends a custom notification to the
+		// system.
+		//
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				args.getInt(Constants.NOTIFICATION_ID), alarmIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -173,10 +156,11 @@ public class NotificationHandler {
 					"NotificationHandler hasn't been initialized yet. Run init(FragmentActivity) when starting application.");
 		}
 
-        ListObject listObject = dbH.getListObject(idListObject);
-        if(listObject == null) {
-            throw new NullPointerException("Couldn't find a ListObject with provided id.");
-        }
+		ListObject listObject = dbH.getListObject(idListObject);
+		if (listObject == null) {
+			throw new NullPointerException(
+					"Couldn't find a ListObject with provided id.");
+		}
 
 		GPSAlarm gpsAlarm = dbH.getGPSAlarm(listObject);
 

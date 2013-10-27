@@ -85,7 +85,7 @@ public class SpinnerCategoryAdapter extends ArrayAdapter<String> {
 		View ribbon = row.findViewById(R.id.category_spinner_ribbon);
 		ribbon.setVisibility(View.VISIBLE);
 		Category category = dbHandler.getCategory(categories.get(position));
-		if (position != getCount()-1)
+		if (position != getCount() - 1)
 			ribbon.setBackgroundColor(Color.parseColor("#"
 					+ category.getBaseColor()));
 

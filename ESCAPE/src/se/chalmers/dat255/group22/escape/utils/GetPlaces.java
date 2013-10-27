@@ -24,7 +24,6 @@ import se.chalmers.dat255.group22.escape.R;
 
 import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
 
-
 /**
  * @author tholene
  */

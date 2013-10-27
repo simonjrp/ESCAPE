@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import se.chalmers.dat255.group22.escape.database.DBHandler;
 import se.chalmers.dat255.group22.escape.objects.IBlockObject;
 import se.chalmers.dat255.group22.escape.objects.ListObject;
 import se.chalmers.dat255.group22.escape.objects.Time;
@@ -35,15 +34,17 @@ public class AutoGenerator {
 	 * Lists are not mutated inside this class.
 	 * 
 	 * @param currentSchedule
-	 * 			The schedule to generate "around"
+	 *            The schedule to generate "around"
 	 * @param blocks
-	 * 			The blocks to generate
+	 *            The blocks to generate
 	 */
 	public AutoGenerator(List<ListObject> currentSchedule,
 			List<IBlockObject> blocks) {
-		this.schedule = currentSchedule == null ? new ArrayList<ListObject>()
+		this.schedule = currentSchedule == null
+				? new ArrayList<ListObject>()
 				: new ArrayList<ListObject>(currentSchedule);
-		this.blocks = blocks == null ? new ArrayList<IBlockObject>()
+		this.blocks = blocks == null
+				? new ArrayList<IBlockObject>()
 				: new LinkedList<IBlockObject>(blocks);
 	}
 
@@ -77,9 +78,10 @@ public class AutoGenerator {
 
 		// Get a list of all the nights for the rest of the week
 		LinkedList<TimeBox> totalList = removeNights(now, end);
-		
+
 		// Add a small timebox so that it starts to add right after "now"
-		totalList.add(new TimeBox(now.getTimeInMillis(), now.getTimeInMillis()-1));
+		totalList.add(new TimeBox(now.getTimeInMillis(),
+				now.getTimeInMillis() - 1));
 
 		// Place the nights sorted together with the original schedule
 		Iterator<ListObject> iterator = schedule.iterator();
@@ -90,7 +92,6 @@ public class AutoGenerator {
 			}
 		}
 
-		
 		fixOverlap(totalList);
 
 		// Prioritize the blocks depending on if they are constrained to working
@@ -268,8 +269,9 @@ public class AutoGenerator {
 									// We make sure to check if it is the last
 									// session and get the proper session time
 									blockTime = (long) 60000
-											* (data[nextOnTurn][1] == 1 ? currentBlock
-													.getLastSplitMinutes()
+											* (data[nextOnTurn][1] == 1
+													? currentBlock
+															.getLastSplitMinutes()
 													: currentBlock
 															.getSessionMinutes());
 									if (timeSlotSize >= blockTime) {
@@ -383,7 +385,7 @@ public class AutoGenerator {
 	 */
 	private void fixOverlap(LinkedList<TimeBox> fullList) {
 		Collections.sort(fullList);
-		
+
 		Iterator<TimeBox> iterator = fullList.iterator();
 		if (iterator.hasNext()) {
 			TimeBox current, next = iterator.next();
@@ -451,7 +453,8 @@ public class AutoGenerator {
 				// Calculate the night span
 				int nightSpan = NIGHT_END;
 				// Dead because night start and night end is set statically
-				nightSpan += (NIGHT_START > NIGHT_END) ? (24 - NIGHT_START)
+				nightSpan += (NIGHT_START > NIGHT_END)
+						? (24 - NIGHT_START)
 						: -NIGHT_START;
 				// Move forward time through the night
 				s.add(Calendar.HOUR_OF_DAY, nightSpan);

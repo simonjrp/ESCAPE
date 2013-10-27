@@ -1,7 +1,5 @@
 package se.chalmers.dat255.group22.escape;
 
-import android.app.Activity;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;

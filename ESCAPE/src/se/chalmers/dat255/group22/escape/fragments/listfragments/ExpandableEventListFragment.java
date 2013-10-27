@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
-import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.CategoryAdapter;
+import se.chalmers.dat255.group22.escape.adapters.CustomExpandableListAdapter;
 
 /**
  * A fragment displaying an expandable list with events.<br>
@@ -80,7 +81,7 @@ public class ExpandableEventListFragment extends Fragment {
 				R.id.expendable_event_list);
 		// setting list adapter
 		expListView.setAdapter(listAdapter);
-        expListView.setDivider(null);
+		expListView.setDivider(null);
 
 		categoryListWidth = getActivity().getResources().getDimensionPixelSize(
 				R.dimen.category_list_width);

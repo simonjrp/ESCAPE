@@ -1,8 +1,5 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.CategoryCreatorFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -14,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.CategoryCreatorFragment;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
 import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
 

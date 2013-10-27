@@ -72,7 +72,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 
 		taskComment = (TextView) taskDataLayout
 				.findViewById(R.id.list_object_comment);
-		taskPlace = (TextView) taskDataLayout.findViewById(R.id.list_object_place);
+		taskPlace = (TextView) taskDataLayout
+				.findViewById(R.id.list_object_place);
 		taskTimeLayout = (RelativeLayout) taskDataLayout
 				.findViewById(R.id.list_object_expanded_time_layout);
 		taskReminder = (TextView) taskDataLayout
@@ -165,7 +166,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 					}
 					taskTimeLayout.setVisibility(View.VISIBLE);
 				} else {
-					View separator = v.findViewById(R.id.list_object_expanded_horizontal_separator);
+					View separator = v
+							.findViewById(R.id.list_object_expanded_horizontal_separator);
 					separator.setVisibility(View.GONE);
 					taskTimeLayout.setVisibility(View.GONE);
 				}
@@ -173,7 +175,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 				// Does the listObject have a reminder?
 				if (dbHandler.getTimeAlarm(listObject) != null
 						|| dbHandler.getGPSAlarm(listObject) != null) {
-					View separator = v.findViewById(R.id.list_object_expanded_reminder_separator);
+					View separator = v
+							.findViewById(R.id.list_object_expanded_reminder_separator);
 					separator.setVisibility(View.VISIBLE);
 					StringBuilder stringBuilder = new StringBuilder();
 					stringBuilder.append(REMIND_ME_AT);
@@ -200,7 +203,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 				} else {
 					taskReminderType.setVisibility(View.GONE);
 					taskReminder.setVisibility(View.GONE);
-					View separator = v.findViewById(R.id.list_object_expanded_reminder_separator);
+					View separator = v
+							.findViewById(R.id.list_object_expanded_reminder_separator);
 					separator.setVisibility(View.GONE);
 				}
 
@@ -250,9 +254,9 @@ public class CustomOnClickListener implements View.OnClickListener {
 		// "Original State"
 		// We also clear the animations to make sure they can run again if
 		// invoked
-        RelativeLayout timeView = (RelativeLayout) v
-                .findViewById(R.id.list_object_collapsed_time);
-        timeView.setVisibility(View.VISIBLE);
+		RelativeLayout timeView = (RelativeLayout) v
+				.findViewById(R.id.list_object_collapsed_time);
+		timeView.setVisibility(View.VISIBLE);
 
 		ImageButton editButton = (ImageButton) v.findViewById(R.id.edit_button);
 		editButton.setVisibility(View.INVISIBLE);
@@ -268,8 +272,8 @@ public class CustomOnClickListener implements View.OnClickListener {
 		taskDataLayout.clearAnimation();
 		taskDataLayout.setVisibility(View.GONE);
 		parent.setPaintFlags(DEFAULT_PAINT_FLAG);
-        RelativeLayout timeView = (RelativeLayout) v
-                .findViewById(R.id.list_object_collapsed_time);
-        timeView.setVisibility(View.VISIBLE);
+		RelativeLayout timeView = (RelativeLayout) v
+				.findViewById(R.id.list_object_collapsed_time);
+		timeView.setVisibility(View.VISIBLE);
 	}
 }
