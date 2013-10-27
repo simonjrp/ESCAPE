@@ -1,5 +1,11 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -8,13 +14,6 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.SpinnerTimeAdapter;
 
 /**
  * Class representing a time picker fragment.

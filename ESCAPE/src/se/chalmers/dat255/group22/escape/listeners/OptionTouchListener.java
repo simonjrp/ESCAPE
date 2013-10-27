@@ -1,13 +1,12 @@
 package se.chalmers.dat255.group22.escape.listeners;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.objects.ListObject;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.objects.ListObject;
 
 /**
  * This listener decides what should happen whenever a LongTouchAction is

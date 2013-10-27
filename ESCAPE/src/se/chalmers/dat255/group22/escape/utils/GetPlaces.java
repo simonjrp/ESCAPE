@@ -1,14 +1,6 @@
 package se.chalmers.dat255.group22.escape.utils;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +12,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import se.chalmers.dat255.group22.escape.R;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import static se.chalmers.dat255.group22.escape.utils.Constants.APPTAG;
+import se.chalmers.dat255.group22.escape.R;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 /**
  * @author tholene

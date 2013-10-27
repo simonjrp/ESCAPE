@@ -1,5 +1,7 @@
 package se.chalmers.dat255.group22.escape.fragments.listfragments;
 
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.adapters.BlockListAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,9 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.adapters.BlockListAdapter;
 
 /**
  * A fragment displaying the IBlockObjects that are saved to the database. An

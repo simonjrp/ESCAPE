@@ -1,8 +1,7 @@
 package se.chalmers.dat255.group22.escape.utils;
 
-import android.content.Context;
-
 import se.chalmers.dat255.group22.escape.R;
+import android.content.Context;
 
 public class IntegerToMonthConverter {
 	/**

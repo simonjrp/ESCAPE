@@ -1,5 +1,10 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import java.util.ArrayList;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -7,12 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.Category;
 
 /**
  * An adapter that customizes the way spinners for choosing a category are

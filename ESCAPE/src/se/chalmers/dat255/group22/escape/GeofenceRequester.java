@@ -1,5 +1,9 @@
 package se.chalmers.dat255.group22.escape;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +19,6 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.utils.Constants;
 
 /**
  * Class to be used for adding geofences for location reminders.

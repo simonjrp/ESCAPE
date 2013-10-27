@@ -1,5 +1,9 @@
 package se.chalmers.dat255.group22.escape;
 
+import se.chalmers.dat255.group22.escape.database.DBHandler;
+import se.chalmers.dat255.group22.escape.objects.BlockObject;
+import se.chalmers.dat255.group22.escape.objects.IBlockObject;
+import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -9,11 +13,6 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import se.chalmers.dat255.group22.escape.database.DBHandler;
-import se.chalmers.dat255.group22.escape.objects.BlockObject;
-import se.chalmers.dat255.group22.escape.objects.IBlockObject;
-import se.chalmers.dat255.group22.escape.objects.TimeWindow;
 
 /**
  * Class representing the activity started when user adds new time blocks

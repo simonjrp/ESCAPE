@@ -1,5 +1,6 @@
 package se.chalmers.dat255.group22.escape.fragments.dialogfragments;
 
+import se.chalmers.dat255.group22.escape.R;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -13,8 +14,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import se.chalmers.dat255.group22.escape.R;
 
 /**
  * Class representing a fragment where the user can create a new category.

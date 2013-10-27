@@ -1,5 +1,10 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import se.chalmers.dat255.group22.escape.R;
+import se.chalmers.dat255.group22.escape.objects.Category;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -9,12 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import se.chalmers.dat255.group22.escape.R;
-import se.chalmers.dat255.group22.escape.objects.Category;
 
 /**
  * An adapter for displaying checkboxes with

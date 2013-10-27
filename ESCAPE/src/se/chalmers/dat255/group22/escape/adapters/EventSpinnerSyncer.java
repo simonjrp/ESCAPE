@@ -1,5 +1,11 @@
 package se.chalmers.dat255.group22.escape.adapters;
 
+import java.sql.Date;
+import java.util.Calendar;
+
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
+import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
+import se.chalmers.dat255.group22.escape.utils.Constants;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -9,13 +15,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-
-import java.sql.Date;
-import java.util.Calendar;
-
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.DatePickerFragment;
-import se.chalmers.dat255.group22.escape.fragments.dialogfragments.TimePickerFragment;
-import se.chalmers.dat255.group22.escape.utils.Constants;
 
 /**
  * Class used to sync a "from-date-spinner" and a "to-date-spinner"
