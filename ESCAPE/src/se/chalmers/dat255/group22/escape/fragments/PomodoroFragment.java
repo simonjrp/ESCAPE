@@ -359,7 +359,9 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			// startService(getActivity().findViewById(R.id.pomodoro_button));
 			// //-- this one works
 		} else if (!breakTimerHasStarted && onBreak == true) {
-			serviceCountDownTimer.cancel();
+			if (serviceTimerHasStarted == true) {
+				serviceCountDownTimer.cancel();
+			}
 			breakCountDownTimer.start();
 			breakTimerHasStarted = true;
 			startB.setText("STOP");
