@@ -106,7 +106,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
 		headerList.add(context.getResources().getString(R.string.today_label));
 		headerList.add(context.getResources()
-                .getString(R.string.tomorrow_label));
+				.getString(R.string.tomorrow_label));
 		headerList.add(context.getResources()
 				.getString(R.string.thisweek_label));
 
