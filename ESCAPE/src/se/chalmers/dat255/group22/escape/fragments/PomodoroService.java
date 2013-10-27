@@ -1,6 +1,8 @@
 package se.chalmers.dat255.group22.escape.fragments;
 
 import se.chalmers.dat255.group22.escape.MainActivity;
+import se.chalmers.dat255.group22.escape.R;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +10,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -127,8 +130,9 @@ public class PomodoroService extends Service {
 		// When timer has reached zero, display "Break time!" instead of time.
 		@Override
 		public void onFinish() {
-
-			Log.d("Pomodoro", "ServiceTimer is at 0!");
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(PomodoroService.super.getApplicationContext());
+            builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle("TITEL").setContentText("DESC");
+            Log.d("Pomodoro", "ServiceTimer is at 0!");
 		}
 
 		// PROBLEM - secondsInString here is not visible when sending it to
