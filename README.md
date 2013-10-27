@@ -5,7 +5,7 @@ The overall goal is to develop a "get-things-done"-app with a simple UI packing 
 
 <b>The app will offer features such as:</b> <br>
 ● Creating “to-do-lists” <br>
-● Automatically generate schedules that can be edited manually afterwards <br>
+● Automatically generate weekly schedules<br>
 ● Time and/or locationbased reminders <br>
 ● Categories for different activities <br>
 ● Pomodoro stopwatch for optimal productivity
