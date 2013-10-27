@@ -23,7 +23,6 @@ public class PomodoroService extends Service {
 	}
 
 	private CountDownTimer servicePomodoroTimer;
-	private long serviceStartTime = 10 * 1000;
 	private long activityTimerSecondsLong;
 	private final long interval = 1 * 1000;
 	public String secondsInString;
@@ -50,12 +49,12 @@ public class PomodoroService extends Service {
 		Log.d("Pomodoro", "In the service - onCreate");
 	}
 
+	// When the service starts, get the active timer and the seconds
+	// on the active timer
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// We want this service to continue running until it is explicitly
-		// stopped, so return sticky.
+
 		Log.d("Pomodoro", "PomodoroService started!!!!!!");
-		doSomethingRepeatedly();
 
 		// This is where the data from the activity is received
 		Log.d("Pomodoro", intent.getStringExtra("activeTimer"));
@@ -75,7 +74,7 @@ public class PomodoroService extends Service {
 
 		// This is where messages are sent from the service to the activity
 		// String serviceTestString = secondsInString;
-		secondsInStringTest = "20";
+		// secondsInStringTest = "20";
 
 		// If the Pomodoro timer was active in the activity, inform activity
 		// about it (the activity
@@ -118,17 +117,13 @@ public class PomodoroService extends Service {
 		return START_STICKY;
 	}
 
-	private void doSomethingRepeatedly() {
-
-		Log.d("Pomodoro", "Service - doSomethingRepeatedly");
-	}
-
+	// Countdown timer for the service
 	public class ServiceTimer extends CountDownTimer {
 		public ServiceTimer(long startTime, long interval) {
 			super(startTime, interval);
 		}
 
-		// When timer has reached zero, display "Break time!" instead of time.
+		// When timer has reached zero, display "Timer up!" instead of time.
 		@Override
 		public void onFinish() {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(
@@ -185,7 +180,6 @@ public class PomodoroService extends Service {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			secondsInLong = millisUntilFinished / 1000;
-			// secondsInString = String.valueOf(secondsInLong);
 			secondsInString = Long.toString(secondsInLong);
 
 			Intent serviceIntent = new Intent(PomodoroFragment.RECEIVE_TIME);
@@ -197,6 +191,7 @@ public class PomodoroService extends Service {
 		}
 	}
 
+	// When the service is destroyed, stop the service timer
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
