@@ -86,12 +86,12 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
 
 		if (pomodoroServiceRunning == "POMODORO_TIMER") {
-			Log.d("Pomodoro",
+            stopService(getActivity().findViewById(R.id.pomodoro_button));
+            Log.d("Pomodoro",
 					"onRESUME - Service was running POMODORO-TIMER before this!");
 			Log.d("Pomodoro",
 					"And there was this much time on the service timer:");
 			Log.d("Pomodoro", serviceTimeString);
-			stopService(getActivity().findViewById(R.id.pomodoro_button));
 
 			// converting string message from service to a long
 			serviceTimeStringToLong = Long.parseLong(serviceTimeString);

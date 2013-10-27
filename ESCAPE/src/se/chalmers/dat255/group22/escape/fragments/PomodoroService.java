@@ -71,9 +71,7 @@ public class PomodoroService extends Service {
 		// This is where messages are sent from the service to the activity
 		// String serviceTestString = secondsInString;
 		secondsInStringTest = "20";
-		Intent serviceIntent = new Intent(PomodoroFragment.RECEIVE_TIME);
-		serviceIntent.putExtra("serviceToActivity", secondsInStringTest);
-		LocalBroadcastManager.getInstance(this).sendBroadcast(serviceIntent);
+
 
 		// If the Pomodoro timer was active in the activity, inform activity
 		// about it (the activity
@@ -142,6 +140,10 @@ public class PomodoroService extends Service {
 			secondsInLong = millisUntilFinished / 1000;
 			// secondsInString = String.valueOf(secondsInLong);
 			secondsInString = Long.toString(secondsInLong);
+
+            Intent serviceIntent = new Intent(PomodoroFragment.RECEIVE_TIME);
+            serviceIntent.putExtra("serviceToActivity", secondsInString);
+            LocalBroadcastManager.getInstance(PomodoroService.super.getApplicationContext()).sendBroadcast(serviceIntent);
 			Log.d("Pomodoro", secondsInString);
 		}
 	}
@@ -149,7 +151,6 @@ public class PomodoroService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
 		servicePomodoroTimer.cancel();
 		Log.d("Pomodoro", "Service - onDestroy");
 
