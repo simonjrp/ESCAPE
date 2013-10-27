@@ -86,8 +86,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 		bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
 
 		if (pomodoroServiceRunning == "POMODORO_TIMER") {
-            stopService(getActivity().findViewById(R.id.pomodoro_button));
-            Log.d("Pomodoro",
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+			Log.d("Pomodoro",
 					"onRESUME - Service was running POMODORO-TIMER before this!");
 			Log.d("Pomodoro",
 					"And there was this much time on the service timer:");
@@ -433,6 +433,221 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		Log.d("Pomodoro", "onResume----------------");
+
+		// Setting up broadcast manager to handle communication between service
+		// and activity
+		LocalBroadcastManager bManager = LocalBroadcastManager
+				.getInstance(getActivity());
+
+		// This is where the pomodoro fragment receives data from the service
+		// Getting time from service
+		IntentFilter receiveTimeFilter = new IntentFilter();
+		receiveTimeFilter.addAction(RECEIVE_TIME);
+		bManager.registerReceiver(bReceiver, receiveTimeFilter);
+		// Asking if service is running
+		IntentFilter receiveRunningStatusFilter = new IntentFilter();
+		receiveRunningStatusFilter.addAction(RECEIVE_STATUS);
+		bManager.registerReceiver(bReceiver, receiveRunningStatusFilter);
+
+		if (pomodoroServiceRunning == "POMODORO_TIMER") {
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+			Log.d("Pomodoro",
+					"onRESUME - Service was running POMODORO-TIMER before this!");
+			Log.d("Pomodoro",
+					"And there was this much time on the service timer:");
+			Log.d("Pomodoro", serviceTimeString);
+
+			// converting string message from service to a long
+			serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+
+			// Since timer is managed in milliseconds, multiply value by 1000
+			serviceTimeStringToLong = serviceTimeStringToLong * 1000;
+
+			// This below used to be outside of if statement, see corresponding
+			// stub for else statement below
+
+			// Layout for the pomodoro start button
+			// startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			// startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			// timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			// TEST without pomodoro timer being initialized in service timer
+			// session
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			serviceCountDownTimer = new PomodoroTimer(serviceTimeStringToLong,
+					interval);
+			// Initializing break count down timer
+			// TEST without break timer being initialized in pomodoro timer
+			// session
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			// timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			pomodoroTimerHasStarted = false;
+			serviceCountDownTimer.start();
+			serviceTimerHasStarted = true;
+			// pomodoroTimerHasStarted = true;
+			startB.setText("STOP");
+
+			// end of "outside of if/else statement" stub
+
+		}
+
+		else if (pomodoroServiceRunning == "BREAK_TIMER") {
+
+			Log.d("Pomodoro",
+					"onRESUME - Service was running BREAK-TIMER before this!");
+			Log.d("Pomodoro",
+					"And there was this much time on the service timer:");
+			Log.d("Pomodoro", serviceTimeString);
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+
+			// converting string message from service to a long
+			serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+
+			// Since timer is managed in milliseconds, multiply value by 1000
+			serviceTimeStringToLong = serviceTimeStringToLong * 1000;
+
+			// This below used to be outside of if statement, see corresponding
+			// stub for else statement below
+
+			// Layout for the pomodoro start button
+			// startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			// startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			// timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			// TEST without pomodoro timer being initialized in service timer
+			// session
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			serviceCountDownTimer = new PomodoroTimer(serviceTimeStringToLong,
+					interval);
+			// Initializing break count down timer
+			// TEST without break timer being initialized in pomodoro timer
+			// session
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			// timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			pomodoroTimerHasStarted = false;
+			breakTimerHasStarted = false;
+			onBreak = true;
+			serviceCountDownTimer.start();
+			serviceTimerHasStarted = true;
+			// pomodoroTimerHasStarted = true;
+			startB.setText("STOP");
+
+			// end of "outside of if/else statement" stub
+
+		}
+
+		else if (pomodoroServiceRunning == "SERVICE_TIMER") {
+
+			Log.d("Pomodoro",
+					"onRESUME - Service was running SERVICE-TIMER before this!");
+			Log.d("Pomodoro",
+					"And there was this much time on the service timer:");
+			Log.d("Pomodoro", serviceTimeString);
+			stopService(getActivity().findViewById(R.id.pomodoro_button));
+
+			// converting string message from service to a long
+			serviceTimeStringToLong = Long.parseLong(serviceTimeString);
+
+			// Since timer is managed in milliseconds, multiply value by 1000
+			serviceTimeStringToLong = serviceTimeStringToLong * 1000;
+
+			// This below used to be outside of if statement, see corresponding
+			// stub for else statement below
+
+			// Layout for the pomodoro start button
+			// startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			// startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			// timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			// TEST without pomodoro timer being initialized in service timer
+			// session
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			serviceCountDownTimer = new PomodoroTimer(serviceTimeStringToLong,
+					interval);
+			// Initializing break count down timer
+			// TEST without break timer being initialized in pomodoro timer
+			// session
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			// timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(serviceTimeStringToLong));
+
+			pomodoroTimerHasStarted = false;
+			breakTimerHasStarted = false;
+			serviceCountDownTimer.start();
+			serviceTimerHasStarted = true;
+			// pomodoroTimerHasStarted = true;
+			startB.setText("STOP");
+
+			// end of "outside of if/else statement" stub
+
+		}
+
+		else {
+			Log.d("Pomodoro", "onRESUME - Service was not running before this!");
+
+			// Used to be outside of else statement
+
+			// Layout for the pomodoro start button
+			// startB = (Button) v.findViewById(R.id.pomodoro_button);
+
+			// Listener for pomodoro start button
+			// startB.setOnClickListener(this);
+
+			// Layout for the time display in the pomodoro timer
+			// timeLeftText = (TextView) v.findViewById(R.id.pomodoro_timer);
+
+			// Initializing pomodoro count down timer
+			pomodoroCountDownTimer = new PomodoroTimer(pomodoroStartTime,
+					interval);
+
+			// Initializing break count down timer
+			breakCountDownTimer = new PomodoroTimer(breakStartTime, interval);
+
+			// Setting start time of the break timer
+			timeLeftText.setText(formatTime(breakStartTime));
+
+			// Setting start time of the pomodoro timer
+			timeLeftText.setText(formatTime(pomodoroStartTime));
+
+			// end of stuff that used to be outside else statement
+		}
 	}
 
 	// Count down timer is handled below
