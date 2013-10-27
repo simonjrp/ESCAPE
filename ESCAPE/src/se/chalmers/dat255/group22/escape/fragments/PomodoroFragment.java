@@ -32,6 +32,8 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	private boolean breakTimerHasStarted = false;
 	private boolean serviceTimerHasStarted = false;
 	private boolean onBreak = false;
+	private boolean serviceBreakTimerHasStarted = false;
+	private boolean servicePomodoroTimerHasStarted = false;
 	private String pomodoroServiceRunning;
 	public String serviceTimeString;
 	private long serviceTimeStringToLong;
@@ -49,7 +51,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 	// startTime defines the amount of time in the pomodoro timer.
 	// 1500 seconds = 25 minutes.
 	private long pomodoroStartTime = 10 * 1000;
-	private long breakStartTime = 27 * 1000;
+	private long breakStartTime = 15 * 1000;
 	private final long interval = 1 * 1000;
 
 	public static final String RECEIVE_TIME = "se.chalmers.dat255.group22.escape.fragments.PomodoroFragment.RECEIVE_TIME";
@@ -136,6 +138,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 				pomodoroTimerHasStarted = false;
 				serviceCountDownTimer.start();
+				servicePomodoroTimerHasStarted = true;
 				serviceTimerHasStarted = true;
 				// pomodoroTimerHasStarted = true;
 				startB.setText("STOP");
@@ -148,6 +151,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 				serviceCountDownTimer.cancel();
 				pomodoroCountDownTimer.cancel();
 				breakCountDownTimer.cancel();
+				servicePomodoroTimerHasStarted = false;
 				pomodoroTimerHasStarted = false;
 				onBreak = true;
 				breakTimerHasStarted = false;
@@ -211,6 +215,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 				pomodoroTimerHasStarted = false;
 				serviceCountDownTimer.start();
+				serviceBreakTimerHasStarted = true;
 				serviceTimerHasStarted = true;
 				// pomodoroTimerHasStarted = true;
 				startB.setText("STOP");
@@ -221,6 +226,7 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 				Log.d("Pomodoro",
 						"----------------Service timer was at 0!!!!--------------");
 				serviceCountDownTimer.cancel();
+				serviceBreakTimerHasStarted = false;
 				pomodoroCountDownTimer.cancel();
 				breakCountDownTimer.cancel();
 				onBreak = false;
@@ -400,6 +406,9 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 			}
 			breakCountDownTimer.start();
 			breakTimerHasStarted = true;
+			// BUGFIX?
+			pomodoroTimerHasStarted = false;
+			// ENDOF BUGFIX?
 			startB.setText("STOP");
 		} else if (pomodoroTimerHasStarted && onBreak == false) {
 			pomodoroCountDownTimer.cancel();
@@ -741,6 +750,9 @@ public class PomodoroFragment extends Fragment implements OnClickListener {
 
 			if (onBreak == false) {
 				onBreak = true;
+				// BUGFIX?
+				// breakTimerHasStarted = false;
+				// ENDOF BUGFIX?
 				timeLeftText.setText("Break time!");
 
 				// Creates a notification that informs the user it's time for a
